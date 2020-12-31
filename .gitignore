@@ -1,0 +1,17 @@
+/node_modules
+.DS_Store
+/build
+/report
+.idea
+.vscode
+*.code-workspace
+.eslintcache
+/coverage/
+
+/.jscpd
+# production
+./dist/
+/coverage/
+# misc
+/npm-debug.log*
+*.log
