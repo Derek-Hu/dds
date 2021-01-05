@@ -42,7 +42,7 @@ module.exports = {
     }),
     // addBundleVisualizer(),
     // multipleEntry.addMultiEntry,
-    rewireReactHotLoader,
+    // rewireReactHotLoader,
     addLessLoader({
       javascriptEnabled: true,
       modifyVars: {
