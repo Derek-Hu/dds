@@ -1,0 +1,54 @@
+@import "../variables.less";
+
+.root {
+  background-color: #f9fcfe;
+  padding-top: 100px;
+
+  .content {
+    max-width: @maxWidth;
+    margin: 0 auto;
+  }
+  .adsOne {
+    margin-bottom: 80px;
+    .item {
+      & > h3 {
+        color: #383838;
+      }
+      & > p {
+        color: #808080;
+      }
+    }
+  }
+  .adsTwo {
+    background-color: #1346ff;
+    color: #fff;
+    padding: 60px 0;
+
+    .item {
+      & > h3 {
+        color: #FFF;
+      }
+      & > p {
+        color: #FFF;
+        opacity: 0.6;
+      }
+    }
+  }
+
+  .item {
+    width: 300px;
+    text-align: center;
+    margin: 0 auto;
+    & > div {
+      margin-bottom: 48px;
+    }
+    & > h3 {
+      font-size: 20px;
+      line-height: 1.2;
+      margin-bottom: 15px;
+    }
+    & > p {
+      font-size: 14px;
+    }
+  }
+}

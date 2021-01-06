@@ -1,53 +1,40 @@
-.root{
-    text-align: center;
-    color: #383838;
-    background-color: #F9FCFE;
-    padding: 100px 0 50px;
-    & > h3 {
-        font-size: 36px;
-        line-height: 45px;
-    }
+@import '../variables.less';
 
-    & > p {
-        font-size: 16px;
-        line-height: 21px;
-        color: #A8B0BB;
-        margin: 20px 0 70px;
-    }
-    .name{
-        font-size: 18px;
-        font-weight: bold;
-        margin: 40px 0 20px;
-    }
-    .description{
-        font-size: 16px;
-        line-height: 22px;
-        width: 550px;
-        margin: 0 auto 70px;
-        text-align: center;
-    }
-    :global{
-        .ant-carousel .slick-slide {
-            text-align: center;
-            overflow: hidden;
-          }
-          
-          .ant-carousel .slick-dots li button,
-          .ant-carousel .slick-dots li.slick-active button {
-                background-color: #D8D8D8;
-                border-radius: 10px;
-                opacity: 1;
-                width: 10px;
-                height: 10px;
-          }
-
-          .ant-carousel .slick-dots li.slick-active button {
-            background-color: #999;
-            border-radius: 10px;
-            opacity: 1;
-            width: 10px;
-            height: 10px;
-      }
-    }
-}
+.root {
+  text-align: center;
+  color: #383838;
+  background-color: #fff;
+  padding: @section-padding;
   
+  .name {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 40px 0 20px;
+  }
+  .description {
+    font-size: 16px;
+    line-height: 22px;
+    width: 550px;
+    margin: 0 auto 70px;
+    text-align: center;
+  }
+  :global {
+    .ant-carousel .slick-slide {
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .ant-carousel .slick-dots li button,
+    .ant-carousel .slick-dots li.slick-active button {
+      background-color: #d8d8d8;
+      border-radius: @button-size;
+      opacity: 1;
+      width: @button-size;
+      height: @button-size;
+    }
+
+    .ant-carousel .slick-dots li.slick-active button {
+      background-color: #999;
+    }
+  }
+}

@@ -27,7 +27,7 @@ const {
 module.exports = {
   webpack: override(
     addDecoratorsLegacy(),
-    // addTslintLoader(),
+    addTslintLoader(),
     // enableEslintTypescript(),
     fixBabelImports("import", {
       libraryName: "antd",

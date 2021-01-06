@@ -1,6 +1,7 @@
-import "react";
+import React from "react";
 import { Carousel, Avatar } from "antd";
 import styles from './style.module.less';
+import SectionTitle from '../section-title/index';
 
 const datasource = [
   {
@@ -17,12 +18,11 @@ const datasource = [
 export default () => {
   return (
     <div className={styles.root}>
-      <h3>We are Community Drived</h3>
-      <p>
+      <SectionTitle title="We are Community Drived">
         Our community members come from all over the world and share the dream
         of decentralized finance.
-      </p>
-      <Carousel effect="fade">
+      </SectionTitle>
+      <Carousel autoplay>
         {datasource.map(({ name, avatar, description }) => (
           <div key={name}>
             <Avatar size={64} src={avatar} />
