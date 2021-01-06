@@ -1,8 +1,16 @@
 import { Icon } from "antd";
 
-export default {
+interface ILink {
+    link: string;
+    name?: string;
+    icon?: any;
+}
+
+const size = 28;
+
+const links: { [key: string]: ILink[]} = {
     Ecosystem: [{
-        icon: <Icon type="wechat" />,
+        icon: <Icon type="wechat"/>,
         link: 'http://www.baidu.com'
     },{
         icon: <Icon type="youtube" />,
@@ -57,3 +65,5 @@ export default {
         link: 'http://www.baidu.com'
     }]
 }
+
+export default links;
