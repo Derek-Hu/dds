@@ -1,11 +1,20 @@
-  
-import { Component } from 'react';
+import { Row, Col } from "antd";
+import styles from "./style.module.less";
 
-export default class Footer extends Component {
-  componentDidMount() {
-    console.log('mount');
-  }
-  render() {
-    return <div>Footer</div>
-  }
-}
+export default () => {
+  return (
+    <div className={styles.root}>
+      <div className={styles.content}>
+        <Row>
+          <Col span={8} className={styles.left}>
+            <h2>DDerivatives</h2>
+            <p>Infrastructure for future derivatives</p>
+          </Col>
+          <Col span={16} className={styles.right}>
+            
+          </Col>
+        </Row>
+      </div>
+    </div>
+  );
+};

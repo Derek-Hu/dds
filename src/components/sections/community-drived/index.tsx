@@ -1,13 +1,14 @@
 import React from "react";
 import { Carousel, Avatar } from "antd";
-import styles from './style.module.less';
-import SectionTitle from '../section-title/index';
+import styles from "./style.module.less";
+import SectionTitle from "../section-title/index";
 
 const datasource = [
   {
     name: "Roger Spears",
     avatar: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-    description: "Welcome anyone who wants to promote the evolution and growth of DDeerivatives to join our community.Welcome anyone who wants to promote the evolution and growth of DDeerivatives to join our community.",
+    description:
+      "Welcome anyone who wants to promote the evolution and growth of DDeerivatives to join our community.Welcome anyone who wants to promote the evolution and growth of DDeerivatives to join our community.",
   },
   {
     name: "Roger Spears2",
@@ -18,19 +19,21 @@ const datasource = [
 export default () => {
   return (
     <div className={styles.root}>
-      <SectionTitle title="We are Community Drived">
-        Our community members come from all over the world and share the dream
-        of decentralized finance.
-      </SectionTitle>
-      <Carousel autoplay>
-        {datasource.map(({ name, avatar, description }) => (
-          <div key={name}>
-            <Avatar size={64} src={avatar} />
-            <div  className={styles.name}>{name}</div>
-            <p  className={styles.description}>{description}</p>
-          </div>
-        ))}
-      </Carousel>
+      <div className={styles.content}>
+        <SectionTitle title="We are Community Drived">
+          Our community members come from all over the world and share the dream
+          of decentralized finance.
+        </SectionTitle>
+        <Carousel autoplay>
+          {datasource.map(({ name, avatar, description }) => (
+            <div key={name}>
+              <Avatar size={64} src={avatar} />
+              <div className={styles.name}>{name}</div>
+              <p className={styles.description}>{description}</p>
+            </div>
+          ))}
+        </Carousel>
+      </div>
     </div>
   );
 };
