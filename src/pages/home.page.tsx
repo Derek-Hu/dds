@@ -1,11 +1,14 @@
   
 import { Component } from 'react';
+import CommunityDrived from '../components/sections/community-drived';
 
 export default class HomePage extends Component {
   componentDidMount() {
     console.log('mount');
   }
   render() {
-    return <div>Home</div>
+    return <div>
+      <CommunityDrived />
+    </div>
   }
 }

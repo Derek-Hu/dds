@@ -11,12 +11,12 @@ export interface IRouter {
 const renderItems = (items?: IRouter[]) => {
   return (
     <Switch>
-      <div>
         {items ? items.map(({ routes, path, component: Component }) => {
           const exact = routes && routes.length;
           if (exact) {
             return (
               <Route
+                key={path}
                 path={path}
                 render={(routeProps: any) => (
                   <Component {...routeProps}>{renderItems(routes)}</Component>
@@ -24,9 +24,8 @@ const renderItems = (items?: IRouter[]) => {
               ></Route>
             );
           }
-          return <Route exact={true} path={path} component={Component}></Route>;
+          return <Route exact={true} key={path} path={path} component={Component}></Route>;
         }): null}
-      </div>
     </Switch>
   );
 };

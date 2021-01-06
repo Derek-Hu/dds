@@ -29,7 +29,7 @@ module.exports = {
     addDecoratorsLegacy(),
     // addTslintLoader(),
     // enableEslintTypescript(),
-    fixBabelImports("import-antd", {
+    fixBabelImports("import", {
       libraryName: "antd",
       libraryDirectory: "es",
       style: true,
