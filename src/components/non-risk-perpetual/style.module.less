@@ -1,0 +1,42 @@
+@import "../sections/variables.less";
+
+.root {
+  max-width: @maxWidth;
+  margin: 0 auto 140px;
+
+  .head {
+    font-size: 18px;
+    line-height: 22px;
+
+    h2 {
+        margin-bottom: 40px;
+        font-size: 18px;
+        color: #383838;
+        span{
+            float: right;
+            font-weight: normal;
+            color: #9FA3AB;
+        }
+    }
+
+  }
+
+  :global{
+    .ant-table-thead th{
+        background-color: #FFF;
+    }
+    .ant-table-tbody tr:hover td{
+        background-color: #F6F7F9 !important;
+    }
+    .ant-table-tbody td,
+    .ant-table-thead th, 
+    .ant-table-thead td{
+        border: 0;
+    }
+      .ant-table-thead .ant-table-column-title{
+            font-size: 14px;
+          color: #808080;
+          font-weight: normal;
+      }
+  }
+}
