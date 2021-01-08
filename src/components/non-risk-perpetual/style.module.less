@@ -4,39 +4,73 @@
   max-width: @maxWidth;
   margin: 0 auto 140px;
 
+  .priceVal {
+    font-size: 14px;
+    color: #383838;
+    font-weight: bold;
+    text-align: right;
+  }
+  .change {
+    text-align: right;
+    position: relative;
+    right: 2em;
+  }
+  .changeVal {
+    font-size: 14px;
+    font-weight: bold;
+    color: #02b464;
+    display: block;
+    text-align: right;
+    padding-right: 2em;
+  }
+
+  .changeVal.negative{
+    color: red;
+  }
+
+  .coin {
+    font-size: 20px;
+    color: #333333;
+  }
+  .usdt {
+    font-size: 14px;
+    color: #9fa3ab;
+  }
   .head {
     font-size: 18px;
     line-height: 22px;
 
     h2 {
-        margin-bottom: 40px;
-        font-size: 18px;
-        color: #383838;
-        span{
-            float: right;
-            font-weight: normal;
-            color: #9FA3AB;
-        }
+      margin-bottom: 40px;
+      font-size: 18px;
+      color: #383838;
+      span {
+        float: right;
+        font-weight: normal;
+        color: #9fa3ab;
+      }
     }
-
   }
 
-  :global{
-    .ant-table-thead th{
-        background-color: #FFF;
+  :global {
+    .ant-table-thead th {
+      background-color: #fff;
     }
-    .ant-table-tbody tr:hover td{
-        background-color: #F6F7F9 !important;
+    .ant-table-thead th:nth-child(3){
+      text-align: right;
+    }
+    .ant-table-tbody tr:hover td {
+      background-color: #f6f7f9 !important;
     }
     .ant-table-tbody td,
-    .ant-table-thead th, 
-    .ant-table-thead td{
-        border: 0;
+    .ant-table-thead th,
+    .ant-table-thead td {
+      // border: 0;
     }
-      .ant-table-thead .ant-table-column-title{
-            font-size: 14px;
-          color: #808080;
-          font-weight: normal;
-      }
+    .ant-table-thead .ant-table-column-title {
+      font-size: 14px;
+      color: #808080;
+      font-weight: normal;
+    }
   }
 }
