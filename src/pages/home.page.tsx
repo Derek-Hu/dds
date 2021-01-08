@@ -9,9 +9,6 @@ import Banner from '../components/banner/index';
 import KLine from '../components/k-line/index';
 
 export default class HomePage extends Component {
-  componentDidMount() {
-    console.log('mount');
-  }
   render() {
     return <div>
       <Banner></Banner>

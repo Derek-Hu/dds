@@ -13,8 +13,8 @@ export default () => {
           hedging
         </SectionTitle>
         <Row  className={styles.adsOne}>
-          {datasourceOne.map(({ icon, name, description }) => (
-            <Col xs={24} sm={24} md={24} lg={8} >
+          {datasourceOne.map(({ icon, name, description }, index) => (
+            <Col xs={24} sm={24} md={24} lg={8} key={index}>
               <div className={styles.item}>
                 <div>{icon}</div>
                 <h3>{name}</h3>
@@ -27,8 +27,8 @@ export default () => {
       <div style={{ background: "#1346FF" }}>
         <div className={styles.content}>
           <Row className={styles.adsTwo}>
-            {datasourceTwo.map(({ icon, name, description }) => (
-              <Col xs={24} sm={24} md={24} lg={8}>
+            {datasourceTwo.map(({ icon, name, description }, index) => (
+              <Col xs={24} sm={24} md={24} lg={8} key={index}>
                 <div className={styles.item}>
                   <div>{icon}</div>
                   <h3>{name}</h3>

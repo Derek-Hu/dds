@@ -6,8 +6,6 @@ interface ILink {
     icon?: any;
 }
 
-const size = 28;
-
 const links: { [key: string]: ILink[]} = {
     Ecosystem: [{
         icon: <Icon type="wechat"/>,

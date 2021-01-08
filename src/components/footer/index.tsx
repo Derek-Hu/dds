@@ -14,12 +14,12 @@ export default () => {
           <Col xs={24} sm={24} md={24} lg={16} className={styles.right}>
             <div>
             {
-              Object.keys(links).map(category => <Row className={styles.row}>
-                <Col span={4} className={styles.category}>{category}</Col>
-                <Col span={18}>{
-                  (links[category]).map(({link, name, icon}) => <a className={icon ? styles.icon : styles.link} href={link}>{name || icon}</a>)
-                }</Col>
-              </Row>)
+              Object.keys(links).map(category => <div key={category} className={styles.row}>
+                <span className={styles.category}>{category}</span>
+                <span className={styles.details}>{
+                  (links[category]).map(({link, name, icon}, index) => <a key={index} className={icon ? styles.icon : styles.link} href={link}>{name || icon}</a>)
+                }</span>
+              </div>)
             }
             </div>
           </Col>

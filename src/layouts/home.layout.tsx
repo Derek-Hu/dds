@@ -6,7 +6,6 @@ import Footer from '../components/footer/index';
 export default class MainLayout extends Component {
   render() {
     const { children } = this.props;
-    console.log(children);
     return (
       <div>
         <Header />

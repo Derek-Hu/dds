@@ -80,7 +80,7 @@ export default () => {
             </Col>
           </Row>
         </div>
-        <Table columns={columns} pagination={false} dataSource={data} />
+        <Table rowKey="coin" columns={columns} pagination={false} dataSource={data} />
       </div>
     </div>
   );
