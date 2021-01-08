@@ -44,31 +44,37 @@ module.exports = {
     // multipleEntry.addMultiEntry,
     // rewireReactHotLoader,
     addLessLoader({
+      modifyVars: {
+        // Primary
+        "@primary-color": "#2acd8f",
+        "@link-color": "#2acd8f",
+        "@border-radius-base": "2px",
+
+        // Input
+        "@input-placeholder-color": "#a3afb7",
+        "@input-hover-border-color": "#2acd8f",
+
+        // Button
+        "@button-primary-bg": "#2acd8f",
+        // Button lg
+        "@btn-height-lg": "48px",
+        "@btn-padding-lg": "11px",
+        "btn-font-size-lg": "20px",
+
+        // Table
+        "@table-header-bg": "#ffffff",
+
+        // Font
+        "@font-size-base": "14px",
+        // Menu
+        'menu-bg': '#1346ff',
+        'menu-item-color': '#FFF',
+        'menu-item-active-border-width': 0,
+        'menu-item-active-bg': '#1346ff',
+        'menu-highlight-color': '#FFF',
+      },
       lessOptions: {
         javascriptEnabled: true,
-        modifyVars: {
-          // Primary
-          "@primary-color": "#2acd8f",
-          "@link-color": "#2acd8f",
-          "@border-radius-base": "2px",
-
-          // Input
-          "@input-placeholder-color": "#a3afb7",
-          "@input-hover-border-color": "#2acd8f",
-
-          // Button
-          "@button-primary-bg": "#2acd8f",
-          // Button lg
-          "@btn-height-lg": "48px",
-          "@btn-padding-lg": "11px",
-          "btn-font-size-lg": "20px",
-
-          // Table
-          "@table-header-bg": "#ffffff",
-
-          // Font
-          "@font-size-base": "14px",
-        },
       },
     }),
     (config) => {

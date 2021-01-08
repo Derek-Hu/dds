@@ -14,7 +14,7 @@ export default () => {
         </SectionTitle>
         <Row  className={styles.adsOne}>
           {datasourceOne.map(({ icon, name, description }) => (
-            <Col span={8}>
+            <Col xs={24} sm={24} md={24} lg={8} >
               <div className={styles.item}>
                 <div>{icon}</div>
                 <h3>{name}</h3>
@@ -28,7 +28,7 @@ export default () => {
         <div className={styles.content}>
           <Row className={styles.adsTwo}>
             {datasourceTwo.map(({ icon, name, description }) => (
-              <Col span={8}>
+              <Col xs={24} sm={24} md={24} lg={8}>
                 <div className={styles.item}>
                   <div>{icon}</div>
                   <h3>{name}</h3>
