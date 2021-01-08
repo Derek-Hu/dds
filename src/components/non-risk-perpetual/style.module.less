@@ -1,23 +1,35 @@
 @import "../sections/variables.less";
-@import '../common.less';
+@import "../common.less";
 
 .root {
   .contentMixin;
   margin-bottom: 140px;
 
-  .col{
+  .tradeBtn {
+    display: inline-block;
+    height: 33px;
+    width: 70px;
+    background: rgba(19, 70, 255, 0.1);
+    border-radius: 2px;
+    color: #1346FF;
+    text-align: center;
+    line-height: 33px;
+    cursor: pointer;
+    border: 1px solid rgba(19, 70, 255, 0.5);
+  }
+  .col {
     margin-bottom: 40px;
   }
 
-  .col.summary{
+  .col.summary {
     text-align: right;
     span {
       font-weight: normal;
       color: #9fa3ab;
     }
-    span.total{
-        color: #333333;
-        font-weight: bold;
+    span.total {
+      color: #333333;
+      font-weight: bold;
     }
   }
   .priceVal {
@@ -40,7 +52,7 @@
     padding-right: 2em;
   }
 
-  .changeVal.negative{
+  .changeVal.negative {
     color: red;
   }
 
@@ -67,7 +79,7 @@
     .ant-table-thead th {
       background-color: #fff;
     }
-    .ant-table-thead th:nth-child(3){
+    .ant-table-thead th:nth-child(3) {
       text-align: right;
     }
     .ant-table-tbody tr:hover td {

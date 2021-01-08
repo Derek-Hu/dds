@@ -49,6 +49,9 @@ const columns = [
     dataIndex: "action",
     key: "action",
     width: "6em",
+    render: () => {
+      return <span className={styles.tradeBtn}>Trade</span>
+    }
   },
 ];
 
