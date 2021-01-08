@@ -1,16 +1,16 @@
 @import "../variables.less";
+@import '../../common.less';
 
 .root {
   background-color: #f9fcfe;
   padding-top: 100px;
 
   .content {
-    max-width: @maxWidth;
-    margin: 0 auto;
+    .contentMixin;
   }
   .adsOne {
-    margin-bottom: 80px;
     .item {
+      margin-bottom: 80px;
       & > h3 {
         color: #383838;
       }
@@ -22,9 +22,9 @@
   .adsTwo {
     background-color: #1346ff;
     color: #fff;
-    padding: 60px 0;
-
+    
     .item {
+      margin: 60px auto;
       & > h3 {
         color: #FFF;
       }

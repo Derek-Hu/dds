@@ -19,7 +19,6 @@ const datasource = [
 export default () => {
   return (
     <div className={styles.root}>
-      <div className={styles.content}>
         <SectionTitle title="We are Community Drived">
           Our community members come from all over the world and share the dream
           of decentralized finance.
@@ -33,7 +32,6 @@ export default () => {
             </div>
           ))}
         </Carousel>
-      </div>
     </div>
   );
 };

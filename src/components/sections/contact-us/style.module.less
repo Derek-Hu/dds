@@ -1,20 +1,21 @@
+@import '../variables.less';
+@import '../../common.less';
+
 .root {
+  .contentMixin;
+  
   text-align: center;
   color: #FFF;
   background-color: #FFF;
   padding-bottom: 80px;
-  
-  h3{
-    // color: #fff;
-  }
   ul{
     list-style: none;
-
+    padding: 0;
     li{
       display: inline-block;
     }
     li + li {
-      margin-left: 50px;
+      margin-left: 60px;
     }
   }
 }
