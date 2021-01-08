@@ -5,7 +5,7 @@ export default () => {
   return (
     <div className={styles.root}>
       <Row>
-        <Col xs={24} sm={24} md={24} lg={10}>
+        <Col xs={24} sm={24} md={24} lg={10} className={styles.imgContainer}>
           <img alt="" src="https://via.placeholder.com/335x210.png" />
         </Col>
         <Col xs={24} sm={24} md={24} lg={14} className={styles.message}>
