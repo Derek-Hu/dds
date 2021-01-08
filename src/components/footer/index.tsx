@@ -6,12 +6,12 @@ export default () => {
   return (
     <div className={styles.root}>
       <div className={styles.content}>
-        <Row>
-          <Col span={8} className={styles.left}>
+        <Row type="flex" justify="space-between">
+          <Col xs={24} sm={24} md={24} lg={8} className={styles.left}>
             <h2>DDerivatives</h2>
             <p>Infrastructure for future derivatives</p>
           </Col>
-          <Col span={16} className={styles.right}>
+          <Col xs={24} sm={24} md={24} lg={16} className={styles.right}>
             <div>
             {
               Object.keys(links).map(category => <Row className={styles.row}>

@@ -3,7 +3,7 @@ import styles from "./style.module.less";
 import SectionTitle from "../section-title/index";
 import { Icon, Row, Col } from "antd";
 
-const style = { color: "#A8B0BB", fontSize: 60, marginTop: '70px' };
+const style = { color: "#A8B0BB", fontSize: 60, marginTop: "70px" };
 
 // const IconFont = Icon.createFromIconfontCN({
 //   scriptUrl: "//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js",
@@ -42,9 +42,9 @@ export default () => {
         Welcome anyone who wants to promote the evolution and growth of
         DDeerivatives to join our community.
       </SectionTitle>
-      <Row justify="end">
-      {links.map(({ icon, url }, index) => (
-          <Col key={index} xs={8} sm={8} md={8} lg={2}>
+      <Row type="flex" justify="center">
+        {links.map(({ icon, url }, index) => (
+          <Col key={index} xs={8} sm={8} md={3} lg={2}>
             <a href={url}>{icon}</a>
           </Col>
         ))}

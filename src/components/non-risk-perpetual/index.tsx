@@ -1,5 +1,6 @@
 import { Table, Row, Col } from "antd";
 import styles from "./style.module.less";
+import numeral from 'numeral';
 
 const columns = [
   {
@@ -75,7 +76,7 @@ export default () => {
               <h2>Non-Risk Perpetual</h2>
             </Col>
             <Col xs={24} sm={24} md={24} lg={12}  className={[styles.col, styles.summary].join(' ')}>
-              <span>24h trading volumn: <span className={styles.total}>{total}</span> USD</span>
+              <span>24h trading volumn: <span className={styles.total}>{numeral(total).format('0,0')}</span> USD</span>
             </Col>
           </Row>
         </div>
