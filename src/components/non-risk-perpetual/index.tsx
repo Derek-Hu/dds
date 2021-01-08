@@ -1,4 +1,4 @@
-import { Table } from "antd";
+import { Table, Row, Col } from "antd";
 import styles from "./style.module.less";
 
 const columns = [
@@ -7,23 +7,36 @@ const columns = [
     dataIndex: "coin",
     key: "coin",
     render: (coin: string) => {
-        return <span>
-            <span className={styles.coin}>{coin}</span><span className={styles.usdt}> / USDT</span>
+      return (
+        <span>
+          <span className={styles.coin}>{coin}</span>
+          <span className={styles.usdt}> / USDT</span>
         </span>
-    }
+      );
+    },
   },
   {
-    title: <span  className={styles.price}>Last Price</span>,
+    title: <span className={styles.price}>Last Price</span>,
     dataIndex: "price",
     key: "price",
-    render: (price: number) => <span className={styles.priceVal}>{price}</span>
+    render: (price: number) => <span className={styles.priceVal}>{price}</span>,
   },
   {
-    title: <span  className={styles.change}>24h Change</span>,
+    title: <span className={styles.change}>24h Change</span>,
     dataIndex: "change",
     key: "change",
-    width: '10em',
-    render: (percentage: any) => <span className={[styles.changeVal, percentage<0 ? styles.negative: ''].join(' ')}>{percentage>0?'+':''}{percentage}%</span>
+    width: "10em",
+    render: (percentage: any) => (
+      <span
+        className={[
+          styles.changeVal,
+          percentage < 0 ? styles.negative : "",
+        ].join(" ")}
+      >
+        {percentage > 0 ? "+" : ""}
+        {percentage}%
+      </span>
+    ),
   },
   {
     title: "Chart",
@@ -34,7 +47,7 @@ const columns = [
     title: "Action",
     dataIndex: "action",
     key: "action",
-    width: '6em'
+    width: "6em",
   },
 ];
 
@@ -51,12 +64,20 @@ const data = [
   },
 ];
 
+const total = 82323123;
 export default () => {
   return (
     <div className={styles.root}>
       <div className={styles.content}>
         <div className={styles.head}>
-          <h2>Non-Risk Perpetual <span>24h trading volumn: 82,323,123 USD</span></h2>
+          <Row>
+            <Col xs={24} sm={24} md={24} lg={12} className={styles.col}>
+              <h2>Non-Risk Perpetual</h2>
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={12}  className={[styles.col, styles.summary].join(' ')}>
+              <span>24h trading volumn: <span className={styles.total}>{total}</span> USD</span>
+            </Col>
+          </Row>
         </div>
         <Table columns={columns} pagination={false} dataSource={data} />
       </div>

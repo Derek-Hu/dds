@@ -1,9 +1,25 @@
 @import "../sections/variables.less";
+@import '../common.less';
 
 .root {
-  max-width: @maxWidth;
-  margin: 0 auto 140px;
+  .contentMixin;
+  margin-bottom: 140px;
 
+  .col{
+    margin-bottom: 40px;
+  }
+
+  .col.summary{
+    text-align: right;
+    span {
+      font-weight: normal;
+      color: #9fa3ab;
+    }
+    span.total{
+        color: #333333;
+        font-weight: bold;
+    }
+  }
   .priceVal {
     font-size: 14px;
     color: #383838;
@@ -41,14 +57,9 @@
     line-height: 22px;
 
     h2 {
-      margin-bottom: 40px;
       font-size: 18px;
       color: #383838;
-      span {
-        float: right;
-        font-weight: normal;
-        color: #9fa3ab;
-      }
+      margin: 0;
     }
   }
 
