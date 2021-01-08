@@ -1,16 +1,25 @@
 @import '../variables.less';
+@import '../../common.less';
 
 .root{
+    .contentMixin;
+    
     background-color: #F9FAFC;
-    height: 320px;
-    padding: 50px;
-    max-width: @maxWidth;
+    // min-height: 320px;
+    padding-bottom: 50px;
     margin: 80px auto 60px;
 
+    .message{
+        padding: 0 2em;
+    }
+    img {
+        margin-top: 50px;
+    }
     h3 {
         color: #383838;
         font-size: 16px;
         line-height: 20px;
+        padding-top: 50px;
     }
     p.advantage{
         font-size: 26px;
