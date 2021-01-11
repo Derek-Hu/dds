@@ -1,6 +1,6 @@
 import { IRouter } from "./render";
 
-import HomeLayout from '../layouts/home.layout';
+import Layout from '../layouts/index';
 
 import BorkerPage from '../pages/broker.page';
 import HomePage from '../pages/home.page';
@@ -13,7 +13,7 @@ import Page404 from '../pages/404.page';
 const routers: IRouter[] = [
   {
     path: "/",
-    component: HomeLayout,
+    component: Layout,
     routes: [
       { path: "/home", component: HomePage },
       { path: "/mining", component: MiningPage },
@@ -23,7 +23,7 @@ const routers: IRouter[] = [
       { path: "/trade", component: TradePage },
       { path: "/404", component: Page404 },
     ],
-  },
+  }
 ];
 
 export default routers;
