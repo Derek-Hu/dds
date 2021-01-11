@@ -1,21 +1,18 @@
 import { Component } from "react";
-import { Icon, Tabs, Row, Col } from "antd";
+import { Icon, Tabs, Row, Col, Input } from "antd";
 import styles from "./style.module.less";
 import numeral from "numeral";
 
 const { TabPane } = Tabs;
 
-const mining = {
-  money: 530400,
-  percentage: 70,
-  ddsCount: 25000000,
+const adsData = {
+  contry: "20+",
+  sparks: 124,
+  invitations: 9824,
+  bonus: 98247489,
 };
 
-const utilization = {
-  money: 400,
-  percentage: 90,
-  ddsCount: 1000000,
-};
+const url = "http://www.dds.com/home/78998d798";
 
 export default class Broker extends Component {
   componentDidMount() {}
@@ -28,6 +25,16 @@ export default class Broker extends Component {
     return (
       <div className={styles.root}>
         <h2>Broker</h2>
+        <div className={styles.referalInfo}>
+          <Input value={url} disabled={true} className={styles.input} />
+          <span className={styles.btn}>Copy referral link</span>
+          <div className={styles.qrcode}>
+            <Icon
+              type="qrcode"
+              style={{ fontSize: 32 }}
+            />
+          </div>
+        </div>
         <div className={styles.tabContainer}>
           <Tabs defaultActiveKey="spark" onChange={this.callback}>
             <TabPane
@@ -43,19 +50,21 @@ export default class Broker extends Component {
               <p className={styles.descTwo}>Settlements Fee Commission</p>
               <Row>
                 <Col span={6} className={styles.col}>
-                  <span className={styles.ads}>20+</span>
+                  <span className={styles.ads}>{adsData.contry}</span>
                   <span>Countries</span>
                 </Col>
                 <Col span={6} className={styles.col}>
-                  <span className={styles.ads}>124</span>
+                  <span className={styles.ads}>{adsData.sparks}</span>
                   <span>Sparks</span>
                 </Col>
                 <Col span={6} className={styles.col}>
-                  <span className={styles.ads}>9824</span>
+                  <span className={styles.ads}>{adsData.invitations}</span>
                   <span>Invitations</span>
                 </Col>
                 <Col span={6}>
-                  <span className={styles.ads}>98247489</span>
+                  <span className={styles.ads}>
+                    {numeral(adsData.bonus).format("0,0")}
+                  </span>
                   <span>Bonus(DDS)</span>
                 </Col>
               </Row>
@@ -65,7 +74,6 @@ export default class Broker extends Component {
               key="referral"
             ></TabPane>
           </Tabs>
-
         </div>
         <div className={styles.steps}>
           <h4>Simple Steps</h4>
