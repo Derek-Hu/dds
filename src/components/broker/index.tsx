@@ -5,6 +5,10 @@ import numeral from "numeral";
 
 const { TabPane } = Tabs;
 
+const tabName = {
+    spark: 'spark',
+    referal: 'referral',
+}
 const adsData = {
   contry: "20+",
   sparks: 124,
@@ -14,11 +18,20 @@ const adsData = {
 
 const url = "http://www.dds.com/home/78998d798";
 
+const referalInfo = {
+  referrals: 9824,
+  bonus: 98247489,
+};
 export default class Broker extends Component {
+  state = {
+    selectedTab: tabName.spark,
+  };
   componentDidMount() {}
 
-  callback(key: string) {
-    console.log(key);
+  callback = (selectedTab: string) => {
+    this.setState({
+        selectedTab
+    })
   }
 
   render() {
@@ -29,17 +42,14 @@ export default class Broker extends Component {
           <Input value={url} disabled={true} className={styles.input} />
           <span className={styles.btn}>Copy referral link</span>
           <div className={styles.qrcode}>
-            <Icon
-              type="qrcode"
-              style={{ fontSize: 32 }}
-            />
+            <Icon type="qrcode" style={{ fontSize: 32 }} />
           </div>
         </div>
         <div className={styles.tabContainer}>
-          <Tabs defaultActiveKey="spark" onChange={this.callback}>
+          <Tabs activeKey={this.state.selectedTab} onChange={this.callback}>
             <TabPane
               tab={<span className={styles.uppercase}>spark program</span>}
-              key="spark"
+              key={tabName.spark}
             >
               <h3>Become DDerivatives’s Spark</h3>
               <p className={styles.descOne}>
@@ -48,7 +58,7 @@ export default class Broker extends Component {
               </p>
               <div className={styles.percentage}>40%</div>
               <p className={styles.descTwo}>Settlements Fee Commission</p>
-              <Row>
+              <Row className={styles.tabSpark}>
                 <Col span={6} className={styles.col}>
                   <span className={styles.ads}>{adsData.contry}</span>
                   <span>Countries</span>
@@ -71,36 +81,51 @@ export default class Broker extends Component {
             </TabPane>
             <TabPane
               tab={<span className={styles.uppercase}>My referral</span>}
-              key="referral"
-            ></TabPane>
+              key={tabName.referal}
+            >
+              <h3 className={styles.referalTitle}>Summary</h3>
+              <Row>
+                <Col span={12} className={styles.col}>
+                  <span className={styles.ads}>{referalInfo.referrals}</span>
+                  <span>Referrals</span>
+                </Col>
+                <Col span={12} className={styles.col}>
+                  <span className={styles.ads}>{referalInfo.bonus}</span>
+                  <span>Bonus(DDS)</span>
+                </Col>
+              </Row>
+            </TabPane>
           </Tabs>
         </div>
-        <div className={styles.steps}>
-          <h4>Simple Steps</h4>
-          <Row>
-            <Col span={8}>
-              <Icon type="form" />
-              <p>1. Invite Friends</p>
-              <div>
-                Invite friends to DDerivatives through the referral link or
-                invitation code
-              </div>
-            </Col>
-            <Col span={8}>
-              <Icon type="line-chart" />
-              <p>2. Your Friends Open First Order</p>
-              <div>
-                Invite friends to DDerivatives through the referral link or
-                invitation code
-              </div>
-            </Col>
-            <Col span={8}>
-              <Icon type="fund" />
-              <p>3. Receive Your DDS Bonus</p>
-              <div>Instantly get your bonus as DDS</div>
-            </Col>
-          </Row>
-        </div>
+        {
+            this.state.selectedTab === tabName.spark ? <div className={styles.steps}>
+            <h4>Simple Steps</h4>
+            <Row>
+              <Col span={8}>
+                <Icon type="form" />
+                <p>1. Invite Friends</p>
+                <div>
+                  Invite friends to DDerivatives through the referral link or
+                  invitation code
+                </div>
+              </Col>
+              <Col span={8}>
+                <Icon type="line-chart" />
+                <p>2. Your Friends Open First Order</p>
+                <div>
+                  Invite friends to DDerivatives through the referral link or
+                  invitation code
+                </div>
+              </Col>
+              <Col span={8}>
+                <Icon type="fund" />
+                <p>3. Receive Your DDS Bonus</p>
+                <div>Instantly get your bonus as DDS</div>
+              </Col>
+            </Row>
+          </div> : null
+        }
+        
       </div>
     );
   }
