@@ -2,13 +2,15 @@ import { Component } from "react";
 import { Icon, Tabs, Row, Col, Input } from "antd";
 import styles from "./style.module.less";
 import numeral from "numeral";
+import Step from "./steps";
+import ReferalDetails, { IData } from "./referal-details";
 
 const { TabPane } = Tabs;
 
 const tabName = {
-    spark: 'spark',
-    referal: 'referral',
-}
+  spark: "spark",
+  referal: "referral",
+};
 const adsData = {
   contry: "20+",
   sparks: 124,
@@ -22,6 +24,33 @@ const referalInfo = {
   referrals: 9824,
   bonus: 98247489,
 };
+
+const data: IData[] = [
+  {
+    bonus: 3243,
+    fee: 100,
+    address: "0xfs328xkdfwr23rew9328320",
+    time: new Date().getTime(),
+  },
+  {
+    bonus: 3243,
+    fee: 10320,
+    address: "0xfs328xkdfwr23rew9328320",
+    time: new Date().getTime(),
+  },
+  {
+    bonus: 3243,
+    fee: 100,
+    address: "0xfs328xkdfwr23rew9328320",
+    time: new Date().getTime(),
+  },
+  {
+    bonus: 3243,
+    fee: 100,
+    address: "0xfs328xkdfwr23rew9328320",
+    time: new Date().getTime(),
+  },
+];
 export default class Broker extends Component {
   state = {
     selectedTab: tabName.spark,
@@ -30,9 +59,9 @@ export default class Broker extends Component {
 
   callback = (selectedTab: string) => {
     this.setState({
-        selectedTab
-    })
-  }
+      selectedTab,
+    });
+  };
 
   render() {
     return (
@@ -97,35 +126,11 @@ export default class Broker extends Component {
             </TabPane>
           </Tabs>
         </div>
-        {
-            this.state.selectedTab === tabName.spark ? <div className={styles.steps}>
-            <h4>Simple Steps</h4>
-            <Row>
-              <Col span={8}>
-                <Icon type="form" />
-                <p>1. Invite Friends</p>
-                <div>
-                  Invite friends to DDerivatives through the referral link or
-                  invitation code
-                </div>
-              </Col>
-              <Col span={8}>
-                <Icon type="line-chart" />
-                <p>2. Your Friends Open First Order</p>
-                <div>
-                  Invite friends to DDerivatives through the referral link or
-                  invitation code
-                </div>
-              </Col>
-              <Col span={8}>
-                <Icon type="fund" />
-                <p>3. Receive Your DDS Bonus</p>
-                <div>Instantly get your bonus as DDS</div>
-              </Col>
-            </Row>
-          </div> : null
-        }
-        
+        {this.state.selectedTab === tabName.spark ? (
+          <Step />
+        ) : (
+          <ReferalDetails data={data} />
+        )}
       </div>
     );
   }

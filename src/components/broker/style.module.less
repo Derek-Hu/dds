@@ -4,30 +4,78 @@
   margin-bottom: 140px;
   padding: 0 1em;
   background-color: #f9fafc;
+
+  .tableList {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 14px;
+    .more{
+      margin: 32px auto 0;
+      display: block;
+    }
+    :global {
+      .ant-table-tbody td,
+      .ant-table-thead th,
+      .ant-table-thead td {
+        border: 0;
+      }
+    }
+    h4 {
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+    table,
+    th {
+      text-align: center;
+    }
+
+    th {
+      color: #666666;
+      line-height: 17px;
+    }
+
+    td {
+      color: #333333;
+      line-height: 17px;
+    }
+    td:nth-child(1) {
+      font-weight: bold;
+      color: #1346ff;
+    }
+
+    th:nth-child(1),
+    td:nth-child(1),
+    td:nth-child(2),
+    th:nth-child(2) {
+      text-align: left;
+    }
+  }
+
   h2 {
     .tradeTitleMixin;
     margin-bottom: 40px;
     padding-bottom: 0;
   }
 
-  .referalInfo{
+  .referalInfo {
     margin-bottom: 35px;
     text-align: center;
   }
-  .btn{
+  .btn {
     .buttonMix;
     padding: 18px 16px;
     line-height: 16px;
     margin: 0 16px;
   }
-  .input{
+  .input {
     width: 400px;
     height: 50px;
     color: #333;
-    background-color:#E7EBF4;
+    background-color: #e7ebf4;
     cursor: default;
   }
-  .qrcode{
+  .qrcode {
     display: inline-block;
     vertical-align: middle;
     line-height: 50px;
@@ -43,7 +91,7 @@
       line-height: 31px;
       margin: 48px 0 12px;
     }
-    .referalTitle{
+    .referalTitle {
       margin-bottom: 24px;
     }
     .tabSpark .col::after {
@@ -118,7 +166,7 @@
       line-height: 20px;
       margin: 1em 0;
     }
-    
+
     p + div {
       font-size: 14px;
       color: #333333;
@@ -126,8 +174,8 @@
     }
 
     svg {
-        font-size: 36px;
-        color: #1346FF;
+      font-size: 36px;
+      color: #1346ff;
     }
   }
 }
