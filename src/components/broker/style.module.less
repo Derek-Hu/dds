@@ -1,0 +1,105 @@
+@import "../common.less";
+
+.root {
+  margin-bottom: 140px;
+  padding: 0 1em;
+  background-color: #f9fafc;
+  h2 {
+    .tradeTitleMixin;
+  }
+
+  .tabContainer {
+    .tabContainerMixin;
+    padding-bottom: 48px;
+    h3 {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      line-height: 31px;
+      margin: 48px 0 12px;
+    }
+    .col::after {
+      content: " ";
+      display: block;
+      width: 1px;
+      height: 2.5em;
+      border-right: 1px solid #1346ff;
+      position: absolute;
+      right: 0;
+      top: 30px;
+    }
+    .percentage {
+      font-size: 48px;
+      font-weight: bold;
+      color: #1346ff;
+      line-height: 59px;
+      letter-spacing: 2px;
+      margin: 36px 0 10px;
+    }
+    span.ads {
+      font-size: 36px;
+      font-weight: bold;
+      color: #1346ff;
+      line-height: 45px;
+      letter-spacing: 2px;
+      display: block;
+      margin-bottom: 12px;
+    }
+    span.ads + span {
+      font-size: 16px;
+      color: #333333;
+      line-height: 19px;
+    }
+    .descOne,
+    .descTwo {
+      font-size: 16px;
+      color: #666;
+      line-height: 19px;
+    }
+    .descTwo {
+      color: #333;
+      margin-bottom: 48px;
+    }
+  }
+
+  .uppercase {
+    text-transform: uppercase;
+    font-size: 18px;
+    font-weight: bold;
+    color: #003fe6;
+    line-height: 22px;
+    letter-spacing: 1px;
+  }
+
+  h4 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333333;
+    line-height: 30px;
+    letter-spacing: 1px;
+    margin: 64px 0 48px;
+  }
+  .steps {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    p {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333333;
+      line-height: 20px;
+      margin: 1em 0;
+    }
+    
+    p + div {
+      font-size: 14px;
+      color: #333333;
+      line-height: 17px;
+    }
+
+    svg {
+        font-size: 36px;
+        color: #1346FF;
+    }
+  }
+}

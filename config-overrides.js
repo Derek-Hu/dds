@@ -46,26 +46,27 @@ module.exports = {
     addLessLoader({
       modifyVars: {
         // Primary
-        "@primary-color": "#2acd8f",
-        "@link-color": "#2acd8f",
-        "@border-radius-base": "2px",
+        "primary-color": "#1346FF",
 
-        // Input
-        "@input-placeholder-color": "#a3afb7",
-        "@input-hover-border-color": "#2acd8f",
+        // "@link-color": "#2acd8f",
+        // "@border-radius-base": "2px",
 
-        // Button
-        "@button-primary-bg": "#2acd8f",
-        // Button lg
-        "@btn-height-lg": "48px",
-        "@btn-padding-lg": "11px",
-        "btn-font-size-lg": "20px",
+        // // Input
+        // "@input-placeholder-color": "#a3afb7",
+        // "@input-hover-border-color": "#2acd8f",
 
-        // Table
-        "@table-header-bg": "#ffffff",
+        // // Button
+        // "@button-primary-bg": "#2acd8f",
+        // // Button lg
+        // "@btn-height-lg": "48px",
+        // "@btn-padding-lg": "11px",
+        // "btn-font-size-lg": "20px",
 
-        // Font
-        "@font-size-base": "14px",
+        // // Table
+        // "@table-header-bg": "#ffffff",
+
+        // // Font
+        // "@font-size-base": "14px",
         // Menu
         'menu-bg': '#1346ff',
         'menu-item-color': '#FFF',

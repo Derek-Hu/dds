@@ -1,7 +1,40 @@
-@import './sections/variables.less';
+@import "./sections/variables.less";
 
 .contentMixin() {
-    max-width: @maxWidth;
-    padding: 0 1em;
+  max-width: @maxWidth;
+  padding: 0 1em;
+  margin: 0 auto;
+}
+
+.buttonMix() {
+  text-align: center;
+  cursor: pointer;
+  line-height: 64px;
+  display: inline-block;
+  background: #1346ff;
+  border-radius: 9px;
+
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.tradeTitleMixin(){
+    padding: 80px 0 60px;
+    font-size: 48px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.tabContainerMixin(){
+    padding: 20px 25px;
+    max-width: 900px;
     margin: 0 auto;
+    text-align: center;
+    background: #ffffff;
+    box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
 }

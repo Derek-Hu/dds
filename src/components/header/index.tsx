@@ -1,6 +1,7 @@
 import { Component } from "react";
 import { Menu, Icon, Row, Col } from "antd";
 import styles from "./style.module.less";
+import {Link } from 'react-router-dom';
 
 const { SubMenu } = Menu;
 
@@ -29,10 +30,10 @@ export default class Header extends Component {
               mode="horizontal"
             >
               <Menu.Item key="logo" className={styles.dderivatives}>
-                DDerivatives
+              <Link to="/home">DDerivatives</Link>
               </Menu.Item>
-              <Menu.Item key="trade">Trade</Menu.Item>
-              <Menu.Item key="pool">Pool</Menu.Item>
+              <Menu.Item key="trade"><Link to="/trade">Trade</Link></Menu.Item>
+              <Menu.Item key="pool"><Link to="/pool">Pool</Link></Menu.Item>
               <SubMenu
                 title={
                   <span className="submenu-title-wrapper">
@@ -41,17 +42,11 @@ export default class Header extends Component {
                   </span>
                 }
               >
-                <Menu.ItemGroup title="Item 1">
-                  <Menu.Item key="setting:1">Option 1</Menu.Item>
-                  <Menu.Item key="setting:2">Option 2</Menu.Item>
-                </Menu.ItemGroup>
-                <Menu.ItemGroup title="Item 2">
-                  <Menu.Item key="setting:3">Option 3</Menu.Item>
-                  <Menu.Item key="setting:4">Option 4</Menu.Item>
-                </Menu.ItemGroup>
+                  <Menu.Item key="setting:1"><Link to="/mining">Mining</Link></Menu.Item>
+                  <Menu.Item key="setting:2"><Link to="/swap-burn">Swap & Burn</Link></Menu.Item>
               </SubMenu>
-              <Menu.Item key="broker">Broker</Menu.Item>
-              <Menu.Item key="analytics">Analytics</Menu.Item>
+              <Menu.Item key="broker"><Link to="/broker">Broker</Link></Menu.Item>
+              <Menu.Item key="analytics"><Link to="/analytics">Analytics</Link></Menu.Item>
               <Menu.Item key="support">
                 Support&nbsp;&nbsp;
                 <Icon type="down" />
