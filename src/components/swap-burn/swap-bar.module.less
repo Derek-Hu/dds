@@ -1,0 +1,96 @@
+
+@opacity: 0.3;
+
+.root {
+  margin-top: 100px;
+  .L1 {
+  }
+  .L2 {
+  }
+  .L3 {
+  }
+  .L4 {
+  }
+  .L5 {
+  }
+  .L6 {
+  }
+  .L7 {
+  }
+  .L8 {
+  }
+
+  :global {
+    .cube-inner {
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin: -80px 0 0 -80px;
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+    //   -webkit-transform-origin: 80px 80px;
+    //   transform-origin: 80px 80px;
+    transform: rotateX(83deg) rotateY(-1deg) rotateZ(11deg);
+    }
+
+    .cube-inner > li {
+      position: absolute;
+      display: block;
+      height: 160px;
+      width: 160px;
+    }
+
+    // .cube-inner > li:before {
+    //   content: "";
+    //   display: block;
+    //   position: absolute;
+    //   width: 50px;
+    //   height: 50px;
+    //   -webkit-backface-visibility: hidden;
+    //   backface-visibility: hidden;
+    // }
+
+    .cube-inner .top {
+      background-color: rgba(99, 243, 207, @opacity);
+      -webkit-transform: rotateX(90deg) translateZ(80px);
+      transform: rotateX(90deg) translateZ(80px);
+      width: 160px;
+      height: 160px;
+    }
+
+    .cube-inner .bottom {
+      background-color: rgba(28, 193, 152, @opacity);
+      -webkit-transform: rotateX(-90deg) translateZ(80px);
+      transform: rotateX(-90deg) translateZ(80px);
+      width: 160px;
+      height: 160px;
+    }
+
+    .cube-inner .front {
+      background-color: rgba(174, 255, 235, @opacity);
+      -webkit-transform: translateZ(80px);
+      transform: translateZ(80px);
+      height: 160px;
+      width: 160px;
+    }
+
+    .cube-inner .back {
+      background-color: rgba(174, 255, 235, @opacity);
+      -webkit-transform: rotateX(-180deg) translateZ(80px);
+      transform: rotateX(-180deg) translateZ(80px);
+    }
+
+    .cube-inner .left {
+      background-color: rgb(90, 225, 192, @opacity);
+      -webkit-transform: rotateY(-90deg) translateZ(80px);
+      transform: rotateY(-90deg) translateZ(80px);
+    }
+
+    .cube-inner .right {
+      background-color: rgb(90, 225, 192, @opacity);
+      -webkit-transform: rotateY(90deg) translateZ(80px);
+      transform: rotateY(90deg) translateZ(80px);
+    }
+  }
+}
