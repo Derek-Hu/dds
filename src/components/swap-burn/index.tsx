@@ -14,7 +14,7 @@ export default () => {
   // return <SwapBar></SwapBar>
   return (
     <div className={styles.root}>
-      <h1>Swap & burn</h1>
+      <h1>Swap &apm; burn</h1>
       <div className={styles.card}>
         <div className={styles.imgBar}>
 
