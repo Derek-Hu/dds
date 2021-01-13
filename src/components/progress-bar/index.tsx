@@ -10,9 +10,11 @@ export interface IBarData {
     title: string;
     value: any;
   };
+  unit: string;
 }
 export default ({ data }: { data: IBarData }) => {
-  const { left, right } = data;
+  const { left, right, unit } = data;
+  
   return (
     <>
       <Row>
@@ -25,7 +27,7 @@ export default ({ data }: { data: IBarData }) => {
           <span className={styles.amount}>{right.title}</span>
           <br />
           <span className={styles.dds}>{right.value}</span>&nbsp;
-          <span className={styles.unit}>DDS</span>
+          <span className={styles.unit}>{unit}</span>
         </Col>
       </Row>
       <Progress

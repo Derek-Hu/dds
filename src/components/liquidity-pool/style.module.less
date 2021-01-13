@@ -3,50 +3,12 @@
 .root {
   margin-bottom: 267px;
   padding: 0 1em;
-  background-color: #F9FAFC;
+  background-color: #f9fafc;
   h2 {
     .tradeTitleMixin;
   }
   .tabContainer {
     .tabContainerMixin;
-
-    .left {
-      text-align: left;
-    }
-    .right {
-      text-align: right;
-    }
-    .fifo {
-      font-size: 16px;
-      color: #808080;
-      line-height: 19px;
-      margin-top: 1em;
-    }
-    .today,
-    .amount {
-      font-size: 16px;
-      color: #808080;
-      line-height: 19px;
-    }
-
-    .percentage,
-    .dds {
-      line-height: 44px;
-      font-size: 24px;
-      font-weight: bold;
-    }
-    .percentage {
-      color: #1346ff;
-    }
-    .dds {
-      color: #333333;
-    }
-    .unit {
-      font-size: 14px;
-      color: #1346ff;
-      line-height: 28px;
-    }
-
     h3 {
       font-size: 24px;
       font-weight: 500;
@@ -55,25 +17,47 @@
       letter-spacing: 1px;
       margin: 56px 0 36px;
     }
-    .coins {
+    p.coins {
       font-size: 48px;
       font-weight: bold;
       color: #1346ff;
       line-height: 59px;
       letter-spacing: 2px;
+      margin-bottom: 0;
     }
   }
 
+  .cal {
+    font-size: 24px;
+    font-family: Gilroy-Heavy, Gilroy;
+    font-weight: 800;
+    color: #333333;
+    line-height: 31px;
+    letter-spacing: 1px;
+    margin-bottom: 0;
+    margin-top: 24px;
+    span{
+      color: #1346FF;
+    }
+  }
+  .actionArea {
+    max-width: 480px;
+    margin: 0 auto;
+    padding-top: 24px;
+  }
   .btn {
-    .buttonMix;
-    width: 50%;
+    width: 100%;
     margin: 64px 0 42px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffffff;
+    line-height: 22px;
+    letter-spacing: 1px;
   }
   .uppercase {
     text-transform: uppercase;
     font-size: 18px;
     font-weight: bold;
-    color: #003fe6;
     line-height: 22px;
     letter-spacing: 1px;
   }

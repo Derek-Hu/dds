@@ -20,6 +20,7 @@ const barData: IBarData = {
     title: "Total daily amount",
     value: 25000000,
   },
+  unit: 'DDS'
 };
 
 const utilization = {

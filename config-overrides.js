@@ -68,6 +68,12 @@ module.exports = {
         // // Font
         // "@font-size-base": "14px",
         // Menu
+        'input-height-base': '50px',
+        'input-disabled-color': '#333',
+        'input-disabled-bg': '#e7ebf4',
+
+        'btn-height-base': '50px',
+        
         'menu-bg': '#1346ff',
         'menu-item-color': '#FFF',
         'menu-item-active-border-width': 0,

@@ -1,24 +1,63 @@
 import { Component } from "react";
-import { Progress, Tabs, Row, Col } from "antd";
+import { Tabs, Button, Row, Col, Select, Input } from "antd";
 import styles from "./style.module.less";
 import numeral from "numeral";
-import { IBarData } from "../progress-bar";
+import Pool, { IPool } from "./pool";
+import Balance from "./liquidity-balance";
+import FillGrid from "../fill-grid";
 
+const { Option } = Select;
 const { TabPane } = Tabs;
 
 const mining = {
-    money: 530400,
-    percentage: 70,
-    ddsCount: 25000000
-}
+  money: 530400,
+  percentage: 70,
+  ddsCount: 25000000,
+};
 
-const utilization = {
-    money: 400,
-    percentage: 90,
-    ddsCount: 1000000
-}
+const TabName = {
+  Collaborative: "Collaborative Pool",
+  Private: "Private Pool",
+};
 
-export default class LiquidityPool extends Component {
+const ProvidedPool: IPool = {
+  title: "Liquidity Provided",
+  usd: 748830,
+  coins: [
+    {
+      name: "DAI",
+      value: 647,
+    },
+    {
+      name: "USDC",
+      value: 638,
+    },
+    {
+      name: "USDT",
+      value: 7378,
+    },
+  ],
+};
+
+const NetPool: IPool = {
+  title: "Net P&L",
+  usd: 637,
+  coins: [
+    {
+      name: "DAI",
+      value: 74,
+    },
+    {
+      name: "USDC",
+      value: 3,
+    },
+    {
+      name: "USDT",
+      value: 445,
+    },
+  ],
+};
+export default class Mining extends Component {
   componentDidMount() {}
 
   callback(key: string) {
@@ -28,74 +67,93 @@ export default class LiquidityPool extends Component {
   render() {
     return (
       <div className={styles.root}>
-        <h2>Mining</h2>
+        <h2>LIQUIDITY POOL</h2>
         <div className={styles.tabContainer}>
-          <Tabs defaultActiveKey="mining" onChange={this.callback}>
-            <TabPane
-              tab={<span className={styles.uppercase}>liquidity mining</span>}
-              key="mining"
-            >
-              <h3>Liquidity Mining Reward Today</h3>
-              <p className={styles.coins}>{numeral(mining.money).format("0,0")} DDS</p>
-              <span className={styles.btn}>Connect Wallet</span>
-              <Row>
-                <Col span={12} className={styles.left}>
-                  <span className={styles.today}>Distributed today:</span>
-                  <br />
-                  <span className={styles.percentage}>
-                    {mining.percentage}%
-                  </span>
-                </Col>
-                <Col span={12} className={styles.right}>
-                  <span className={styles.amount}>Total daily amount:</span>
-                  <br />
-                  <span className={styles.dds}>{mining.ddsCount}</span>&nbsp;
-                  <span className={styles.unit}>DDS</span>
-                </Col>
-              </Row>
-              <Progress
-                percent={mining.percentage}
-                strokeColor={{ from: "#0072F4", to: "#0055FF" }}
-                strokeWidth={20}
-                showInfo={false}
-                strokeLinecap="square"
-              />
-              <p className={styles.fifo}>First come first served</p>
-            </TabPane>
+          <Tabs
+            defaultActiveKey={TabName.Collaborative}
+            onChange={this.callback}
+          >
             <TabPane
               tab={
                 <span className={styles.uppercase}>
-                  liquidity utilization mining
+                  {TabName.Collaborative}
                 </span>
               }
-              key="utilization"
+              key={TabName.Collaborative}
             >
-              <h3>Liquidity Utilization Mining Reward Today</h3>
-              <p className={styles.coins}>{numeral(utilization.money).format("0,0")} DDS</p>
-              <span className={styles.btn}>Connect Wallet</span>
-              <Row>
-                <Col span={12} className={styles.left}>
-                  <span className={styles.today}>Distributed today:</span>
-                  <br />
-                  <span className={styles.percentage}>
-                    {utilization.percentage}%
-                  </span>
+              <h3>ARP</h3>
+              <p className={styles.coins}>
+                {numeral(mining.money).format("0,0")}%
+              </p>
+
+              <div className={styles.actionArea}>
+                <FillGrid
+                  left={
+                    <Select
+                      defaultValue="lucy"
+                      style={{ width: 120, height: 50 }}
+                      className={styles.coinDropdown}
+                      // onChange={handleChange}
+                    >
+                      <Option value="jack">Jack</Option>
+                      <Option value="lucy">Lucy</Option>
+                      <Option value="disabled" disabled>
+                        Disabled
+                      </Option>
+                      <Option value="Yiminghe">yiminghe</Option>
+                    </Select>
+                  }
+                  right={
+                    <Input placeholder="amount for providing to the pool" />
+                  }
+                />
+                <p className={styles.cal}>
+                  You Will Receive: <span>94204</span> reDAI
+                </p>
+                <Button type="primary" className={styles.btn}>
+                  Connect Wallet
+                </Button>
+              </div>
+              <Row gutter={24}>
+                <Col span={12}>
+                  <Pool {...ProvidedPool} />
                 </Col>
-                <Col span={12} className={styles.right}>
-                  <span className={styles.amount}>Total daily amount:</span>
-                  <br />
-                  <span className={styles.dds}>{utilization.ddsCount}</span>&nbsp;
-                  <span className={styles.unit}>DDS</span>
+                <Col span={12}>
+                  <Pool {...NetPool} />
                 </Col>
               </Row>
-              <Progress
-                percent={utilization.percentage}
-                strokeColor={{ from: "#0072F4", to: "#0055FF" }}
-                strokeWidth={20}
-                showInfo={false}
-                strokeLinecap="square"
-              />
-              <p className={styles.fifo}>First come first served</p>
+            </TabPane>
+            <TabPane
+              tab={<span className={styles.uppercase}>{TabName.Private}</span>}
+              key={TabName.Private}
+            >
+              <div className={styles.actionArea}>
+                <FillGrid
+                  left={
+                    <Select
+                      defaultValue="lucy"
+                      style={{ width: 120, height: 50 }}
+                      className={styles.coinDropdown}
+                      // onChange={handleChange}
+                    >
+                      <Option value="jack">Jack</Option>
+                      <Option value="lucy">Lucy</Option>
+                      <Option value="disabled" disabled>
+                        Disabled
+                      </Option>
+                      <Option value="Yiminghe">yiminghe</Option>
+                    </Select>
+                  }
+                  right={
+                    <Input placeholder="amount for providing to the pool" />
+                  }
+                />
+                {/* <p className={styles.cal}>You Will Receive: <span>94204</span> reDAI</p> */}
+                <Button type="primary" className={styles.btn}>
+                  Connect Wallet
+                </Button>
+              </div>
+              <Balance />
             </TabPane>
           </Tabs>
         </div>
