@@ -48,7 +48,7 @@ const columns = ColumnConvert<IRecord, {}>({
       case "size":
       case "cost":
       case "fee":
-        return numeral(value).format("0,0");
+        return numeral(value).format("0,0.0000");
       case "pl":
         const { val, percentage } = record[key];
         const flag =
@@ -63,7 +63,7 @@ const columns = ColumnConvert<IRecord, {}>({
           percentage === 0 ? "#383838" : percentage < 0 ? "#FA4D56" : "#02B464";
         return (
           <span>
-            {numeral(val).format("0,0")}
+            {numeral(val).format("0,0.00")}
             <span style={{ color }}>
               ({flag}
               {new Decimal(Math.abs(percentage)).times(100).toString()}%)

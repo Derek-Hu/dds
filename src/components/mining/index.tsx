@@ -1,21 +1,32 @@
 import { Component } from "react";
-import { Progress, Tabs, Row, Col } from "antd";
+import { Tabs, Button, Progress } from "antd";
 import styles from "./style.module.less";
 import numeral from "numeral";
-
+import ProgressBar, { IBarData } from "../progress-bar/index";
 const { TabPane } = Tabs;
 
 const mining = {
-    money: 530400,
+  money: 530400,
+  percentage: 70,
+  ddsCount: 25000000,
+};
+
+const barData: IBarData = {
+  left: {
+    title: "Distributed today",
     percentage: 70,
-    ddsCount: 25000000
-}
+  },
+  right: {
+    title: "Total daily amount",
+    value: 25000000,
+  },
+};
 
 const utilization = {
-    money: 400,
-    percentage: 90,
-    ddsCount: 1000000
-}
+  money: 530400,
+  percentage: 90,
+  ddsCount: 1000000,
+};
 
 export default class Mining extends Component {
   componentDidMount() {}
@@ -35,30 +46,13 @@ export default class Mining extends Component {
               key="mining"
             >
               <h3>Liquidity Mining Reward Today</h3>
-              <p className={styles.coins}>{numeral(mining.money).format("0,0")} DDS</p>
-              <span className={styles.btn}>Connect Wallet</span>
-              <Row>
-                <Col span={12} className={styles.left}>
-                  <span className={styles.today}>Distributed today:</span>
-                  <br />
-                  <span className={styles.percentage}>
-                    {mining.percentage}%
-                  </span>
-                </Col>
-                <Col span={12} className={styles.right}>
-                  <span className={styles.amount}>Total daily amount:</span>
-                  <br />
-                  <span className={styles.dds}>{mining.ddsCount}</span>&nbsp;
-                  <span className={styles.unit}>DDS</span>
-                </Col>
-              </Row>
-              <Progress
-                percent={mining.percentage}
-                strokeColor={{ from: "#0072F4", to: "#0055FF" }}
-                strokeWidth={20}
-                showInfo={false}
-                strokeLinecap="square"
-              />
+              <p className={styles.coins}>
+                {numeral(mining.money).format("0,0")} DDS
+              </p>
+              <Button type="primary" className={styles.btn}>
+                Connect Wallet
+              </Button>
+              <ProgressBar data={barData} />
               <p className={styles.fifo}>First come first served</p>
             </TabPane>
             <TabPane
@@ -70,31 +64,28 @@ export default class Mining extends Component {
               key="utilization"
             >
               <h3>Liquidity Utilization Mining Reward Today</h3>
-              <p className={styles.coins}>{numeral(utilization.money).format("0,0")} DDS</p>
-              <span className={styles.btn}>Connect Wallet</span>
-              <Row>
-                <Col span={12} className={styles.left}>
-                  <span className={styles.today}>Distributed today:</span>
-                  <br />
-                  <span className={styles.percentage}>
-                    {utilization.percentage}%
-                  </span>
-                </Col>
-                <Col span={12} className={styles.right}>
-                  <span className={styles.amount}>Total daily amount:</span>
-                  <br />
-                  <span className={styles.dds}>{utilization.ddsCount}</span>&nbsp;
-                  <span className={styles.unit}>DDS</span>
-                </Col>
-              </Row>
-              <Progress
-                percent={utilization.percentage}
-                strokeColor={{ from: "#0072F4", to: "#0055FF" }}
-                strokeWidth={20}
-                showInfo={false}
-                strokeLinecap="square"
-              />
-              <p className={styles.fifo}>First come first served</p>
+              <p className={styles.coins}>
+                {numeral(utilization.money).format("0,0")} DDS
+              </p>
+              <h4 className={styles.clockTitle}>Rewards Colck</h4>
+              <p className={styles.rule}>
+                Start liquidity utilization mining if there is no trading within
+                30min
+              </p>
+              <div className={styles.cicleBar}>
+                <Progress
+                  type="circle"
+                  width={160}
+                  strokeWidth={20}
+                  percent={70}
+                  strokeColor="#1346FF"
+                  strokeLinecap="square"
+                  format={percent => `${percent} Days`} 
+                />
+              </div>
+              <Button type="primary" className={styles.btn}>
+                Connect Wallet
+              </Button>
             </TabPane>
           </Tabs>
         </div>

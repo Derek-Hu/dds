@@ -1,8 +1,10 @@
 body {
   -webkit-font-smoothing: antialiased;
   background-color: #f9fafc !important;
+  font-family: Gilroy-Heavy, Gilroy !important;
 }
 
+/** Progress */
 .ant-progress-inner {
   background-color: #e7ebf4;
 }
@@ -10,7 +12,17 @@ body {
 .ant-progress-bg {
   border-radius: 0 !important;
 }
+.ant-progress-circle .ant-progress-text {
+  font-size: 16px;
+  font-weight: bold;
+  color: #1346ff !important;
+}
 
+/** Tabs */
+.ant-tabs-bar{
+  margin-bottom: 0 !important;
+  border: 0 !important;
+}
 .ant-tabs-nav {
   width: 100%;
 }
@@ -19,14 +31,15 @@ body {
   text-align: center;
   margin: 0 !important;
   line-height: 43px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333333;
+  letter-spacing: 1px;
 }
 .ant-tabs-nav .ant-tabs-tab-active {
   background: #e7ebf4;
   border-radius: 9px;
   margin-right: 0 !important;
-}
-.ant-tabs-bar {
-  border: 0 !important;
 }
 .ant-tabs-ink-bar {
   visibility: hidden;
