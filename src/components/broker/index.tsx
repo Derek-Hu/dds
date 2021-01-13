@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { Icon, Tabs, Row, Col, Input } from "antd";
+import { Icon, Tabs, Row, Col, Input, Button } from "antd";
 import styles from "./style.module.less";
 import numeral from "numeral";
 import Step from "./steps";
@@ -69,7 +69,7 @@ export default class Broker extends Component {
         <h2>Broker</h2>
         <div className={styles.referalInfo}>
           <Input value={url} disabled={true} className={styles.input} />
-          <span className={styles.btn}>Copy referral link</span>
+          <Button type="primary" className={styles.btn}>Copy referral link</Button>
           <div className={styles.qrcode}>
             <Icon type="qrcode" style={{ fontSize: 32 }} />
           </div>
@@ -80,7 +80,7 @@ export default class Broker extends Component {
               tab={<span className={styles.uppercase}>spark program</span>}
               key={tabName.spark}
             >
-              <h3>Become DDerivatives’s Spark</h3>
+              <h3>Become DDerivatives's Spark</h3>
               <p className={styles.descOne}>
                 Spread DeFi Spark To The Old World Make Your Influence Into
                 Affluence
