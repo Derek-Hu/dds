@@ -6,6 +6,7 @@ import Pool, { IPool } from "./pool";
 import Balance from "./liquidity-balance";
 import FillGrid from "../fill-grid";
 import MiningShare from './mining-share';
+import SharePool from './share-pool';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -135,11 +136,14 @@ export default class Mining extends Component {
                 </Button>
               </div>
               <Row gutter={24}>
-                <Col span={12}>
+                <Col span={8}>
                   <Pool {...ProvidedPool} />
                 </Col>
-                <Col span={12}>
+                <Col span={8}>
                   <Pool {...NetPool} />
+                </Col>
+                <Col span={8}>
+                  <SharePool />
                 </Col>
               </Row>
             </TabPane>

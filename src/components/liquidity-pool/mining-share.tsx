@@ -14,7 +14,8 @@ const data: IMiningShare = {
         label: 'USDT',
         percentage: 55,
         val: 63
-    }]
+    }],
+    totalMode: false
 }
 export default () => {
     return <div>
