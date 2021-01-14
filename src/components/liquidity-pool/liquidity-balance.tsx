@@ -1,6 +1,6 @@
 import Pool, { IPool } from "./pool";
 import { Tabs, Button, Row, Col, Select, Input } from "antd";
-import styles from "./style.module.less";
+import styles from "./balance.module.less";
 
 const BalancePool: IPool = {
   title: "Liquidity Balance",
@@ -24,11 +24,13 @@ const BalancePool: IPool = {
 export default () => {
   return (
     <div>
-      <Pool {...BalancePool}>
+      <Pool {...BalancePool} smallSize={true}>
         <Button type="primary" className={styles.btn}>
           Withdraw
         </Button>
-        <p>Liquidity Balance Record</p>
+        <Button type="link" className={styles.link}>
+          Liquidity Balance Record
+        </Button>
       </Pool>
     </div>
   );

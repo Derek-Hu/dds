@@ -5,9 +5,10 @@ import numeral from "numeral";
 import Pool, { IPool } from "./pool";
 import Balance from "./liquidity-balance";
 import FillGrid from "../fill-grid";
-import MiningShare from './mining-share';
-import SharePool from './share-pool';
-
+import MiningShare from "./mining-share";
+import SharePool from "./share-pool";
+import AvailablePool from './available-pool';
+import NetPL from './net-pl';
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -77,7 +78,7 @@ const PrivatePool = {
       value: 445,
     },
   ],
-}
+};
 export default class Mining extends Component {
   componentDidMount() {}
 
@@ -178,15 +179,25 @@ export default class Mining extends Component {
                   Connect Wallet
                 </Button>
               </div>
-                <Row gutter={24}>
+              <Row gutter={24}>
+                <Col span={8}>
+                  <MiningShare />
+                </Col>
+                <Col span={8}>
+                  <Pool {...PrivatePool} />
+                </Col>
+                <Col span={8}>
+                  <Balance />
+                </Col>
+              </Row>
+              <Row gutter={24}>
                 <Col span={12}>
-                    <MiningShare />
-                  </Col>
-                  <Col span={12}>
-                    <Pool {...PrivatePool} />
-                  </Col>
-                </Row>
-              <Balance />
+                  <AvailablePool />
+                </Col>
+                <Col span={12}>
+                  <NetPL />
+                </Col>
+              </Row>
             </TabPane>
           </Tabs>
         </div>

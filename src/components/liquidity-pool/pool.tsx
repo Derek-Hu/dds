@@ -6,14 +6,15 @@ export interface IPool {
   title: string;
   usd: number;
   coins: Array<{ name: string; value: number }>;
-  children?: React.ReactElement[];
+  children?: React.ReactElement | React.ReactElement[];
+  smallSize?: boolean;
 }
 export default (props: IPool) => {
-  const { title, usd, coins, children } = props;
+  const { title, usd, coins, children, smallSize } = props;
   return (
-    <div className={styles.root}>
+    <div className={[styles.root, smallSize ?styles.small:''].join(' ')}>
       <h4>{title}</h4>
-      <p>
+      <p className={styles.numbers}>
         {numeral(usd).format("0,0")} <span>USD</span>
       </p>
       <Row>
