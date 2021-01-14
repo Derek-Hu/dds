@@ -1,0 +1,31 @@
+.root {
+  margin-top: 26px;
+  .label {
+    width: 4em;
+    text-align: left;
+    display: inline-block;
+
+    font-size: 14px;
+    font-weight: bold;
+    color: #333333;
+    line-height: 17px;
+  }
+
+  .bar {
+    & > div {
+      vertical-align: bottom;
+    }
+  }
+  p.indicator {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1346ff;
+    line-height: 17px;
+    position: relative;
+    text-align: left;
+    span + span {
+      position: absolute;
+      transform: translate(-50%, 0);
+    }
+  }
+}

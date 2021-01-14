@@ -5,6 +5,7 @@ import numeral from "numeral";
 import Pool, { IPool } from "./pool";
 import Balance from "./liquidity-balance";
 import FillGrid from "../fill-grid";
+import MiningShare from './mining-share';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -57,6 +58,25 @@ const NetPool: IPool = {
     },
   ],
 };
+
+const PrivatePool = {
+  title: "PRIVATE POOL",
+  usd: 734890,
+  coins: [
+    {
+      name: "DAI",
+      value: 74,
+    },
+    {
+      name: "USDC",
+      value: 3,
+    },
+    {
+      name: "USDT",
+      value: 445,
+    },
+  ],
+}
 export default class Mining extends Component {
   componentDidMount() {}
 
@@ -127,7 +147,9 @@ export default class Mining extends Component {
               tab={<span className={styles.uppercase}>{TabName.Private}</span>}
               key={TabName.Private}
             >
-              <div className={styles.actionArea}>
+              <div
+                className={[styles.actionArea, styles.privateArea].join(" ")}
+              >
                 <FillGrid
                   left={
                     <Select
@@ -148,11 +170,18 @@ export default class Mining extends Component {
                     <Input placeholder="amount for providing to the pool" />
                   }
                 />
-                {/* <p className={styles.cal}>You Will Receive: <span>94204</span> reDAI</p> */}
                 <Button type="primary" className={styles.btn}>
                   Connect Wallet
                 </Button>
               </div>
+                <Row gutter={24}>
+                <Col span={12}>
+                    <MiningShare />
+                  </Col>
+                  <Col span={12}>
+                    <Pool {...PrivatePool} />
+                  </Col>
+                </Row>
               <Balance />
             </TabPane>
           </Tabs>
