@@ -78,6 +78,17 @@ module.exports = {
         'alert-warning-border-color': 'rgba(220, 74, 69, 0.51)',
         'alert-text-color': '#DC4A45',
         'alert-message-color':  '#DC4A45',
+
+        'modal-mask-bg': 'rgba(0,0,0,0.5)',
+        'modal-header-border-width': 0,
+        'modal-header-title-font-size': '24px',
+        'modal-heading-color': '#333',
+        'modal-close-color': '#333',
+        'modal-header-padding': '36px 0',
+
+        'checkbox-color': '#FFA863',
+        'checkbox-check-bg': '#FFA863',
+
         'menu-bg': '#1346ff',
         'menu-item-color': '#FFF',
         'menu-item-active-border-width': 0,

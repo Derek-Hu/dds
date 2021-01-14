@@ -79,7 +79,7 @@ const PrivatePool = {
     },
   ],
 };
-export default class Mining extends Component {
+export default class PoolArea extends Component {
   componentDidMount() {}
 
   callback(key: string) {
