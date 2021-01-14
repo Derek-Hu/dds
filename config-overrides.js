@@ -74,6 +74,10 @@ module.exports = {
 
         'btn-height-base': '50px',
         
+        'alert-warning-bg-color': 'rgba(220, 74, 69, 0.06)',
+        'alert-warning-border-color': 'rgba(220, 74, 69, 0.51)',
+        'alert-text-color': '#DC4A45',
+        'alert-message-color':  '#DC4A45',
         'menu-bg': '#1346ff',
         'menu-item-color': '#FFF',
         'menu-item-active-border-width': 0,
