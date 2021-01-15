@@ -9,6 +9,8 @@ import MiningShare from "./mining-share";
 import SharePool from "./share-pool";
 import AvailablePool from './available-pool';
 import NetPL from './net-pl';
+import {CustomTabKey} from '../../constant/index';
+
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -92,6 +94,7 @@ export default class PoolArea extends Component {
         <h2>LIQUIDITY POOL</h2>
         <div className={styles.tabContainer}>
           <Tabs
+          className={CustomTabKey}
             defaultActiveKey={TabName.Collaborative}
             onChange={this.callback}
           >

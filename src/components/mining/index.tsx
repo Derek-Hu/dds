@@ -3,6 +3,8 @@ import { Tabs, Button, Progress } from "antd";
 import styles from "./style.module.less";
 import numeral from "numeral";
 import ProgressBar, { IBarData } from "../progress-bar/index";
+import {CustomTabKey} from '../../constant/index';
+
 const { TabPane } = Tabs;
 
 const mining = {
@@ -41,7 +43,7 @@ export default class Mining extends Component {
       <div className={styles.root}>
         <h2>Mining</h2>
         <div className={styles.tabContainer}>
-          <Tabs defaultActiveKey="mining" onChange={this.callback}>
+          <Tabs defaultActiveKey="mining" className={CustomTabKey} onChange={this.callback}>
             <TabPane
               tab={<span className={styles.uppercase}>liquidity mining</span>}
               key="mining"

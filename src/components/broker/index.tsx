@@ -4,7 +4,7 @@ import styles from "./style.module.less";
 import numeral from "numeral";
 import Step from "./steps";
 import ReferalDetails, { IData } from "./referal-details";
-
+import {CustomTabKey} from '../../constant/index';
 const { TabPane } = Tabs;
 
 const tabName = {
@@ -75,7 +75,7 @@ export default class Broker extends Component {
           </div>
         </div>
         <div className={styles.tabContainer}>
-          <Tabs activeKey={this.state.selectedTab} onChange={this.callback}>
+          <Tabs activeKey={this.state.selectedTab} className={CustomTabKey} onChange={this.callback}>
             <TabPane
               tab={<span className={styles.uppercase}>spark program</span>}
               key={tabName.spark}
