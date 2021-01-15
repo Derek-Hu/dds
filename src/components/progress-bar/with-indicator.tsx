@@ -5,7 +5,7 @@ import styles from "./with.module.less";
 export interface IIndicatorProgress {
   label: string;
   percentage: number;
-  val: any;
+  val?: any;
 }
 export default ({
   data,
