@@ -218,6 +218,7 @@ export default class PoolPage extends Component {
           visible={this.state.withDrawVisible}
           title="Liquidity Withdraw"
           className={styles.modal}
+          okText={'Claim'}
           onCancel={this.closeWithDraw}
         >
           <Row>
@@ -230,9 +231,9 @@ export default class PoolPage extends Component {
                 <Option value={coin}>{coin}</Option>
               ))}
             </Select>
-            <span>Max Withdraw Balance: <span></span> DAI</span>
+            <span className={styles.maxWithdraw}>Max Withdraw Balance: <span>3278392</span> DAI</span>
           </Row>
-          <Row>
+          <Row className={styles.repay}>
             <Input placeholder="Withdraw amount" />
             <p>XXX reDAI you need to pay</p>
           </Row>
