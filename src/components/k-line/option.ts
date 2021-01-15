@@ -1,19 +1,9 @@
-var base = +new Date(1968, 9, 3);
-var oneDay = 24 * 3600 * 1000;
-var date = [];
+export const seryName = 'klineData';
 
-var data = [Math.random() * 300];
-
-for (var i = 1; i < 20000; i++) {
-  var now = new Date((base += oneDay));
-  date.push([now.getFullYear(), now.getMonth() + 1, now.getDate()].join("/"));
-  data.push(Math.abs(Math.round((Math.random() - 0.5) * 20 + data[i - 1])));
-}
-
-const option = {
+export default {
   tooltip: {
     trigger: "axis",
-    position: function (pt) {
+    position: function (pt: any) {
       return [pt[0], "10%"];
     },
   },
@@ -50,7 +40,7 @@ const option = {
   ],
   series: [
     {
-      name: "klineData",
+      name: seryName,
       type: "line",
       smooth: true,
       symbol: "none",
@@ -77,7 +67,7 @@ const option = {
           ],
         },
       },
-      data: data,
+      data: [],
     },
   ],
 };

@@ -1,9 +1,10 @@
 import { Component } from "react";
-import { Progress, Row, Col } from "antd";
+import { Row, Col } from "antd";
 import TradeBonus, { IRecord } from "../components/trade-bonus/index";
 import TradeInfo from "../components/trade-info/index";
 import TradePool from "../components/trade-pool/index";
 import styles from "./style.module.less";
+import KLine from "../components/k-line/index";
 
 const data: IRecord[] = [
   {
@@ -60,8 +61,14 @@ export default class TradePage extends Component {
   render() {
     return (
       <div className={styles.tradeInfoPool}>
+        <Row>
+          <Col span={16}>
+            <KLine />
+          </Col>
+          <Col span={8}></Col>
+        </Row>
         <TradeBonus data={data} />
-        <div style={{marginTop: '20px'}}>
+        <div style={{ marginTop: "20px" }}>
           <Row gutter={20}>
             <Col span={16}>
               <TradePool />
