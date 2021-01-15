@@ -11,15 +11,6 @@ export default {
     left: "center",
     text: "大数据量面积图",
   },
-  toolbox: {
-    feature: {
-      dataZoom: {
-        yAxisIndex: "none",
-      },
-      restore: {},
-      saveAsImage: {},
-    },
-  },
   xAxis: {
     type: "category",
     boundaryGap: false,
