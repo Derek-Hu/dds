@@ -7,10 +7,10 @@ export default {
       return [pt[0], "10%"];
     },
   },
-  title: {
-    left: "center",
-    text: "大数据量面积图",
-  },
+  // title: {
+  //   left: "center",
+  //   text: "大数据量面积图",
+  // },
   xAxis: {
     type: "category",
     boundaryGap: false,

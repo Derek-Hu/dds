@@ -1,22 +1,51 @@
-@import '../variables.less';
-@import '../../common.less';
+@import "../variables.less";
+@import "../../common.less";
 
 .root {
   .contentMixin;
-  
+
   text-align: center;
-  color: #FFF;
-  background-color: #FFF;
+  color: #fff;
+  background-color: #fff;
   padding-bottom: 80px;
   padding-top: 140px;
-  ul{
-    list-style: none;
-    padding: 0;
-    li{
-      display: inline-block;
+
+  i {
+    color: #a8b0bb;
+    font-size: 60px;
+    margin-top: 70px;
+  }
+  &.mobile {
+    background-color: #0e1421;
+    // margin-top: 100px;
+    padding: 30px 15px 50px;
+    h3 {
+      color: #fff;
+      font-size: 20px;
+      opacity: 0.8;
+      line-height: 1;
     }
-    li + li {
-      margin-left: 60px;
+
+    h3 + p {
+      margin-bottom: 0px;
+      margin-top: 16px;
+      font-size: 13px;
+    }
+
+    i{
+      font-size: 28px;
+      margin-top: 50px;
     }
   }
+
+  // ul {
+  //   list-style: none;
+  //   padding: 0;
+  //   li {
+  //     display: inline-block;
+  //   }
+  //   li + li {
+  //     margin-left: 60px;
+  //   }
+  // }
 }

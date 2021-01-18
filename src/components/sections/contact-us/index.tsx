@@ -2,53 +2,51 @@ import React from "react";
 import styles from "./style.module.less";
 import SectionTitle from "../section-title/index";
 import { Icon, Row, Col } from "antd";
-
-const style = { color: "#A8B0BB", fontSize: 60, marginTop: "70px" };
-
-// const IconFont = Icon.createFromIconfontCN({
-//   scriptUrl: "//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js",
-// });
+import SiteContext from "../../../layouts/SiteContext";
 
 const links = [
   {
-    icon: <Icon type="twitter" style={style} />,
+    icon: <Icon type="twitter" />,
     url: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
   },
   {
-    icon: <Icon type="instagram" style={style} />,
+    icon: <Icon type="instagram" />,
     url: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
   },
   {
-    icon: <Icon type="facebook" style={style} />,
+    icon: <Icon type="facebook" />,
     url: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
   },
   {
-    icon: <Icon type="medium" style={style} />,
+    icon: <Icon type="medium" />,
     url: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
   },
   {
-    icon: <Icon type="github" style={style} />,
+    icon: <Icon type="github" />,
     url: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
   },
   {
-    icon: <Icon type="github" style={style} />,
+    icon: <Icon type="github" />,
     url: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
   },
 ];
-export default () => {
-  return (
-    <div className={styles.root}>
-      <SectionTitle title="Contact DDerivatives" noMarginBottom>
-        Welcome anyone who wants to promote the evolution and growth of
-        DDeerivatives to join our community.
-      </SectionTitle>
-      <Row type="flex" justify="center">
-        {links.map(({ icon, url }, index) => (
-          <Col key={index} xs={8} sm={8} md={3} lg={2}>
-            <a href={url}>{icon}</a>
-          </Col>
-        ))}
-      </Row>
-    </div>
-  );
-};
+
+export default () => (
+  <SiteContext.Consumer>
+    {({ isMobile }) => (
+      <div className={[styles.root, isMobile ? styles.mobile : ""].join(" ")}>
+        <SectionTitle title="Contact DDerivatives" noMarginBottom>
+          Welcome anyone who wants to promote the evolution and growth of
+          DDeerivatives to join our community.
+        </SectionTitle>
+        <Row type="flex" justify="center">
+          {links.map(({ icon, url }, index) => (
+            <Col key={index} xs={4} sm={8} md={3} lg={2}>
+              <a href={url}>{icon}</a>
+            </Col>
+          ))}
+        </Row>
+      </div>
+    )}
+  </SiteContext.Consumer>
+);

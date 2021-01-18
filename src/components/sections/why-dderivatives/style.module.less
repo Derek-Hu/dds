@@ -5,9 +5,57 @@
   background-color: #f9fcfe;
   padding-top: 100px;
 
+  &.mobile{
+    padding: 80px 0 0;
+    .content{
+      h3{
+        color: #383838;
+        line-height: 1;
+        font-size: 24px;
+      }
+      h3 + p {
+        margin: 16px 0 0;
+        font-size: 14px;
+      }
+    }
+    .adsOne{
+      padding-bottom: 80px;
+      .item {
+        margin: 70px auto 0;
+
+        & > div {
+          margin-bottom: 23px;
+        }
+
+        h3 {
+          font-size: 20px;
+          margin-bottom: 22px;
+        }
+      }
+    }
+    .adsTwo {
+      padding-top: 60px;
+      .item {
+        margin: 0 auto;
+        padding-bottom: 60px;
+        font-weight: 500;
+        & > div {
+          margin-bottom: 0;
+        }
+        h3 {
+          margin: 20px 0 10px;
+          font-size: 18px;
+        }
+        p{
+          margin: 0;
+        }
+      }
+    }
+  }
   .content {
     .contentMixin;
   }
+
   .adsOne {
     .item {
       margin-bottom: 80px;
