@@ -68,12 +68,12 @@ export default class TradePage extends Component {
           <Col span={8}></Col>
         </Row>
         <TradeBonus data={data} />
-        <div style={{ marginTop: "20px" }}>
+        <div>
           <Row gutter={20}>
-            <Col span={16}>
+            <Col  xs={24} sm={24} md={12} lg={12}>
               <TradePool />
             </Col>
-            <Col span={8}>
+            <Col  xs={24} sm={24} md={12} lg={12}>
               <TradeInfo />
             </Col>
           </Row>

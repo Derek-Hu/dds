@@ -4,6 +4,7 @@ import numeral from "numeral";
 import Decimal from "decimal.js";
 import dayjs from "dayjs";
 import styles from "./style.module.less";
+import SiteContext from "../../layouts/SiteContext";
 
 type IStatus = "ACTIVE" | "CLOSED" | "LIQUIDATING";
 
@@ -96,16 +97,20 @@ const columns = ColumnConvert<IRecord, {}>({
 });
 export default ({ data }: { data: IRecord[] }) => {
   return (
-    <div className={styles.root}>
-      <h2>Trading Bonus</h2>
-      <div className={styles.tableWpr}>
-        <Table
-          rowKey="id"
-          columns={columns}
-          pagination={false}
-          dataSource={data}
-        />
-      </div>
-    </div>
+    <SiteContext.Consumer>
+      {({ isMobile }) => (
+        <div className={[styles.root, isMobile ? styles.mobile : ""].join(" ")}>
+          <h2>Trading Bonus</h2>
+          <div className={styles.tableWpr}>
+            <Table
+              rowKey="id"
+              columns={columns}
+              pagination={false}
+              dataSource={data}
+            />
+          </div>
+        </div>
+      )}
+    </SiteContext.Consumer>
   );
 };
