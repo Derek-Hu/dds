@@ -6,6 +6,18 @@
   padding-top: 50px;
   position: relative;
   background-image: url(https://via.placeholder.com/1600x722/1346ff/1346ff?Text=WebsiteBuilders.com);
+
+  &.mobile {
+    padding: 52px 30px 64px;
+    text-align: center;
+    // height: calc(100vh - 52px);
+    .content {
+      padding-left: 0;
+      position: static;
+      transform: none;
+    }
+  }
+
   .content {
     padding-left: 120px;
     position: absolute;
@@ -19,7 +31,8 @@
     color: #fff;
     margin-bottom: 0px;
   }
-  .spot, .read{
+  .spot,
+  .read {
     text-transform: uppercase;
     width: 170px;
   }

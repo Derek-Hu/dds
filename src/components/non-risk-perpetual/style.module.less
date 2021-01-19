@@ -5,13 +5,29 @@
   .contentMixin;
   margin-bottom: 140px;
 
+  &.mobile {
+    padding: 0 0 80px;
+    margin-bottom: 0;
+    background: #FFF;
+    .head {
+      h2 {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+      }
+      .col{
+        margin-bottom: 30px;
+      }
+    }
+  }
+
   .tradeBtn {
     display: inline-block;
     height: 33px;
     width: 70px;
     background: rgba(19, 70, 255, 0.1);
     border-radius: 2px;
-    color: #1346FF;
+    color: #1346ff;
     text-align: center;
     line-height: 33px;
     cursor: pointer;

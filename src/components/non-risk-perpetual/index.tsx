@@ -1,59 +1,55 @@
 import { Table, Row, Col } from "antd";
 import styles from "./style.module.less";
-import numeral from 'numeral';
+import numeral from "numeral";
+import SiteContext from "../../layouts/SiteContext";
+import ColumnConvert from "../column-convert/index";
 
-const columns = [
-  {
-    title: "Coin",
-    dataIndex: "coin",
-    key: "coin",
-    render: (coin: string) => {
-      return (
-        <span>
-          <span className={styles.coin}>{coin}</span>
-          <span className={styles.usdt}> / USDT</span>
-        </span>
-      );
+interface INonRiskPerpetual {
+  coin: string;
+  price: number;
+  change: number;
+  chart: string;
+}
+
+
+const columns = ColumnConvert<INonRiskPerpetual, { action: any }>({
+    column: {
+      coin: "Coin",
+      price: <span className={styles.price}>Last Price</span>,
+      change: <span className={styles.change}>24h Change</span>,
+      chart: "Chart",
+      action: "Action",
     },
-  },
-  {
-    title: <span className={styles.price}>Last Price</span>,
-    dataIndex: "price",
-    key: "price",
-    render: (price: number) => <span className={styles.priceVal}>{price}</span>,
-  },
-  {
-    title: <span className={styles.change}>24h Change</span>,
-    dataIndex: "change",
-    key: "change",
-    width: "10em",
-    render: (percentage: any) => (
-      <span
-        className={[
-          styles.changeVal,
-          percentage < 0 ? styles.negative : "",
-        ].join(" ")}
-      >
-        {percentage > 0 ? "+" : ""}
-        {percentage}%
-      </span>
-    ),
-  },
-  {
-    title: "Chart",
-    dataIndex: "chart",
-    key: "chart",
-  },
-  {
-    title: "Action",
-    dataIndex: "action",
-    key: "action",
-    width: "6em",
-    render: () => {
-      return <span className={styles.tradeBtn}>Trade</span>
-    }
-  },
-];
+    render(value, key) {
+      switch (key) {
+        case "coin":
+          return (
+            <span>
+              <span className={styles.coin}>{value}</span>
+              <span className={styles.usdt}> / USDT</span>
+            </span>
+          );
+        case "price":
+          return <span className={styles.priceVal}>{value}</span>;
+        case "change":
+          return (
+            <span
+              className={[
+                styles.changeVal,
+                value < 0 ? styles.negative : "",
+              ].join(" ")}
+            >
+              {value > 0 ? "+" : ""}
+              {value}%
+            </span>
+          );
+        case "action":
+          return <span className={styles.tradeBtn}>Trade</span>;
+        default:
+          return value;
+      }
+    },
+  });
 
 const data = [
   {
@@ -71,20 +67,44 @@ const data = [
 const total = 82323123;
 export default () => {
   return (
-    <div className={styles.root}>
-      <div className={styles.content}>
-        <div className={styles.head}>
-          <Row>
-            <Col xs={24} sm={24} md={24} lg={12} className={styles.col}>
-              <h2>Non-Risk Perpetual</h2>
-            </Col>
-            <Col xs={24} sm={24} md={24} lg={12}  className={[styles.col, styles.summary].join(' ')}>
-              <span>24h trading volumn: <span className={styles.total}>{numeral(total).format('0,0')}</span> USD</span>
-            </Col>
-          </Row>
+    <SiteContext.Consumer>
+      {({ isMobile }) => (
+        <div className={[styles.root, isMobile ? styles.mobile : ""].join(" ")}>
+          <div className={styles.content}>
+            <div className={styles.head}>
+              <Row>
+                <Col xs={24} sm={24} md={24} lg={12} className={styles.col}>
+                  <h2>Non-Risk Perpetual</h2>
+                </Col>
+                {isMobile ? null : (
+                  <Col
+                    xs={24}
+                    sm={24}
+                    md={24}
+                    lg={12}
+                    className={[styles.col, styles.summary].join(" ")}
+                  >
+                    <span>
+                      24h trading volumn:{" "}
+                      <span className={styles.total}>
+                        {numeral(total).format("0,0")}
+                      </span>{" "}
+                      USD
+                    </span>
+                  </Col>
+                )}
+              </Row>
+            </div>
+            <Table
+              rowKey="coin"
+              columns={columns}
+              scroll={ isMobile  ? { x: 800 }: undefined}
+              pagination={false}
+              dataSource={data}
+            />
+          </div>
         </div>
-        <Table rowKey="coin" columns={columns} pagination={false} dataSource={data} />
-      </div>
-    </div>
+      )}
+    </SiteContext.Consumer>
   );
 };

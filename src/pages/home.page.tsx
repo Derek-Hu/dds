@@ -18,8 +18,8 @@ export default class HomePage extends Component {
             <Banner></Banner>
             <WhatIs></WhatIs>
             <NonRisk></NonRisk>
-            <KLine></KLine>
-            <HowTrade></HowTrade>
+            {/* <KLine></KLine> */}
+            {/* <HowTrade></HowTrade> */}
             <WhyDderivatives />
             <CommunityDrived />
             <ContactUs />
