@@ -47,7 +47,11 @@ module.exports = {
       modifyVars: {
         // Primary
         "primary-color": "#1346FF",
+        "btn-border-radius-base": '2px',
 
+        'radio-button-active-color': '#F55858',
+        'radio-button-hover-color': '#F55858',
+        'radio-solid-checked-color': '#F55858',
         // "@link-color": "#2acd8f",
         // "@border-radius-base": "2px",
 

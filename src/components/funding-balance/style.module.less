@@ -1,0 +1,96 @@
+.root {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 30px 20px 20px;
+
+  & > h2 {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333333;
+    span {
+      font-weight: normal;
+    }
+  }
+
+  .balanceVal {
+    text-align: center;
+    font-size: 64px;
+    font-weight: 500;
+    color: #1346ff;
+    margin: 20px 0 10px;
+  }
+
+  .dayChange {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333333;
+    span {
+      color: #1346ff;
+    }
+  }
+
+  .actionLink {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1346ff;
+    margin: 20px 0;
+
+    button{
+        padding: 0;
+        height: 1em;
+    }
+  }
+
+  .radioBtn {
+      :global{
+          .ant-radio-group {
+              width: 100%;
+              text-align: center;
+          }
+          .ant-radio-button-wrapper:hover{
+              color: #F55858;
+          }
+          .ant-radio-button-wrapper-checked{
+            border-color: #F55858;
+            color: #F55858;
+            box-shadow: -1px 0 0 0 #F55858;
+          }
+          .ant-radio-button-wrapper{
+              width: 50%;
+              border-radius: 0;
+          }
+      }
+  }
+  .price {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333333;
+    margin: 20px 0 15px;
+  }
+
+  .utilMax {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333333;
+    margin: 15px 0;
+  }
+  .amountTip {
+    font-size: 14px;
+    font-weight: 500;
+    color: #a6a6a6;
+    margin-bottom: 15px;
+  }
+
+  .settlement {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333333;
+    margin: 15px 0;
+  }
+
+  button {
+      width: 100%;
+  }
+}

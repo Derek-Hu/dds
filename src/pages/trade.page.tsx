@@ -5,7 +5,7 @@ import TradeInfo from "../components/trade-info/index";
 import TradePool from "../components/trade-pool/index";
 import styles from "./style.module.less";
 import KLine from "../components/k-line/index";
-
+import FundingBalance from '../components/funding-balance/index';
 const data: IRecord[] = [
   {
     id: "001",
@@ -65,7 +65,9 @@ export default class TradePage extends Component {
           <Col span={16}>
             <KLine />
           </Col>
-          <Col span={8}></Col>
+          <Col span={8}>
+            <FundingBalance />
+          </Col>
         </Row>
         <TradeBonus data={data} />
         <div>
