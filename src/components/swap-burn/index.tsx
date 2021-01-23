@@ -12,12 +12,14 @@ const swapInfo = {
   unit: "DAI",
 };
 export default () => {
-  // return <SwapBar></SwapBar>
+  // return
   return (
     <div className={styles.root}>
       <h1>Swap & burn</h1>
       <div className={styles.card}>
-        <div className={styles.imgBar}></div>
+        <div className={styles.imgBar}>
+          <SwapBar></SwapBar>
+        </div>
         <h3 className={styles.msg}>Current Swap Price</h3>
         <p className={styles.calcute}>
           {numeral(swapInfo.coin).format("0,0")} USD ={" "}
@@ -33,24 +35,29 @@ export default () => {
               <span className={styles.unit}>DDS</span>
             </Form.Item>
             <Form.Item>
-              <FillGrid left={<>
-                <span className={styles.swap}>
-                    <Icon type="swap" />
-                  </span>
-                  <Select
-                    defaultValue="lucy"
-                    style={{ width: 120, height: 50 }}
-                    className={styles.coinDropdown}
-                    // onChange={handleChange}
-                  >
-                    <Option value="jack">Jack</Option>
-                    <Option value="lucy">Lucy</Option>
-                    <Option value="disabled" disabled>
-                      Disabled
-                    </Option>
-                    <Option value="Yiminghe">yiminghe</Option>
-                  </Select>
-              </>} right={<Input placeholder="" />}>
+              <FillGrid
+                left={
+                  <>
+                    <span className={styles.swap}>
+                      <Icon type="swap" />
+                    </span>
+                    <Select
+                      defaultValue="lucy"
+                      style={{ width: 120, height: 50 }}
+                      className={styles.coinDropdown}
+                      // onChange={handleChange}
+                    >
+                      <Option value="jack">Jack</Option>
+                      <Option value="lucy">Lucy</Option>
+                      <Option value="disabled" disabled>
+                        Disabled
+                      </Option>
+                      <Option value="Yiminghe">yiminghe</Option>
+                    </Select>
+                  </>
+                }
+                right={<Input placeholder="" />}
+              >
                 <span className={styles.targetUnit}>DAI</span>
               </FillGrid>
             </Form.Item>
