@@ -34,6 +34,10 @@ module.exports = {
       libraryDirectory: "es",
       style: true,
     }),
+    fixBabelImports("import-mobile", {
+      libraryName: "antd-mobile",
+      style: "css",
+    }),
     // useEslintRc(),
     addWebpackAlias({
       "~": path.resolve(__dirname, "src/"),
@@ -47,11 +51,11 @@ module.exports = {
       modifyVars: {
         // Primary
         "primary-color": "#1346FF",
-        "btn-border-radius-base": '2px',
+        "btn-border-radius-base": "2px",
 
-        'radio-button-active-color': '#F55858',
-        'radio-button-hover-color': '#F55858',
-        'radio-solid-checked-color': '#F55858',
+        "radio-button-active-color": "#F55858",
+        "radio-button-hover-color": "#F55858",
+        "radio-solid-checked-color": "#F55858",
         // "@link-color": "#2acd8f",
         // "@border-radius-base": "2px",
 
@@ -72,32 +76,32 @@ module.exports = {
         // // Font
         // "@font-size-base": "14px",
         // Menu
-        'input-height-base': '50px',
-        'input-disabled-color': '#333',
-        'input-disabled-bg': '#e7ebf4',
+        "input-height-base": "50px",
+        "input-disabled-color": "#333",
+        "input-disabled-bg": "#e7ebf4",
 
-        'btn-height-base': '50px',
-        
-        'alert-warning-bg-color': 'rgba(220, 74, 69, 0.06)',
-        'alert-warning-border-color': 'rgba(220, 74, 69, 0.51)',
-        'alert-text-color': '#DC4A45',
-        'alert-message-color':  '#DC4A45',
+        "btn-height-base": "50px",
 
-        'modal-mask-bg': 'rgba(0,0,0,0.5)',
-        'modal-header-border-width': 0,
-        'modal-header-title-font-size': '24px',
-        'modal-heading-color': '#333',
-        'modal-close-color': '#333',
-        'modal-header-padding': '36px 0',
+        "alert-warning-bg-color": "rgba(220, 74, 69, 0.06)",
+        "alert-warning-border-color": "rgba(220, 74, 69, 0.51)",
+        "alert-text-color": "#DC4A45",
+        "alert-message-color": "#DC4A45",
 
-        'checkbox-color': '#FFA863',
-        'checkbox-check-bg': '#FFA863',
+        "modal-mask-bg": "rgba(0,0,0,0.5)",
+        "modal-header-border-width": 0,
+        "modal-header-title-font-size": "24px",
+        "modal-heading-color": "#333",
+        "modal-close-color": "#333",
+        "modal-header-padding": "36px 0",
 
-        'menu-bg': '#1346ff',
-        'menu-item-color': '#FFF',
-        'menu-item-active-border-width': 0,
-        'menu-item-active-bg': '#1346ff',
-        'menu-highlight-color': '#FFF',
+        "checkbox-color": "#FFA863",
+        "checkbox-check-bg": "#FFA863",
+
+        "menu-bg": "#1346ff",
+        "menu-item-color": "#FFF",
+        "menu-item-active-border-width": 0,
+        "menu-item-active-bg": "#1346ff",
+        "menu-highlight-color": "#FFF",
       },
       lessOptions: {
         javascriptEnabled: true,

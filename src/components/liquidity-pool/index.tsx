@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { Tabs, Button, Row, Col, Select, Input } from "antd";
+import { Tabs, Button, Row, Col, Select, Input } from "antd"
 import styles from "./style.module.less";
 import numeral from "numeral";
 import Pool, { IPool } from "./pool";

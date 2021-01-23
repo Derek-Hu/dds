@@ -62,20 +62,20 @@ export default class TradePage extends Component {
     return (
       <div className={styles.tradeInfoPool}>
         <Row>
-          <Col span={16}>
+          <Col xs={24} sm={24} md={12} lg={16}>
             <KLine />
           </Col>
-          <Col span={8}>
+          <Col xs={24} sm={24} md={12} lg={8}>
             <FundingBalance />
           </Col>
         </Row>
         <TradeBonus data={data} />
         <div>
           <Row gutter={20}>
-            <Col  xs={24} sm={24} md={12} lg={12}>
+            <Col xs={24} sm={24} md={12} lg={12}>
               <TradePool />
             </Col>
-            <Col  xs={24} sm={24} md={12} lg={12}>
+            <Col xs={24} sm={24} md={12} lg={12}>
               <TradeInfo />
             </Col>
           </Row>
