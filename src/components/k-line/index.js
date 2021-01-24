@@ -34,7 +34,7 @@ export default class MainLayout extends Component {
   render() {
     return (
       <div className={styles.root}>
-        <div id="k-line" style={{ width: "100%", height: "400px" }}></div>
+        <div id="k-line" style={{ width: "100%", height: "100%" }}></div>
       </div>
     );
   }
