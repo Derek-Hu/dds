@@ -85,11 +85,7 @@ export default class Balance extends Component<{ data: IRecord[] }, any> {
           );
         case "status":
           const status = record[key];
-          return status === "CLOSED" ? (
-            <Button type="link" onClick={() => this.showOrderCloseModal()}>Close</Button>
-          ) : (
-            <span style={{ color: statusColor[status] }}>{status}</span>
-          );
+          return <span style={{ color: statusColor[status] }}>{status}</span>
         case "type":
           const buyShort = record[key];
           return (
@@ -106,6 +102,8 @@ export default class Balance extends Component<{ data: IRecord[] }, any> {
               {buyShort}
             </span>
           );
+          case 'exercise':
+            return record.status === "ACTIVE" ? <Button type="link" onClick={() => this.showOrderCloseModal()}>CLOSE</Button> : null
         default:
           return value;
       }

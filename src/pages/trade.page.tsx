@@ -61,7 +61,7 @@ export default class TradePage extends Component {
   render() {
     return (
       <div className={styles.tradeInfoPool}>
-        <Row>
+        <Row className={styles.chartBalance}>
           <Col xs={24} sm={24} md={12} lg={16}>
             <KLine />
           </Col>

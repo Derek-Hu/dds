@@ -33,7 +33,7 @@ export default () => {
           <h2>Liquidity Pool</h2>
           <div className={styles.barContainer}>
             <ProgressBar data={publicBar} />
-            <div style={{ padding: "20px" }}></div>
+            <div style={{ padding: "40px" }}></div>
             <ProgressBar data={privateBar} />
           </div>
         </div>
