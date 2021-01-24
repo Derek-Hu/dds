@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { Menu, Icon, Row, Col } from "antd";
+import { Menu, Icon, Row, Col, Button } from "antd";
 import styles from "./style.module.less";
 import {Link } from 'react-router-dom';
 
@@ -51,19 +51,11 @@ export default class Header extends Component {
                 Support&nbsp;&nbsp;
                 <Icon type="down" />
               </Menu.Item>
-              {/* <Menu.Item key="alipay">
-            <a
-              href="https://ant.design"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Navigation Four - Link
-            </a>
-          </Menu.Item> */}
             </Menu>
           </Col>
           <Col span={4} className={styles.connectWpr}>
-            <div className={styles.connectBtn}><span>Connect Wallet</span></div>
+            <Button className={styles.connectBtn}>Connect Wallet</Button>
+            {/* <div className={styles.connectBtn}><span>Connect Wallet</span></div> */}
           </Col>
         </Row>
       </div>

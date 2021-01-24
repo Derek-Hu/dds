@@ -4,17 +4,19 @@
 .root {
   .contentMixin;
 
-  background-color: #f9fafc;
+  background-color: #fff;
   // min-height: 320px;
-  padding-bottom: 50px;
   margin: 80px auto 60px;
+
+  & > div {
+    background-color: #f9fafc;
+  }
 
   &.mobile {
     padding: 30px 16px 80px;
     margin: 0;
     background-color: #fff;
     & > div {
-      background-color: #f9fafc;
       padding: 40px 24px;
       border-radius: 4px;
     }
@@ -36,6 +38,7 @@
       img {
         margin-top: 0;
         width: 100%;
+        margin-bottom: 0;
       }
     }
   }
@@ -47,6 +50,7 @@
     text-align: center;
     img {
       margin-top: 50px;
+      margin-bottom: 50px;
     }
   }
   h3 {

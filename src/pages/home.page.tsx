@@ -14,7 +14,7 @@ export default class HomePage extends Component {
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => (
-          <div>
+          <div style={{background: '#fff'}}>
             <Banner></Banner>
             <WhatIs></WhatIs>
             <NonRisk></NonRisk>
