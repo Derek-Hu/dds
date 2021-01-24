@@ -1,16 +1,30 @@
 import SiteContext from "../../layouts/SiteContext";
-import { Modal } from "antd-mobile";
-import { ModalProps } from "antd-mobile/lib/modal/Modal";
+import { Modal as MModal } from "antd-mobile";
+import { Modal as DModal } from "antd";
 
-export default (props: ModalProps & { children: React.ReactElement | React.ReactElement[] }) => {
-  const { popup, children } = props;
+export default (
+  props: any
+) => {
+  const { popup, children, onCancel } = props;
   return (
     <SiteContext.Consumer>
-      {({ isMobile }) => (
-        <Modal {...props} animationType="slide-up" popup={popup === undefined ? isMobile : popup}>
+      {({ isMobile }) => {
+        return isMobile ? <MModal
+          {...props}
+          animationType="slide-up"
+          onClose={onCancel}
+          popup={popup === undefined ? isMobile : popup}
+        >
           {children}
-        </Modal>
-      )}
+        </MModal> : <DModal
+          {...props}
+          animationType="slide-up"
+          onCancel={onCancel}
+          popup={popup === undefined ? isMobile : popup}
+        >
+          {children}
+        </DModal>;
+      }}
     </SiteContext.Consumer>
   );
 };

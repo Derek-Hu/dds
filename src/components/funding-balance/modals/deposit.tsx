@@ -1,4 +1,3 @@
-import FillGrid from "../../fill-grid/index";
 import { Tabs, Button, Row, Col, Select, Input } from "antd";
 import ModalRender from "../../modal-render/index";
 
@@ -7,13 +6,14 @@ const { Option } = Select;
 const title = "Funding Deposit";
 
 export default (props: any) => {
-  const { visible } = props;
+  const { visible, onCancel } = props;
   return (
-    <ModalRender visible={visible}>
+    <ModalRender visible={visible} onCancel={onCancel} footer={null}>
       <div>
         <h4>{title}</h4>
-        <FillGrid
-          left={
+        <Row>
+          <Col>
+            {" "}
             <Select defaultValue="lucy" style={{ width: 120, height: 50 }}>
               <Option value="jack">Jack</Option>
               <Option value="lucy">Lucy</Option>
@@ -22,9 +22,19 @@ export default (props: any) => {
               </Option>
               <Option value="Yiminghe">yiminghe</Option>
             </Select>
-          }
-          right={<Input placeholder="amount for providing to the pool" />}
-        />
+          </Col>
+          <Col>
+            <Input placeholder="Deposit amount" />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Button>Cancel</Button>
+          </Col>
+          <Col>
+            <Button type="primary">Go to deposit</Button>
+          </Col>
+        </Row>
       </div>
     </ModalRender>
   );

@@ -1,6 +1,8 @@
 import { Row, Col, Radio, Input, Progress, Button } from "antd";
 import styles from "./style.module.less";
 import DespositModal from "./modals/deposit";
+import WithdrawModal from "./modals/withdraw";
+import OrderConfirm from "./modals/order-confirm";
 import { Component } from "react";
 
 const balance = "19.00";
@@ -9,6 +11,8 @@ export default class Balance extends Component {
 
   state = {
     depositVisible: false,
+    withdrawVisible: false,
+    orderConfirmVisible: false,
   }
 
   showDepositModal = () => {
@@ -23,8 +27,33 @@ export default class Balance extends Component {
     })
   }
 
+  
+  showWithdrawModal = () => {
+    this.setState({
+      withdrawVisible: true
+    })
+  }
+
+  closeWithdrawModal = () => {
+    this.setState({
+      withdrawVisible: false
+    })
+  }
+
+  showOrderConfirmModal = () => {
+    this.setState({
+      orderConfirmVisible: true
+    })
+  }
+
+  closeOrderConfirmModal = () => {
+    this.setState({
+      orderConfirmVisible: false
+    })
+  }
+
   render() {
-    const { depositVisible } = this.state;
+    const { depositVisible, withdrawVisible, orderConfirmVisible } = this.state;
 
     return (
       <div className={styles.root}>
@@ -40,7 +69,7 @@ export default class Balance extends Component {
             <Button type="link" onClick={this.showDepositModal}>Deposit</Button>
           </Col>
           <Col>
-            <Button type="link">Withdraw</Button>
+            <Button type="link" onClick={this.showWithdrawModal}>Withdraw</Button>
           </Col>
         </Row>
         <Row className={styles.radioBtn}>
@@ -52,15 +81,19 @@ export default class Balance extends Component {
         <p className={styles.price}>Current Price: 644.05 DAI</p>
         <p className={styles.amountTip}>Amount</p>
         <Input placeholder="0.00" suffix={"ETH"} />
+
         <Row className={styles.utilMax} type="flex" justify="space-between">
           <Col>Utilization: 20%</Col>
           <Col>Max Open:323.34 ETH</Col>
         </Row>
+
         <Progress percent={30} strokeWidth={20} />
         <p className={styles.settlement}>Settlements Fee : 0.00 DAI</p>
-        <Button type="primary">Connect Wallet</Button>
+        <Button type="primary" onClick={this.showOrderConfirmModal}>Connect Wallet</Button>
 
-        <DespositModal onClose={this.closeDepositModal} visible={depositVisible} />
+        <DespositModal onCancel={this.closeDepositModal} visible={depositVisible} />
+        <WithdrawModal onCancel={this.closeWithdrawModal} visible={withdrawVisible} />
+        <OrderConfirm onCancel={this.closeOrderConfirmModal} visible={orderConfirmVisible} />
       </div>
     );
   }

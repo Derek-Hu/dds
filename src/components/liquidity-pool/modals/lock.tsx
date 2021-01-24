@@ -5,7 +5,7 @@ import ModalRender from "../../modal-render/index";
 
 const { Option } = Select;
 
-const title = "Funding Withdraw";
+const title = "Lock reTokens";
 
 export default (props: any) => {
   const { visible, onCancel } = props;
@@ -22,16 +22,13 @@ export default (props: any) => {
         </Col>
         <Col>
           <span className={styles.maxWithdraw}>
-            Max Withdraw Balance: <span>3278392</span> DAI
+            Maximum  Amount: <span>3278392</span> reDAI
           </span>
         </Col>
       </Row>
       <Row className={styles.repay}>
         <Col>
-          <Input placeholder="Withdraw amount" />
-        </Col>
-        <Col>
-          <p>XXX reDAI you need to pay</p>
+          <Input placeholder="Amount for locking" />
         </Col>
       </Row>
       <Row>
@@ -39,7 +36,7 @@ export default (props: any) => {
             <Button>Cancel</Button>
           </Col>
           <Col>
-            <Button type="primary">Claim</Button>
+            <Button type="primary">Confirm</Button>
           </Col>
         </Row>
     </ModalRender>
