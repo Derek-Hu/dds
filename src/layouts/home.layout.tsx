@@ -9,7 +9,7 @@ export default class MainLayout extends Component {
       <SiteContext.Consumer>
         {({ isMobile }) => (
           <div>
-            <Header />
+            <Header darkMode={true} />
             {children}
             {isMobile ? null : <Footer />}
           </div>
