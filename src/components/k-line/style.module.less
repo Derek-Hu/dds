@@ -1,3 +1,40 @@
-.root{
-    
+.root {
+  .currVal {
+    font-size: 36px;
+    font-weight: bold;
+    color: #333333;
+  }
+  .change {
+    font-size: 14px;
+    font-weight: 500;
+    color: #ff6666;
+
+    span {
+      color: #333;
+    }
+  }
+  .range {
+    button {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333333;
+
+      &.current{
+          color: #1346FF;
+      }
+    }
+
+  }
+
+  :global{
+    .ant-select-selection{
+      border-color: transparent;
+      box-shadow: none;
+      &:focus,
+      &:active{
+        border-color: transparent;
+        box-shadow: none;
+      }
+    }
+  }
 }
