@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { Tabs, Button, Row, Col, Select, Input } from "antd"
+import { Tabs, Button, Row, Col, Select, Input, Alert } from "antd";
 import styles from "./style.module.less";
 import numeral from "numeral";
 import Pool, { IPool } from "./pool";
@@ -7,9 +7,9 @@ import Balance from "./liquidity-balance";
 import FillGrid from "../fill-grid";
 import MiningShare from "./mining-share";
 import SharePool from "./share-pool";
-import AvailablePool from './available-pool';
-import NetPL from './net-pl';
-import {CustomTabKey} from '../../constant/index';
+import AvailablePool from "./available-pool";
+import NetPL from "./net-pl";
+import { CustomTabKey, CoinSelectOption } from "../../constant/index";
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -21,11 +21,11 @@ const mining = {
 };
 
 const TabName = {
-  Collaborative: "Collaborative Pool",
-  Private: "Private Pool",
+  Collaborative: "Collaborative",
+  Private: "Private",
 };
 
-const ProvidedPool: IPool = {
+const PublicProvidedPool: IPool = {
   title: "Liquidity Provided",
   usd: 748830,
   coins: [
@@ -44,7 +44,7 @@ const ProvidedPool: IPool = {
   ],
 };
 
-const NetPool: IPool = {
+const PublicNetPool: IPool = {
   title: "Net P&L",
   usd: 637,
   coins: [
@@ -81,130 +81,164 @@ const PrivatePool = {
     },
   ],
 };
-export default class PoolArea extends Component {
+export default class PoolArea extends Component<{ isLogin: boolean }, any> {
+  state = {
+    selectedTab: TabName.Collaborative,
+  };
   componentDidMount() {}
 
-  callback(key: string) {
-    console.log(key);
-  }
+  callback = (selectedTab: string) => {
+    this.setState({
+      selectedTab,
+    });
+  };
 
   render() {
+    const { isLogin } = this.props;
+    const { selectedTab } = this.state;
     return (
-      <div className={styles.root}>
-        <h2>LIQUIDITY POOL</h2>
-        <div className={styles.tabContainer}>
-          <Tabs
-          className={CustomTabKey}
-            defaultActiveKey={TabName.Collaborative}
-            onChange={this.callback}
-          >
-            <TabPane
-              tab={
-                <span className={styles.uppercase}>
-                  {TabName.Collaborative}
-                </span>
-              }
-              key={TabName.Collaborative}
+      <>
+        {isLogin && selectedTab === TabName.Private ? (
+          <Alert
+            className={styles.poolMsg}
+            message="Private pool is extremely risky. If you are not a hedging expert, please stay away!!!"
+            type="warning"
+          />
+        ) : null}
+        <div className={styles.root}>
+          <h2>LIQUIDITY POOL</h2>
+          <div className={styles.tabContainer}>
+            <Tabs
+              className={CustomTabKey}
+              defaultActiveKey={selectedTab}
+              onChange={this.callback}
             >
-              <h3>ARP</h3>
-              <p className={styles.coins}>
-                {numeral(mining.money).format("0,0")}%
-              </p>
-
-              <div className={styles.actionArea}>
-                <FillGrid
-                  left={
-                    <Select
-                      defaultValue="lucy"
-                      style={{ width: 120, height: 50 }}
-                      className={styles.coinDropdown}
-                      // onChange={handleChange}
-                    >
-                      <Option value="jack">Jack</Option>
-                      <Option value="lucy">Lucy</Option>
-                      <Option value="disabled" disabled>
-                        Disabled
-                      </Option>
-                      <Option value="Yiminghe">yiminghe</Option>
-                    </Select>
-                  }
-                  right={
-                    <Input placeholder="amount for providing to the pool" />
-                  }
-                />
-                <p className={styles.cal}>
-                  You Will Receive: <span>94204</span> reDAI
-                </p>
-                <Button type="primary" className={styles.btn}>
-                  Connect Wallet
-                </Button>
-              </div>
-              <Row gutter={24}>
-                <Col span={8}>
-                  <Pool {...ProvidedPool} />
-                </Col>
-                <Col span={8}>
-                  <Pool {...NetPool} />
-                </Col>
-                <Col span={8}>
-                  <SharePool />
-                </Col>
-              </Row>
-            </TabPane>
-            <TabPane
-              tab={<span className={styles.uppercase}>{TabName.Private}</span>}
-              key={TabName.Private}
-            >
-              <div
-                className={[styles.actionArea, styles.privateArea].join(" ")}
+              <TabPane
+                tab={
+                  <span className={styles.uppercase}>
+                    {TabName.Collaborative}
+                  </span>
+                }
+                key={TabName.Collaborative}
               >
-                <FillGrid
-                  left={
-                    <Select
-                      defaultValue="lucy"
-                      style={{ width: 120, height: 50 }}
-                      className={styles.coinDropdown}
-                      // onChange={handleChange}
-                    >
-                      <Option value="jack">Jack</Option>
-                      <Option value="lucy">Lucy</Option>
-                      <Option value="disabled" disabled>
-                        Disabled
-                      </Option>
-                      <Option value="Yiminghe">yiminghe</Option>
-                    </Select>
-                  }
-                  right={
-                    <Input placeholder="amount for providing to the pool" />
-                  }
-                />
-                <Button type="primary" className={styles.btn}>
-                  Connect Wallet
-                </Button>
-              </div>
-              <Row gutter={24}>
-                <Col span={8}>
-                  <MiningShare />
-                </Col>
-                <Col span={8}>
-                  <Pool {...PrivatePool} />
-                </Col>
-                <Col span={8}>
-                  <Balance />
-                </Col>
-              </Row>
-              <Row gutter={24}>
-                <Col span={12}>
-                  <AvailablePool />
-                </Col>
-                <Col span={12}>
-                  <NetPL />
-                </Col>
-              </Row>
-            </TabPane>
-          </Tabs>
+                <h3>ARP</h3>
+                <p className={styles.coins}>
+                  {numeral(mining.money).format("0,0")}%
+                </p>
+
+                <div className={styles.actionArea}>
+                  <FillGrid
+                    left={
+                      <Select
+                        defaultValue="DAI"
+                        style={{ width: 120, height: 50 }}
+                        className={styles.coinDropdown}
+                        // onChange={handleChange}
+                      >
+                        {CoinSelectOption}
+                      </Select>
+                    }
+                    right={
+                      <Input placeholder="amount for providing to the pool" />
+                    }
+                  />
+                  <p className={styles.cal}>
+                    You Will Receive: <span>94204</span> reDAI
+                  </p>
+                  {isLogin ? (
+                    <Button type="primary" className={styles.btn}>
+                      Deposit
+                    </Button>
+                  ) : (
+                    <Button type="primary" className={styles.btn}>
+                      Connect Wallet
+                    </Button>
+                  )}
+                </div>
+                {isLogin ? (
+                  <Row gutter={24}>
+                    <Col span={8}>
+                      <SharePool />
+                    </Col>
+                    <Col span={8}>
+                      <Balance />
+                    </Col>
+                    <Col span={8}>
+                      <NetPL />
+                    </Col>
+                  </Row>
+                ) : (
+                  <Row gutter={24}>
+                    <Col span={12}>
+                      <Pool {...PublicProvidedPool} />
+                    </Col>
+                    <Col span={12}>
+                      <Pool {...PublicNetPool} />
+                    </Col>
+                  </Row>
+                )}
+              </TabPane>
+              <TabPane
+                tab={
+                  <span className={styles.uppercase}>{TabName.Private}</span>
+                }
+                key={TabName.Private}
+              >
+                <div
+                  className={[styles.actionArea, styles.privateArea].join(" ")}
+                >
+                  <FillGrid
+                    left={
+                      <Select
+                        defaultValue="lucy"
+                        style={{ width: 120, height: 50 }}
+                        className={styles.coinDropdown}
+                        // onChange={handleChange}
+                      >
+                        {CoinSelectOption}
+                      </Select>
+                    }
+                    right={
+                      <Input placeholder="amount for providing to the pool" />
+                    }
+                  />
+                  {isLogin ? (
+                    <Button type="primary" className={styles.btn}>
+                      Deposit
+                    </Button>
+                  ) : (
+                    <Button type="primary" className={styles.btn}>
+                      Connect Wallet
+                    </Button>
+                  )}
+                </div>
+                {isLogin ? (
+                  <Row gutter={24}>
+                    <Col span={8}>
+                      <AvailablePool />
+                    </Col>
+                    <Col span={8}>
+                      <Balance />
+                    </Col>
+                    <Col span={8}>
+                      <NetPL />
+                    </Col>
+                  </Row>
+                ) : (
+                  <Row gutter={24}>
+                    <Col span={12}>
+                      <AvailablePool />
+                    </Col>
+                    <Col span={12}>
+                      <Pool {...PublicProvidedPool} />
+                    </Col>
+                  </Row>
+                )}
+              </TabPane>
+            </Tabs>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 }

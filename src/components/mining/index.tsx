@@ -8,7 +8,6 @@ import { CustomTabKey } from "../../constant/index";
 import Pool, { IPool } from "../liquidity-pool/pool";
 import PoolProgress, { IMiningShare } from "../progress-bar/pool-progress";
 import ColumnConvert from "../column-convert/index";
-import { createNull } from "typescript";
 
 const { TabPane } = Tabs;
 const style = {

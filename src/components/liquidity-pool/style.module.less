@@ -1,11 +1,19 @@
 @import "../common.less";
 
+.poolMsg {
+  text-align: center;
+  border-radius: 0;
+}
+
 .root {
   margin-bottom: 267px;
   padding: 0 1em;
   background-color: #f9fafc;
-  h2 {
+  line-height: 1;
+
+  & > h2 {
     .tradeTitleMixin;
+    margin: 0;
   }
   .tabContainer {
     .tabContainerMixin;
@@ -36,8 +44,8 @@
     letter-spacing: 1px;
     margin-bottom: 0;
     margin-top: 24px;
-    span{
-      color: #1346FF;
+    span {
+      color: #1346ff;
     }
   }
   .actionArea {
@@ -45,9 +53,9 @@
     margin: 0 auto;
     padding-top: 24px;
   }
-  .privateArea.actionArea{
+  .privateArea.actionArea {
     padding-top: 80px;
-    .btn{
+    .btn {
       margin: 28px 0 60px;
     }
   }

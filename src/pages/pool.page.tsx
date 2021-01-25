@@ -3,14 +3,17 @@ import { Alert, Modal, Button, Checkbox } from "antd";
 import LiquidityPool from "../components/liquidity-pool/index";
 import styles from "./style.module.less";
 
+const isLogin = true;
+
 export default class PoolPage extends Component {
   componentDidMount() {
     console.log("mount");
   }
 
   state = {
-    visible: true,
+    visible: isLogin,
     agreed: false,
+    isLogin
   }
 
   closeAgree = () => {
@@ -25,11 +28,10 @@ export default class PoolPage extends Component {
     })
   }
   render() {
-    const { agreed } = this.state;
+    const { agreed, isLogin } = this.state;
     return (
       <div>
-        <Alert className={styles.poolMsg} message="Private pool is extremely risky. If you are not a hedging expert, please stay away!!!" type="warning" />
-        <LiquidityPool />
+        <LiquidityPool isLogin={isLogin}/>
         <Modal
           visible={this.state.visible}
           title="RISK WARNING"
