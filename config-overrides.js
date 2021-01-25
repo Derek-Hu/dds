@@ -81,6 +81,7 @@ module.exports = {
         "input-disabled-bg": "#e7ebf4",
 
         "btn-height-base": "50px",
+        'btn-danger-bg': '#F55858',
 
         "alert-warning-bg-color": "rgba(220, 74, 69, 0.06)",
         "alert-warning-border-color": "rgba(220, 74, 69, 0.51)",
@@ -94,8 +95,8 @@ module.exports = {
         "modal-close-color": "#333",
         "modal-header-padding": "36px 0",
 
-        "checkbox-color": "#FFA863",
-        "checkbox-check-bg": "#FFA863",
+        "checkbox-color": "#F55858",
+        "checkbox-check-bg": "#F55858",
 
         "menu-bg": "#1346ff",
         "menu-item-color": "#FFF",
