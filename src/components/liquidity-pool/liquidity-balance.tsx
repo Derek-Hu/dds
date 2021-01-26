@@ -1,11 +1,13 @@
 import { Component } from "react";
 import Pool, { IPool } from "./pool";
-import { Tabs, Button, Modal, Table, Row, Select, Input } from "antd";
+import { Tabs, Button, Modal, Table, Row, Select, Input, Col } from "antd";
 import styles from "./balance.module.less";
+import commonStyles from "../funding-balance/modals/style.module.less";
 import ColumnConvert from "../column-convert/index";
 import dayjs from "dayjs";
 import numeral from "numeral";
 import { CustomTabKey, SupportedCoins } from "../../constant/index";
+import ModalRender from "../modal-render/index";
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -167,10 +169,10 @@ export default class PoolPage extends Component {
           </Button>
         </Pool>
 
-        <Modal
+        <ModalRender
           visible={this.state.recordVisible}
           title="Liquidity Balance Record"
-          className={styles.modal}
+          className={commonStyles.commonModal}
           onCancel={this.closeRecord}
           footer={null}
         >
@@ -212,32 +214,43 @@ export default class PoolPage extends Component {
               </Tabs>
             </TabPane>
           </Tabs>
-        </Modal>
+        </ModalRender>
 
-        <Modal
+        <ModalRender
           visible={this.state.withDrawVisible}
           title="Liquidity Withdraw"
-          className={styles.modal}
-          okText={'Claim'}
+          className={commonStyles.commonModal}
+          okText={"Claim"}
           onCancel={this.closeWithDraw}
+          footer={null}
         >
-          <Row>
-            <Select
-              defaultValue="DAI"
-              style={{ width: 120, height: 50 }}
-              className={styles.coinDropdown}
-            >
-              {SupportedCoins.map((coin) => (
-                <Option value={coin}>{coin}</Option>
-              ))}
-            </Select>
-            <span className={styles.maxWithdraw}>Max Withdraw Balance: <span>3278392</span> DAI</span>
+          <Row  type="flex" justify="space-between" align="middle">
+            <Col xs={24} sm={24} md={6} lg={6}>
+              <Select defaultValue="DAI" style={{ width: "100%", height: 50 }}>
+                {SupportedCoins.map((coin) => (
+                  <Option value={coin}>{coin}</Option>
+                ))}
+              </Select>
+            </Col>
+            <Col xs={24} sm={24} md={18} lg={18}>
+              <span className={styles.maxWithdraw}>
+                Max Withdraw Balance: <span>3278392</span> DAI
+              </span>
+            </Col>
           </Row>
           <Row className={styles.repay}>
             <Input placeholder="Withdraw amount" />
             <p>XXX reDAI you need to pay</p>
           </Row>
-        </Modal>
+          <Row className={commonStyles.actionBtns} gutter={16}>
+            <Col xs={24} sm={24} md={12} lg={12}>
+              <Button>Cancel</Button>
+            </Col>
+            <Col xs={24} sm={24} md={12} lg={12}>
+              <Button type="primary">Go to deposit</Button>
+            </Col>
+          </Row>
+        </ModalRender>
       </div>
     );
   }
