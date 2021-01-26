@@ -37,7 +37,7 @@ export default class MainLayout extends Component {
   render() {
     return (
       <div className={styles.root}>
-        <div>
+        <div className={styles.headArea}>
           <Select defaultValue="ETH/DAI" style={{ width: 120 }}>
             <Option value="ETH/DAI">ETH/DAI</Option>
             <Option value="ETH/USDT">ETH/USDT</Option>
@@ -48,7 +48,7 @@ export default class MainLayout extends Component {
           </Select>
         </div>
         <Row type="flex" justify="space-between" align="middle">
-          <Col xs={24} sm={24} md={12} lg={12}>
+          <Col xs={24} sm={24} md={12} lg={12} className={styles.currPrice}>
             <div className={styles.currVal}>174.8727 USDC</div>
             <p className={styles.change}>
               -147.2416 USDC(-11.14%) <span>Past 24 Hours</span>

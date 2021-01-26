@@ -5,7 +5,7 @@ import { Modal as DModal } from "antd";
 export default (
   props: any
 ) => {
-  const { popup, children, onCancel } = props;
+  const { popup, children, onCancel, className } = props;
   return (
     <SiteContext.Consumer>
       {({ isMobile }) => {
@@ -20,6 +20,7 @@ export default (
           {...props}
           animationType="slide-up"
           onCancel={onCancel}
+          className={className}
           popup={popup === undefined ? isMobile : popup}
         >
           {children}

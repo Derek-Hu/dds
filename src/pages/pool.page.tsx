@@ -41,6 +41,7 @@ export default class PoolPage extends Component {
               &nbsp;RISK WARNING
             </span>
           }
+          closable={false}
           className={styles.modal}
           onCancel={this.closeAgree}
           footer={[

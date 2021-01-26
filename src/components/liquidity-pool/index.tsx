@@ -155,28 +155,6 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                     </Button>
                   )}
                 </div>
-                {isLogin ? (
-                  <Row gutter={24}>
-                    <Col span={8}>
-                      <SharePool />
-                    </Col>
-                    <Col span={8}>
-                      <Balance />
-                    </Col>
-                    <Col span={8}>
-                      <NetPL />
-                    </Col>
-                  </Row>
-                ) : (
-                  <Row gutter={24}>
-                    <Col span={12}>
-                      <Pool {...PublicProvidedPool} />
-                    </Col>
-                    <Col span={12}>
-                      <Pool {...PublicNetPool} />
-                    </Col>
-                  </Row>
-                )}
               </TabPane>
               <TabPane
                 tab={
@@ -212,6 +190,38 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                     </Button>
                   )}
                 </div>
+              </TabPane>
+            </Tabs>
+          </div>
+          <div>
+            {selectedTab === TabName.Collaborative ? (
+              <div>
+                {isLogin ? (
+                  <Row gutter={24}>
+                    <Col span={8}>
+                      <SharePool />
+                    </Col>
+                    <Col span={8}>
+                      <Balance />
+                    </Col>
+                    <Col span={8}>
+                      <NetPL />
+                    </Col>
+                  </Row>
+                ) : (
+                  <Row gutter={24}>
+                    <Col span={12}>
+                      <Pool {...PublicProvidedPool} />
+                    </Col>
+                    <Col span={12}>
+                      <Pool {...PublicNetPool} />
+                    </Col>
+                  </Row>
+                )}
+              </div>
+            ) : null}
+            {selectedTab === TabName.Private ? (
+              <div>
                 {isLogin ? (
                   <Row gutter={24}>
                     <Col span={8}>
@@ -234,8 +244,8 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                     </Col>
                   </Row>
                 )}
-              </TabPane>
-            </Tabs>
+              </div>
+            ) : null}
           </div>
         </div>
       </>
