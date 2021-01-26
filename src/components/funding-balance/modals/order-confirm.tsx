@@ -1,4 +1,4 @@
-import { Descriptions, Row, Col, Button } from "antd";
+import { Descriptions, Row, Col, Button, Divider  } from "antd";
 import styles from "./style.module.less";
 import ModalRender from "../../modal-render/index";
 
@@ -7,7 +7,7 @@ const title = "Order Confirm";
 export default (props: any) => {
   const { visible, onCancel } = props;
   return (
-    <ModalRender visible={visible} onCancel={onCancel} footer={null}>
+    <ModalRender visible={visible} onCancel={onCancel} footer={null} className={styles.commonModal}>
       <h4>{title}</h4>
       <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
         <Descriptions.Item label="Type" span={24}>
@@ -26,12 +26,13 @@ export default (props: any) => {
           0.644 DAI
         </Descriptions.Item>
       </Descriptions>
-      <p>Invitor:www.dderivatives.com</p>
-      <Row>
-        <Col>
+      <Divider />
+      <p className={styles.invitorInfo}>Invitor:www.dderivatives.com</p>
+      <Row gutter={16} className={styles.actionBtns}>
+      <Col xs={24} sm={24} md={12} lg={12}>
           <Button>Cancel</Button>
         </Col>
-        <Col>
+        <Col xs={24} sm={24} md={12} lg={12}>
           <Button type="primary">Confirm</Button>
         </Col>
       </Row>
