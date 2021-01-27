@@ -36,7 +36,7 @@ export default class PoolPage extends Component {
           width={450}
           visible={this.state.visible}
           title={
-            <span>
+            <span style={{color: '#F55858'}}>
               <Icon type="warning" />
               &nbsp;RISK WARNING
             </span>
