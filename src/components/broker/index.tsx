@@ -1,10 +1,12 @@
 import { Component } from "react";
-import { Icon, Tabs, Row, Col, Input, Button } from "antd";
+import { Icon, Tabs, Row, Col, Input, Button, Modal } from "antd";
 import styles from "./style.module.less";
 import numeral from "numeral";
 import Step from "./steps";
 import ReferalDetails, { IData } from "./referal-details";
-import {CustomTabKey} from '../../constant/index';
+import { CustomTabKey } from "../../constant/index";
+import commonStyles from "../funding-balance/modals/style.module.less";
+
 const { TabPane } = Tabs;
 
 const tabName = {
@@ -54,8 +56,20 @@ const data: IData[] = [
 export default class Broker extends Component {
   state = {
     selectedTab: tabName.spark,
+    generateModalVisible: false,
   };
   componentDidMount() {}
+
+  showGenerateModal = () => {
+    this.setState({
+      generateModalVisible: true,
+    });
+  };
+  closeGenerateModal = () => {
+    this.setState({
+      generateModalVisible: false,
+    });
+  };
 
   callback = (selectedTab: string) => {
     this.setState({
@@ -64,18 +78,29 @@ export default class Broker extends Component {
   };
 
   render() {
+    const { generateModalVisible } = this.state;
     return (
       <div className={styles.root}>
         <h2>Broker</h2>
         <div className={styles.referalInfo}>
           <Input value={url} disabled={true} className={styles.input} />
-          <Button type="primary" className={styles.btn}>Copy referral link</Button>
+          <Button
+            type="primary"
+            className={styles.btn}
+            onClick={this.showGenerateModal}
+          >
+            Copy referral link
+          </Button>
           <div className={styles.qrcode}>
             <Icon type="qrcode" style={{ fontSize: 32 }} />
           </div>
         </div>
         <div className={styles.tabContainer}>
-          <Tabs activeKey={this.state.selectedTab} className={CustomTabKey} onChange={this.callback}>
+          <Tabs
+            activeKey={this.state.selectedTab}
+            className={CustomTabKey}
+            onChange={this.callback}
+          >
             <TabPane
               tab={<span className={styles.uppercase}>spark program</span>}
               key={tabName.spark}
@@ -131,6 +156,27 @@ export default class Broker extends Component {
         ) : (
           <ReferalDetails data={data} />
         )}
+        <Modal
+          width={500}
+          visible={generateModalVisible}
+          onCancel={this.closeGenerateModal}
+          title="Generate your referral link"
+          closable={false}
+          footer={null}
+          className={commonStyles.commonModal}
+        >
+          <p style={{textAlign: 'center'}}>
+            To become a spark broker, you need to sign in our Decentralized broker system in order to generate your referral link, it may cost a little gas.
+          </p>
+          <Row className={commonStyles.actionBtns} gutter={16}>
+            <Col xs={24} sm={24} md={12} lg={12}>
+              <Button>Cancel</Button>
+            </Col>
+            <Col xs={24} sm={24} md={12} lg={12}>
+              <Button type="primary">Generate</Button>
+            </Col>
+          </Row>
+        </Modal>
       </div>
     );
   }
