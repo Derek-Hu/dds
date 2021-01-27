@@ -162,6 +162,7 @@ export default class Mining extends Component {
 
   state = {
     visible: false,
+    isLogin: true
   };
 
   showWithDraw = () => {
@@ -180,7 +181,7 @@ export default class Mining extends Component {
   }
 
   render() {
-    const { visible } = this.state;
+    const { visible, isLogin } = this.state;
 
     return (
       <div className={styles.root}>
@@ -199,13 +200,19 @@ export default class Mining extends Component {
               <p className={styles.coins}>
                 {numeral(mining.money).format("0,0")} DDS
               </p>
-              <Button type="primary" className={styles.btn}>
+              {
+                isLogin ?   <Button type="primary" className={styles.btn}>
+                Claim
+              </Button> : <Button type="primary" className={styles.btn}>
                 Connect Wallet
               </Button>
+              }
+             
               <ProgressBar data={barData} />
               <p className={styles.fifo}>First come first served</p>
 
-              <Row gutter={24} style={{ marginTop: "40px" }}>
+              {
+                isLogin ? <Row gutter={24} style={{ marginTop: "40px" }}>
                 <Col span={8}>
                   <Pool {...ReTokenBalance} smallSize={true}>
                     <Button type="primary" className={styles.lock}>
@@ -228,7 +235,9 @@ export default class Mining extends Component {
                 <Col span={8}>
                   <PoolProgress {...MiningShare} />
                 </Col>
-              </Row>
+              </Row> : null
+              }
+              
             </TabPane>
             <TabPane
               tab={
@@ -242,7 +251,7 @@ export default class Mining extends Component {
               <p className={styles.coins}>
                 {numeral(utilization.money).format("0,0")} DDS
               </p>
-              <h4 className={styles.clockTitle}>Rewards Colck</h4>
+              {/* <h4 className={styles.clockTitle}>Rewards Colck</h4>
               <p className={styles.rule}>
                 Start liquidity utilization mining if there is no trading within
                 30min
@@ -258,10 +267,9 @@ export default class Mining extends Component {
                   format={(percent) => `${percent} Days`}
                 />
               </div>
-              <Button type="primary" className={styles.btn}>
-                Connect Wallet
-              </Button>
-              <div>
+               */}
+              {
+                isLogin ? <div>
                 <Button type="primary" className={styles.cliamBtn}>
                   Claim
                 </Button>
@@ -270,7 +278,10 @@ export default class Mining extends Component {
                     Reward record
                   </Button>
                 </div>
-              </div>
+              </div> : <Button type="primary" className={styles.btn}>
+                Connect Wallet
+              </Button>
+              }
             </TabPane>
           </Tabs>
           <Modal
