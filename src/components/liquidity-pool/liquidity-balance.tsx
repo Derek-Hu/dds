@@ -32,7 +32,7 @@ const BalancePool: IPool = {
 };
 
 const TabName = {
-  Transfer: "Transfer",
+  Transfer: "TRANSFER",
   PNL: "PNL",
 };
 
@@ -174,6 +174,7 @@ export default class PoolPage extends Component {
           title="Liquidity Balance Record"
           className={commonStyles.commonModal}
           onCancel={this.closeRecord}
+          width={600}
           footer={null}
         >
           <Tabs defaultActiveKey={TabName.Transfer} className={CustomTabKey}>
@@ -247,7 +248,7 @@ export default class PoolPage extends Component {
               <Button>Cancel</Button>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12}>
-              <Button type="primary">Go to deposit</Button>
+              <Button type="primary">Withdraw</Button>
             </Col>
           </Row>
         </ModalRender>

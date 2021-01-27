@@ -1,15 +1,25 @@
 import { Component } from "react";
-import { Tabs, Button, Row, Col, Select, Input, Alert } from "antd";
+import {
+  Tabs,
+  Button,
+  Row,
+  Col,
+  Select,
+  Input,
+  Alert,
+  Descriptions,
+} from "antd";
 import styles from "./style.module.less";
 import numeral from "numeral";
 import Pool, { IPool } from "./pool";
 import Balance from "./liquidity-balance";
 import FillGrid from "../fill-grid";
-import MiningShare from "./mining-share";
+import commonStyles from "../funding-balance/modals/style.module.less";
 import SharePool from "./share-pool";
 import AvailablePool from "./available-pool";
 import NetPL from "./net-pl";
 import { CustomTabKey, CoinSelectOption } from "../../constant/index";
+import ModalRender from "../modal-render/index";
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -84,8 +94,21 @@ const PrivatePool = {
 export default class PoolArea extends Component<{ isLogin: boolean }, any> {
   state = {
     selectedTab: TabName.Collaborative,
+    depositModalVisible: false,
   };
   componentDidMount() {}
+
+  closeDepositModal = () => {
+    this.setState({
+      depositModalVisible: false,
+    });
+  };
+
+  showDepositModal = () => {
+    this.setState({
+      depositModalVisible: true,
+    });
+  };
 
   callback = (selectedTab: string) => {
     this.setState({
@@ -146,7 +169,11 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                     You Will Receive: <span>94204</span> reDAI
                   </p>
                   {isLogin ? (
-                    <Button type="primary" className={styles.btn}>
+                    <Button
+                      type="primary"
+                      className={styles.btn}
+                      onClick={this.showDepositModal}
+                    >
                       Deposit
                     </Button>
                   ) : (
@@ -181,7 +208,11 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                     }
                   />
                   {isLogin ? (
-                    <Button type="primary" className={styles.btn}>
+                    <Button
+                      type="primary"
+                      className={styles.btn}
+                      onClick={this.showDepositModal}
+                    >
                       Deposit
                     </Button>
                   ) : (
@@ -247,6 +278,30 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
               </div>
             ) : null}
           </div>
+          <ModalRender
+            visible={this.state.depositModalVisible}
+            title="Comfirm Deposit"
+            className={commonStyles.commonModal}
+            onCancel={this.closeDepositModal}
+            footer={null}
+          >
+            <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
+              <Descriptions.Item label="Deposit Amount" span={24}>
+                10.36 DAI
+              </Descriptions.Item>
+              <Descriptions.Item label="Receive" span={24}>
+                10.36 reDAI
+              </Descriptions.Item>
+            </Descriptions>
+            <Row className={commonStyles.actionBtns} gutter={16}>
+              <Col xs={24} sm={24} md={12} lg={12}>
+                <Button>Cancel</Button>
+              </Col>
+              <Col xs={24} sm={24} md={12} lg={12}>
+                <Button type="primary">Comfirm</Button>
+              </Col>
+            </Row>
+          </ModalRender>
         </div>
       </>
     );
