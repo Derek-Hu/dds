@@ -6,6 +6,6 @@ export default class SwapBurnPage extends Component {
     console.log('mount');
   }
   render() {
-    return <div><SwapBurn/></div>
+    return <div><SwapBurn isLogin={true}/></div>
   }
 }
