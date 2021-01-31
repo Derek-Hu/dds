@@ -2,6 +2,7 @@
   "name": "dds-dao-frontend2",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@types/echarts": "^4.9.3",
     "@types/jest": "^26.0.19",
