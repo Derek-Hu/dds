@@ -137,6 +137,7 @@ export default class Balance extends Component<{ data: IRecord[] }, any> {
                 columns={this.columns}
                 pagination={false}
                 dataSource={data}
+                scroll={{x: 1000}}
               />
             </div>
             <OrderClose

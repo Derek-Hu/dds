@@ -3,7 +3,16 @@
 .root {
   max-width: @maxWidth;
   margin: 0 auto 80px;
-  h2 {
+
+  &.mobile{
+    margin: 0 auto;
+    & > h2 {
+      font-size: 24px;
+      margin: 56px 0 15px;
+    }
+    
+  }
+  & > h2 {
     font-size: 32px;
     font-family: Gilroy-Bold, Gilroy;
     font-weight: bold;

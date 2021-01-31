@@ -4,6 +4,7 @@ import DespositModal from "./modals/deposit";
 import WithdrawModal from "./modals/withdraw";
 import OrderConfirm from "./modals/order-confirm";
 import { Component } from "react";
+import SiteContext from "../../layouts/SiteContext";
 
 const balance = "19.00";
 
@@ -55,8 +56,9 @@ export default class Balance extends Component {
   render() {
     const { depositVisible, withdrawVisible, orderConfirmVisible } = this.state;
 
-    return (
-      <div className={styles.root}>
+    return       <SiteContext.Consumer>
+    {({ isMobile }) => (
+      <div className={[styles.root, isMobile ? styles.mobile : ""].join(" ")}>
         <h2>
           Funding Balance<span>(USD)</span>
         </h2>
@@ -95,6 +97,7 @@ export default class Balance extends Component {
         <WithdrawModal onCancel={this.closeWithdrawModal} visible={withdrawVisible} />
         <OrderConfirm onCancel={this.closeOrderConfirmModal} visible={orderConfirmVisible} />
       </div>
-    );
+    )}
+    </SiteContext.Consumer>
   }
 }

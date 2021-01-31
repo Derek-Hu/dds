@@ -5,7 +5,9 @@ import TradeInfo from "../components/trade-info/index";
 import TradePool from "../components/trade-pool/index";
 import styles from "./style.module.less";
 import KLine from "../components/k-line/index";
-import FundingBalance from '../components/funding-balance/index';
+import FundingBalance from "../components/funding-balance/index";
+import SiteContext from "../layouts/SiteContext";
+
 const data: IRecord[] = [
   {
     id: "001",
@@ -60,27 +62,32 @@ export default class TradePage extends Component {
   }
   render() {
     return (
-      <div className={styles.tradeInfoPool}>
-        <Row className={styles.chartBalance} gutter={24}>
-          <Col xs={24} sm={24} md={12} lg={16} className={styles.charWpr}>
-            <KLine />
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={8}>
-            <FundingBalance />
-          </Col>
-        </Row>
-        <TradeBonus data={data} />
-        <div>
-          <Row gutter={20}>
-            <Col xs={24} sm={24} md={12} lg={12}>
-              <TradePool />
-            </Col>
-            <Col xs={24} sm={24} md={12} lg={12}>
-              <TradeInfo />
-            </Col>
-          </Row>
-        </div>
-      </div>
+      <SiteContext.Consumer>
+        {({ isMobile }) => (
+          <div 
+          className={[styles.tradeInfoPool, isMobile ? styles.mobile : ""].join(" ")}>
+            <Row className={styles.chartBalance} gutter={isMobile? 0: 24}>
+              <Col xs={24} sm={24} md={12} lg={16} className={styles.charWpr}>
+                <KLine />
+              </Col>
+              <Col xs={24} sm={24} md={12} lg={8}>
+                <FundingBalance />
+              </Col>
+            </Row>
+            <TradeBonus data={data} />
+            <div>
+              <Row gutter={isMobile? 0: 20}>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <TradePool />
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <TradeInfo />
+                </Col>
+              </Row>
+            </div>
+          </div>
+        )}
+      </SiteContext.Consumer>
     );
   }
 }
