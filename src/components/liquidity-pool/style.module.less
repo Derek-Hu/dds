@@ -12,6 +12,7 @@
   line-height: 1;
 
   &.mobile{
+    margin-bottom: 60px;
     & > h2 {
       font-size: 18px;
       margin: 30px 0;
@@ -30,6 +31,13 @@
       }
       .cal{
         font-size: 16px;
+      }
+    }
+    .panels{
+      :global{
+        .ant-row > div + div {
+          margin-top: 28px;
+        }
       }
     }
   }

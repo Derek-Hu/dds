@@ -155,21 +155,19 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                     </p>
 
                     <div className={styles.actionArea}>
-                      <FillGrid
-                        left={
-                          <Select
+                      <Row gutter={[isMobile? 0: 12, isMobile? 15: 0]}>
+                        <Col xs={24} sm={24} md={8} lg={6}><Select
                             defaultValue="DAI"
-                            style={{ width: 120, height: 50 }}
+                            style={{ width: '100%', height: 50 }}
                             className={styles.coinDropdown}
                             // onChange={handleChange}
                           >
                             {CoinSelectOption}
-                          </Select>
-                        }
-                        right={
-                          <Input placeholder="amount for providing to the pool" />
-                        }
-                      />
+                          </Select></Col>
+                        <Col xs={24} sm={24} md={16} lg={18}>
+                        <Input placeholder="amount for providing to the pool" />
+                        </Col>
+                      </Row>
                       <p className={styles.cal}>
                         You Will Receive: <span>94204</span> reDAI
                       </p>
@@ -201,21 +199,19 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                         " "
                       )}
                     >
-                      <FillGrid
-                        left={
-                          <Select
-                            defaultValue="lucy"
-                            style={{ width: 120, height: 50 }}
+                      <Row gutter={[isMobile? 0: 12, isMobile? 15: 0]}>
+                        <Col xs={24} sm={24} md={8} lg={6}><Select
+                            defaultValue="DAI"
+                            style={{ width: '100%', height: 50 }}
                             className={styles.coinDropdown}
                             // onChange={handleChange}
                           >
                             {CoinSelectOption}
-                          </Select>
-                        }
-                        right={
-                          <Input placeholder="amount for providing to the pool" />
-                        }
-                      />
+                          </Select></Col>
+                        <Col xs={24} sm={24} md={16} lg={18}>
+                        <Input placeholder="amount for providing to the pool" />
+                        </Col>
+                      </Row>
                       {isLogin ? (
                         <Button
                           type="primary"
