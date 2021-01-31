@@ -5,8 +5,20 @@
   line-height: 17px;
   display: inline-block;
   margin-left: 20px;
+  text-align: left;
+  &.mobile{
+    // margin-bottom: 8px;
+    margin-left: 0;
+  }
   span {
     font-weight: bold;
+  }
+}
+
+.actionBtns {
+  margin-top: 36px;
+  button {
+    width: 100%;
   }
 }
 
@@ -36,15 +48,14 @@
     margin-bottom: 40px;
     line-height: 1;
   }
-  .actionBtns {
-    margin-top: 36px;
-    button {
-      width: 100%;
-    }
-  }
+  
 }
 .repay {
   margin-top: 16px;
+  &.mobile{
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
   p {
     font-size: 14px;
     font-family: Gilroy-Medium, Gilroy;

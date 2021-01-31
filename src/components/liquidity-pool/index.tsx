@@ -288,6 +288,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                 title="Comfirm Deposit"
                 className={commonStyles.commonModal}
                 onCancel={this.closeDepositModal}
+                height={300}
                 footer={null}
               >
                 <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
@@ -298,11 +299,11 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                     10.36 reDAI
                   </Descriptions.Item>
                 </Descriptions>
-                <Row className={commonStyles.actionBtns} gutter={16}>
-                  <Col xs={24} sm={24} md={12} lg={12}>
+                <Row className={commonStyles.actionBtns} gutter={[16, 16]} type="flex">
+                  <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
                     <Button>Cancel</Button>
                   </Col>
-                  <Col xs={24} sm={24} md={12} lg={12}>
+                  <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                     <Button type="primary">Comfirm</Button>
                   </Col>
                 </Row>

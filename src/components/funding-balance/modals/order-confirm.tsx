@@ -1,14 +1,24 @@
-import { Descriptions, Row, Col, Button, Divider  } from "antd";
+import { Descriptions, Row, Col, Button, Divider } from "antd";
 import styles from "./style.module.less";
 import ModalRender from "../../modal-render/index";
+import SiteContext from "../../../layouts/SiteContext";
 
 const title = "Order Confirm";
 
 export default (props: any) => {
   const { visible, onCancel } = props;
-  return (
-    <ModalRender visible={visible} onCancel={onCancel} footer={null} className={styles.commonModal}>
-      <h4>{title}</h4>
+  const invitor = "Invitor:www.dderivatives.com"
+
+  return <SiteContext.Consumer>
+  {({ isMobile }) => (
+    <ModalRender
+      visible={visible}
+      height={invitor ? 475: 390}
+      onCancel={onCancel}
+      footer={null}
+      title={title}
+      className={styles.commonModal}
+    >
       <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
         <Descriptions.Item label="Type" span={24}>
           Long
@@ -26,16 +36,22 @@ export default (props: any) => {
           0.644 DAI
         </Descriptions.Item>
       </Descriptions>
-      <Divider />
-      <p className={styles.invitorInfo}>Invitor:www.dderivatives.com</p>
-      <Row gutter={16} className={styles.actionBtns}>
-      <Col xs={24} sm={24} md={12} lg={12}>
+      {invitor ? (
+        <>
+          <Divider />
+          <p className={styles.invitorInfo}>{invitor}</p>
+        </>
+      ) : null}
+
+      <Row gutter={[isMobile ? 0: 16, 16]} className={styles.actionBtns} type="flex">
+        <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
           <Button>Cancel</Button>
         </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
+        <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
           <Button type="primary">Confirm</Button>
         </Col>
       </Row>
     </ModalRender>
-  );
+  )}
+  </SiteContext.Consumer>
 };

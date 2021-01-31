@@ -10,8 +10,7 @@ const title = "Unlock reTokens";
 export default (props: any) => {
   const { visible, onCancel } = props;
   return (
-    <ModalRender visible={visible} onCancel={onCancel} footer={null}>
-      <h4>{title}</h4>
+    <ModalRender title={title} visible={visible} onCancel={onCancel} footer={null}>
       <Row>
         <Col>
           <Select defaultValue="DAI" style={{ width: 120, height: 50 }}>

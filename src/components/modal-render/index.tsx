@@ -1,23 +1,31 @@
 import SiteContext from "../../layouts/SiteContext";
-import { Modal as MModal } from "antd-mobile";
-import { Modal as DModal } from "antd";
+import { Modal as DModal, Drawer } from "antd";
 
 export default (props: any) => {
-  const { popup, children, onCancel, className } = props;
+  const { visible, children, title, height, onCancel, className } = props;
   return (
     <SiteContext.Consumer>
       {({ isMobile }) => {
-        return (
+        return isMobile ? <Drawer 
+        closable={false}
+        onClose={onCancel}
+        title={title}
+        height={height}
+        placement="bottom"
+        className="mobile"
+        destroyOnClose={true}
+        visible={visible}
+        >{children}</Drawer> : 
           <DModal
             {...props}
             animationType="slide-up"
+            title={title}
             onCancel={onCancel}
             className={className}
-            popup={popup === undefined ? isMobile : popup}
+            // popup={popup === undefined ? isMobile : popup}
           >
             {children}
           </DModal>
-        );
       }}
     </SiteContext.Consumer>
   );

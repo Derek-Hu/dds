@@ -7,6 +7,7 @@ import ReferalDetails, { IData } from "./referal-details";
 import { CustomTabKey } from "../../constant/index";
 import commonStyles from "../funding-balance/modals/style.module.less";
 import SiteContext from "../../layouts/SiteContext";
+import ModalRender from "../modal-render/index";
 
 const { TabPane } = Tabs;
 
@@ -158,27 +159,28 @@ export default class Broker extends Component {
         ) : (
           <ReferalDetails data={data} />
         )}
-        <Modal
+        <ModalRender
           width={500}
           visible={generateModalVisible}
           onCancel={this.closeGenerateModal}
-          title="Generate your referral link"
           closable={false}
           footer={null}
+          height={300}
+          title="Generate your referral link"
           className={commonStyles.commonModal}
         >
           <p style={{textAlign: 'center'}}>
             To become a spark broker, you need to sign in our Decentralized broker system in order to generate your referral link, it may cost a little gas.
           </p>
-          <Row className={commonStyles.actionBtns} gutter={16}>
-            <Col xs={24} sm={24} md={12} lg={12}>
+          <Row className={commonStyles.actionBtns} gutter={[16, 16]}  type="flex">
+            <Col xs={24} sm={24} md={12} lg={12}  order={isMobile ? 2 : 1}>
               <Button>Cancel</Button>
             </Col>
-            <Col xs={24} sm={24} md={12} lg={12}>
+            <Col xs={24} sm={24} md={12} lg={12}  order={isMobile ? 1 : 2}>
               <Button type="primary">Generate</Button>
             </Col>
           </Row>
-        </Modal>
+        </ModalRender>
       </div>
     )}
     </SiteContext.Consumer>

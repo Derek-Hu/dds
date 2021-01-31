@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import numeral from "numeral";
 import { CustomTabKey, SupportedCoins } from "../../constant/index";
 import ModalRender from "../modal-render/index";
+import SiteContext from "../../layouts/SiteContext";
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -155,104 +156,134 @@ export default class PoolPage extends Component {
 
   render() {
     return (
-      <div>
-        <Pool {...BalancePool} smallSize={true}>
-          <Button
-            type="primary"
-            onClick={this.showWithDraw}
-            className={styles.btn}
-          >
-            Withdraw
-          </Button>
-          <Button type="link" onClick={this.showRecord} className={styles.link}>
-            Liquidity Balance Record
-          </Button>
-        </Pool>
+      <SiteContext.Consumer>
+        {({ isMobile }) => (
+          <div>
+            <Pool {...BalancePool} smallSize={true}>
+              <Button
+                type="primary"
+                onClick={this.showWithDraw}
+                className={styles.btn}
+              >
+                Withdraw
+              </Button>
+              <Button
+                type="link"
+                onClick={this.showRecord}
+                className={styles.link}
+              >
+                Liquidity Balance Record
+              </Button>
+            </Pool>
 
-        <ModalRender
-          visible={this.state.recordVisible}
-          title="Liquidity Balance Record"
-          className={commonStyles.commonModal}
-          onCancel={this.closeRecord}
-          width={600}
-          footer={null}
-        >
-          <Tabs defaultActiveKey={TabName.Transfer} className={CustomTabKey}>
-            <TabPane
-              tab={<span className={styles.uppercase}>{TabName.Transfer}</span>}
-              key={TabName.Transfer}
+            <ModalRender
+              visible={this.state.recordVisible}
+              title="Liquidity Balance Record"
+              className={commonStyles.commonModal}
+              onCancel={this.closeRecord}
+              height={500}
+              width={600}
+              footer={null}
             >
-              <Tabs defaultActiveKey="DAI" className={styles.innerTab}>
-                {SupportedCoins.map((coin) => (
-                  <TabPane tab={coin} key={coin}>
-                    <Table
-                      rowKey="coin"
-                      scroll={{ y: 300 }}
-                      columns={columns}
-                      pagination={false}
-                      dataSource={data}
-                    />
-                  </TabPane>
-                ))}
+              <Tabs
+                defaultActiveKey={TabName.Transfer}
+                className={CustomTabKey}
+              >
+                <TabPane
+                  tab={
+                    <span className={styles.uppercase}>{TabName.Transfer}</span>
+                  }
+                  key={TabName.Transfer}
+                >
+                  <Tabs defaultActiveKey="DAI" className={styles.innerTab}>
+                    {SupportedCoins.map((coin) => (
+                      <TabPane tab={coin} key={coin}>
+                        <Table
+                          rowKey="coin"
+                          scroll={{ y: 200, x: 600 }}
+                          columns={columns}
+                          pagination={false}
+                          dataSource={data}
+                        />
+                      </TabPane>
+                    ))}
+                  </Tabs>
+                </TabPane>
+                <TabPane
+                  tab={<span className={styles.uppercase}>{TabName.PNL}</span>}
+                  key={TabName.PNL}
+                >
+                  <Tabs defaultActiveKey="DAI" className={styles.innerTab}>
+                    {SupportedCoins.map((coin) => (
+                      <TabPane tab={coin} key={coin}>
+                        <Table
+                          rowKey="coin"
+                          scroll={{ y: 300 }}
+                          columns={columns}
+                          pagination={false}
+                          dataSource={data}
+                        />
+                      </TabPane>
+                    ))}
+                  </Tabs>
+                </TabPane>
               </Tabs>
-            </TabPane>
-            <TabPane
-              tab={<span className={styles.uppercase}>{TabName.PNL}</span>}
-              key={TabName.PNL}
-            >
-              <Tabs defaultActiveKey="DAI" className={styles.innerTab}>
-                {SupportedCoins.map((coin) => (
-                  <TabPane tab={coin} key={coin}>
-                    <Table
-                      rowKey="coin"
-                      scroll={{ y: 300 }}
-                      columns={columns}
-                      pagination={false}
-                      dataSource={data}
-                    />
-                  </TabPane>
-                ))}
-              </Tabs>
-            </TabPane>
-          </Tabs>
-        </ModalRender>
+            </ModalRender>
 
-        <ModalRender
-          visible={this.state.withDrawVisible}
-          title="Liquidity Withdraw"
-          className={commonStyles.commonModal}
-          okText={"Claim"}
-          onCancel={this.closeWithDraw}
-          footer={null}
-        >
-          <Row  type="flex" justify="space-between" align="middle">
-            <Col xs={24} sm={24} md={6} lg={6}>
-              <Select defaultValue="DAI" style={{ width: "100%", height: 50 }}>
-                {SupportedCoins.map((coin) => (
-                  <Option value={coin}>{coin}</Option>
-                ))}
-              </Select>
-            </Col>
-            <Col xs={24} sm={24} md={18} lg={18}>
-              <span className={styles.maxWithdraw}>
-                Max Withdraw Balance: <span>3278392</span> DAI
-              </span>
-            </Col>
-          </Row>
-          <Row className={styles.repay}>
-            <Input placeholder="Withdraw amount" />
-            <p>XXX reDAI you need to pay</p>
-          </Row>
-          <Row className={commonStyles.actionBtns} gutter={16}>
-            <Col xs={24} sm={24} md={12} lg={12}>
-              <Button>Cancel</Button>
-            </Col>
-            <Col xs={24} sm={24} md={12} lg={12}>
-              <Button type="primary">Withdraw</Button>
-            </Col>
-          </Row>
-        </ModalRender>
-      </div>
+            <ModalRender
+              visible={this.state.withDrawVisible}
+              title="Liquidity Withdraw"
+              className={commonStyles.commonModal}
+              okText={"Claim"}
+              height={420}
+              onCancel={this.closeWithDraw}
+              footer={null}
+            >
+              <Row
+                gutter={[16, 16]}
+                type="flex"
+                justify="space-between"
+                align="middle"
+              >
+                <Col xs={24} sm={24} md={6} lg={6}>
+                  <Select
+                    defaultValue="DAI"
+                    style={{ width: "100%", height: 50 }}
+                  >
+                    {SupportedCoins.map((coin) => (
+                      <Option value={coin}>{coin}</Option>
+                    ))}
+                  </Select>
+                </Col>
+                <Col xs={24} sm={24} md={18} lg={18}>
+                  <span className={[styles.maxWithdraw, isMobile ? styles.mobile : ""].join(' ')}>
+                    Max Withdraw Balance: <span>3278392</span> DAI
+                  </span>
+                </Col>
+                <Col span={24}>
+                  <div
+                    className={[
+                      styles.repay,
+                      isMobile ? styles.mobile : "",
+                    ].join(" ")}
+                  >
+                    <Input placeholder="Withdraw amount" />
+                    <p>XXX reDAI you need to pay</p>
+                  </div>
+                </Col>
+              </Row>
+              <Row className={commonStyles.actionBtns} gutter={[16, 16]}>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <Button>Cancel</Button>
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <Button type="primary">Withdraw</Button>
+                </Col>
+              </Row>
+            </ModalRender>
+          </div>
+        )}
+      </SiteContext.Consumer>
     );
   }
 }
