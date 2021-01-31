@@ -4,7 +4,7 @@ import styles from "./style.module.less";
 import SiteContext from "../../../layouts/SiteContext";
 import { CoinSelectOption } from '../../../constant/index';
 
-const { Option } = Select;
+
 
 const title = "Funding Deposit";
 
