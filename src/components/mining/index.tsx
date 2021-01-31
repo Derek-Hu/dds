@@ -401,7 +401,7 @@ export default class Mining extends Component {
           </ModalRender>
         </div>
         {isLogin  && selectedTab === TabName.Liquidity ? <div className={styles.panels}>
-            <Row gutter={24} style={{ marginTop: "40px" }}>
+            <Row gutter={24}>
               <Col xs={24} sm={24} md={8} lg={8}>
                 <Pool {...ReTokenBalance} smallSize={true}>
                   <Button
