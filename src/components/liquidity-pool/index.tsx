@@ -224,11 +224,11 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
               </TabPane>
             </Tabs>
           </div>
-          <div>
+          <div className={styles.panels}>
             {selectedTab === TabName.Collaborative ? (
               <div>
                 {isLogin ? (
-                  <Row gutter={24}>
+                  <Row gutter={12}>
                     <Col span={8}>
                       <SharePool />
                     </Col>
@@ -240,7 +240,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                     </Col>
                   </Row>
                 ) : (
-                  <Row gutter={24}>
+                  <Row gutter={12}>
                     <Col span={12}>
                       <Pool {...PublicProvidedPool} />
                     </Col>
@@ -254,7 +254,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
             {selectedTab === TabName.Private ? (
               <div>
                 {isLogin ? (
-                  <Row gutter={24}>
+                  <Row gutter={12}>
                     <Col span={8}>
                       <AvailablePool />
                     </Col>
@@ -266,7 +266,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                     </Col>
                   </Row>
                 ) : (
-                  <Row gutter={24}>
+                  <Row gutter={12}>
                     <Col span={12}>
                       <AvailablePool />
                     </Col>
