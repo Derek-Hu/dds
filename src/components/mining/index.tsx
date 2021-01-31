@@ -187,7 +187,7 @@ export default class Mining extends Component {
   showLockModal = (isUnlockType: boolean) => {
     this.setState({
       lockReModalVisible: true,
-      isUnlockType
+      isUnlockType,
     });
   };
   closeLockModal = () => {
@@ -212,7 +212,13 @@ export default class Mining extends Component {
   }
 
   render() {
-    const { visible, isLogin, claimModalVisible, lockReModalVisible, isUnlockType } = this.state;
+    const {
+      visible,
+      isLogin,
+      claimModalVisible,
+      lockReModalVisible,
+      isUnlockType,
+    } = this.state;
 
     return (
       <div className={styles.root}>
@@ -247,35 +253,6 @@ export default class Mining extends Component {
 
               <ProgressBar data={barData} />
               <p className={styles.fifo}>First come first served</p>
-
-              {isLogin ? (
-                <Row gutter={24} style={{ marginTop: "40px" }}>
-                  <Col span={8}>
-                    <Pool {...ReTokenBalance} smallSize={true}>
-                      <Button type="primary" className={styles.lock} onClick={() => this.showLockModal(false)}>
-                        Lock reTokens
-                      </Button>
-                      <p>
-                        Lock reTokens to start receving rewards inDDS tokens
-                      </p>
-                    </Pool>
-                  </Col>
-                  <Col span={8}>
-                    <Pool {...LockBalance} smallSize={true}>
-                      <Button type="primary" className={styles.lock} onClick={() => this.showLockModal(true)}>
-                        Unlock reTokens
-                      </Button>
-                      <p>
-                        Unlock reToken to be able to withdraw your reToken from
-                        the liquidity mining
-                      </p>
-                    </Pool>
-                  </Col>
-                  <Col span={8}>
-                    <PoolProgress {...MiningShare} />
-                  </Col>
-                </Row>
-              ) : null}
             </TabPane>
             <TabPane
               tab={
@@ -310,7 +287,7 @@ export default class Mining extends Component {
                 <div>
                   <Button
                     type="primary"
-                    className={styles.cliamBtn}
+                    className={[styles.btn, styles.cliamBtn].join(" ")}
                     onClick={this.showClaimModal}
                   >
                     Claim
@@ -332,6 +309,7 @@ export default class Mining extends Component {
               )}
             </TabPane>
           </Tabs>
+          
           <ModalRender
             visible={claimModalVisible}
             onCancel={this.closeClaimModal}
@@ -363,7 +341,7 @@ export default class Mining extends Component {
             visible={lockReModalVisible}
             onCancel={this.closeLockModal}
             footer={null}
-            title={isUnlockType? 'Unlock reTokens': 'Lock reTokens'}
+            title={isUnlockType ? "Unlock reTokens" : "Lock reTokens"}
             className={commonStyles.commonModal}
           >
             <Row gutter={16} type="flex" justify="space-between" align="middle">
@@ -385,7 +363,11 @@ export default class Mining extends Component {
             </Row>
             <Row className={commonStyles.repay}>
               <Col>
-                <Input placeholder={`Amount for ${isUnlockType? 'unlocking':'locking'}`} />
+                <Input
+                  placeholder={`Amount for ${
+                    isUnlockType ? "unlocking" : "locking"
+                  }`}
+                />
               </Col>
             </Row>
             <Row gutter={16} className={commonStyles.actionBtns}>
@@ -412,6 +394,40 @@ export default class Mining extends Component {
             />
           </ModalRender>
         </div>
+        {isLogin ? <div className={styles.panels}>
+            <Row gutter={24} style={{ marginTop: "40px" }}>
+              <Col span={8}>
+                <Pool {...ReTokenBalance} smallSize={true}>
+                  <Button
+                    type="primary"
+                    className={styles.lock}
+                    onClick={() => this.showLockModal(false)}
+                  >
+                    Lock reTokens
+                  </Button>
+                  <p>Lock reTokens to start receving rewards inDDS tokens</p>
+                </Pool>
+              </Col>
+              <Col span={8}>
+                <Pool {...LockBalance} smallSize={true}>
+                  <Button
+                    type="primary"
+                    className={styles.lock}
+                    onClick={() => this.showLockModal(true)}
+                  >
+                    Unlock reTokens
+                  </Button>
+                  <p>
+                    Unlock reToken to be able to withdraw your reToken from the
+                    liquidity mining
+                  </p>
+                </Pool>
+              </Col>
+              <Col span={8}>
+                <PoolProgress {...MiningShare} />
+              </Col>
+            </Row>
+          </div> : null}
       </div>
     );
   }
