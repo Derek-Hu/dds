@@ -7,7 +7,7 @@ export default class TradeLayout extends Component {
     const { children } = this.props;
     return (
       <div>
-        <Header />
+        <Header/>
         {
           children
         }

@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { Menu, Icon, Row, Col, Button, Drawer } from "antd";
 import styles from "./style.module.less";
-import { NavLink as Link, Link as LLink } from "react-router-dom";
+import { NavLink as Link, Link as LLink, Redirect } from "react-router-dom";
 import SiteContext from "../../layouts/SiteContext";
 import ConnectWallet from "../connect-wallet/index";
 
@@ -35,22 +35,6 @@ const rightMenus = {
   "Terms of Service": "/terms",
 };
 
-const renderRightMenus = (config: any) => {
-  return Object.keys(config).map((linkName) => {
-    const url = config[linkName];
-    const isUrl = typeof url === "string";
-    return isUrl ? (
-      <Menu.Item key={linkName}><Link to={url}>{linkName}</Link></Menu.Item>
-    ) : (
-      <SubMenu
-        key={linkName}
-        title={linkName}
-      >
-        {renderRightMenus(url)}
-      </SubMenu>
-    );
-  });
-};
 export default class Header extends Component<{ darkMode?: boolean }, any> {
   componentDidMount() {}
 
@@ -78,6 +62,27 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
     });
   };
 
+  gotoLink = (url: string) => {
+    this.setState({
+      drawerOpen: false,
+    });
+  };
+  renderRightMenus = (config: any) => {
+    return Object.keys(config).map((linkName) => {
+      const url = config[linkName];
+      const isUrl = typeof url === "string";
+      return isUrl ? (
+        <Menu.Item key={linkName} onClick={() => this.gotoLink(url)}>
+          <LLink to={url}>{linkName}</LLink>
+        </Menu.Item>
+      ) : (
+        <SubMenu key={linkName} title={linkName}>
+          {this.renderRightMenus(url)}
+        </SubMenu>
+      );
+    });
+  };
+
   render() {
     const { darkMode } = this.props;
     const { drawerOpen } = this.state;
@@ -85,28 +90,93 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
       <SiteContext.Consumer>
         {({ isMobile }) =>
           isMobile ? (
-            <div className={styles.homeHeader}>
-              <Row>
-                <Col span={12}>DDerivatives</Col>
-                <Col span={12} style={{ textAlign: "right" }}>
-                  <Icon type="menu" onClick={this.openDrawer} />
-                </Col>
-                <Drawer
-                  onClose={this.onClose}
-                  placement="right"
-                  visible={drawerOpen}
-                  closable={true}
-                >
-                  <Menu
-                    defaultOpenKeys={["sub1"]}
-                    mode="inline"
-                    inlineCollapsed={false}
+            darkMode ? (
+              <div className={styles.homeHeader}>
+                <Row>
+                  <Col span={12}>DDerivatives</Col>
+                  <Col span={12} style={{ textAlign: "right" }}>
+                    <Icon type="menu" onClick={this.openDrawer} />
+                  </Col>
+                  <Drawer
+                    onClose={this.onClose}
+                    placement="right"
+                    visible={drawerOpen}
+                    closable={true}
                   >
-                    {renderRightMenus(rightMenus)}
-                  </Menu>
-                </Drawer>
-              </Row>
-            </div>
+                    <Menu
+                      defaultOpenKeys={["sub1"]}
+                      mode="inline"
+                      inlineCollapsed={false}
+                    >
+                      {this.renderRightMenus(rightMenus)}
+                    </Menu>
+                  </Drawer>
+                </Row>
+              </div>
+            ) : (
+              <div className={[styles.root, darkMode ? "" : styles.light, styles.mobileLight].join(" ")}>
+                <Row type="flex" justify="space-between" align="middle">
+                  <Col span={2}  style={{textAlign: 'center'}}>D</Col>
+                  <Col span={22} style={{textAlign: 'right'}}>
+                    <Menu
+                      onClick={this.handleClick}
+                      selectedKeys={[this.state.current]}
+                      mode="horizontal"
+                    >
+                      <Menu.Item key="trade">
+                        <Link
+                          to="/trade"
+                          activeClassName="ant-menu-item-selected"
+                        >
+                          Trade
+                        </Link>
+                      </Menu.Item>
+                      <Menu.Item key="pool">
+                        <Link
+                          to="/pool"
+                          activeClassName="ant-menu-item-selected"
+                        >
+                          Pool
+                        </Link>
+                      </Menu.Item>
+                      <SubMenu
+                        title={
+                          <span className="submenu-title-wrapper">
+                            DDS&nbsp;&nbsp;
+                            <Icon type="down" />
+                          </span>
+                        }
+                      >
+                        <Menu.Item key="setting:1">
+                          <Link
+                            to="/mining"
+                            activeClassName="ant-menu-item-selected"
+                          >
+                            Mining
+                          </Link>
+                        </Menu.Item>
+                        <Menu.Item key="setting:2">
+                          <Link
+                            to="/swap-burn"
+                            activeClassName="ant-menu-item-selected"
+                          >
+                            Swap & Burn
+                          </Link>
+                        </Menu.Item>
+                      </SubMenu>
+                      <Menu.Item key="broker">
+                        <Link
+                          to="/broker"
+                          activeClassName="ant-menu-item-selected"
+                        >
+                          Broker
+                        </Link>
+                      </Menu.Item>
+                    </Menu>
+                  </Col>
+                </Row>
+              </div>
+            )
           ) : (
             <div
               className={[styles.root, darkMode ? "" : styles.light].join(" ")}
