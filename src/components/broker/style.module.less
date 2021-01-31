@@ -5,6 +5,50 @@
   padding: 0 1em;
   background-color: #f9fafc;
 
+  &.mobile{
+    margin-bottom: 60px;
+    & > h2{
+      font-size: 18px;
+      padding: 0;
+      margin: 30px 0;
+    }
+    .referalInfo{
+      input {
+        margin-bottom: 16px;
+        width: 100%;
+      }
+    }
+    .tabContainer{
+      h3 {
+        font-size: 18px;
+        margin: 30px 0;
+      }
+
+      h3 + p {
+        font-size: 15px;
+      }
+      .percentage{
+        font-size: 30px;
+      }
+      .tabSpark{
+        & > div {
+          margin-top: 28px;
+        }
+        span.ads,
+        {
+          font-size: 18px;
+          margin-bottom: 8px;
+        }
+        span.ads + span{
+          font-size: 14px;
+        }
+      }
+      .tabSpark .col::after{
+        display: none;
+      }
+    }
+  }
+
   .tableList {
     max-width: 900px;
     margin: 0 auto;
@@ -155,6 +199,15 @@
     max-width: 900px;
     margin: 0 auto;
     text-align: center;
+
+    &.mobile{
+      h4 {
+        margin-bottom: 0;
+      }
+      & > div > div{
+        margin-top: 48px;
+      }
+    }
     p {
       font-size: 16px;
       font-weight: bold;

@@ -6,6 +6,7 @@ import Step from "./steps";
 import ReferalDetails, { IData } from "./referal-details";
 import { CustomTabKey } from "../../constant/index";
 import commonStyles from "../funding-balance/modals/style.module.less";
+import SiteContext from "../../layouts/SiteContext";
 
 const { TabPane } = Tabs;
 
@@ -79,8 +80,9 @@ export default class Broker extends Component {
 
   render() {
     const { generateModalVisible } = this.state;
-    return (
-      <div className={styles.root}>
+    return     <SiteContext.Consumer>
+    {({ isMobile }) => (
+      <div className={[styles.root, isMobile? styles.mobile: ''].join(' ')}>
         <h2>Broker</h2>
         <div className={styles.referalInfo}>
           <Input value={url} disabled={true} className={styles.input} />
@@ -113,19 +115,19 @@ export default class Broker extends Component {
               <div className={styles.percentage}>40%</div>
               <p className={styles.descTwo}>Settlements Fee Commission</p>
               <Row className={styles.tabSpark}>
-                <Col span={6} className={styles.col}>
+                <Col  xs={24} sm={12} md={6} lg={6} className={styles.col}>
                   <span className={styles.ads}>{adsData.contry}</span>
                   <span>Countries</span>
                 </Col>
-                <Col span={6} className={styles.col}>
+                <Col  xs={24} sm={12} md={6} lg={6}className={styles.col}>
                   <span className={styles.ads}>{adsData.sparks}</span>
                   <span>Sparks</span>
                 </Col>
-                <Col span={6} className={styles.col}>
+                <Col  xs={24} sm={12} md={6} lg={6} className={styles.col}>
                   <span className={styles.ads}>{adsData.invitations}</span>
                   <span>Invitations</span>
                 </Col>
-                <Col span={6}>
+                <Col  xs={24} sm={12} md={6} lg={6}>
                   <span className={styles.ads}>
                     {numeral(adsData.bonus).format("0,0")}
                   </span>
@@ -178,6 +180,7 @@ export default class Broker extends Component {
           </Row>
         </Modal>
       </div>
-    );
+    )}
+    </SiteContext.Consumer>
   }
 }
