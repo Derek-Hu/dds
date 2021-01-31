@@ -66,6 +66,36 @@ body {
     }
   }
 }
+/** Drawer */
+.ant-drawer-right .ant-drawer-content .ant-drawer-body {
+  padding: 10px 0 0;
+  & > ul {
+    background-color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    color: #303236;
+  }
+  a,
+  .ant-menu,
+  .ant-menu-item:active, .ant-menu-submenu-title:active,
+  .ant-menu-submenu > .ant-menu,
+  .ant-menu-item{
+    background-color: #fff;
+    color: #303236;
+  }
+  .ant-menu-submenu-selected,
+  .ant-menu-submenu-title:hover{
+    color: #303236;
+  }
+  .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected{
+    background-color: #fff;
+    color: #303236;
+  }
+  .ant-menu-submenu-inline > .ant-menu-submenu-title .ant-menu-submenu-arrow::before,
+  .ant-menu-submenu-inline > .ant-menu-submenu-title .ant-menu-submenu-arrow::after{
+    background: #C5C8CE;
+  }
+}
 /** Progress */
 .ant-progress-inner {
   background-color: #e7ebf4;
@@ -138,7 +168,7 @@ body {
 .ant-drawer-content .ant-drawer-header {
   padding: 24px 15px;
   border-bottom: 0;
-  .ant-drawer-title{
+  .ant-drawer-title {
     font-size: 16px;
     font-weight: bold;
     color: #333333;

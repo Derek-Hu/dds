@@ -1,33 +1,74 @@
 import { Component } from "react";
 import { Menu, Icon, Row, Col, Button, Drawer } from "antd";
 import styles from "./style.module.less";
-import { NavLink as Link } from "react-router-dom";
+import { NavLink as Link, Link as LLink } from "react-router-dom";
 import SiteContext from "../../layouts/SiteContext";
 import ConnectWallet from "../connect-wallet/index";
 
 const { SubMenu } = Menu;
 
-const mobileHeader = () => {
-  return (
-    <Row>
-      <Col span={12}>DDerivatives</Col>
-      <Col span={12} style={{ textAlign: "right" }}>
-        <Icon type="menu" />
-      </Col>
-      <Drawer title="Basic Drawer" placement="right" closable={true}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-      </Drawer>
-    </Row>
-  );
+const rightMenus = {
+  Trade: "/trade",
+  Pool: "/pool",
+  DDS: {
+    Mining: "/mining",
+    Swap: "/swap-burn",
+  },
+  Broker: "/broker",
+  Analytics: "/home",
+  Support: {
+    Whitepaper: "/Whitepaper",
+    FAQ: "/faq",
+    "Developer Docs": "/docs",
+    API: "/api",
+    Github: "/github",
+    Twitter: "/Twitter",
+    Reddit: "/Reddit",
+    "DDerivatives DAO": "/dao",
+    Vote: "/vote",
+  },
+  Audit: "/home",
+  "Bug Bounty": "/home",
+  Liquidator: "/home",
+  Blog: "/home",
+  "Brand Assets": "/home",
+  "Terms of Service": "/terms",
 };
 
+const renderRightMenus = (config: any) => {
+  return Object.keys(config).map((linkName) => {
+    const url = config[linkName];
+    const isUrl = typeof url === "string";
+    return isUrl ? (
+      <Menu.Item key={linkName}><Link to={url}>{linkName}</Link></Menu.Item>
+    ) : (
+      <SubMenu
+        key={linkName}
+        title={linkName}
+      >
+        {renderRightMenus(url)}
+      </SubMenu>
+    );
+  });
+};
 export default class Header extends Component<{ darkMode?: boolean }, any> {
   componentDidMount() {}
 
   state = {
     current: "mail",
+    drawerOpen: false,
+  };
+
+  openDrawer = () => {
+    this.setState({
+      drawerOpen: true,
+    });
+  };
+
+  onClose = () => {
+    this.setState({
+      drawerOpen: false,
+    });
   };
 
   handleClick = (e: any) => {
@@ -39,11 +80,33 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
 
   render() {
     const { darkMode } = this.props;
+    const { drawerOpen } = this.state;
     return (
       <SiteContext.Consumer>
         {({ isMobile }) =>
           isMobile ? (
-            mobileHeader()
+            <div className={styles.homeHeader}>
+              <Row>
+                <Col span={12}>DDerivatives</Col>
+                <Col span={12} style={{ textAlign: "right" }}>
+                  <Icon type="menu" onClick={this.openDrawer} />
+                </Col>
+                <Drawer
+                  onClose={this.onClose}
+                  placement="right"
+                  visible={drawerOpen}
+                  closable={true}
+                >
+                  <Menu
+                    defaultOpenKeys={["sub1"]}
+                    mode="inline"
+                    inlineCollapsed={false}
+                  >
+                    {renderRightMenus(rightMenus)}
+                  </Menu>
+                </Drawer>
+              </Row>
+            </div>
           ) : (
             <div
               className={[styles.root, darkMode ? "" : styles.light].join(" ")}

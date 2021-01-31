@@ -13,15 +13,12 @@ export default () => {
               Decentralized Non-Risk Perpetual Exchange
             </h2>
             <Button className={styles.spot}>Spot Trading</Button>
-            {isMobile ? null : (
-              <Button className={styles.read} type="link">
-                Read the docs
-              </Button>
-            )}
+            <Button className={styles.read} type="link">
+              Read the docs
+            </Button>
           </div>
-        </div> 
+        </div>
       )}
     </SiteContext.Consumer>
   );
 };
-
