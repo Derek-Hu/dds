@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 
 export interface IRouter {
   path: string;
@@ -26,6 +26,11 @@ const renderItems = (items?: IRouter[]) => {
           }
           return <Route exact={true} key={path} path={path} component={Component}></Route>;
         }): null}
+        <Route render={() => <Redirect
+            to={{
+              pathname: "/home"
+            }}
+          />} />
     </Switch>
   );
 };

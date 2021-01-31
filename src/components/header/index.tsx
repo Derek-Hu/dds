@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { Menu, Icon, Row, Col, Button, Drawer } from "antd";
 import styles from "./style.module.less";
-import { Link } from "react-router-dom";
+import { NavLink as Link  } from "react-router-dom";
 import SiteContext from "../../layouts/SiteContext";
 
 const { SubMenu } = Menu;
@@ -39,7 +39,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
       current: e.key,
     });
   };
-
+  
   render() {
     const { darkMode } = this.props;
     return (
@@ -56,13 +56,13 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                   mode="horizontal"
                 >
                   <Menu.Item key="logo" className={styles.dderivatives}>
-                    <Link to="/home">DDerivatives</Link>
+                    <Link to="/home" activeClassName="ant-menu-item-selected">DDerivatives</Link>
                   </Menu.Item>
                   <Menu.Item key="trade">
-                    <Link to="/trade">Trade</Link>
+                    <Link to="/trade" activeClassName="ant-menu-item-selected">Trade</Link>
                   </Menu.Item>
                   <Menu.Item key="pool">
-                    <Link to="/pool">Pool</Link>
+                    <Link to="/pool" activeClassName="ant-menu-item-selected">Pool</Link>
                   </Menu.Item>
                   <SubMenu
                     title={
@@ -73,17 +73,17 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                     }
                   >
                     <Menu.Item key="setting:1">
-                      <Link to="/mining">Mining</Link>
+                      <Link to="/mining"  activeClassName="ant-menu-item-selected">Mining</Link>
                     </Menu.Item>
                     <Menu.Item key="setting:2">
-                      <Link to="/swap-burn">Swap & Burn</Link>
+                      <Link to="/swap-burn"  activeClassName="ant-menu-item-selected">Swap & Burn</Link>
                     </Menu.Item>
                   </SubMenu>
                   <Menu.Item key="broker">
-                    <Link to="/broker">Broker</Link>
+                    <Link to="/broker"  activeClassName="ant-menu-item-selected">Broker</Link>
                   </Menu.Item>
                   <Menu.Item key="analytics">
-                    <Link to="/analytics">Analytics</Link>
+                    <Link to="/analytics" activeClassName="ant-menu-item-selected">Analytics</Link>
                   </Menu.Item>
                   <Menu.Item key="support">
                     Support&nbsp;&nbsp;
