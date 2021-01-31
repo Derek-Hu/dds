@@ -38,8 +38,10 @@ export default class Layout extends Component<RouteComponentProps, IState> {
     const LayoutComp = location.pathname === "/home" ? HomeLayout : TradeLayout;
 
     return (
-      <SiteContext.Provider value={{isMobile, direction: 'ltr' }}>
-        <LayoutComp>{children}</LayoutComp>
+      <SiteContext.Provider value={{ isMobile, direction: "ltr" }}>
+        <div className={isMobile ? "mobile" : ""}>
+          <LayoutComp>{children}</LayoutComp>
+        </div>
       </SiteContext.Provider>
     );
   }

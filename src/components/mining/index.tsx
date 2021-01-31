@@ -11,6 +11,7 @@ import PoolProgress, { IMiningShare } from "../progress-bar/pool-progress";
 import ColumnConvert from "../column-convert/index";
 import ModalRender from "../modal-render/index";
 import currStyles from "../trade-bonus/modals/style.module.less";
+import SiteContext from "../../layouts/SiteContext";
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -224,8 +225,9 @@ export default class Mining extends Component {
       selectedTab
     } = this.state;
 
-    return (
-      <div className={styles.root}>
+    return <SiteContext.Consumer>
+    {({ isMobile }) => (
+      <div className={[styles.root, styles.mobile].join(' ')}>
         <h2>Mining</h2>
         <div className={styles.tabContainer}>
           <Tabs
@@ -400,7 +402,7 @@ export default class Mining extends Component {
         </div>
         {isLogin  && selectedTab === TabName.Liquidity ? <div className={styles.panels}>
             <Row gutter={24} style={{ marginTop: "40px" }}>
-              <Col span={8}>
+              <Col xs={24} sm={24} md={8} lg={8}>
                 <Pool {...ReTokenBalance} smallSize={true}>
                   <Button
                     type="primary"
@@ -412,7 +414,7 @@ export default class Mining extends Component {
                   <p>Lock reTokens to start receving rewards inDDS tokens</p>
                 </Pool>
               </Col>
-              <Col span={8}>
+              <Col xs={24} sm={24} md={8} lg={8}>
                 <Pool {...LockBalance} smallSize={true}>
                   <Button
                     type="primary"
@@ -427,12 +429,13 @@ export default class Mining extends Component {
                   </p>
                 </Pool>
               </Col>
-              <Col span={8}>
+              <Col xs={24} sm={24} md={8} lg={8}>
                 <PoolProgress {...MiningShare} />
               </Col>
             </Row>
           </div> : null}
       </div>
-    );
+    )}
+    </SiteContext.Consumer>
   }
 }

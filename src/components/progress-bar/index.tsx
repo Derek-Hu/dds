@@ -1,5 +1,6 @@
 import { Progress, Row, Col } from "antd";
 import styles from "./style.module.less";
+import SiteContext from "../../layouts/SiteContext";
 
 export interface IBarData {
   left: {
@@ -15,8 +16,9 @@ export interface IBarData {
 export default ({ data }: { data: IBarData }) => {
   const { left, right, unit } = data;
   
-  return (
-    <>
+  return <SiteContext.Consumer>
+  {({ isMobile }) => (
+    <div className={isMobile ? styles.mobile : ''}>
       <Row>
         <Col span={12} className={styles.left}>
           <span className={styles.today}>{left.title}:</span>
@@ -33,10 +35,11 @@ export default ({ data }: { data: IBarData }) => {
       <Progress
         percent={left.percentage}
         strokeColor={{ from: "#0072F4", to: "#0055FF" }}
-        strokeWidth={20}
+        strokeWidth={isMobile ? 15: 20}
         showInfo={false}
         strokeLinecap="square"
       />
-    </>
-  );
+    </div>
+  )}
+  </SiteContext.Consumer>
 };

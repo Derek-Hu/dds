@@ -1,6 +1,6 @@
 body {
   -webkit-font-smoothing: antialiased;
-  background-color: #F9FAFC !important;
+  background-color: #f9fafc !important;
   font-family: Gilroy-Heavy, Gilroy !important;
 }
 
@@ -41,10 +41,8 @@ body {
   font-weight: normal;
 }
 
-
 /** Modal */
-.ant-modal-root{
-
+.ant-modal-root {
   .ant-modal-title {
     font-size: 24px;
     text-align: center;
@@ -54,16 +52,16 @@ body {
     padding: 36px 0 4px;
     border-bottom: 0;
   }
-  .ant-modal-footer{
-    border-top: 0 ;
+  .ant-modal-footer {
+    border-top: 0;
     text-align: center;
     padding-bottom: 40px;
-  
+
     button {
       width: 80%;
     }
-  
-    button + button{
+
+    button + button {
       margin-left: 16px !important;
     }
   }
@@ -91,7 +89,7 @@ body {
 
 /** Tabs */
 .dds-tabs {
-  .ant-tabs-bar{
+  .ant-tabs-bar {
     border: 0;
   }
   & > .ant-tabs-bar {
@@ -117,6 +115,19 @@ body {
     }
     .ant-tabs-ink-bar {
       visibility: hidden;
+    }
+  }
+}
+
+.mobile {
+  .dds-tabs {
+    & > .ant-tabs-bar {
+      .ant-tabs-tab {
+        font-size: 14px;
+        line-height: 50px;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
     }
   }
 }
