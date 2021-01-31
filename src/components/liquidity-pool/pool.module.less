@@ -1,4 +1,26 @@
 .root {
+  &.small.mobile{
+    & > h4{
+      font-size: 16px;
+    }
+    .coinName{
+      font-size: 12px;
+    }
+    .coinName + span {
+      font-size: 16px;
+    }
+    .numbers,
+    .numbers span{
+      font-size: 16px;
+    }
+    button{
+      width: 100%;
+      border-radius: 4px;
+    }
+    button + p {
+      font-size: 12px;
+    }
+  }
   &.small {
     & > p.numbers {
       margin: 20px 0 30px;

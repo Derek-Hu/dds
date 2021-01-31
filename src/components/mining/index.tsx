@@ -227,7 +227,7 @@ export default class Mining extends Component {
 
     return <SiteContext.Consumer>
     {({ isMobile }) => (
-      <div className={[styles.root, styles.mobile].join(' ')}>
+      <div className={[styles.root, isMobile ? styles.mobile: ''].join(' ')}>
         <h2>Mining</h2>
         <div className={styles.tabContainer}>
           <Tabs

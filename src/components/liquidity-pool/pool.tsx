@@ -1,6 +1,7 @@
 import { Row, Col } from "antd";
 import styles from "./pool.module.less";
 import numeral from "numeral";
+import SiteContext from "../../layouts/SiteContext";
 
 export interface IPool {
   title: string;
@@ -12,22 +13,24 @@ export interface IPool {
 export default (props: IPool) => {
   const { title, usd, coins, children, smallSize } = props;
   return (
-    <div className={[styles.root, smallSize ?styles.small:''].join(' ')}>
-      <h4>{title}</h4>
-      <p className={styles.numbers}>
-        {numeral(usd).format("0,0")} <span>USD</span>
-      </p>
-      <Row>
-        {coins.map(({ name, value }) => (
-          <Col key={name} span={8}>
-            <p className={styles.coinName}>{name}</p>
-            <span>{value}</span>
-          </Col>
-        ))}
-      </Row>
-      {
-        children
-      }
-    </div>
+    <SiteContext.Consumer>
+      {({ isMobile }) => (
+        <div className={[styles.root, smallSize ? styles.small : "", isMobile? styles.mobile: ''].join(" ")}>
+          <h4>{title}</h4>
+          <p className={styles.numbers}>
+            {numeral(usd).format("0,0")} <span>USD</span>
+          </p>
+          <Row>
+            {coins.map(({ name, value }) => (
+              <Col key={name} span={8}>
+                <p className={styles.coinName}>{name}</p>
+                <span>{value}</span>
+              </Col>
+            ))}
+          </Row>
+          {children}
+        </div>
+      )}
+    </SiteContext.Consumer>
   );
 };
