@@ -15,6 +15,7 @@ import numeral from "numeral";
 import FillGrid from "../fill-grid";
 import ModalRender from "../modal-render/index";
 import commonStyles from "../funding-balance/modals/style.module.less";
+import SiteContext from "../../layouts/SiteContext";
 
 const { Option } = Select;
 
@@ -41,8 +42,9 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
   };
 
   render() {
-    return (
-      <div className={styles.root}>
+    return <SiteContext.Consumer>
+    {({ isMobile }) => (
+      <div className={[styles.root, isMobile? styles.mobile: ''].join(' ')}>
         <h1>Swap & burn</h1>
         <div className={styles.card}>
           <div className={styles.imgBar}>
@@ -125,6 +127,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
           </Row>
         </ModalRender>
       </div>
-    );
+    )}
+    </SiteContext.Consumer>
   }
 }
