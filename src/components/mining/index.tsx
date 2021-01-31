@@ -14,9 +14,10 @@ import currStyles from "../trade-bonus/modals/style.module.less";
 
 const { Option } = Select;
 const { TabPane } = Tabs;
-const style = {
-  color: "#1346FF",
-  fontSize: "18px",
+
+const TabName = {
+  Liquidity: "liquidity mining",
+  Utilization: "liquidity utilization mining",
 };
 
 const mining = {
@@ -172,6 +173,7 @@ export default class Mining extends Component {
     isUnlockType: false,
     claimModalVisible: false,
     lockReModalVisible: false,
+    selectedTab: TabName.Liquidity,
   };
 
   showWithDraw = () => {
@@ -206,10 +208,11 @@ export default class Mining extends Component {
       claimModalVisible: false,
     });
   };
-
-  callback(key: string) {
-    console.log(key);
-  }
+  callback = (selectedTab: string) => {
+    this.setState({
+      selectedTab,
+    });
+  };
 
   render() {
     const {
@@ -218,6 +221,7 @@ export default class Mining extends Component {
       claimModalVisible,
       lockReModalVisible,
       isUnlockType,
+      selectedTab
     } = this.state;
 
     return (
@@ -225,13 +229,13 @@ export default class Mining extends Component {
         <h2>Mining</h2>
         <div className={styles.tabContainer}>
           <Tabs
-            defaultActiveKey="mining"
+            defaultActiveKey={selectedTab}
             className={CustomTabKey}
             onChange={this.callback}
           >
             <TabPane
-              tab={<span className={styles.uppercase}>liquidity mining</span>}
-              key="mining"
+              tab={<span className={styles.uppercase}>{TabName.Liquidity}</span>}
+              key={TabName.Liquidity}
             >
               <h3>Liquidity Mining Reward Today</h3>
               <p className={styles.coins}>
@@ -257,10 +261,10 @@ export default class Mining extends Component {
             <TabPane
               tab={
                 <span className={styles.uppercase}>
-                  liquidity utilization mining
+                  {TabName.Utilization}
                 </span>
               }
-              key="utilization"
+              key={TabName.Utilization}
             >
               <h3>Liquidity Utilization Mining Reward Today</h3>
               <p className={styles.coins}>
@@ -394,7 +398,7 @@ export default class Mining extends Component {
             />
           </ModalRender>
         </div>
-        {isLogin ? <div className={styles.panels}>
+        {isLogin  && selectedTab === TabName.Liquidity ? <div className={styles.panels}>
             <Row gutter={24} style={{ marginTop: "40px" }}>
               <Col span={8}>
                 <Pool {...ReTokenBalance} smallSize={true}>
