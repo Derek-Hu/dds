@@ -142,11 +142,11 @@ export default class Broker extends Component {
             >
               <h3 className={styles.referalTitle}>Summary</h3>
               <Row>
-                <Col span={12} className={styles.col}>
+                <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
                   <span className={styles.ads}>{referalInfo.referrals}</span>
                   <span>Referrals</span>
                 </Col>
-                <Col span={12} className={styles.col}>
+                <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
                   <span className={styles.ads}>{referalInfo.bonus}</span>
                   <span>Bonus(DDS)</span>
                 </Col>

@@ -2,6 +2,7 @@ import { Table, Icon, Button } from "antd";
 import dayjs from "dayjs";
 import numeral from "numeral";
 import styles from "./style.module.less";
+import SiteContext from "../../layouts/SiteContext";
 
 const columns = [
   {
@@ -43,15 +44,23 @@ export interface IData {
 }
 export default ({ data }: { data: IData[] }) => {
   return (
-    <div className={styles.tableList}>
-      <h4>refeerals details</h4>
-      <Table
-        rowKey="coin"
-        columns={columns}
-        pagination={false}
-        dataSource={data}
-      />
-      <Button type="link" className={styles.more}>More&nbsp;<Icon type="down" /></Button>
-    </div>
+    <SiteContext.Consumer>
+      {({ isMobile }) => (
+        <div className={styles.tableList}>
+          <h4>refeerals details</h4>
+          <Table
+            rowKey="coin"
+            columns={columns}
+            pagination={false}
+            dataSource={data}
+            scroll={isMobile ? { x: 600 } : undefined}
+          />
+          <Button type="link" className={styles.more}>
+            More&nbsp;
+            <Icon type="down" />
+          </Button>
+        </div>
+      )}
+    </SiteContext.Consumer>
   );
 };
