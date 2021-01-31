@@ -1,4 +1,18 @@
 .root {
+  &.mobile{
+    background-color: #F9FAFC;
+    .currPrice, .headArea{
+      padding-left: 16px;
+    }
+    .range{
+      text-align: left;
+    }
+    :global{
+      .ant-select-selection{
+        background-color: transparent;
+      }
+    }
+  }
   .currPrice, .headArea{
     padding-left: 50px;
   }
@@ -17,6 +31,7 @@
     }
   }
   .range {
+    text-align: right;
     button {
       font-size: 14px;
       font-weight: 500;
