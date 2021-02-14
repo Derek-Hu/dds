@@ -1,35 +1,95 @@
-import { Component } from "react";
-import { Select, Row, Col, Button } from "antd";
-import styles from "./style.module.less";
-import SiteContext from "../../layouts/SiteContext";
-import ModalRender from "../modal-render/index";
-import commonStyles from "../funding-balance/modals/style.module.less";
+import { Component } from 'react';
+import { Select, Row, Col, Button } from 'antd';
+import styles from './style.module.less';
+import SiteContext from '../../layouts/SiteContext';
+import ModalRender from '../modal-render/index';
+import commonStyles from '../funding-balance/modals/style.module.less';
+import { metamaskWallet } from '../../wallet/metamask';
+import { Subscription } from 'rxjs';
 
 const { Option } = Select;
+const SupporttedWallets = ['Metamask', 'Wallet Connect'];
 
-const SupporttedWallets = ["Metamask", "Wallet Connect"];
 export default class ConnectWallet extends Component<any, any> {
   state = {
     visible: false,
     isConnected: false,
-    walletType: "Metamask",
+    walletType: 'Metamask',
+    account: undefined,
   };
 
-  switchWallet = (walletType: string) => {
-    this.setState({
-      walletType,
-    });
+  private accSub: Subscription | null = null;
+
+  componentDidMount = () => {
+    this.watchWalletAccount();
   };
+
+  componentWillUnmount() {
+    this.unWatchWalletAccount();
+  }
+
+  switchWallet = (walletType: string) => {
+    this.setState(
+      {
+        walletType,
+        isConnected: false,
+      },
+      () => this.watchWalletAccount()
+    );
+  };
+
   showModal = () => {
     this.setState({
       visible: true,
     });
   };
+
   closeDepositModal = () => {
     this.setState({
       visible: false,
     });
   };
+
+  connectWallet = () => {
+    if (this.state.isConnected) {
+      return;
+    }
+
+    switch (this.state.walletType) {
+      case 'Metamask': {
+        metamaskWallet.doConnect();
+        break;
+      }
+      default: {
+      }
+    }
+  };
+
+  unWatchWalletAccount() {
+    if (this.accSub) {
+      this.accSub.unsubscribe();
+    }
+  }
+
+  watchWalletAccount() {
+    this.unWatchWalletAccount();
+
+    switch (this.state.walletType) {
+      case 'Metamask': {
+        this.accSub = metamaskWallet
+          .watchAccount()
+          .subscribe((account: string | null) => {
+            this.setState({
+              isConnected: account !== null,
+              account,
+            });
+          });
+        break;
+      }
+      default: {
+      }
+    }
+  }
 
   render() {
     const { visible, isConnected, walletType } = this.state;
@@ -53,7 +113,7 @@ export default class ConnectWallet extends Component<any, any> {
                   <Col
                     key={name}
                     span={24}
-                    className={walletType === name ? styles.active : ""}
+                    className={walletType === name ? styles.active : ''}
                   >
                     <Button onClick={() => this.switchWallet(name)}>
                       {name}
@@ -63,19 +123,25 @@ export default class ConnectWallet extends Component<any, any> {
                 {isConnected ? (
                   <Col span={24}>
                     <Select
-                      defaultValue="0x43278r9eifkdss"
-                      style={{ width: "100%", height: 50 }}
+                      defaultValue={this.state.account}
+                      value={this.state.account}
+                      style={{ width: '100%', height: 50 }}
                     >
-                      <Option value="0x43278r9eifkdss">0x43278r9eifkdss</Option>
-                      <Option value="0x4327ewdsifkdss">0x4327ewdsifkdss</Option>
+                      <Option value={this.state.account}>
+                        {this.state.account}
+                      </Option>
                     </Select>
                   </Col>
                 ) : null}
                 <Col span={24}>
                   {isConnected ? (
-                    <Button type="primary">Disconnect Wallet</Button>
+                    <Button type="primary" disabled={true}>
+                      Connected
+                    </Button>
                   ) : (
-                    <Button type="primary">Connect Wallet</Button>
+                    <Button type="primary" onClick={() => this.connectWallet()}>
+                      Connect Wallet
+                    </Button>
                   )}
                 </Col>
               </Row>
