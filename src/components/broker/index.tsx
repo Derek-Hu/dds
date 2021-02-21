@@ -253,21 +253,21 @@ export default class Broker extends Component {
                 <TabPane tab={<span className={styles.uppercase}>My referral</span>} key={tabName.referal}>
                   <h3>Summary</h3>
                   <Row className="padding-bottom-60">
-                    <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
+                    <Col xs={24} sm={24} md={8} lg={8} className={styles.col}>
                       <span className={styles.ads}>{'A'}</span>
                       <span>Current Level</span>
                     </Col>
-                    <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
+                    <Col xs={24} sm={24} md={8} lg={8} className={styles.col}>
                       <span className={styles.ads}>{referalInfo.referrals}</span>
                       <span>Ranking</span>
                     </Col>
-                    <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
+                    <Col xs={24} sm={24} md={8} lg={8} className={styles.col}>
                       <span className={styles.ads}>{referalInfo.referrals}</span>
                       <span>Referrals</span>
                     </Col>
                     <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
                       <span className={styles.ads}>{referalInfo.bonus}</span>
-                      <span>Bonus(DDS)</span>
+                      <span>Bonus(USD)</span>
                     </Col>
                   </Row>
                 </TabPane>
@@ -293,7 +293,7 @@ export default class Broker extends Component {
                     </Pool>
                   </Col>
                 </Row>
-                <ReferalDetails data={data} />
+                {/* <ReferalDetails data={data} /> */}
               </>
             )}
             <ModalRender

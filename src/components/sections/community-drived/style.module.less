@@ -1,15 +1,8 @@
 @import "../variables.less";
 @import "../../common.less";
 
-.root {
-  .contentMixin;
-
-  padding-top: 140px;
-  text-align: center;
-  color: #383838;
-  background-color: #fff;
-
-  &.mobile {
+:global(.mobile){
+  .root {
     padding: 100px 1em 100px;
 
     h3 {
@@ -33,6 +26,16 @@
       color: #383838;
     }
   }
+}
+
+.root {
+  .contentMixin;
+
+  padding-top: 140px;
+  text-align: center;
+  color: #383838;
+  background-color: #fff;
+
   .name {
     font-size: 18px;
     font-weight: bold;

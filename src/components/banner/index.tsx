@@ -1,6 +1,5 @@
 import { Button } from 'antd';
 import styles from './style.module.less';
-import SiteContext from '../../layouts/SiteContext';
 import { Link } from 'react-router-dom';
 
 export default () => {

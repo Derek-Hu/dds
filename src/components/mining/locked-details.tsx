@@ -14,9 +14,9 @@ const columns = [
     },
   },
   {
-    title: "Size",
-    dataIndex: "size",
-    key: "size",
+    title: "Amount",
+    dataIndex: "amount",
+    key: "amount",
   },
   {
     title: "Liquidity Locked",

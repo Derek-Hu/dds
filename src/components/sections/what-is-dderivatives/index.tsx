@@ -12,7 +12,7 @@ export default () => {
   return (
     <SiteContext.Consumer>
       {({ isMobile }) => (
-        <div className={[styles.root, isMobile ? styles.mobile : ""].join(" ")}>
+        <div className={styles.root}>
           <div>
             <Row>
               { isMobile ? null : adsImage}

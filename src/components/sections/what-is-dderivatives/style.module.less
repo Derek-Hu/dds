@@ -1,18 +1,8 @@
-@import "../variables.less";
-@import "../../common.less";
+@import '../variables.less';
+@import '../../common.less';
 
-.root {
-  .contentMixin;
-
-  background-color: #fff;
-  // min-height: 320px;
-  margin: 80px auto 60px;
-
-  & > div {
-    background-color: #f9fafc;
-  }
-
-  &.mobile {
+:global(.mobile) {
+  .root {
     padding: 30px 16px 80px;
     margin: 0;
     background-color: #fff;
@@ -41,6 +31,17 @@
         margin-bottom: 0;
       }
     }
+  }
+}
+
+.root {
+  .contentMixin;
+
+  background-color: #fff;
+  margin: 80px auto 60px;
+
+  & > div {
+    background-color: #f9fafc;
   }
 
   .message {

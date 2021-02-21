@@ -1,23 +1,9 @@
 @import "../variables.less";
 @import "../../common.less";
 
-.root {
-  .contentMixin;
-
-  text-align: center;
-  color: #fff;
-  background-color: #fff;
-  padding-bottom: 80px;
-  padding-top: 140px;
-
-  i {
-    color: #a8b0bb;
-    font-size: 60px;
-    margin-top: 70px;
-  }
-  &.mobile {
+:global(.mobile){
+  .root {
     background-color: #0e1421;
-    // margin-top: 100px;
     padding: 30px 15px 50px;
     h3 {
       color: #fff;
@@ -37,15 +23,19 @@
       margin-top: 50px;
     }
   }
+}
+.root {
+  .contentMixin;
 
-  // ul {
-  //   list-style: none;
-  //   padding: 0;
-  //   li {
-  //     display: inline-block;
-  //   }
-  //   li + li {
-  //     margin-left: 60px;
-  //   }
-  // }
+  text-align: center;
+  color: #fff;
+  background-color: #fff;
+  padding-bottom: 80px;
+  padding-top: 140px;
+
+  i {
+    color: #a8b0bb;
+    font-size: 60px;
+    margin-top: 70px;
+  }
 }

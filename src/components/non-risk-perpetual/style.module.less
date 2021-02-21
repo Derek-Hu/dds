@@ -1,11 +1,9 @@
 @import "../sections/variables.less";
 @import "../common.less";
 
-.root {
-  .contentMixin;
-  margin-bottom: 100px;
 
-  &.mobile {
+:global(.mobile){
+  .root {
     padding: 0 0 80px;
     margin-bottom: 0;
     background: #FFF;
@@ -20,6 +18,11 @@
       }
     }
   }
+}
+
+.root {
+  .contentMixin;
+  margin-bottom: 100px;
 
   .tradeBtn {
     display: inline-block;
@@ -75,6 +78,7 @@
   .coin {
     font-size: 20px;
     color: #333333;
+    font-weight: bold;
   }
   .usdt {
     font-size: 14px;

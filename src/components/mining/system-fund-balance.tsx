@@ -40,7 +40,7 @@ export default ({isLogin}: {isLogin:boolean}) => {
             </div>
             {
               isLogin ? <p className={styles.current}>
-                You are at <span>NO.23/Na</span>
+                You are at <span>NO.23-N/A</span>
               </p>: <p>Connect wallet to see your ranking</p> 
             }
             

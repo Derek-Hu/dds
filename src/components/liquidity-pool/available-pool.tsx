@@ -6,7 +6,7 @@ const style = {
 }
 const data: IMiningShare = {
     title: 'Available Liquidity',
-    desc: <span>Total Liquidity: <span style={style}>23534.33</span> USD</span>,
+    // desc: <span>Total Liquidity: <span style={style}>23534.33</span> USD</span>,
     coins: [{
         label: 'DAI',
         percentage: 25,

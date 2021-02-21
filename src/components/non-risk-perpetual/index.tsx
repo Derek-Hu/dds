@@ -1,75 +1,19 @@
-import { Table, Row, Col } from "antd";
-import styles from "./style.module.less";
-import numeral from "numeral";
-import SiteContext from "../../layouts/SiteContext";
-import ColumnConvert from "../column-convert/index";
+import { Table, Row, Col } from 'antd';
+import styles from './style.module.less';
+import numeral from 'numeral';
+import SiteContext from '../../layouts/SiteContext';
+import columns, { INonRiskPerpetual } from './columns';
 
-interface INonRiskPerpetual {
-  coin: string;
-  price: number;
-  change: number;
-  chart: string;
+export interface INonRecords {
+  total: number;
+  data: INonRiskPerpetual[];
 }
 
-
-const columns = ColumnConvert<INonRiskPerpetual, { action: any }>({
-    column: {
-      coin: "Coin",
-      price: <span className={styles.price}>Last Price</span>,
-      change: <span className={styles.change}>24h Change</span>,
-      // chart: "Chart",
-      action: "Action",
-    },
-    render(value, key) {
-      switch (key) {
-        case "coin":
-          return (
-            <span>
-              <span className={styles.coin}>{value}</span>
-              <span className={styles.usdt}> / DAI</span>
-            </span>
-          );
-        case "price":
-          return <span className={styles.priceVal}>{value}</span>;
-        case "change":
-          return (
-            <span
-              className={[
-                styles.changeVal,
-                value < 0 ? styles.negative : "",
-              ].join(" ")}
-            >
-              {value > 0 ? "+" : ""}
-              {value}%
-            </span>
-          );
-        case "action":
-          return <span className={styles.tradeBtn}>Trade</span>;
-        default:
-          return value;
-      }
-    },
-  });
-
-const data = [
-  {
-    coin: "WBTC",
-    price: "7173.77",
-    change: 8.23,
-  },
-  {
-    coin: "ETH",
-    price: "183.28",
-    change: -10.01,
-  },
-];
-
-const total = 82323123;
-export default () => {
+export default ({ data, total }: INonRecords) => {
   return (
     <SiteContext.Consumer>
       {({ isMobile }) => (
-        <div className={[styles.root, isMobile ? styles.mobile : ""].join(" ")}>
+        <div className={styles.root}>
           <div className={styles.content}>
             <div className={styles.head}>
               <Row>
@@ -77,19 +21,9 @@ export default () => {
                   <h2>Non-Risk Perpetual</h2>
                 </Col>
                 {isMobile ? null : (
-                  <Col
-                    xs={24}
-                    sm={24}
-                    md={24}
-                    lg={12}
-                    className={[styles.col, styles.summary].join(" ")}
-                  >
+                  <Col xs={24} sm={24} md={24} lg={12} className={[styles.col, styles.summary].join(' ')}>
                     <span>
-                      24h trading volumn:{" "}
-                      <span className={styles.total}>
-                        {numeral(total).format("0,0")}
-                      </span>{" "}
-                      USD
+                      24h trading volumn: <span className={styles.total}>{numeral(total).format('0,0')}</span> USD
                     </span>
                   </Col>
                 )}
@@ -98,7 +32,7 @@ export default () => {
             <Table
               rowKey="coin"
               columns={columns}
-              scroll={ isMobile  ? { x: 800 }: undefined}
+              scroll={isMobile ? { x: 800 } : undefined}
               pagination={false}
               dataSource={data}
             />

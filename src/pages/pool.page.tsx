@@ -3,7 +3,7 @@ import { Icon, Modal, Button, Checkbox } from "antd";
 import LiquidityPool from "../components/liquidity-pool/index";
 import styles from "./style.module.less";
 
-const isLogin = false;
+const isLogin = true;
 
 export default class PoolPage extends Component {
   componentDidMount() {
@@ -46,7 +46,7 @@ export default class PoolPage extends Component {
           onCancel={this.closeAgree}
           footer={[
             <Button type="danger" onClick={this.closeAgree}>
-              Go to deposit
+              I understand and agree
             </Button>,
             <Checkbox
               checked={agreed}

@@ -182,19 +182,19 @@ const MiningShare: IMiningShare = {
   ),
   coins: [
     {
-      label: 'reDAI',
+      label: 'DAI',
       percentage: 25,
-      // val: <span>37863/ 65349</span>,
+      val: <span>37863</span>,
     },
     {
-      label: 'reUSDC',
+      label: 'USDC',
       percentage: 75,
-      // val: <span>37863/ 65349</span>,
+      val: <span>37863</span>,
     },
     {
-      label: 'reUSDT',
+      label: 'USDT',
       percentage: 55,
-      // val: <span>37863/ 65349</span>,
+      val: <span>37863349</span>,
     },
   ],
   totalMode: true,
@@ -209,7 +209,7 @@ export default class Mining extends Component {
 
   state = {
     visible: false,
-    isLogin: false,
+    isLogin: true,
     isUnlockType: false,
     claimModalVisible: false,
     lockReModalVisible: false,
@@ -265,13 +265,9 @@ export default class Mining extends Component {
             <div className={styles.tabContainer}>
               <Tabs defaultActiveKey={selectedTab} className={CustomTabKey} onChange={this.callback}>
                 <TabPane tab={<span className={styles.uppercase}>{TabName.Liquidity}</span>} key={TabName.Liquidity}>
-                  <h3>Liquidity Mining Reward</h3>
+                  <h3>{isLogin ? 'Your Liquidity Mining Reward' : 'Liquidity Mining Reward Today'}</h3>
                   <p className={styles.coins}>{numeral(mining.money).format('0,0')} DDS</p>
-                  {isLogin ? (
-                    <p className={styles.dynamic}>
-                      <span>24h</span> +3000
-                    </p>
-                  ) : (
+                  {isLogin ? null : (
                     <p className={styles.dynamic}>
                       <span>Current reward factor </span>
                       <br />
@@ -292,7 +288,7 @@ export default class Mining extends Component {
                   tab={<span className={styles.uppercase}>{TabName.Utilization}</span>}
                   key={TabName.Utilization}
                 >
-                  <h3>Liquidity Locked Rewards Today</h3>
+                  <h3>{isLogin ? 'Your Liquidity Locked Rewards' : 'Liquidity Locked Rewards Today'}</h3>
                   <p className={styles.coins}>{numeral(utilization.money).format('0,0')} DDS</p>
                   {isLogin ? null : (
                     <p className={styles.dynamic}>
@@ -332,26 +328,28 @@ export default class Mining extends Component {
                         </Button>
                       </div>
                     </div>
-                  ) :null}
+                  ) : null}
                 </TabPane>
                 <TabPane tab={<span className={styles.uppercase}>{TabName.Liquiditor}</span>} key={TabName.Liquiditor}>
                   <div className={styles.liquiditorWpr}>
-                    <h3>Liquiditor Mining Rewards</h3>
+                    <h3>{isLogin ? 'Your Liquiditor Mining Rewards' : 'Liquiditor Mining Rewards'}</h3>
                     <p>Win the liquiditor Campaign or get compensated when fund is empty</p>
                     <Row>
                       <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
-                        <span className={styles.ads}>{totalRewards.Campaign}</span>
-                        <span>Total Campaign Rewards(DDS)</span>
+                        <span className={styles.ads}>{totalRewards.Campaign} DDS</span>
+                        <span>Campaign Rewards</span>
                       </Col>
                       <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
-                        <span className={styles.ads}>{totalRewards.Compensate}</span>
-                        <span>Total Compensate Rewards(DDS)</span>
+                        <span className={styles.ads}>{totalRewards.Compensate} DDS</span>
+                        <span>Compensate Rewards</span>
                       </Col>
                     </Row>
-                    <p className={styles.wantoBe}>
-                      Want to become a liquiditor?
-                    </p>
-                    <Button type="primary">Read Liquiditor Docs</Button>
+                    {isLogin ? null : (
+                      <>
+                        <p className={styles.wantoBe}>Want to become a liquiditor?</p>
+                        <Button type="primary">Read Liquiditor Docs</Button>
+                      </>
+                    )}
                   </div>
                 </TabPane>
               </Tabs>
@@ -444,23 +442,23 @@ export default class Mining extends Component {
               {isLogin && selectedTab === TabName.Liquidity ? (
                 <div className={styles.panels}>
                   <Row gutter={24}>
-                    <Col xs={24} sm={24} md={8} lg={8}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
                       <Pool {...ReTokenBalance} smallSize={true}>
-                        <Button type="primary" className={styles.lock} onClick={() => this.showLockModal(false)}>
+                        {/* <Button type="primary" className={styles.lock} onClick={() => this.showLockModal(false)}>
                           Lock reTokens
                         </Button>
-                        <p>Lock reTokens to start receving rewards inDDS tokens</p>
+                        <p>Lock reTokens to start receving rewards inDDS tokens</p> */}
                       </Pool>
                     </Col>
-                    <Col xs={24} sm={24} md={8} lg={8}>
+                    {/* <Col xs={24} sm={24} md={8} lg={8}>
                       <Pool {...LockBalance} smallSize={true}>
                         <Button type="primary" className={styles.lock} onClick={() => this.showLockModal(true)}>
                           Unlock reTokens
                         </Button>
                         <p>Unlock reToken to be able to withdraw your reToken from the liquidity mining</p>
                       </Pool>
-                    </Col>
-                    <Col xs={24} sm={24} md={8} lg={8}>
+                    </Col> */}
+                    <Col xs={24} sm={24} md={12} lg={12}>
                       <PoolProgress {...MiningShare} />
                     </Col>
                   </Row>

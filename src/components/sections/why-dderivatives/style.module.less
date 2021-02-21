@@ -1,11 +1,8 @@
 @import "../variables.less";
 @import '../../common.less';
 
-.root {
-  background-color: #f9fcfe;
-  padding-top: 100px;
-
-  &.mobile{
+:global(.mobile){
+  .root {
     padding: 80px 0 0;
     .content{
       h3{
@@ -52,6 +49,12 @@
       }
     }
   }
+}
+
+.root {
+  background-color: #f9fcfe;
+  padding-top: 100px;
+  
   .content {
     .contentMixin;
   }

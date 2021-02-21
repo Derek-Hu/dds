@@ -6,17 +6,17 @@ const style = {
 }
 const data: IMiningShare = {
     title: 'Your Share in the Pool',
-    desc: <span>Total Liquidity: <span style={style}>23534.33</span> USD</span>,
+    // desc: <span>Total Liquidity: <span style={style}>23534.33</span> USD</span>,
     coins: [{
-        label: 'reDAI',
+        label: 'DAI',
         percentage: 25,
         val: <span>37863/ 65349</span>
     },{
-        label: 'reUSDC',
+        label: 'USDC',
         percentage: 75,
         val: <span>37863/ 65349</span>
     },{
-        label: 'reUSDT',
+        label: 'USDT',
         percentage: 55,
         val: <span>37863/ 65349</span>
     }],
