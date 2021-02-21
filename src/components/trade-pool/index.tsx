@@ -4,7 +4,7 @@ import SiteContext from "../../layouts/SiteContext";
 
 const publicBar: IBarData = {
   left: {
-    title: "LP1 Utilization Rate",
+    title: "Public Pool",
     percentage: 80,
   },
   right: {
@@ -16,7 +16,7 @@ const publicBar: IBarData = {
 
 const privateBar: IBarData = {
   left: {
-    title: "LP2 Utilization Rate",
+    title: "Private Pool",
     percentage: 85,
   },
   right: {

@@ -130,7 +130,7 @@ export default class Balance extends Component<{ data: IRecord[] }, any> {
           <div
             className={[styles.root, isMobile ? styles.mobile : ""].join(" ")}
           >
-            <h2>Trading Bonus</h2>
+            <h2>Orders</h2>
             <div className={styles.tableWpr}>
               <Table
                 rowKey="id"

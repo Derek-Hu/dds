@@ -21,7 +21,7 @@ export default ({ data }: { data: IBarData }) => {
     <div className={isMobile ? styles.mobile : ''}>
       <Row>
         <Col span={12} className={styles.left}>
-          <span className={styles.today}>{left.title}:</span>
+          <span className={styles.today}>{left.title}</span>
           <br />
           <span className={styles.percentage}>{left.percentage}%</span>
         </Col>

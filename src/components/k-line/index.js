@@ -48,9 +48,9 @@ export default class MainLayout extends Component {
                   <Option value="ETH/DAI">ETH/DAI</Option>
                   <Option value="ETH/USDT">ETH/USDT</Option>
                   <Option value="ETH/USDC">ETH/USDC</Option>
-                  <Option value="BTC/DAI">BTC/DAI</Option>
-                  <Option value="BTC/USDT">BTC/USDT</Option>
-                  <Option value="BTC/USDC">BTC/USDC</Option>
+                  <Option value="WBTC/DAI">WBTC/DAI</Option>
+                  <Option value="WBTC/USDT">WBTC/USDT</Option>
+                  <Option value="WBTC/USDC">WBTC/USDC</Option>
                 </Select>
               </div>
               <Row type="flex" justify="space-between" align="middle">

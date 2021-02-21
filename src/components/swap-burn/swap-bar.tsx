@@ -2,8 +2,8 @@ import styles from "./swap-bar.module.less";
 import SiteContext from "../../layouts/SiteContext";
 
 const datas = {
-  left: { percentage: 80, value: 647738.46 },
-  right: { percentage: 20, value: 647738.46 },
+  left: { percentage: 100, value: 647738.46 },
+  right: { percentage: 10, value: 647738.46 },
 };
 
 const shadowRect = {

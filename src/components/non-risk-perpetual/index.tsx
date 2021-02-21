@@ -26,7 +26,7 @@ const columns = ColumnConvert<INonRiskPerpetual, { action: any }>({
           return (
             <span>
               <span className={styles.coin}>{value}</span>
-              <span className={styles.usdt}> / USDT</span>
+              <span className={styles.usdt}> / DAI</span>
             </span>
           );
         case "price":
@@ -53,7 +53,7 @@ const columns = ColumnConvert<INonRiskPerpetual, { action: any }>({
 
 const data = [
   {
-    coin: "BTC",
+    coin: "WBTC",
     price: "7173.77",
     change: 8.23,
   },

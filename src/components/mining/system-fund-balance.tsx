@@ -39,9 +39,9 @@ export default ({isLogin}: {isLogin:boolean}) => {
               <div><span>3</span><span>0x17...589</span></div>
             </div>
             {
-              isLogin ? <Button type="primary">Connect wallet to see your ranking</Button> : <p className={styles.current}>
+              isLogin ? <p className={styles.current}>
                 You are at <span>NO.23/Na</span>
-              </p>
+              </p>: <p>Connect wallet to see your ranking</p> 
             }
             
           </div>

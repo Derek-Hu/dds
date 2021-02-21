@@ -3,7 +3,7 @@ import { Icon, Modal, Button, Checkbox } from "antd";
 import LiquidityPool from "../components/liquidity-pool/index";
 import styles from "./style.module.less";
 
-const isLogin = true;
+const isLogin = false;
 
 export default class PoolPage extends Component {
   componentDidMount() {

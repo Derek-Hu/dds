@@ -248,9 +248,9 @@ export default class Broker extends Component {
               <Button type="primary" className={styles.btn} onClick={this.showGenerateModal}>
                 Copy referral link
               </Button>
-              <div className={styles.qrcode}>
+              {/* <div className={styles.qrcode}>
                 <Icon type="qrcode" style={{ fontSize: 32 }} />
-              </div>
+              </div> */}
             </div>
             <div className={styles.tabContainer}>
               <Tabs activeKey={this.state.selectedTab} className={CustomTabKey} onChange={this.callback}>
@@ -262,21 +262,21 @@ export default class Broker extends Component {
                   <div className={styles.percentage}>40%</div>
                   <p className={styles.descTwo}>Settlements Fee Commission</p>
                   <Row className={styles.tabSpark}>
-                    <Col xs={24} sm={12} md={6} lg={6} className={styles.col}>
+                    <Col xs={24} sm={12} md={12} lg={12} className={styles.col}>
                       <span className={styles.ads}>{adsData.contry}</span>
                       <span>Countries</span>
                     </Col>
-                    <Col xs={24} sm={12} md={6} lg={6} className={styles.col}>
+                    <Col xs={24} sm={12} md={12} lg={12} className={styles.col}>
                       <span className={styles.ads}>{adsData.sparks}</span>
                       <span>Sparks</span>
                     </Col>
-                    <Col xs={24} sm={12} md={6} lg={6} className={styles.col}>
+                    <Col xs={24} sm={12} md={12} lg={12} className={styles.col}>
                       <span className={styles.ads}>{adsData.invitations}</span>
-                      <span>Invitations</span>
+                      <span>Referals</span>
                     </Col>
-                    <Col xs={24} sm={12} md={6} lg={6}>
+                    <Col xs={24} sm={12} md={12} lg={12}>
                       <span className={styles.ads}>{numeral(adsData.bonus).format('0,0')}</span>
-                      <span>Bonus(DDS)</span>
+                      <span>Bonus(USD)</span>
                     </Col>
                   </Row>
                 </TabPane>

@@ -47,6 +47,7 @@ export default () => {
             </Row>
             <div>
               <h4>Level</h4>
+              <p>due to the ranking of the network we have 4 level for broker</p>
               <Row>
                 <Col xs={24} sm={24} md={6} lg={6}>
                   <p className={styles.themeColor}>A</p>
@@ -68,6 +69,13 @@ export default () => {
             </div>
             <div className={styles.campionLevels}>
               <h4>Campaign</h4>
+              <p>不同等级的返佣率不同，C、D等级将分别拿出10%和20%的手续费注入奖励池。
+
+每一笔由经纪人带来的交易都将触发经纪人的重新排名。
+
+每30天奖励池的60%和40%的奖励将被均分给等级A、B的经纪人，
+
+并基于最新的排名重置等级。</p>
               <div>
                 <div className={styles.title}>
                   <span>Commission Rate</span>

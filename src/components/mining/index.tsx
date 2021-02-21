@@ -209,7 +209,7 @@ export default class Mining extends Component {
 
   state = {
     visible: false,
-    isLogin: true,
+    isLogin: false,
     isUnlockType: false,
     claimModalVisible: false,
     lockReModalVisible: false,
@@ -283,11 +283,7 @@ export default class Mining extends Component {
                     <Button type="primary" className={styles.btn} onClick={this.showClaimModal}>
                       Claim
                     </Button>
-                  ) : (
-                    <Button type="primary" className={styles.btn}>
-                      Connect Wallet
-                    </Button>
-                  )}
+                  ) : null}
                   {/* 
                   <ProgressBar data={barData} />
                   <p className={styles.fifo}>First come first served</p> */}
@@ -296,13 +292,13 @@ export default class Mining extends Component {
                   tab={<span className={styles.uppercase}>{TabName.Utilization}</span>}
                   key={TabName.Utilization}
                 >
-                  <h3>Liquidity Utilization Mining Reward Today</h3>
+                  <h3>Liquidity Locked Rewards Today</h3>
                   <p className={styles.coins}>{numeral(utilization.money).format('0,0')} DDS</p>
-                  {isLogin ? (
+                  {isLogin ? null : (
                     <p className={styles.dynamic}>
                       <span>Only reward for liquidity locked in private pool</span>
                     </p>
-                  ) : null}
+                  )}
 
                   {/* <h4 className={styles.clockTitle}>Rewards Colck</h4>
               <p className={styles.rule}>
@@ -336,13 +332,9 @@ export default class Mining extends Component {
                         </Button>
                       </div>
                     </div>
-                  ) : (
-                    <Button type="primary" className={styles.btn}>
-                      Connect Wallet
-                    </Button>
-                  )}
+                  ) :null}
                 </TabPane>
-                <TabPane tab={<span className={styles.uppercase}>{TabName.Utilization}</span>} key={TabName.Liquiditor}>
+                <TabPane tab={<span className={styles.uppercase}>{TabName.Liquiditor}</span>} key={TabName.Liquiditor}>
                   <div className={styles.liquiditorWpr}>
                     <h3>Liquiditor Mining Rewards</h3>
                     <p>Win the liquiditor Campaign or get compensated when fund is empty</p>
@@ -356,9 +348,9 @@ export default class Mining extends Component {
                         <span>Total Compensate Rewards(DDS)</span>
                       </Col>
                     </Row>
-                    <Button className={styles.wantoBe} type="link">
+                    <p className={styles.wantoBe}>
                       Want to become a liquiditor?
-                    </Button>
+                    </p>
                     <Button type="primary">Read Liquiditor Docs</Button>
                   </div>
                 </TabPane>
