@@ -1,10 +1,8 @@
-import { Wallet } from '~/constant';
+import { Wallet } from '../constant';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 export class ChainDataState {
-  private curWallet: BehaviorSubject<Wallet | null> = new BehaviorSubject<Wallet | null>(
-    null
-  );
+  private curWallet: BehaviorSubject<Wallet | null> = new BehaviorSubject<Wallet | null>(null);
 
   getCurWallet(): Wallet | null {
     return this.curWallet.getValue();

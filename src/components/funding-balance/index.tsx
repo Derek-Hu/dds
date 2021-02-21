@@ -5,7 +5,7 @@ import WithdrawModal from './modals/withdraw';
 import OrderConfirm from './modals/order-confirm';
 import { Component } from 'react';
 import SiteContext from '../../layouts/SiteContext';
-import { contractAccessor } from '~/wallet/chain-access';
+import { contractAccessor } from '../../wallet/chain-access';
 import { Subscription } from 'rxjs';
 
 const balance = '19.00';

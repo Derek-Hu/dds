@@ -3,14 +3,9 @@ import { BehaviorSubject, from, Observable, of, interval } from 'rxjs';
 import * as ethers from 'ethers';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { BigNumber } from '@ethersproject/bignumber';
-import { toEthers } from '~/util/ethers';
+import { toEthers } from '../util/ethers';
 import { isMetaMaskInstalled } from './metamask';
-import {
-  ContractAddress,
-  DataRefreshInterval,
-  DefaultNetwork,
-  Wallet,
-} from '~/constant';
+import { ContractAddress, DataRefreshInterval, DefaultNetwork, Wallet } from '~/constant';
 import { chainDataState, ChainDataState } from '~/wallet/chain-state';
 
 declare const window: Window & { ethereum: any };
