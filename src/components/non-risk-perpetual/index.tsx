@@ -17,7 +17,7 @@ const columns = ColumnConvert<INonRiskPerpetual, { action: any }>({
       coin: "Coin",
       price: <span className={styles.price}>Last Price</span>,
       change: <span className={styles.change}>24h Change</span>,
-      chart: "Chart",
+      // chart: "Chart",
       action: "Action",
     },
     render(value, key) {

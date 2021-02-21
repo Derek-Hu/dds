@@ -144,8 +144,15 @@ body {
   .ant-tabs-bar {
     border: 0;
   }
+  & > .ant-tabs-content{
+    .ant-tabs-tabpane{
+      background-color: #FFF;
+      box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+    }
+  }
   & > .ant-tabs-bar {
-    margin-bottom: 0;
+    margin-bottom: 40px;
     .ant-tabs-nav {
       width: 100%;
 
@@ -204,4 +211,9 @@ body {
     color: #333333;
     margin-bottom: 15px;
   }
+}
+
+
+.font-w-bold{
+  font-weight: bold;
 }

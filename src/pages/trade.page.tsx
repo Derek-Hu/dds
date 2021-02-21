@@ -14,7 +14,7 @@ const data: IRecord[] = [
     time: new Date().getTime(),
     type: "Buy",
     price: 400.65,
-    size: 10.36,
+    amount: 10.36,
     cost: 5.23,
     fee: 0.1,
     pl: {
@@ -29,7 +29,7 @@ const data: IRecord[] = [
     time: new Date().getTime(),
     type: "Buy",
     price: 400.65,
-    size: 10.36,
+    amount: 10.36,
     cost: 5.23,
     fee: 0.1,
     pl: {
@@ -44,7 +44,7 @@ const data: IRecord[] = [
     time: new Date().getTime(),
     type: "Short",
     price: 400.65,
-    size: 10.36,
+    amount: 10.36,
     cost: 5.23,
     fee: 0.1,
     pl: {

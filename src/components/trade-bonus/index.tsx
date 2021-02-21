@@ -15,7 +15,7 @@ export interface IRecord {
   time: number;
   type: string;
   price: number;
-  size: number;
+  amount: number;
   cost: number;
   fee: number;
   pl: {
@@ -42,7 +42,7 @@ export default class Balance extends Component<{ data: IRecord[] }, any> {
       time: "Time",
       type: "Type",
       price: "Order Price",
-      size: "Size",
+      amount: "Amount",
       cost: "Funding Cost ($)",
       fee: "Settlements Fee ($)",
       pl: "P&L",
@@ -54,7 +54,7 @@ export default class Balance extends Component<{ data: IRecord[] }, any> {
         case "time":
           return dayjs(value).format("YYYY-MM-DD");
         case "price":
-        case "size":
+        case "amount":
         case "cost":
         case "fee":
           return numeral(value).format("0,0.0000");

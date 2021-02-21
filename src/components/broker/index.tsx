@@ -12,6 +12,7 @@ import ModalRender from '../modal-render/index';
 import Pool, { IPool } from '../liquidity-pool/pool';
 import CampionPool from './campion-pool';
 import ColumnConvert from '../column-convert/index';
+import BecomeSpark, { ISpark } from './become-spark';
 
 const { TabPane } = Tabs;
 
@@ -55,10 +56,11 @@ const tabName = {
   spark: 'spark',
   referal: 'referral',
 };
-const adsData = {
+const adsData: ISpark = {
+  percentage: 40,
   contry: '20+',
   sparks: 124,
-  invitations: 9824,
+  referals: 9824,
   bonus: 98247489,
 };
 
@@ -188,25 +190,15 @@ const campionData: ICampion[] = [
     amount: 32,
   },
 ];
+
 export default class Broker extends Component {
   state = {
     selectedTab: tabName.spark,
-    generateModalVisible: false,
     commissionVisible: false,
     campaignVisible: false,
+    isLogin: true
   };
   componentDidMount() {}
-
-  showGenerateModal = () => {
-    this.setState({
-      generateModalVisible: true,
-    });
-  };
-  closeGenerateModal = () => {
-    this.setState({
-      generateModalVisible: false,
-    });
-  };
 
   showCommissionModal = () => {
     this.setState({
@@ -237,7 +229,7 @@ export default class Broker extends Component {
   };
 
   render() {
-    const { generateModalVisible , campaignVisible, commissionVisible } = this.state;
+    const { isLogin, campaignVisible, commissionVisible } = this.state;
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => (
@@ -245,44 +237,22 @@ export default class Broker extends Component {
             <h2>Broker</h2>
             <div className={styles.referalInfo}>
               <Input value={url} disabled={true} className={styles.input} />
-              <Button type="primary" className={styles.btn} onClick={this.showGenerateModal}>
+              <Button type="primary" className={styles.btn}>
                 Copy referral link
               </Button>
               {/* <div className={styles.qrcode}>
                 <Icon type="qrcode" style={{ fontSize: 32 }} />
               </div> */}
             </div>
-            <div className={styles.tabContainer}>
-              <Tabs activeKey={this.state.selectedTab} className={CustomTabKey} onChange={this.callback}>
+            {
+              isLogin ? <div className={styles.tabContainer}>
+              <Tabs animated={false} activeKey={this.state.selectedTab} className={CustomTabKey} onChange={this.callback}>
                 <TabPane tab={<span className={styles.uppercase}>spark program</span>} key={tabName.spark}>
-                  <h3>Become DDerivatives's Spark</h3>
-                  <p className={styles.descOne}>
-                    Spread DeFi Spark To The Old World Make Your Influence Into Affluence
-                  </p>
-                  <div className={styles.percentage}>40%</div>
-                  <p className={styles.descTwo}>Settlements Fee Commission</p>
-                  <Row className={styles.tabSpark}>
-                    <Col xs={24} sm={12} md={12} lg={12} className={styles.col}>
-                      <span className={styles.ads}>{adsData.contry}</span>
-                      <span>Countries</span>
-                    </Col>
-                    <Col xs={24} sm={12} md={12} lg={12} className={styles.col}>
-                      <span className={styles.ads}>{adsData.sparks}</span>
-                      <span>Sparks</span>
-                    </Col>
-                    <Col xs={24} sm={12} md={12} lg={12} className={styles.col}>
-                      <span className={styles.ads}>{adsData.invitations}</span>
-                      <span>Referals</span>
-                    </Col>
-                    <Col xs={24} sm={12} md={12} lg={12}>
-                      <span className={styles.ads}>{numeral(adsData.bonus).format('0,0')}</span>
-                      <span>Bonus(USD)</span>
-                    </Col>
-                  </Row>
+                    <BecomeSpark {...adsData}/>
                 </TabPane>
                 <TabPane tab={<span className={styles.uppercase}>My referral</span>} key={tabName.referal}>
-                  <h3 className={styles.referalTitle}>Summary</h3>
-                  <Row>
+                  <h3>Summary</h3>
+                  <Row className="padding-bottom-60">
                     <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
                       <span className={styles.ads}>{'A'}</span>
                       <span>Current Level</span>
@@ -302,7 +272,8 @@ export default class Broker extends Component {
                   </Row>
                 </TabPane>
               </Tabs>
-            </div>
+            </div> : <div className={styles.becomeContainer}><BecomeSpark {...adsData}/></div>
+            }
             {this.state.selectedTab === tabName.spark ? (
               <Step />
             ) : (
@@ -325,29 +296,6 @@ export default class Broker extends Component {
                 <ReferalDetails data={data} />
               </>
             )}
-            <ModalRender
-              width={500}
-              visible={generateModalVisible}
-              onCancel={this.closeGenerateModal}
-              closable={false}
-              footer={null}
-              height={300}
-              title="Generate your referral link"
-              className={commonStyles.commonModal}
-            >
-              <p style={{ textAlign: 'center' }}>
-                To become a spark broker, you need to sign in our Decentralized broker system in order to generate your
-                referral link, it may cost a little gas.
-              </p>
-              <Row className={commonStyles.actionBtns} gutter={[16, 16]} type="flex">
-                <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                  <Button>Cancel</Button>
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
-                  <Button type="primary">Generate</Button>
-                </Col>
-              </Row>
-            </ModalRender>
             <ModalRender
               visible={commissionVisible}
               title="Commission Record"
