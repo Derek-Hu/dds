@@ -1,18 +1,36 @@
-import { Row, Col, Radio, Input, Progress, Button } from "antd";
-import styles from "./style.module.less";
-import DespositModal from "./modals/deposit";
-import WithdrawModal from "./modals/withdraw";
-import OrderConfirm from "./modals/order-confirm";
-import { Component } from "react";
-import SiteContext from "../../layouts/SiteContext";
+import { Row, Col, Radio, Input, Progress, Button } from 'antd';
+import styles from './style.module.less';
+import DespositModal from './modals/deposit';
+import WithdrawModal from './modals/withdraw';
+import OrderConfirm from './modals/order-confirm';
+import { Component } from 'react';
+import SiteContext from '../../layouts/SiteContext';
+import { contractAccessor } from '~/wallet/chain-access';
+import { Subscription } from 'rxjs';
 
-const balance = "19.00";
+const balance = '19.00';
 
 export default class Balance extends Component {
   state = {
     depositVisible: false,
     withdrawVisible: false,
     orderConfirmVisible: false,
+    curPrice: '',
+  };
+
+  private subs: Subscription[] = [];
+
+  componentDidMount = () => {
+    const sub = contractAccessor
+      .watchPriceByETHDAI()
+      .subscribe((price: string) => {
+        this.setState({ curPrice: price });
+      });
+    this.subs.push(sub);
+  };
+
+  componentWillUnmount = () => {
+    this.subs.forEach((one) => one.unsubscribe());
   };
 
   showDepositModal = () => {
@@ -58,7 +76,7 @@ export default class Balance extends Component {
       <SiteContext.Consumer>
         {({ isMobile }) => (
           <div
-            className={[styles.root, isMobile ? styles.mobile : ""].join(" ")}
+            className={[styles.root, isMobile ? styles.mobile : ''].join(' ')}
           >
             <h2>
               Funding Balance<span>(USD)</span>
@@ -89,9 +107,11 @@ export default class Balance extends Component {
                 <Radio.Button value="Short">Short</Radio.Button>
               </Radio.Group>
             </Row>
-            <p className={styles.price}>Current Price: 644.05 DAI</p>
+            <p className={styles.price}>
+              Current Price: {this.state.curPrice} DAI
+            </p>
             <p className={styles.amountTip}>Amount</p>
-            <Input placeholder="0.00" suffix={"ETH"} />
+            <Input placeholder="0.00" suffix={'ETH'} />
 
             <Row className={styles.utilMax} type="flex" justify="space-between">
               <Col>Utilization: 20%</Col>
