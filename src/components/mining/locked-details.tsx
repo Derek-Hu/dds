@@ -1,45 +1,45 @@
-import { Table, Icon, Button } from "antd";
-import dayjs from "dayjs";
-import numeral from "numeral";
-import styles from "./locked.module.less";
-import SiteContext from "../../layouts/SiteContext";
+import { Table, Icon, Button } from 'antd';
+import dayjs from 'dayjs';
+import numeral from 'numeral';
+import styles from './locked.module.less';
+import SiteContext from '../../layouts/SiteContext';
 
 const columns = [
   {
-    title: "Time",
-    dataIndex: "time",
-    key: "time",
+    title: 'Time',
+    dataIndex: 'time',
+    key: 'time',
     render: (time: string) => {
-      return dayjs(time).format("YYYY-MM-DD");
+      return dayjs(time).format('YYYY-MM-DD');
     },
   },
   {
-    title: "Amount",
-    dataIndex: "amount",
-    key: "amount",
+    title: 'Amount',
+    dataIndex: 'amount',
+    key: 'amount',
   },
   {
-    title: "Liquidity Locked",
-    dataIndex: "locked",
-    key: "locked",
+    title: 'Liquidity Locked',
+    dataIndex: 'locked',
+    key: 'locked',
     render: (time: string) => {
-      return numeral(time).format("0,0");
+      return numeral(time).format('0,0');
     },
   },
   {
-    title: "Settlements Fee",
-    dataIndex: "fee",
-    key: "fee",
+    title: 'Settlements Fee',
+    dataIndex: 'fee',
+    key: 'fee',
     render: (time: string) => {
-      return numeral(time).format("0,0");
+      return numeral(time).format('0,0');
     },
   },
   {
-    title: "Reward(DDS)",
-    dataIndex: "reward",
-    key: "reward",
+    title: 'Reward(DDS)',
+    dataIndex: 'reward',
+    key: 'reward',
     render: (time: string) => {
-      return numeral(time).format("0,0");
+      return numeral(time).format('0,0');
     },
   },
 ];
@@ -69,7 +69,6 @@ export default ({ data }: { data: ILockedData[] }) => {
             <Icon type="down" />
           </Button>
         </div>
-
       )}
     </SiteContext.Consumer>
   );

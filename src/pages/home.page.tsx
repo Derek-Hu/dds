@@ -12,28 +12,30 @@ const nonRisks: INonRecords = {
   data: [
     {
       fromCoin: 'WBTC',
-      toCoin: "DAI",
+      toCoin: 'DAI',
       price: 7173.77,
       change: 8.23,
     },
     {
       fromCoin: 'ETH',
-      toCoin: "DAI",
+      toCoin: 'DAI',
       price: 183.28,
       change: -10.01,
     },
-  ]
-}
+  ],
+};
 export default class HomePage extends Component {
   render() {
-    return <div style={{ background: '#fff' }}>
-      <Banner></Banner>
-      <WhatIs></WhatIs>
-      <NonRisk {...nonRisks}></NonRisk>
-      {/* <HowTrade></HowTrade> */}
-      <WhyDderivatives />
-      <CommunityDrived />
-      <ContactUs />
-    </div>;
+    return (
+      <div style={{ background: '#fff' }}>
+        <Banner></Banner>
+        <WhatIs></WhatIs>
+        <NonRisk {...nonRisks}></NonRisk>
+        {/* <HowTrade></HowTrade> */}
+        <WhyDderivatives />
+        <CommunityDrived />
+        <ContactUs />
+      </div>
+    );
   }
 }

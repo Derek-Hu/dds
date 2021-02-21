@@ -98,7 +98,6 @@ const data: IData[] = [
   },
 ];
 
-
 interface ICommission {
   time: number;
   pair: {
@@ -196,7 +195,7 @@ export default class Broker extends Component {
     selectedTab: tabName.spark,
     commissionVisible: false,
     campaignVisible: false,
-    isLogin: true
+    isLogin: true,
   };
   componentDidMount() {}
 
@@ -244,36 +243,45 @@ export default class Broker extends Component {
                 <Icon type="qrcode" style={{ fontSize: 32 }} />
               </div> */}
             </div>
-            {
-              isLogin ? <div className={styles.tabContainer}>
-              <Tabs animated={false} activeKey={this.state.selectedTab} className={CustomTabKey} onChange={this.callback}>
-                <TabPane tab={<span className={styles.uppercase}>spark program</span>} key={tabName.spark}>
-                    <BecomeSpark {...adsData}/>
-                </TabPane>
-                <TabPane tab={<span className={styles.uppercase}>My referral</span>} key={tabName.referal}>
-                  <h3>Summary</h3>
-                  <Row className="padding-bottom-60">
-                    <Col xs={24} sm={24} md={8} lg={8} className={styles.col}>
-                      <span className={styles.ads}>{'A'}</span>
-                      <span>Current Level</span>
-                    </Col>
-                    <Col xs={24} sm={24} md={8} lg={8} className={styles.col}>
-                      <span className={styles.ads}>{referalInfo.referrals}</span>
-                      <span>Ranking</span>
-                    </Col>
-                    <Col xs={24} sm={24} md={8} lg={8} className={styles.col}>
-                      <span className={styles.ads}>{referalInfo.referrals}</span>
-                      <span>Referrals</span>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
-                      <span className={styles.ads}>{referalInfo.bonus}</span>
-                      <span>Bonus(USD)</span>
-                    </Col>
-                  </Row>
-                </TabPane>
-              </Tabs>
-            </div> : <div className={styles.becomeContainer}><BecomeSpark {...adsData}/></div>
-            }
+            {isLogin ? (
+              <div className={styles.tabContainer}>
+                <Tabs
+                  animated={false}
+                  activeKey={this.state.selectedTab}
+                  className={CustomTabKey}
+                  onChange={this.callback}
+                >
+                  <TabPane tab={<span className={styles.uppercase}>spark program</span>} key={tabName.spark}>
+                    <BecomeSpark {...adsData} />
+                  </TabPane>
+                  <TabPane tab={<span className={styles.uppercase}>My referral</span>} key={tabName.referal}>
+                    <h3>Summary</h3>
+                    <Row className="padding-bottom-60">
+                      <Col xs={24} sm={24} md={8} lg={8} className={styles.col}>
+                        <span className={styles.ads}>{'A'}</span>
+                        <span>Current Level</span>
+                      </Col>
+                      <Col xs={24} sm={24} md={8} lg={8} className={styles.col}>
+                        <span className={styles.ads}>{referalInfo.referrals}</span>
+                        <span>Ranking</span>
+                      </Col>
+                      <Col xs={24} sm={24} md={8} lg={8} className={styles.col}>
+                        <span className={styles.ads}>{referalInfo.referrals}</span>
+                        <span>Referrals</span>
+                      </Col>
+                      <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
+                        <span className={styles.ads}>{referalInfo.bonus}</span>
+                        <span>Bonus(USD)</span>
+                      </Col>
+                    </Row>
+                  </TabPane>
+                </Tabs>
+              </div>
+            ) : (
+              <div className={styles.becomeContainer}>
+                <BecomeSpark {...adsData} />
+              </div>
+            )}
             {this.state.selectedTab === tabName.spark ? (
               <Step />
             ) : (
@@ -281,7 +289,9 @@ export default class Broker extends Component {
                 <Row gutter={20} style={{ marginTop: '20px' }}>
                   <Col xs={24} sm={24} md={8} lg={8}>
                     <Pool {...LockBalance}>
-                      <Button type="link" onClick={this.showCommissionModal}>Commission Record</Button>
+                      <Button type="link" onClick={this.showCommissionModal}>
+                        Commission Record
+                      </Button>
                     </Pool>
                   </Col>
                   <Col xs={24} sm={24} md={8} lg={8}>
@@ -289,7 +299,9 @@ export default class Broker extends Component {
                   </Col>
                   <Col xs={24} sm={24} md={8} lg={8}>
                     <Pool {...CampaignRewards}>
-                      <Button type="link" onClick={this.showCampaignModal}>Rewards Record</Button>
+                      <Button type="link" onClick={this.showCampaignModal}>
+                        Rewards Record
+                      </Button>
                     </Pool>
                   </Col>
                 </Row>
@@ -304,7 +316,12 @@ export default class Broker extends Component {
               onCancel={this.closeCommissionModal}
               footer={null}
             >
-              <Table scroll={{ y: 300, x: 500 }} columns={CommissionColumns} pagination={false} dataSource={commissionData} />
+              <Table
+                scroll={{ y: 300, x: 500 }}
+                columns={CommissionColumns}
+                pagination={false}
+                dataSource={commissionData}
+              />
             </ModalRender>
             <ModalRender
               visible={campaignVisible}

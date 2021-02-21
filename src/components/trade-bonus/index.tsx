@@ -1,14 +1,14 @@
-import { Table, Button } from "antd";
-import ColumnConvert from "../column-convert/index";
-import numeral from "numeral";
-import Decimal from "decimal.js";
-import dayjs from "dayjs";
-import styles from "./style.module.less";
-import SiteContext from "../../layouts/SiteContext";
-import OrderClose from "./modals/order-close";
-import { Component } from "react";
+import { Table, Button } from 'antd';
+import ColumnConvert from '../column-convert/index';
+import numeral from 'numeral';
+import Decimal from 'decimal.js';
+import dayjs from 'dayjs';
+import styles from './style.module.less';
+import SiteContext from '../../layouts/SiteContext';
+import OrderClose from './modals/order-close';
+import { Component } from 'react';
 
-type IStatus = "ACTIVE" | "CLOSED";
+type IStatus = 'ACTIVE' | 'CLOSED';
 
 export interface IRecord {
   id: string;
@@ -27,8 +27,8 @@ export interface IRecord {
 }
 
 const statusColor: { [key in IStatus]: string } = {
-  ACTIVE: "#333333",
-  CLOSED: "#333333",
+  ACTIVE: '#333333',
+  CLOSED: '#333333',
 };
 
 export default class Balance extends Component<{ data: IRecord[] }, any> {
@@ -38,71 +38,58 @@ export default class Balance extends Component<{ data: IRecord[] }, any> {
 
   columns = ColumnConvert<IRecord, {}>({
     column: {
-      time: "Time",
-      type: "Type",
-      price: "Order Price",
-      amount: "Amount",
-      cost: "Funding Cost ($)",
-      fee: "Settlements Fee ($)",
-      pl: "P&L",
-      status: "Status",
-      exercise: "Exercise",
+      time: 'Time',
+      type: 'Type',
+      price: 'Order Price',
+      amount: 'Amount',
+      cost: 'Funding Cost ($)',
+      fee: 'Settlements Fee ($)',
+      pl: 'P&L',
+      status: 'Status',
+      exercise: 'Exercise',
     },
     render: (value, key, record) => {
       switch (key) {
-        case "time":
-          return dayjs(value).format("YYYY-MM-DD");
-        case "price":
-        case "amount":
-        case "cost":
-        case "fee":
-          return numeral(value).format("0,0.0000");
-        case "pl":
+        case 'time':
+          return dayjs(value).format('YYYY-MM-DD');
+        case 'price':
+        case 'amount':
+        case 'cost':
+        case 'fee':
+          return numeral(value).format('0,0.0000');
+        case 'pl':
           const { val, percentage } = record[key];
-          const flag =
-            percentage === 0 ? (
-              ""
-            ) : percentage < 0 ? (
-              <span>-</span>
-            ) : (
-              <span>+</span>
-            );
-          const color =
-            percentage === 0
-              ? "#383838"
-              : percentage < 0
-              ? "#FA4D56"
-              : "#02B464";
+          const flag = percentage === 0 ? '' : percentage < 0 ? <span>-</span> : <span>+</span>;
+          const color = percentage === 0 ? '#383838' : percentage < 0 ? '#FA4D56' : '#02B464';
           return (
             <span>
-              {numeral(val).format("0,0.00")}
+              {numeral(val).format('0,0.00')}
               <span style={{ color }}>
                 ({flag}
                 {new Decimal(Math.abs(percentage)).times(100).toString()}%)
               </span>
             </span>
           );
-        case "status":
+        case 'status':
           const status = record[key];
-          return <span style={{ color: statusColor[status] }}>{status}</span>
-        case "type":
+          return <span style={{ color: statusColor[status] }}>{status}</span>;
+        case 'type':
           const buyShort = record[key];
           return (
             <span
               style={{
-                color:
-                  buyShort === "Buy"
-                    ? "#02B464"
-                    : buyShort === "Buy"
-                    ? "#FA4D56"
-                    : "#383838",
+                color: buyShort === 'Buy' ? '#02B464' : buyShort === 'Buy' ? '#FA4D56' : '#383838',
               }}
             >
               {buyShort}
             </span>
           );
-          case 'exercise':
-            return record.status === "ACTIVE" ? <Button type="link" onClick={() => this.showOrderCloseModal()}>CLOSE</Button> : null
+        case 'exercise':
+          return record.status === 'ACTIVE' ? (
+            <Button type="link" onClick={() => this.showOrderCloseModal()}>
+              CLOSE
+            </Button>
+          ) : null;
         default:
           return value;
       }
@@ -126,23 +113,12 @@ export default class Balance extends Component<{ data: IRecord[] }, any> {
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => (
-          <div
-            className={[styles.root, isMobile ? styles.mobile : ""].join(" ")}
-          >
+          <div className={[styles.root, isMobile ? styles.mobile : ''].join(' ')}>
             <h2>Orders</h2>
             <div className={styles.tableWpr}>
-              <Table
-                rowKey="id"
-                columns={this.columns}
-                pagination={false}
-                dataSource={data}
-                scroll={{x: 1000}}
-              />
+              <Table rowKey="id" columns={this.columns} pagination={false} dataSource={data} scroll={{ x: 1000 }} />
             </div>
-            <OrderClose
-              onCancel={this.closeOrderCloseModal}
-              visible={orderCloseVisible}
-            />
+            <OrderClose onCancel={this.closeOrderCloseModal} visible={orderCloseVisible} />
           </div>
         )}
       </SiteContext.Consumer>

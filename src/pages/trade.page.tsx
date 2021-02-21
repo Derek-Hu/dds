@@ -1,18 +1,18 @@
-import { Component } from "react";
-import { Row, Col } from "antd";
-import TradeBonus, { IRecord } from "../components/trade-bonus/index";
-import TradeInfo from "../components/trade-info/index";
-import TradePool from "../components/trade-pool/index";
-import styles from "./style.module.less";
-import KLine from "../components/k-line/index";
-import FundingBalance from "../components/funding-balance/index";
-import SiteContext from "../layouts/SiteContext";
+import { Component } from 'react';
+import { Row, Col } from 'antd';
+import TradeBonus, { IRecord } from '../components/trade-bonus/index';
+import TradeInfo from '../components/trade-info/index';
+import TradePool from '../components/trade-pool/index';
+import styles from './style.module.less';
+import KLine from '../components/k-line/index';
+import FundingBalance from '../components/funding-balance/index';
+import SiteContext from '../layouts/SiteContext';
 
 const data: IRecord[] = [
   {
-    id: "001",
+    id: '001',
     time: new Date().getTime(),
-    type: "Buy",
+    type: 'Buy',
     price: 400.65,
     amount: 10.36,
     cost: 5.23,
@@ -21,13 +21,13 @@ const data: IRecord[] = [
       val: 10.56,
       percentage: -0.25,
     },
-    status: "CLOSED",
-    exercise: "-",
+    status: 'CLOSED',
+    exercise: '-',
   },
   {
-    id: "002",
+    id: '002',
     time: new Date().getTime(),
-    type: "Buy",
+    type: 'Buy',
     price: 400.65,
     amount: 10.36,
     cost: 5.23,
@@ -36,13 +36,13 @@ const data: IRecord[] = [
       val: 10.56,
       percentage: -0.25,
     },
-    status: "ACTIVE",
-    exercise: "-",
+    status: 'ACTIVE',
+    exercise: '-',
   },
   {
-    id: "003",
+    id: '003',
     time: new Date().getTime(),
-    type: "Short",
+    type: 'Short',
     price: 400.65,
     amount: 10.36,
     cost: 5.23,
@@ -51,14 +51,14 @@ const data: IRecord[] = [
       val: 10.56,
       percentage: 0.25,
     },
-    status: "CLOSED",
-    exercise: "-",
+    status: 'CLOSED',
+    exercise: '-',
   },
 ];
 
 export default class TradePage extends Component {
   componentDidMount() {
-    console.log("mount");
+    console.log('mount');
   }
   render() {
     return (
@@ -67,27 +67,29 @@ export default class TradePage extends Component {
           const { coins } = account || {};
           const usdt = coins?.USDC;
 
-          return <div className={[styles.tradeInfoPool, isMobile ? styles.mobile : ""].join(" ")}>
-            <Row className={styles.chartBalance} gutter={isMobile? 0: 24}>
-              <Col xs={24} sm={24} md={12} lg={16} className={styles.charWpr}>
-                <KLine />
-              </Col>
-              <Col xs={24} sm={24} md={12} lg={8}>
-                <FundingBalance />
-              </Col>
-            </Row>
-            <TradeBonus data={data} />
-            <div>
-              <Row gutter={isMobile? 0: 20}>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <TradePool />
+          return (
+            <div className={[styles.tradeInfoPool, isMobile ? styles.mobile : ''].join(' ')}>
+              <Row className={styles.chartBalance} gutter={isMobile ? 0 : 24}>
+                <Col xs={24} sm={24} md={12} lg={16} className={styles.charWpr}>
+                  <KLine />
                 </Col>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <TradeInfo />
+                <Col xs={24} sm={24} md={12} lg={8}>
+                  <FundingBalance />
                 </Col>
               </Row>
+              <TradeBonus data={data} />
+              <div>
+                <Row gutter={isMobile ? 0 : 20}>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <TradePool />
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <TradeInfo />
+                  </Col>
+                </Row>
+              </div>
             </div>
-          </div>
+          );
         }}
       </SiteContext.Consumer>
     );
