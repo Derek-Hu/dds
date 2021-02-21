@@ -1,0 +1,52 @@
+@import '../common.less';
+
+.tableList {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 14px;
+  .more {
+    margin: 32px auto 0;
+    display: block;
+  }
+  :global {
+    .ant-table-tbody td,
+    .ant-table-thead th,
+    .ant-table-thead td {
+      border: 0;
+    }
+  }
+  h4 {
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    margin-top: 40px;
+    font-size: 24px;
+    font-weight: 800;
+    color: #333333;
+  }
+  table,
+  th {
+    text-align: center;
+  }
+
+  th {
+    color: #666666;
+    line-height: 17px;
+  }
+
+  td {
+    color: #333333;
+    line-height: 17px;
+  }
+  td:nth-child(1) {
+    font-weight: bold;
+    color: #1346ff;
+  }
+
+  th:nth-child(1),
+  td:nth-child(1),
+  td:nth-child(2),
+  th:nth-child(2) {
+    text-align: left;
+  }
+}

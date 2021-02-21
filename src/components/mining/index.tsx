@@ -1,24 +1,27 @@
-import { Component } from "react";
-import { Tabs, Button, Input, Row, Col, Select, Table } from "antd";
-import styles from "./style.module.less";
-import commonStyles from "../funding-balance/modals/style.module.less";
-import numeral from "numeral";
-import dayjs from "dayjs";
-import ProgressBar, { IBarData } from "../progress-bar/index";
-import { CustomTabKey, SupportedCoins } from "../../constant/index";
-import Pool, { IPool } from "../liquidity-pool/pool";
-import PoolProgress, { IMiningShare } from "../progress-bar/pool-progress";
-import ColumnConvert from "../column-convert/index";
-import ModalRender from "../modal-render/index";
-import currStyles from "../trade-bonus/modals/style.module.less";
-import SiteContext from "../../layouts/SiteContext";
+import { Component } from 'react';
+import { Tabs, Button, Input, Row, Col, Select, Table } from 'antd';
+import styles from './style.module.less';
+import commonStyles from '../funding-balance/modals/style.module.less';
+import numeral from 'numeral';
+import dayjs from 'dayjs';
+import ProgressBar, { IBarData } from '../progress-bar/index';
+import { CustomTabKey, SupportedCoins } from '../../constant/index';
+import Pool, { IPool } from '../liquidity-pool/pool';
+import PoolProgress, { IMiningShare } from '../progress-bar/pool-progress';
+import ColumnConvert from '../column-convert/index';
+import ModalRender from '../modal-render/index';
+import currStyles from '../trade-bonus/modals/style.module.less';
+import SiteContext from '../../layouts/SiteContext';
+import LockedDetails, { ILockedData } from './locked-details';
+import SystemFundBalance from './system-fund-balance';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
 
 const TabName = {
-  Liquidity: "liquidity mining",
-  Utilization: "liquidity utilization mining",
+  Liquidity: 'liquidity',
+  Utilization: 'liquidity locked',
+  Liquiditor: 'liquiditor',
 };
 
 const mining = {
@@ -29,14 +32,14 @@ const mining = {
 
 const barData: IBarData = {
   left: {
-    title: "Distributed today",
+    title: 'Distributed today',
     percentage: 70,
   },
   right: {
-    title: "Total daily amount",
+    title: 'Total daily amount',
     value: 25000000,
   },
-  unit: "DDS",
+  unit: 'DDS',
 };
 
 const utilization = {
@@ -46,38 +49,69 @@ const utilization = {
 };
 
 const ReTokenBalance: IPool = {
-  title: "Your reToken Balance",
+  title: 'Your reToken Balance',
   usd: 748830,
   coins: [
     {
-      name: "reDAI",
+      name: 'reDAI',
       value: 647,
     },
     {
-      name: "reUSDC",
+      name: 'reUSDC',
       value: 638,
     },
     {
-      name: "reUSDT",
+      name: 'reUSDT',
       value: 7378,
     },
   ],
 };
 
+const lockedData: ILockedData[] = [
+  {
+    size: 3243,
+    reward: 4322,
+    fee: 100,
+    locked: 4322,
+    time: new Date().getTime(),
+  },
+  {
+    size: 3243,
+    reward: 4322,
+    fee: 100,
+    locked: 4322,
+    time: new Date().getTime(),
+  },
+  {
+    size: 3243,
+    reward: 4322,
+    fee: 100,
+    locked: 4322,
+    time: new Date().getTime(),
+  },
+  {
+    size: 3243,
+    reward: 4322,
+    fee: 100,
+    locked: 4322,
+    time: new Date().getTime(),
+  },
+];
+
 const LockBalance: IPool = {
-  title: "Locked",
+  title: 'Locked',
   usd: 748830,
   coins: [
     {
-      name: "reDAI",
+      name: 'reDAI',
       value: 647,
     },
     {
-      name: "reUSDC",
+      name: 'reUSDC',
       value: 638,
     },
     {
-      name: "reUSDT",
+      name: 'reUSDT',
       value: 7378,
     },
   ],
@@ -86,8 +120,8 @@ const LockBalance: IPool = {
 interface IReward {
   time: number;
   pair: {
-    from: "ETH";
-    to: "DAI";
+    from: 'ETH';
+    to: 'DAI';
   };
   price: number;
   amount: number;
@@ -95,23 +129,23 @@ interface IReward {
 }
 const columns = ColumnConvert<IReward, {}>({
   column: {
-    time: "Time",
-    pair: "Coin Pair",
-    amount: "Amount",
-    price: "Order Price",
-    reward: "Reward(DDS)",
+    time: 'Time',
+    pair: 'Coin Pair',
+    amount: 'Amount',
+    price: 'Order Price',
+    reward: 'Reward(DDS)',
   },
   render(value, key, record) {
     switch (key) {
-      case "time":
-        return dayjs(value).format("YYYY-MM-DD");
-      case "pair":
+      case 'time':
+        return dayjs(value).format('YYYY-MM-DD');
+      case 'pair':
         const { from, to } = record[key];
-        return from + "/" + to;
-      case "amount":
-      case "price":
-      case "reward":
-        return numeral(value).format("0,0.0000");
+        return from + '/' + to;
+      case 'amount':
+      case 'price':
+      case 'reward':
+        return numeral(value).format('0,0.0000');
       default:
         return value;
     }
@@ -122,8 +156,8 @@ const data: IReward[] = [
   {
     time: new Date().getTime(),
     pair: {
-      from: "ETH",
-      to: "DAI",
+      from: 'ETH',
+      to: 'DAI',
     },
     price: 32432,
     amount: 32,
@@ -131,7 +165,7 @@ const data: IReward[] = [
   },
 ];
 const MiningShare: IMiningShare = {
-  title: "Your Liauidity Mining share",
+  title: 'Your Liauidity Mining share',
   desc: (
     <p className={styles.shareTotalTip}>
       <span>
@@ -148,22 +182,27 @@ const MiningShare: IMiningShare = {
   ),
   coins: [
     {
-      label: "reDAI",
+      label: 'DAI',
       percentage: 25,
-      // val: <span>37863/ 65349</span>,
+      val: <span>37863</span>,
     },
     {
-      label: "reUSDC",
+      label: 'USDC',
       percentage: 75,
-      // val: <span>37863/ 65349</span>,
+      val: <span>37863</span>,
     },
     {
-      label: "reUSDT",
+      label: 'USDT',
       percentage: 55,
-      // val: <span>37863/ 65349</span>,
+      val: <span>37863349</span>,
     },
   ],
   totalMode: true,
+};
+
+const totalRewards = {
+  Campaign: 530400,
+  Compensate: 530400,
 };
 export default class Mining extends Component {
   componentDidMount() {}
@@ -216,69 +255,47 @@ export default class Mining extends Component {
   };
 
   render() {
-    const {
-      visible,
-      isLogin,
-      claimModalVisible,
-      lockReModalVisible,
-      isUnlockType,
-      selectedTab,
-    } = this.state;
+    const { visible, isLogin, claimModalVisible, lockReModalVisible, isUnlockType, selectedTab } = this.state;
 
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => (
-          <div
-            className={[styles.root, isMobile ? styles.mobile : ""].join(" ")}
-          >
+          <div className={[styles.root, isMobile ? styles.mobile : ''].join(' ')}>
             <h2>Mining</h2>
             <div className={styles.tabContainer}>
-              <Tabs
-                defaultActiveKey={selectedTab}
-                className={CustomTabKey}
-                onChange={this.callback}
-              >
-                <TabPane
-                  tab={
-                    <span className={styles.uppercase}>
-                      {TabName.Liquidity}
-                    </span>
-                  }
-                  key={TabName.Liquidity}
-                >
-                  <h3>Liquidity Mining Reward Today</h3>
-                  <p className={styles.coins}>
-                    {numeral(mining.money).format("0,0")} DDS
-                  </p>
-                  {isLogin ? (
-                    <Button
-                      type="primary"
-                      className={styles.btn}
-                      onClick={this.showClaimModal}
-                    >
-                      Claim
-                    </Button>
-                  ) : (
-                    <Button type="primary" className={styles.btn}>
-                      Connect Wallet
-                    </Button>
+              <Tabs defaultActiveKey={selectedTab} className={CustomTabKey} onChange={this.callback}>
+                <TabPane tab={<span className={styles.uppercase}>{TabName.Liquidity}</span>} key={TabName.Liquidity}>
+                  <h3>{isLogin ? 'Your Liquidity Mining Reward' : 'Liquidity Mining Reward Today'}</h3>
+                  <p className={styles.coins}>{numeral(mining.money).format('0,0')} DDS</p>
+                  {isLogin ? null : (
+                    <p className={styles.dynamic}>
+                      <span>Current reward factor </span>
+                      <br />
+                      32 <span>DDS/Block</span>
+                    </p>
                   )}
 
+                  {isLogin ? (
+                    <Button type="primary" className={styles.btn} onClick={this.showClaimModal}>
+                      Claim
+                    </Button>
+                  ) : null}
+                  {/* 
                   <ProgressBar data={barData} />
-                  <p className={styles.fifo}>First come first served</p>
+                  <p className={styles.fifo}>First come first served</p> */}
                 </TabPane>
                 <TabPane
-                  tab={
-                    <span className={styles.uppercase}>
-                      {TabName.Utilization}
-                    </span>
-                  }
+                  tab={<span className={styles.uppercase}>{TabName.Utilization}</span>}
                   key={TabName.Utilization}
                 >
-                  <h3>Liquidity Utilization Mining Reward Today</h3>
-                  <p className={styles.coins}>
-                    {numeral(utilization.money).format("0,0")} DDS
-                  </p>
+                  <h3>{isLogin ? 'Your Liquidity Locked Rewards' : 'Liquidity Locked Rewards Today'}</h3>
+                  <p className={styles.coins}>{numeral(utilization.money).format('0,0')} DDS</p>
+                  {isLogin ? null : (
+                    <p className={styles.dynamic}>
+                      <span>Only reward for liquidity locked in private pool</span>
+                    </p>
+                  )}
+
                   {/* <h4 className={styles.clockTitle}>Rewards Colck</h4>
               <p className={styles.rule}>
                 Start liquidity utilization mining if there is no trading within
@@ -300,26 +317,40 @@ export default class Mining extends Component {
                     <div>
                       <Button
                         type="primary"
-                        className={[styles.btn, styles.cliamBtn].join(" ")}
+                        className={[styles.btn, styles.cliamBtn].join(' ')}
                         onClick={this.showClaimModal}
                       >
                         Claim
                       </Button>
                       <div>
-                        <Button
-                          type="link"
-                          onClick={this.showWithDraw}
-                          className={styles.recordLink}
-                        >
-                          Reward record
+                        <Button type="link" onClick={this.showWithDraw} className={styles.recordLink}>
+                          Rewards Balance Record
                         </Button>
                       </div>
                     </div>
-                  ) : (
-                    <Button type="primary" className={styles.btn}>
-                      Connect Wallet
-                    </Button>
-                  )}
+                  ) : null}
+                </TabPane>
+                <TabPane tab={<span className={styles.uppercase}>{TabName.Liquiditor}</span>} key={TabName.Liquiditor}>
+                  <div className={styles.liquiditorWpr}>
+                    <h3>{isLogin ? 'Your Liquiditor Mining Rewards' : 'Liquiditor Mining Rewards'}</h3>
+                    <p>Win the liquiditor Campaign or get compensated when fund is empty</p>
+                    <Row>
+                      <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
+                        <span className={styles.ads}>{totalRewards.Campaign} DDS</span>
+                        <span>Campaign Rewards</span>
+                      </Col>
+                      <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
+                        <span className={styles.ads}>{totalRewards.Compensate} DDS</span>
+                        <span>Compensate Rewards</span>
+                      </Col>
+                    </Row>
+                    {isLogin ? null : (
+                      <>
+                        <p className={styles.wantoBe}>Want to become a liquiditor?</p>
+                        <Button type="primary">Read Liquiditor Docs</Button>
+                      </>
+                    )}
+                  </div>
                 </TabPane>
               </Tabs>
 
@@ -335,24 +366,14 @@ export default class Mining extends Component {
                   <Col xs={20} sm={20} md={20} lg={20}>
                     <Input placeholder="Amount you want to claim" />
                   </Col>
-                  <Col
-                    xs={4}
-                    sm={4}
-                    md={4}
-                    lg={4}
-                    style={{ textAlign: "center" }}
-                  >
+                  <Col xs={4} sm={4} md={4} lg={4} style={{ textAlign: 'center' }}>
                     <span>DDS</span>
                   </Col>
                 </Row>
                 <p className={currStyles.tips}>
                   Total Amount: 10.36 <Button type="link">Close All</Button>
                 </p>
-                <Row
-                  className={commonStyles.actionBtns}
-                  gutter={[16, 16]}
-                  type="flex"
-                >
+                <Row className={commonStyles.actionBtns} gutter={[16, 16]} type="flex">
                   <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
                     <Button>Cancel</Button>
                   </Col>
@@ -366,58 +387,32 @@ export default class Mining extends Component {
                 onCancel={this.closeLockModal}
                 footer={null}
                 height={390}
-                title={isUnlockType ? "Unlock reTokens" : "Lock reTokens"}
+                title={isUnlockType ? 'Unlock reTokens' : 'Lock reTokens'}
                 className={commonStyles.commonModal}
               >
-                <Row
-                  gutter={[16, 16]}
-                  type="flex"
-                  justify="space-between"
-                  align="middle"
-                >
+                <Row gutter={[16, 16]} type="flex" justify="space-between" align="middle">
                   <Col xs={24} sm={24} md={6} lg={6}>
-                    <Select
-                      defaultValue="DAI"
-                      style={{ width: "100%", height: 50 }}
-                    >
+                    <Select defaultValue="DAI" style={{ width: '100%', height: 50 }}>
                       {SupportedCoins.map((coin) => (
                         <Option value={coin}>{coin}</Option>
                       ))}
                     </Select>
                   </Col>
                   <Col xs={24} sm={24} md={18} lg={18}>
-                    <span
-                      className={[
-                        commonStyles.maxWithdraw,
-                        isMobile ? commonStyles.mobile : "",
-                      ].join(" ")}
-                    >
+                    <span className={[commonStyles.maxWithdraw, isMobile ? commonStyles.mobile : ''].join(' ')}>
                       Max Amount: <span>3278392</span> DAI
                     </span>
                   </Col>
                   <Col span={24}>
-                    <div
-                      className={[
-                        commonStyles.repay,
-                        isMobile ? commonStyles.mobile : "",
-                      ].join(" ")}
-                    >
-                      <Input
-                        placeholder={`Amount for ${
-                          isUnlockType ? "unlocking" : "locking"
-                        }`}
-                      />
+                    <div className={[commonStyles.repay, isMobile ? commonStyles.mobile : ''].join(' ')}>
+                      <Input placeholder={`Amount for ${isUnlockType ? 'unlocking' : 'locking'}`} />
                     </div>
                   </Col>
                 </Row>
                 {/* <Row >
               
             </Row> */}
-                <Row
-                  gutter={[16, 16]}
-                  className={commonStyles.actionBtns}
-                  type="flex"
-                >
+                <Row gutter={[16, 16]} className={commonStyles.actionBtns} type="flex">
                   <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
                     <Button>Cancel</Button>
                   </Col>
@@ -434,52 +429,42 @@ export default class Mining extends Component {
                 onCancel={this.closeWithDraw}
                 footer={null}
               >
-                <Table
-                  scroll={{ y: 300, x: 500 }}
-                  columns={columns}
-                  pagination={false}
-                  dataSource={data}
-                />
+                <Table scroll={{ y: 300, x: 500 }} columns={columns} pagination={false} dataSource={data} />
               </ModalRender>
             </div>
-            {isLogin && selectedTab === TabName.Liquidity ? (
-              <div className={styles.panels}>
-                <Row gutter={24}>
-                  <Col xs={24} sm={24} md={8} lg={8}>
-                    <Pool {...ReTokenBalance} smallSize={true}>
-                      <Button
-                        type="primary"
-                        className={styles.lock}
-                        onClick={() => this.showLockModal(false)}
-                      >
-                        Lock reTokens
-                      </Button>
-                      <p>
-                        Lock reTokens to start receving rewards inDDS tokens
-                      </p>
-                    </Pool>
-                  </Col>
-                  <Col xs={24} sm={24} md={8} lg={8}>
-                    <Pool {...LockBalance} smallSize={true}>
-                      <Button
-                        type="primary"
-                        className={styles.lock}
-                        onClick={() => this.showLockModal(true)}
-                      >
-                        Unlock reTokens
-                      </Button>
-                      <p>
-                        Unlock reToken to be able to withdraw your reToken from
-                        the liquidity mining
-                      </p>
-                    </Pool>
-                  </Col>
-                  <Col xs={24} sm={24} md={8} lg={8}>
-                    <PoolProgress {...MiningShare} />
-                  </Col>
-                </Row>
-              </div>
-            ) : null}
+            <div className={styles.bottomArea}>
+              {isLogin && selectedTab === TabName.Utilization ? (
+                <div>
+                  <LockedDetails data={lockedData} />
+                </div>
+              ) : null}
+              {selectedTab === TabName.Liquiditor ? <SystemFundBalance isLogin={isLogin} /> : null}
+              {isLogin && selectedTab === TabName.Liquidity ? (
+                <div className={styles.panels}>
+                  <Row gutter={24}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                      <Pool {...ReTokenBalance} smallSize={true}>
+                        {/* <Button type="primary" className={styles.lock} onClick={() => this.showLockModal(false)}>
+                          Lock reTokens
+                        </Button>
+                        <p>Lock reTokens to start receving rewards inDDS tokens</p> */}
+                      </Pool>
+                    </Col>
+                    {/* <Col xs={24} sm={24} md={8} lg={8}>
+                      <Pool {...LockBalance} smallSize={true}>
+                        <Button type="primary" className={styles.lock} onClick={() => this.showLockModal(true)}>
+                          Unlock reTokens
+                        </Button>
+                        <p>Unlock reToken to be able to withdraw your reToken from the liquidity mining</p>
+                      </Pool>
+                    </Col> */}
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                      <PoolProgress {...MiningShare} />
+                    </Col>
+                  </Row>
+                </div>
+              ) : null}
+            </div>
           </div>
         )}
       </SiteContext.Consumer>

@@ -1,13 +1,13 @@
-import { Component } from "react";
-import { Icon, Modal, Button, Checkbox } from "antd";
-import LiquidityPool from "../components/liquidity-pool/index";
-import styles from "./style.module.less";
+import { Component } from 'react';
+import { Icon, Modal, Button, Checkbox } from 'antd';
+import LiquidityPool from '../components/liquidity-pool/index';
+import styles from './style.module.less';
 
 const isLogin = true;
 
 export default class PoolPage extends Component {
   componentDidMount() {
-    console.log("mount");
+    console.log('mount');
   }
 
   state = {
@@ -36,7 +36,7 @@ export default class PoolPage extends Component {
           width={450}
           visible={this.state.visible}
           title={
-            <span style={{color: '#F55858'}}>
+            <span style={{ color: '#F55858' }}>
               <Icon type="warning" />
               &nbsp;RISK WARNING
             </span>
@@ -46,22 +46,16 @@ export default class PoolPage extends Component {
           onCancel={this.closeAgree}
           footer={[
             <Button type="danger" onClick={this.closeAgree}>
-              Go to deposit
+              I understand and agree
             </Button>,
-            <Checkbox
-              checked={agreed}
-              onChange={this.onCheckChange}
-              className={styles.agree}
-            >
+            <Checkbox checked={agreed} onChange={this.onCheckChange} className={styles.agree}>
               Don't show it again
             </Checkbox>,
           ]}
         >
           <p>
-            DDerivatives have been audited by Peckshield Your funds are at risk.
-            You can lose up to 100% of the amount that you will provide to the
-            liquidity pools contracts. NEVER provide funds that you can't afford
-            to lose.
+            DDerivatives have been audited by Peckshield Your funds are at risk. You can lose up to 100% of the amount
+            that you will provide to the liquidity pools contracts. NEVER provide funds that you can't afford to lose.
           </p>
         </Modal>
       </div>

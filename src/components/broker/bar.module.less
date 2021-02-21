@@ -1,0 +1,98 @@
+.root {
+  background: #f59a23;
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  &.vertical {
+    & > .spanWpr,
+    .percentage {
+      position: absolute;
+      width: 100%;
+    }
+    & > .spanWpr {
+      left: 0;
+    }
+    .percentage {
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #e5b77c;
+      &.fixed {
+        position: absolute;
+        background: #e5b77c;
+        span {
+          left: 50%;
+          top: auto;
+          bottom: 2px;
+          transform: translate(-50%, 0%);
+        }
+      }
+    }
+    .remains {
+      top: 50%;
+      left: 50%;
+      color: #fff;
+      display: inline-block;
+      height: 100%;
+      position: absolute;
+      height: 1em;
+      line-height: 1em;
+      transform: translate(-50%, -50%);
+
+      &.fixed {
+        z-index: 9;
+        top: 50%;
+        left: 50%;
+        margin-top: 3px;
+      }
+    }
+  }
+
+  div.spanWpr {
+    display: inline-block;
+  }
+  & > div.percentage {
+    background: #1346ff;
+    position: relative;
+    span {
+      color: #fff;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      position: absolute;
+    }
+  }
+  & > div.percentage.right {
+    float: right;
+  }
+  & > div.percentage.fixed {
+    background: #1346ff;
+    position: relative;
+    span {
+      color: #fff;
+      left: 10px;
+      top: 50%;
+      transform: translate(0, -50%);
+      position: absolute;
+    }
+  }
+  & > div.percentage.fixed.right {
+    span {
+      right: 10px;
+      left: auto;
+    }
+  }
+  .remains {
+    color: #fff;
+    display: inline-block;
+    height: 100%;
+    line-height: 80px;
+
+    &.fixed {
+      position: absolute;
+      top: 0;
+      left: 2px;
+      z-index: 9;
+    }
+  }
+}

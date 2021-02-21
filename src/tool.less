@@ -1,0 +1,42 @@
+@font-selectors: 24, 26, 28, 30, 32, 34, 36;
+
+each(@font-selectors, {
+  .font-@{value} {
+    font-size: @value + 'px';
+  }
+});
+
+@color-list: 3, 6, 9, E;
+
+each(@color-list, {
+    .color-@{value} {
+        color: @value + @value + @value;
+    }
+});
+
+@color-values: 1346ff;
+
+each(@color-values, {
+    .color-@{value} {
+        color: @value;
+    }
+});
+
+@gap-type: margin, padding;
+
+.direction-list() {
+  lft: left;
+  rgt: right;
+  top: top;
+  btom: bottom;
+}
+// 0, 5, 10, 15, 20, 30, 40, 50, 60
+each(@gap-type, .(@type) {
+    each(.direction-list(), .(@direction, @short) {
+        each(range(0, 60, 1), {
+            .@{type}-@{short}-@{value} {
+                @{type}-@{direction}: @value + 'px';
+              }
+        })
+    });
+});

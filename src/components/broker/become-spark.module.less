@@ -1,0 +1,84 @@
+.root {
+  padding-bottom: 60px;
+  & > h3 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    line-height: 31px;
+    padding: 48px 0 12px;
+  }
+
+  .percentage {
+    font-size: 48px;
+    font-weight: bold;
+    color: #1346ff;
+    line-height: 1;
+    letter-spacing: 2px;
+    margin: 36px 0 18px;
+  }
+
+  .descOne,
+  .descTwo {
+    font-size: 16px;
+    color: #666;
+    line-height: 19px;
+    font-weight: 500;
+  }
+  .descTwo {
+    color: #333;
+    margin-bottom: 48px;
+  }
+
+  .col {
+    margin-top: 40px;
+  }
+  // .col:nth-child(1),
+  // .col:nth-child(2) {
+  //   .ads {
+  //     color: #333;
+  //   }
+  // }
+
+  span.ads {
+    font-size: 36px;
+    font-weight: bold;
+    color: #1346ff;
+    line-height: 1;
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 20px;
+  }
+  span.ads + span {
+    font-size: 16px;
+    color: #333333;
+    line-height: 19px;
+  }
+}
+
+:global(.mobile) {
+  .root {
+    & > h3 {
+      font-size: 18px;
+      margin: 30px 0;
+    }
+
+    .descOne {
+      font-size: 15px;
+    }
+    .percentage {
+      font-size: 30px;
+    }
+    .tabSpark {
+      & > div {
+        margin-top: 28px;
+      }
+      span.ads {
+        font-size: 18px;
+        margin-bottom: 8px;
+      }
+      span.ads + span {
+        font-size: 14px;
+      }
+    }
+  }
+}
