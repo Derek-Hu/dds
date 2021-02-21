@@ -8,7 +8,7 @@ import SiteContext from "../../layouts/SiteContext";
 import OrderClose from "./modals/order-close";
 import { Component } from "react";
 
-type IStatus = "ACTIVE" | "CLOSED" | "LIQUIDATING";
+type IStatus = "ACTIVE" | "CLOSED";
 
 export interface IRecord {
   id: string;
@@ -29,7 +29,6 @@ export interface IRecord {
 const statusColor: { [key in IStatus]: string } = {
   ACTIVE: "#333333",
   CLOSED: "#333333",
-  LIQUIDATING: "#FA4D56",
 };
 
 export default class Balance extends Component<{ data: IRecord[] }, any> {

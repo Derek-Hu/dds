@@ -21,7 +21,7 @@ const data: IRecord[] = [
       val: 10.56,
       percentage: -0.25,
     },
-    status: "LIQUIDATING",
+    status: "CLOSED",
     exercise: "-",
   },
   {
@@ -63,9 +63,11 @@ export default class TradePage extends Component {
   render() {
     return (
       <SiteContext.Consumer>
-        {({ isMobile }) => (
-          <div 
-          className={[styles.tradeInfoPool, isMobile ? styles.mobile : ""].join(" ")}>
+        {({ isMobile, account }) => {
+          const { coins } = account || {};
+          const usdt = coins?.USDC;
+
+          return <div className={[styles.tradeInfoPool, isMobile ? styles.mobile : ""].join(" ")}>
             <Row className={styles.chartBalance} gutter={isMobile? 0: 24}>
               <Col xs={24} sm={24} md={12} lg={16} className={styles.charWpr}>
                 <KLine />
@@ -86,7 +88,7 @@ export default class TradePage extends Component {
               </Row>
             </div>
           </div>
-        )}
+        }}
       </SiteContext.Consumer>
     );
   }

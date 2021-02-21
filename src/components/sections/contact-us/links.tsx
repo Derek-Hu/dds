@@ -10,15 +10,7 @@ export default [
     url: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
   },
   {
-    icon: <Icon type="facebook" />,
-    url: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-  },
-  {
     icon: <Icon type="medium" />,
-    url: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-  },
-  {
-    icon: <Icon type="github" />,
     url: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
   },
   {

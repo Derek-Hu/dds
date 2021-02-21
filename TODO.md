@@ -10,7 +10,7 @@ Ecosystem Logo与链接，测试网隐藏
 About Blog 跳转Medium
 
 行情图不允许缩放
-Funding Balance: 24h +1.58 隐藏
+Funding Balance: 24h +1.58 隐藏(Done)
 Max Open： 改为标签可点击Max
 Short颜色绿色，按钮绿色
 
@@ -78,3 +78,65 @@ Broker Summary ->
 Broker -> Campaign Rewards Pool 使用进度条形式展示
 
 弹窗一一过
+
+Install MetaMask 跳转官网
+检测是否安装  
+连接钱包没有地址选择
+
+Deposit / Withdraw未登录点击时自动弹出连接钱包, 出现Loading后轮询
+
+Funding Deposit 去除下拉选择，增加Max
+
+
+Funding Balance Deposit存，账户多少，都需刷新钱包余额
+Funding Balance Withdraw取，从合约取， 都需刷新钱包余额
+
+
+邀请码 编码/解码，下单传递邀请码
+
+下单：
+    Settlements Fee 固定值 千分之一
+    Max = (Balance - Locked) / Price
+
+Close Order弹窗
+
+Pool -> Comfirm Deposit 增加14天说明
+
+Your Share In The Pool 中第一个值 等于 Liquidity Balance中的值
+
+Liquidity Balance： 文案更新
+XXX reDAI you need to pay
+
+Liquidity Balance Record 表格合并
+
+Private  Comfirm Deposit 没有14天冻结，没有receive reDai
+
+Private Liquidity Withdraw : XXX reDAI you need to pay
+
+Orders 自动下拉刷新数据
+Liquidity Balance Record自动下拉刷新数据
+
+MINING页面 
+
+    Available Liquidity Value = - （Private Poll -> Liquidity Balance） -（LIQUIDITY LOCKED DETAIL 所有Active订单分币种的Liquidity Locked累加）
+
+    Available Liquidity 比例 = Available Liquidity Value / Liquidity Balance
+
+
+Net P&L
+    Liquidity Balance - Liquidity Balance Record 存取累计差额
+
+LIQUIDITY：
+    Claim一次性提取
+
+MINING -> LIQUIDITY：全部接口
+
+LIQUIDITY LOCKED --》 Private Pool Locked
+
+
+LIQUIDITY LOCKED DETAIL 移到Private Pool下面，删除列Reward(DDS)，增加Status列， Open Price；增加补仓操作，可补仓数量 ===  Available Liquidity
+
+21,087 USD = 1,078 DDS 改为1 DDS = xx USD
+
+Claim 余额为0 ，提示余额不足
+Open余额不足，提示
