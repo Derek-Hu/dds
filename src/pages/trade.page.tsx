@@ -59,12 +59,13 @@ const data: IRecord[] = [
 export default class TradePage extends Component {
   componentDidMount() {
     console.log("mount");
+    
   }
   render() {
     return (
       <SiteContext.Consumer>
         {({ isMobile, account }) => {
-          const { coins } = account || {};
+          const { coins, address } = account || {};
           const usdt = coins?.USDC;
 
           return <div className={[styles.tradeInfoPool, isMobile ? styles.mobile : ""].join(" ")}>
@@ -76,7 +77,9 @@ export default class TradePage extends Component {
                 <FundingBalance />
               </Col>
             </Row>
-            <TradeBonus data={data} />
+            {
+              address ? <TradeBonus data={data} /> : null
+            }
             <div>
               <Row gutter={isMobile? 0: 20}>
                 <Col xs={24} sm={24} md={12} lg={12}>

@@ -30,6 +30,10 @@
     "dev": "react-scripts start",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
+    
+    "start:stage": "cross-env AppEnv=stage react-app-rewired start",
+    "build:stage": "cross-env AppEnv=stage react-app-rewired build",
+
     "test": "react-app-rewired test",
     "debug": "node --inspect-brk ./node_modules/jest/bin/jest --runInBand --no-cache --no-watchman"
   },

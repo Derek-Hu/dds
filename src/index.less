@@ -147,12 +147,19 @@ body {
   & > .ant-tabs-content{
     .ant-tabs-tabpane{
       background-color: #FFF;
-      box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.05);
+      // box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.05);
       border-radius: 8px;
     }
   }
+  &.miningTabs {
+    & > .ant-tabs-bar {
+      .ant-tabs-tab {
+        width: 33.3%;
+      }
+    }
+  }
   & > .ant-tabs-bar {
-    margin-bottom: 40px;
+    margin-bottom: 25px;
     .ant-tabs-nav {
       width: 100%;
 
@@ -223,4 +230,13 @@ body {
 }
 .color-3{
   color: #333;
+}
+
+button.buttonGreen{
+  background-color: green;
+  &:focus,
+  &:hover{
+    background-color: green;
+    border-color: green;
+  }
 }

@@ -21,16 +21,12 @@ const NetPool: IPool = {
   ],
 };
 
-const rates = [-53, 1453, 0];
 
-export default () => {
+
+export default ({children}: {children?: any}) => {
   return (
     <Pool {...NetPool}>
-      <Row>
-          {
-              rates.map(val => <Col className={styles.rate} span={8}>{val}%</Col>)
-          }
-      </Row>
+      {children}
     </Pool>
   );
 };

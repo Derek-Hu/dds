@@ -1,3 +1,4 @@
+import { Component } from 'react';
 import ProgressBar, { IBarData } from "../progress-bar/index";
 import styles from "./style.module.less";
 import SiteContext from "../../layouts/SiteContext";
@@ -25,9 +26,11 @@ const privateBar: IBarData = {
   },
   unit: "DAI",
 };
-export default () => {
-  return (
-    <SiteContext.Consumer>
+export default class TradePool extends Component {
+  render(){
+
+    return (
+      <SiteContext.Consumer>
       {({ isMobile }) => (
         <div className={[styles.root, isMobile ? styles.mobile : ""].join(" ")}>
           <h2>Liquidity Pool</h2>
@@ -40,4 +43,5 @@ export default () => {
       )}
     </SiteContext.Consumer>
   );
+}
 };

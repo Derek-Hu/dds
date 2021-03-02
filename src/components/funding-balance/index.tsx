@@ -1,4 +1,4 @@
-import { Row, Col, Radio, Input, Progress, Button } from "antd";
+import { Row, Col, Radio, Input, Tag, Button } from "antd";
 import styles from "./style.module.less";
 import DespositModal from "./modals/deposit";
 import WithdrawModal from "./modals/withdraw";
@@ -13,6 +13,8 @@ export default class Balance extends Component {
     depositVisible: false,
     withdrawVisible: false,
     orderConfirmVisible: false,
+    isLogin: true,
+    tradeType: 'Long'
   };
 
   showDepositModal = () => {
@@ -51,8 +53,15 @@ export default class Balance extends Component {
     });
   };
 
+  changeType = (e: any) => {
+    console.log(e);
+    this.setState({
+      tradeType: e.target.value
+    })
+  }
+
   render() {
-    const { depositVisible, withdrawVisible, orderConfirmVisible } = this.state;
+    const { depositVisible, withdrawVisible, orderConfirmVisible, tradeType } = this.state;
 
     return (
       <SiteContext.Consumer>
@@ -84,9 +93,9 @@ export default class Balance extends Component {
               </Col>
             </Row>
             <Row className={styles.radioBtn}>
-              <Radio.Group defaultValue="Long">
+              <Radio.Group defaultValue="Long" onChange={this.changeType}>
                 <Radio.Button value="Long">Long</Radio.Button>
-                <Radio.Button value="Short">Short</Radio.Button>
+                <Radio.Button value="Short" className={styles.green}>Short</Radio.Button>
               </Radio.Group>
             </Row>
             <p className={styles.price}>Current Price: 644.05 DAI</p>
@@ -94,15 +103,15 @@ export default class Balance extends Component {
             <Input placeholder="0.00" suffix={"ETH"} />
 
             <Row className={styles.utilMax} type="flex" justify="space-between">
-              <Col span={12}>Max</Col>
-              <Col span={12}>323.34 ETH</Col>
+              <Col span={12}><Tag color="#1346FF">Max</Tag></Col>
+              <Col span={12} style={{textAlign: 'right'}}>323.34 ETH</Col>
             </Row>
             <p className={styles.settlement}>Settlements Fee : 0.00 DAI</p>
             {/* <Progress strokeColor="#1346FF" showInfo={false} percent={30} strokeWidth={20} /> */}
-            
-            <Button type="primary" onClick={this.showOrderConfirmModal}>
-              Connect Wallet
+              <Button className={tradeType==='Short'? 'buttonGreen': ''} type="primary" onClick={this.showOrderConfirmModal}>
+              Open
             </Button>
+            
 
             <DespositModal
               onCancel={this.closeDepositModal}

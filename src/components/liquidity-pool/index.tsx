@@ -92,6 +92,8 @@ const PrivatePool = {
     },
   ],
 };
+
+const rates = [-53, 1453, 0];
 export default class PoolArea extends Component<{ isLogin: boolean }, any> {
   state = {
     selectedTab: TabName.Collaborative,
@@ -124,13 +126,6 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
       <SiteContext.Consumer>
         {({ isMobile }) => (
           <div>
-            {isLogin && selectedTab === TabName.Private ? (
-              <Alert
-                className={styles.poolMsg}
-                message="Private pool is extremely risky. If you are not a hedging expert, please stay away!!!"
-                type="warning"
-              />
-            ) : null}
             <div
               className={[styles.root, isMobile ? styles.mobile : ""].join(" ")}
             >
@@ -194,6 +189,13 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                     }
                     key={TabName.Private}
                   >
+                    {isLogin && selectedTab === TabName.Private ? (
+                      <Alert
+                        className={styles.poolMsg}
+                        message="Private pool is extremely risky. If you are not a hedging expert, please stay away!!!"
+                        type="warning"
+                      />
+                    ) : null}
                     <div
                       className={[styles.actionArea, styles.privateArea].join(
                         " "
@@ -267,7 +269,13 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                           <Balance />
                         </Col>
                         <Col  xs={24} sm={24} md={8} lg={8}>
-                          <NetPL />
+                          <NetPL>
+                          <Row>
+                              {
+                                  rates.map(val => <Col className={styles.rate} span={8}>{val}%</Col>)
+                              }
+                          </Row>
+                          </NetPL>
                         </Col>
                       </Row>
                     ) : (

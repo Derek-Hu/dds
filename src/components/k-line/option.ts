@@ -22,14 +22,14 @@ export default {
     boundaryGap: [0, "5%"],
     // boundaryGap: false,
   },
-  dataZoom: [
-    {
-      type: "inside",
-      start: 0,
-      end: 10,
-      minSpan: 0.1,
-    },
-  ],
+  // dataZoom: [
+  //   {
+  //     type: "inside",
+  //     start: 0,
+  //     end: 10,
+  //     minSpan: 0.1,
+  //   },
+  // ],
   series: [
     {
       name: seryName,

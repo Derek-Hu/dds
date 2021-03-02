@@ -34,7 +34,7 @@ export default ({
               <span>{percentage}%</span>
               <span style={style}>{val}</span>
             </p>
-            <Progress percent={percentage} showInfo={false} />
+            <Progress strokeColor={{ from: "#0072F4", to: "#0055FF" }} percent={percentage} showInfo={false} />
           </div>
         }
       />

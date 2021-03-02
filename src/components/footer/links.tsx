@@ -6,35 +6,39 @@ interface ILink {
     icon?: any;
 }
 
-const links: { [key: string]: ILink[]} = {
-    Ecosystem: [{
-        icon: <Icon type="wechat"/>,
-        link: 'http://www.baidu.com'
-    },{
-        icon: <Icon type="youtube" />,
-        link: 'http://www.baidu.com'
-    },{
-        icon: <Icon type="gitlab" />,
-        link: 'http://www.baidu.com'
-    },{
-        icon: <Icon type="dropbox" />,
-        link: 'http://www.baidu.com'
-    },{
-        icon: <Icon type="codepen" />,
-        link: 'http://www.baidu.com'
-    },{
-        icon: <Icon type="ant-cloud" />,
-        link: 'http://www.baidu.com'
-    },{
-        icon: <Icon type="dribbble" />,
-        link: 'http://www.baidu.com'
-    },{
-        icon: <Icon type="behance" />,
-        link: 'http://www.baidu.com'
-    },{
-        icon: <Icon type="slack" />,
-        link: 'http://www.baidu.com'
-    }],
+const Ecosystem:  ILink[] = [{
+    icon: <Icon type="wechat"/>,
+    link: 'http://www.baidu.com'
+},{
+    icon: <Icon type="youtube" />,
+    link: 'http://www.baidu.com'
+},{
+    icon: <Icon type="gitlab" />,
+    link: 'http://www.baidu.com'
+},{
+    icon: <Icon type="dropbox" />,
+    link: 'http://www.baidu.com'
+},{
+    icon: <Icon type="codepen" />,
+    link: 'http://www.baidu.com'
+},{
+    icon: <Icon type="ant-cloud" />,
+    link: 'http://www.baidu.com'
+},{
+    icon: <Icon type="dribbble" />,
+    link: 'http://www.baidu.com'
+},{
+    icon: <Icon type="behance" />,
+    link: 'http://www.baidu.com'
+},{
+    icon: <Icon type="slack" />,
+    link: 'http://www.baidu.com'
+}];
+
+const isStage = process.env.AppEnv === 'stage';
+
+const links: { [key: string ]: ILink[]} = {
+    // ...(isStage? null : { Ecosystem }),
     Security: [{
         name: 'Audit',
         link: 'http://www.baidu.com'

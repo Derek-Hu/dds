@@ -263,7 +263,7 @@ export default class Mining extends Component {
           <div className={[styles.root, isMobile ? styles.mobile : ''].join(' ')}>
             <h2>Mining</h2>
             <div className={styles.tabContainer}>
-              <Tabs defaultActiveKey={selectedTab} className={CustomTabKey} onChange={this.callback}>
+              <Tabs defaultActiveKey={selectedTab} className={[CustomTabKey, 'miningTabs'].join(' ')} onChange={this.callback}>
                 <TabPane tab={<span className={styles.uppercase}>{TabName.Liquidity}</span>} key={TabName.Liquidity}>
                   <h3>{isLogin ? 'Your Liquidity Mining Reward' : 'Liquidity Mining Reward Today'}</h3>
                   <p className={styles.coins}>{numeral(mining.money).format('0,0')} DDS</p>
