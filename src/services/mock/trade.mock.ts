@@ -1,7 +1,10 @@
 export const balance: IBalanceInfo = {
-    balance: 92012,
-    locked: 100
+  balance: 92012,
+  locked: 100,
+  available: 91912,
 };
+
+export const curPrice: number = 1500.0;
 
 const infos = {
   'Ticker Root': 20,
@@ -13,7 +16,7 @@ const infos = {
   'Funding Rate': 'Funding Rate',
 };
 // @ts-ignore
-export const infoItems:ITradeInfo[] = Object.keys(infos).map((key) => ({ label: key, value: infos[key] }));
+export const infoItems: ITradeInfo[] = Object.keys(infos).map((key) => ({ label: key, value: infos[key] }));
 
 export const orders: ITradeRecord[] = [
   {
