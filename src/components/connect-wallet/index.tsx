@@ -1,20 +1,20 @@
 import { Component } from 'react';
-import { Select, Row, Col, Button } from 'antd';
+import { Button, Col, Row, Select } from 'antd';
 import styles from './style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import ModalRender from '../modal-render/index';
 import commonStyles from '../funding-balance/modals/style.module.less';
 import { metamaskWallet } from '../../wallet/metamask';
 import { Subscription } from 'rxjs';
+import { SupportedWallets, Wallet } from '~/constant';
 
 const { Option } = Select;
-const SupporttedWallets = ['Metamask', 'Wallet Connect'];
 
 export default class ConnectWallet extends Component<any, any> {
   state = {
     visible: false,
     isConnected: false,
-    walletType: 'Metamask',
+    walletType: Wallet.Metamask,
     account: undefined,
   };
 
@@ -28,7 +28,7 @@ export default class ConnectWallet extends Component<any, any> {
     this.unWatchWalletAccount();
   }
 
-  switchWallet = (walletType: string) => {
+  switchWallet = (walletType: Wallet) => {
     this.setState(
       {
         walletType,
@@ -56,7 +56,7 @@ export default class ConnectWallet extends Component<any, any> {
     }
 
     switch (this.state.walletType) {
-      case 'Metamask': {
+      case Wallet.Metamask: {
         metamaskWallet.doConnect();
         break;
       }
@@ -75,15 +75,13 @@ export default class ConnectWallet extends Component<any, any> {
     this.unWatchWalletAccount();
 
     switch (this.state.walletType) {
-      case 'Metamask': {
-        this.accSub = metamaskWallet
-          .watchAccount()
-          .subscribe((account: string | null) => {
-            this.setState({
-              isConnected: account !== null,
-              account,
-            });
+      case Wallet.Metamask: {
+        this.accSub = metamaskWallet.watchAccount().subscribe((account: string | null) => {
+          this.setState({
+            isConnected: account !== null,
+            account,
           });
+        });
         break;
       }
       default: {
@@ -109,15 +107,9 @@ export default class ConnectWallet extends Component<any, any> {
               footer={null}
             >
               <Row gutter={[16, 24]} type="flex" className={styles.coinList}>
-                {SupporttedWallets.map((name) => (
-                  <Col
-                    key={name}
-                    span={24}
-                    className={walletType === name ? styles.active : ''}
-                  >
-                    <Button onClick={() => this.switchWallet(name)}>
-                      {name}
-                    </Button>
+                {SupportedWallets.map((name) => (
+                  <Col key={name} span={24} className={walletType === name ? styles.active : ''}>
+                    <Button onClick={() => this.switchWallet(name)}>{name}</Button>
                   </Col>
                 ))}
                 {isConnected ? (
@@ -127,9 +119,7 @@ export default class ConnectWallet extends Component<any, any> {
                       value={this.state.account}
                       style={{ width: '100%', height: 50 }}
                     >
-                      <Option value={this.state.account}>
-                        {this.state.account}
-                      </Option>
+                      <Option value={this.state.account}>{this.state.account}</Option>
                     </Select>
                   </Col>
                 ) : null}

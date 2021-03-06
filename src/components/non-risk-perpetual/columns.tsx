@@ -1,5 +1,5 @@
 import ColumnConvert from '../column-convert/index';
-import styles from "./style.module.less";
+import styles from './style.module.less';
 import { ICoins, ISupporttedUSD } from '../../constant';
 export interface INonRiskPerpetual {
   fromCoin: ICoins;
@@ -9,7 +9,7 @@ export interface INonRiskPerpetual {
   chart?: string;
 }
 
-export default ColumnConvert<INonRiskPerpetual, { coin: any, action: any }>({
+export default ColumnConvert<INonRiskPerpetual, { coin: any; action: any }>({
   column: {
     coin: 'Coin',
     price: <span className={styles.price}>Last Price</span>,

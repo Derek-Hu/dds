@@ -117,7 +117,6 @@ const data: IData[] = [
   },
 ];
 
-
 interface ICommission {
   time: number;
   pair: {
@@ -215,7 +214,7 @@ export default class Broker extends Component {
     selectedTab: tabName.spark,
     commissionVisible: false,
     campaignVisible: false,
-    isLogin: true
+    isLogin: true,
   };
   componentDidMount() {}
 
@@ -302,7 +301,11 @@ export default class Broker extends Component {
               <>
                 <Row gutter={20} style={{ marginTop: '20px' }}>
                   <Col xs={24} sm={24} md={8} lg={8}>
-                    <CardInfo theme="inner" {...LockBalance}></CardInfo>
+                    <CardInfo theme="inner" {...LockBalance}>
+                      <Button type="link" onClick={this.showCommissionModal}>
+                        Commission Record
+                      </Button>
+                    </CardInfo>
                     {/* <Pool {...LockBalance}>
                       <Button type="link" onClick={this.showCommissionModal}>Commission Record</Button>
                     </Pool> */}
@@ -330,7 +333,12 @@ export default class Broker extends Component {
               onCancel={this.closeCommissionModal}
               footer={null}
             >
-              <Table scroll={{ y: 300, x: 500 }} columns={CommissionColumns} pagination={false} dataSource={commissionData} />
+              <Table
+                scroll={{ y: 300, x: 500 }}
+                columns={CommissionColumns}
+                pagination={false}
+                dataSource={commissionData}
+              />
             </ModalRender>
             <ModalRender
               visible={campaignVisible}

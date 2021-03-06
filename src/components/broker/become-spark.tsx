@@ -3,20 +3,14 @@ import numeral from 'numeral';
 import styles from './become-spark.module.less';
 
 export interface ISpark {
-    percentage: number;
-    contry: string;
-    sparks: number;
-    referals: number;
-    bonus: number;
+  percentage: number;
+  contry: string;
+  sparks: number;
+  referals: number;
+  bonus: number;
 }
 
-export default ({
-    percentage,
-    contry,
-    sparks,
-    referals,
-    bonus,
-}: ISpark) => {
+export default ({ percentage, contry, sparks, referals, bonus }: ISpark) => {
   return (
     <div className={styles.root}>
       <h3>Become DDerivatives's Spark</h3>

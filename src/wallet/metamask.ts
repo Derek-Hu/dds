@@ -1,15 +1,17 @@
 import MetaMaskOnboarding from '@metamask/onboarding';
 import { BehaviorSubject, from, Observable } from 'rxjs';
+import { chainDataState } from './chain-connect-state';
+import { Wallet } from '~/constant';
+import { WalletInterface } from '~/wallet/wallet-interface';
 
 declare const window: Window & { ethereum: any };
 
 export const { isMetaMaskInstalled } = MetaMaskOnboarding;
 
-export class MetamaskWallet {
+export class MetamaskWallet implements WalletInterface {
+  public readonly walletType: Wallet = Wallet.Metamask;
   private accounts: string[] = [];
-  private curSelectedAccount: BehaviorSubject<
-    string | null
-  > = new BehaviorSubject<string | null>(null);
+  private curSelectedAccount: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
   constructor() {
     this.syncAccount();
@@ -61,6 +63,9 @@ export class MetamaskWallet {
 
   private updateAccount(accounts: string[]) {
     if (accounts && accounts.length > 0) {
+      // 当前只有metamask钱包，当获取到账号时，直接更新全局状态
+      chainDataState.setCurWallet(Wallet.Metamask);
+
       this.accounts = accounts;
       this.curSelectedAccount.next(accounts[0]);
     } else {
@@ -78,18 +83,20 @@ export class MetamaskWallet {
 
       from(reqAccounts).subscribe(
         (accounts: string[]) => {
+          // 如果没有连接，返回空数组
           this.updateAccount(accounts);
           if (accounts && accounts.length > 0) {
             this.watchAccountChange();
           }
         },
-        (error) => ({})
+        (error) => {}
       );
     }
   }
 
-  private accountChangeCallback = (accounts: string[]) =>
+  private accountChangeCallback = (accounts: string[]) => {
     this.updateAccount(accounts);
+  };
 
   private watchAccountChange() {
     if (isMetaMaskInstalled()) {

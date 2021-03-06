@@ -1,3 +1,1 @@
-export const getTradeLiquidityPool = () => {
-    
-}
+export const getTradeLiquidityPool = () => {};

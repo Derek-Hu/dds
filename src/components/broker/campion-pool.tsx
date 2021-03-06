@@ -46,5 +46,4 @@ export default () => {
             <Row><Col span={8}>USDC</Col><Col className={styles.themeColor} span={8}>12</Col><Col span={8}>63</Col></Row>
         </div> */}
     </div>
-
-}
+};

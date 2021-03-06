@@ -5,24 +5,26 @@ import Bar from './bar';
 
 const percentages = {
   center: 30,
-}
+};
 export default () => {
   return (
     <SiteContext.Consumer>
       {({ isMobile }) => {
-        const rect = isMobile ?{
-          width: 350,
-          height: 200,
-          barHeight: 80,
-          bar: 100,
-          center: 80,
-        }: {
-          width: 750,
-          height: 200,
-          barHeight: 80,
-          bar: 200,
-          center: 140,
-        };
+        const rect = isMobile
+          ? {
+              width: 350,
+              height: 200,
+              barHeight: 80,
+              bar: 100,
+              center: 80,
+            }
+          : {
+              width: 750,
+              height: 200,
+              barHeight: 80,
+              bar: 200,
+              center: 140,
+            };
         const leftCenter = (rect.width - 2 * rect.bar - rect.center) / 2 + rect.bar;
         const gap = (rect.width - 2 * rect.bar - rect.center) / 2;
         return (
@@ -51,29 +53,40 @@ export default () => {
               <Row>
                 <Col xs={24} sm={24} md={6} lg={6}>
                   <p className={styles.themeColor}>A</p>
-                  <div>Top 20<br/> 40%</div>
+                  <div>
+                    Top 20
+                    <br /> 40%
+                  </div>
                 </Col>
                 <Col xs={24} sm={24} md={6} lg={6}>
                   <p className={styles.themeColor}>B</p>
-                  <div>Top 21 - 50<br/> 40%</div>
+                  <div>
+                    Top 21 - 50
+                    <br /> 40%
+                  </div>
                 </Col>
                 <Col xs={24} sm={24} md={6} lg={6}>
                   <p className={styles.themeColor}>C</p>
-                  <div>Top 50 - 100<br/> 30%</div>
+                  <div>
+                    Top 50 - 100
+                    <br /> 30%
+                  </div>
                 </Col>
                 <Col xs={24} sm={24} md={6} lg={6}>
                   <p className={styles.themeColor}>D</p>
-                  <div>&gt;100<br/> 20%</div>
+                  <div>
+                    &gt;100
+                    <br /> 20%
+                  </div>
                 </Col>
               </Row>
             </div>
             <div className={styles.campionLevels}>
               <h4>Campaign</h4>
-              <p>不同等级的返佣率不同，C、D等级将分别拿出10%和20%的手续费注入奖励池。
-
-每30天奖励池的60%和40%的奖励将被均分给等级A、B的经纪人，
-
-并基于最新的排名重置等级。</p>
+              <p>
+                不同等级的返佣率不同，C、D等级将分别拿出10%和20%的手续费注入奖励池。
+                每30天奖励池的60%和40%的奖励将被均分给等级A、B的经纪人， 并基于最新的排名重置等级。
+              </p>
               <div>
                 <div className={styles.title}>
                   <span>Commission Rate</span>
@@ -95,7 +108,9 @@ export default () => {
                   <div className={styles.layers} style={{ width: gap + 'px', left: rect.bar + 'px' }}>
                     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height={rect.height} width={gap}>
                       <polygon
-                        points={`0,${rect.barHeight} ${gap},${(100-percentages.center) * rect.height /100} 0,${rect.height - rect.barHeight}`}
+                        points={`0,${rect.barHeight} ${gap},${((100 - percentages.center) * rect.height) / 100} 0,${
+                          rect.height - rect.barHeight
+                        }`}
                         stroke-width="0"
                         fill="#fff"
                       />
@@ -104,7 +119,9 @@ export default () => {
                   <div className={styles.layers} style={{ width: gap + 'px', right: rect.bar + 'px' }}>
                     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height={rect.height} width={gap}>
                       <polygon
-                        points={`${gap},${rect.barHeight} 0,${(100-percentages.center) * rect.height /100} ${gap},${rect.height - rect.barHeight}`}
+                        points={`${gap},${rect.barHeight} 0,${
+                          ((100 - percentages.center) * rect.height) / 100
+                        } ${gap},${rect.height - rect.barHeight}`}
                         stroke-width="0"
                         fill="#fff"
                       />

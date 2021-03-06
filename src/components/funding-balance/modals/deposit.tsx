@@ -4,12 +4,10 @@ import styles from "./style.module.less";
 import SiteContext from "../../../layouts/SiteContext";
 import { CoinSelectOption } from '../../../constant/index';
 
-
-
-const title = "Funding Deposit";
+const title = 'Funding Deposit';
 
 export default (props: any) => {
-  const { visible, onCancel } = props;
+  const { visible, onCancel, onDeposit, onAmountChange } = props;
   return (
     <SiteContext.Consumer>
       {({ isMobile }) => (
@@ -24,16 +22,8 @@ export default (props: any) => {
           <div>
             {/* <h4>{title}</h4> */}
             <Row gutter={[16, 16]}>
-              {/* <Col xs={24} sm={24} md={6} lg={6}>
-                <Select
-                  defaultValue="DAI"
-                  style={{ width: "100%", height: 50 }}
-                >
-                  {CoinSelectOption}
-                </Select>
-              </Col> */}
-              <Col xs={24} sm={24} md={24} lg={24}>
-                <Input placeholder="Deposit amount" />
+              <Col xs={24} sm={24} md={18} lg={18}>
+                <Input placeholder="Deposit amount" onChange={onAmountChange} />
               </Col>
             </Row>
             <Row  gutter={[16, 16]} className={styles.utilMax} type="flex" justify="space-between">
@@ -42,10 +32,12 @@ export default (props: any) => {
             </Row>
             <Row className={styles.actionBtns} gutter={[16, 16]} type="flex">
               <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                <Button>Cancel</Button>
+                <Button onClick={onCancel}>Cancel</Button>
               </Col>
               <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
-                <Button type="primary">Deposit</Button>
+                <Button onClick={onDeposit} type="primary">
+                  Deposit
+                </Button>
               </Col>
             </Row>
           </div>

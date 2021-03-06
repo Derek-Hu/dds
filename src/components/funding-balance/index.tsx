@@ -1,20 +1,73 @@
-import { Row, Col, Radio, Input, Tag, Button } from "antd";
-import styles from "./style.module.less";
-import DespositModal from "./modals/deposit";
-import WithdrawModal from "./modals/withdraw";
-import OrderConfirm from "./modals/order-confirm";
-import { Component } from "react";
-import SiteContext from "../../layouts/SiteContext";
-
-const balance = "19.00";
+import { Row, Col, Radio, Input, Progress, Button } from 'antd';
+import styles from './style.module.less';
+import DespositModal from './modals/deposit';
+import WithdrawModal from './modals/withdraw';
+import OrderConfirm from './modals/order-confirm';
+import { Component } from 'react';
+import SiteContext from '../../layouts/SiteContext';
+import { contractAccessor } from '../../wallet/chain-access';
+import { NEVER, Subscription } from 'rxjs';
+import { BigNumber } from 'ethers';
+import { ETH_WEIGHT } from '~/constant';
+import { walletManager } from '~/wallet/wallet-manager';
+import { WalletInterface } from '~/wallet/wallet-interface';
+import { filter, map, switchMap } from 'rxjs/operators';
+import { toEthers } from '~/util/ethers';
 
 export default class Balance extends Component {
   state = {
     depositVisible: false,
     withdrawVisible: false,
     orderConfirmVisible: false,
-    isLogin: true,
-    tradeType: 'Long'
+    tradeType: 'Long',
+    curPrice: '--',
+    balance: '--',
+    locked: '--',
+    available: '--',
+    depositAmount: 0,
+    withdrawAmount: 0,
+  };
+
+  private subs: Subscription[] = [];
+
+  componentDidMount = () => {
+    const sub = contractAccessor.watchPriceByETHDAI().subscribe((price: string) => {
+      this.setState({ curPrice: price });
+    });
+
+    const sub2 = walletManager
+      .watchWalletInstance()
+      .pipe(
+        filter((wallet: WalletInterface | null) => {
+          return wallet !== null;
+        }),
+        map((wallet: WalletInterface | null) => {
+          return wallet as WalletInterface;
+        }),
+        switchMap((wallet: WalletInterface) => {
+          return wallet.watchAccount();
+        }),
+        switchMap((userAccount: string | null) => {
+          if (userAccount === null) {
+            return NEVER;
+          }
+          return contractAccessor.watchUserAccount(userAccount);
+        })
+      )
+      .subscribe(({ deposit, available }) => {
+        const locked: BigNumber = BigNumber.from(deposit).sub(BigNumber.from(available));
+        this.setState({
+          balance: toEthers(deposit, 4),
+          locked: toEthers(locked, 4),
+          available: toEthers(available, 4),
+        });
+      });
+
+    this.subs.push(sub, sub2);
+  };
+
+  componentWillUnmount = () => {
+    this.subs.forEach((one) => one.unsubscribe());
   };
 
   showDepositModal = () => {
@@ -26,6 +79,38 @@ export default class Balance extends Component {
   closeDepositModal = () => {
     this.setState({
       depositVisible: false,
+    });
+  };
+
+  changeDepositAmount = (amount: any) => {
+    const value: number = Number(amount.target.value);
+    this.state.depositAmount = isNaN(value) ? 0 : value;
+  };
+
+  changeWithdrawAmount = (amount: any) => {
+    const value: number = Number(amount.target.value);
+    this.state.withdrawAmount = isNaN(value) ? 0 : value;
+  };
+
+  deposit = () => {
+    if (this.state.depositAmount <= 0) {
+      return;
+    }
+
+    const amount: BigNumber = BigNumber.from(this.state.depositAmount).mul(BigNumber.from(ETH_WEIGHT));
+    contractAccessor.depositToken(amount.toString()).subscribe(() => {
+      this.closeDepositModal();
+    });
+  };
+
+  withdraw = () => {
+    if (this.state.withdrawAmount <= 0) {
+      return;
+    }
+
+    const amount: BigNumber = BigNumber.from(this.state.withdrawAmount).mul(BigNumber.from(ETH_WEIGHT));
+    contractAccessor.withdrawToken(amount.toString()).subscribe(() => {
+      this.closeWithdrawModal();
     });
   };
 
@@ -66,21 +151,15 @@ export default class Balance extends Component {
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => (
-          <div
-            className={[styles.root, isMobile ? styles.mobile : ""].join(" ")}
-          >
+          <div className={[styles.root, isMobile ? styles.mobile : ''].join(' ')}>
             <h2>
               Funding Balance<span>(DAI)</span>
             </h2>
-            <p className={styles.balanceVal}>{balance}</p>
+            <p className={styles.balanceVal}>{this.state.balance}</p>
             <div className={styles.dayChange}>
-              2&nbsp;<span>Locked</span>
+              {this.state.locked} &nbsp;<span>Locked</span>
             </div>
-            <Row
-              className={styles.actionLink}
-              type="flex"
-              justify="space-between"
-            >
+            <Row className={styles.actionLink} type="flex" justify="space-between">
               <Col>
                 <Button type="link" onClick={this.showDepositModal}>
                   Deposit
@@ -98,9 +177,9 @@ export default class Balance extends Component {
                 <Radio.Button value="Short" className={styles.green}>Short</Radio.Button>
               </Radio.Group>
             </Row>
-            <p className={styles.price}>Current Price: 644.05 DAI</p>
+            <p className={styles.price}>Current Price: {this.state.curPrice} DAI</p>
             <p className={styles.amountTip}>Amount</p>
-            <Input placeholder="0.00" suffix={"ETH"} />
+            <Input placeholder="0.00" suffix={'ETH'} />
 
             <Row className={styles.utilMax} type="flex" justify="space-between">
               <Col span={12}><Tag color="#1346FF">Max</Tag></Col>
@@ -114,17 +193,19 @@ export default class Balance extends Component {
             
 
             <DespositModal
+              onDeposit={this.deposit}
               onCancel={this.closeDepositModal}
+              onAmountChange={this.changeDepositAmount}
               visible={depositVisible}
             />
             <WithdrawModal
               onCancel={this.closeWithdrawModal}
+              onAmountChange={this.changeWithdrawAmount}
+              onWithdraw={this.withdraw}
+              maxWithdraw={this.state.available}
               visible={withdrawVisible}
             />
-            <OrderConfirm
-              onCancel={this.closeOrderConfirmModal}
-              visible={orderConfirmVisible}
-            />
+            <OrderConfirm onCancel={this.closeOrderConfirmModal} visible={orderConfirmVisible} />
           </div>
         )}
       </SiteContext.Consumer>

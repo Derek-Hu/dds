@@ -10,9 +10,9 @@ import SiteContext from "../layouts/SiteContext";
 
 const data: IRecord[] = [
   {
-    id: "001",
+    id: '001',
     time: new Date().getTime(),
-    type: "Buy",
+    type: 'Buy',
     price: 400.65,
     amount: 10.36,
     costCoin: 'DAI',
@@ -22,13 +22,13 @@ const data: IRecord[] = [
       val: 10.56,
       percentage: -0.25,
     },
-    status: "CLOSED",
-    exercise: "-",
+    status: 'CLOSED',
+    exercise: '-',
   },
   {
-    id: "002",
+    id: '002',
     time: new Date().getTime(),
-    type: "Buy",
+    type: 'Buy',
     price: 400.65,
     amount: 10.36,
     costCoin: 'USDT',
@@ -38,13 +38,13 @@ const data: IRecord[] = [
       val: 10.56,
       percentage: -0.25,
     },
-    status: "ACTIVE",
-    exercise: "-",
+    status: 'ACTIVE',
+    exercise: '-',
   },
   {
-    id: "003",
+    id: '003',
     time: new Date().getTime(),
-    type: "Short",
+    type: 'Short',
     price: 400.65,
     amount: 10.36,
     costCoin: 'USDC',
@@ -54,8 +54,8 @@ const data: IRecord[] = [
       val: 10.56,
       percentage: 0.25,
     },
-    status: "CLOSED",
-    exercise: "-",
+    status: 'CLOSED',
+    exercise: '-',
   },
 ];
 
@@ -95,14 +95,25 @@ export default class TradePage extends Component {
               address ? <TradeBonus data={data} /> : null
             }
             <div>
-              <Row gutter={isMobile? 0: 20}>
+              {/* <Row gutter={isMobile? 0: 20}>
                 <Col xs={24} sm={24} md={12} lg={12}>
                   <TradePool />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12}>
                   <TradeInfo theme="outer" title="Info" items={infoItems}/>
                 </Col>
-              </Row>
+              </Row> */}
+              <TradeBonus data={data} />
+              <div>
+                <Row gutter={isMobile ? 0 : 20}>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <TradePool />
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                  <TradeInfo theme="outer" title="Info" items={infoItems}/>
+                  </Col>
+                </Row>
+              </div>
             </div>
           </div>
         }}

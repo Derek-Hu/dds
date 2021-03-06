@@ -1,10 +1,10 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 // import echarts from "echarts/lib/echarts";
-import styles from "./style.module.less";
-import option, { seryName } from "./option";
-import MockData from "./mock";
-import { Select, Row, Col, Button } from "antd";
-import SiteContext from "../../layouts/SiteContext";
+import styles from './style.module.less';
+import option, { seryName } from './option';
+import MockData from './mock';
+import { Select, Row, Col, Button } from 'antd';
+import SiteContext from '../../layouts/SiteContext';
 
 const { Option } = Select;
 
@@ -14,7 +14,7 @@ export default class MainLayout extends Component {
   ref = React.createRef();
 
   componentDidMount() {
-    const container = document.getElementById("k-line");
+    const container = document.getElementById('k-line');
 
     // eslint-disable-next-line
     var myChart = echarts.init(container);
@@ -40,9 +40,9 @@ export default class MainLayout extends Component {
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => {
-          const width = isMobile ? window.innerWidth - 32 : "100%";
+          const width = isMobile ? window.innerWidth - 32 : '100%';
           return (
-            <div className={[styles.root, isMobile ? styles.mobile : ""].join(" ")}>
+            <div className={[styles.root, isMobile ? styles.mobile : ''].join(' ')}>
               <div className={styles.headArea}>
                 <Select defaultValue="ETH/DAI" style={{ width: 120 }}>
                   <Option value="ETH/DAI">ETH/DAI</Option>
@@ -69,7 +69,7 @@ export default class MainLayout extends Component {
                 </Col>
               </Row>
 
-              <div id="k-line" style={{ width: width, margin: '0', height: "400px" }}></div>
+              <div id="k-line" style={{ width: width, margin: '0', height: '400px' }}></div>
             </div>
           );
         }}

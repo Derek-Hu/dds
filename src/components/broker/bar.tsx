@@ -6,7 +6,7 @@ interface IProps {
   width: number;
   height?: number;
   className?: string;
-  style?: object,
+  style?: object;
   percentage: number;
 }
 
@@ -19,7 +19,10 @@ export default ({ vertical, right, style, className, percentage, width, height =
       className={[vertical ? styles.vertical : '', styles.root, className].join(' ')}
     >
       {vertical || right ? (
-        <div style={vertical ? {height: 100 - percentage + '%'} : { width: 100 - percentage + '%' }} className={styles.spanWpr}>
+        <div
+          style={vertical ? { height: 100 - percentage + '%' } : { width: 100 - percentage + '%' }}
+          className={styles.spanWpr}
+        >
           <span className={[styles.remains, remainFixed ? styles.fixed : '', right ? styles.right : ''].join(' ')}>
             {100 - percentage}%
           </span>
@@ -27,7 +30,7 @@ export default ({ vertical, right, style, className, percentage, width, height =
       ) : null}
       <div
         className={[styles.percentage, fixed ? styles.fixed : '', right ? styles.right : ''].join(' ')}
-        style={vertical ? {width: '100', height: percentage + '%'} : { width: percentage + '%', height: '100%' }}
+        style={vertical ? { width: '100', height: percentage + '%' } : { width: percentage + '%', height: '100%' }}
       >
         <div className={styles.spanWpr}>
           {vertical ? (
