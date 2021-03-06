@@ -12,11 +12,27 @@ import ColumnConvert from '../column-convert/index';
 import ModalRender from '../modal-render/index';
 import currStyles from '../trade-bonus/modals/style.module.less';
 import SiteContext from '../../layouts/SiteContext';
-import LockedDetails, { ILockedData } from './locked-details';
-import SystemFundBalance from './system-fund-balance';
+import LockedDetails, { ILockedData } from '../liquidity-pool/locked-details';
+import SystemRanking from './system-ranking';
+import CardInfo from "../card-info/index";
 
 const { Option } = Select;
 const { TabPane } = Tabs;
+
+const SystemFundBalance = {
+  title: 'System Fund Balance',
+  // desc: <span>Total Liquidity: <span style={style}>23534.33</span> USD</span>,
+  items: [{
+      label: 'DAI',
+      val: <span>647</span>
+  },{
+      label: 'USDC',
+      val: <span>638</span>
+  },{
+      label: 'USDT',
+      val: <span>7378</span>
+  }],
+}
 
 const TabName = {
   Liquidity: 'liquidity',
@@ -67,36 +83,6 @@ const ReTokenBalance: IPool = {
   ],
 };
 
-const lockedData: ILockedData[] = [
-  {
-    size: 3243,
-    reward: 4322,
-    fee: 100,
-    locked: 4322,
-    time: new Date().getTime(),
-  },
-  {
-    size: 3243,
-    reward: 4322,
-    fee: 100,
-    locked: 4322,
-    time: new Date().getTime(),
-  },
-  {
-    size: 3243,
-    reward: 4322,
-    fee: 100,
-    locked: 4322,
-    time: new Date().getTime(),
-  },
-  {
-    size: 3243,
-    reward: 4322,
-    fee: 100,
-    locked: 4322,
-    time: new Date().getTime(),
-  },
-];
 
 const LockBalance: IPool = {
   title: 'Locked',
@@ -433,12 +419,11 @@ export default class Mining extends Component {
               </ModalRender>
             </div>
             <div className={styles.bottomArea}>
-              {isLogin && selectedTab === TabName.Utilization ? (
-                <div>
-                  <LockedDetails data={lockedData} />
-                </div>
-              ) : null}
-              {selectedTab === TabName.Liquiditor ? <SystemFundBalance isLogin={isLogin} /> : null}
+              {selectedTab === TabName.Liquiditor ? 
+              <SystemRanking isLogin={false}>
+                <CardInfo theme="inner" {...SystemFundBalance} />
+              </SystemRanking>
+               : null}
               {isLogin && selectedTab === TabName.Liquidity ? (
                 <div className={styles.panels}>
                   <Row gutter={24}>

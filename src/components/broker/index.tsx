@@ -13,40 +13,59 @@ import Pool, { IPool } from '../liquidity-pool/pool';
 import CampionPool from './campion-pool';
 import ColumnConvert from '../column-convert/index';
 import BecomeSpark, { ISpark } from './become-spark';
+import PoolProgress, { IMiningShare } from '../progress-bar/pool-progress';
+import CardInfo from "../card-info/index";
+
+// const LockBalance: IPool = {
+//   title: 'Commission',
+//   coins: [
+//     {
+//       name: 'DAI',
+//       value: 647,
+//     },
+//     {
+//       name: 'USDC',
+//       value: 638,
+//     },
+//     {
+//       name: 'USDT',
+//       value: 7378,
+//     },
+//   ],
+// };
+
+const LockBalance = {
+  title: 'Commission',
+  // desc: <span>Total Liquidity: <span style={style}>23534.33</span> USD</span>,
+  items: [{
+      label: 'DAI',
+      val: <span>647</span>
+  },{
+      label: 'USDC',
+      val: <span>638</span>
+  },{
+      label: 'USDT',
+      val: <span>7378</span>
+  }],
+}
 
 const { TabPane } = Tabs;
 
-const LockBalance: IPool = {
-  title: 'Commission',
-  coins: [
-    {
-      name: 'DAI',
-      value: 647,
-    },
-    {
-      name: 'USDC',
-      value: 638,
-    },
-    {
-      name: 'USDT',
-      value: 7378,
-    },
-  ],
-};
 
-const CampaignRewards: IPool = {
+
+const CampaignRewards = {
   title: 'Campaign Rewards',
-  coins: [
+  items: [
     {
-      name: 'DAI',
+      label: 'DAI',
       value: 647,
     },
     {
-      name: 'USDC',
+      label: 'USDC',
       value: 638,
     },
     {
-      name: 'USDT',
+      label: 'USDT',
       value: 7378,
     },
   ],
@@ -265,11 +284,14 @@ export default class Broker extends Component {
                       <span className={styles.ads}>{referalInfo.referrals}</span>
                       <span>Referrals</span>
                     </Col>
-                    <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
+                  </Row>
+                  <div style={{marginTop: '48px', paddingBottom: '40px'}}>
                       <span className={styles.ads}>{referalInfo.bonus}</span>
                       <span>Bonus(USD)</span>
-                    </Col>
-                  </Row>
+                      <div>
+                        <Button style={{width: '120px', margin: '20px'}} type="primary">Claim</Button>
+                      </div>
+                  </div>
                 </TabPane>
               </Tabs>
             </div> : <div className={styles.becomeContainer}><BecomeSpark {...adsData}/></div>
@@ -280,17 +302,21 @@ export default class Broker extends Component {
               <>
                 <Row gutter={20} style={{ marginTop: '20px' }}>
                   <Col xs={24} sm={24} md={8} lg={8}>
-                    <Pool {...LockBalance}>
+                    <CardInfo theme="inner" {...LockBalance}></CardInfo>
+                    {/* <Pool {...LockBalance}>
                       <Button type="link" onClick={this.showCommissionModal}>Commission Record</Button>
-                    </Pool>
+                    </Pool> */}
                   </Col>
                   <Col xs={24} sm={24} md={8} lg={8}>
                     <CampionPool />
                   </Col>
                   <Col xs={24} sm={24} md={8} lg={8}>
-                    <Pool {...CampaignRewards}>
+                    <CardInfo theme="inner" {...LockBalance}>
                       <Button type="link" onClick={this.showCampaignModal}>Rewards Record</Button>
-                    </Pool>
+                    </CardInfo>
+                    {/* <Pool {...CampaignRewards}>
+                      
+                    </Pool> */}
                   </Col>
                 </Row>
                 {/* <ReferalDetails data={data} /> */}

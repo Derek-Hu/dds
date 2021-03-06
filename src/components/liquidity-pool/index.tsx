@@ -21,6 +21,7 @@ import NetPL from "./net-pl";
 import { CustomTabKey, CoinSelectOption } from "../../constant/index";
 import ModalRender from "../modal-render/index";
 import SiteContext from "../../layouts/SiteContext";
+import LockedDetails, { ILockedData } from '../liquidity-pool/locked-details';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -35,6 +36,42 @@ const TabName = {
   Collaborative: "Collaborative",
   Private: "Private",
 };
+
+
+const lockedData: ILockedData[] = [
+  {
+    size: 3243,
+    reward: 4322,
+    fee: 100,
+    locked: 4322,
+    time: new Date().getTime(),
+    status: 'Closed'
+  },
+  {
+    size: 3243,
+    reward: 4322,
+    fee: 100,
+    locked: 4322,
+    time: new Date().getTime(),
+    status: 'Closed'
+  },
+  {
+    size: 3243,
+    reward: 4322,
+    fee: 100,
+    locked: 4322,
+    time: new Date().getTime(),
+    status: 'Closed'
+  },
+  {
+    size: 3243,
+    reward: 4322,
+    fee: 100,
+    locked: 4322,
+    time: new Date().getTime(),
+    status: 'Closed'
+  },
+];
 
 const PublicProvidedPool: IPool = {
   title: "Liquidity Provided",
@@ -149,7 +186,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                       {numeral(mining.money).format("0,0")}%
                     </p>
 
-                    <div className={styles.actionArea}>
+                    { isLogin ? <div className={styles.actionArea}>
                       <Row gutter={[isMobile? 0: 12, isMobile? 15: 0]}>
                         <Col xs={24} sm={24} md={8} lg={6}><Select
                             defaultValue="DAI"
@@ -166,20 +203,14 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                       <p className={styles.cal}>
                         You Will Receive: <span>94204</span> reDAI
                       </p>
-                      {isLogin ? (
-                        <Button
-                          type="primary"
-                          className={styles.btn}
-                          onClick={this.showDepositModal}
-                        >
-                          Deposit
-                        </Button>
-                      ) : (
-                        <Button type="primary" className={styles.btn}>
-                          Connect Wallet
-                        </Button>
-                      )}
-                    </div>
+                      <Button
+                        type="primary"
+                        className={styles.btn}
+                        onClick={this.showDepositModal}
+                      >
+                        Deposit
+                      </Button>
+                    </div> : null }
                   </TabPane>
                   <TabPane
                     tab={
@@ -260,25 +291,26 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                 ) : null}
                 {selectedTab === TabName.Private ? (
                   <div>
-                    {isLogin ? (
-                      <Row gutter={isMobile? 0: 12}>
-                        <Col  xs={24} sm={24} md={8} lg={8}>
-                          <AvailablePool />
-                        </Col>
-                        <Col  xs={24} sm={24} md={8} lg={8}>
-                          <Balance />
-                        </Col>
-                        <Col  xs={24} sm={24} md={8} lg={8}>
-                          <NetPL>
-                          <Row>
-                              {
-                                  rates.map(val => <Col className={styles.rate} span={8}>{val}%</Col>)
-                              }
-                          </Row>
-                          </NetPL>
-                        </Col>
-                      </Row>
-                    ) : (
+                    {isLogin ? <div>
+                        <Row gutter={isMobile? 0: 12}>
+                          <Col  xs={24} sm={24} md={8} lg={8}>
+                            <AvailablePool />
+                          </Col>
+                          <Col  xs={24} sm={24} md={8} lg={8}>
+                            <Balance />
+                          </Col>
+                          <Col  xs={24} sm={24} md={8} lg={8}>
+                            <NetPL>
+                            <Row>
+                                {
+                                    rates.map(val => <Col className={styles.rate} span={8}>{val}%</Col>)
+                                }
+                            </Row>
+                            </NetPL>
+                          </Col>
+                        </Row>
+                        <LockedDetails data={lockedData} />
+                      </div> : (
                       <Row gutter={isMobile? 0: 12}>
                         <Col xs={24} sm={24} md={12} lg={12}>
                           <AvailablePool />
@@ -303,10 +335,15 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                   <Descriptions.Item label="Deposit Amount" span={24}>
                     10.36 DAI
                   </Descriptions.Item>
-                  <Descriptions.Item label="Receive" span={24}>
+                  {
+                    selectedTab === TabName.Private ? null : <Descriptions.Item label="Receive" span={24}>
                     10.36 reDAI
                   </Descriptions.Item>
+                  }
                 </Descriptions>
+                {
+                    selectedTab === TabName.Private ? null : <p>说明：将冻结14天</p>
+                  }
                 <Row className={commonStyles.actionBtns} gutter={[16, 16]} type="flex">
                   <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
                     <Button>Cancel</Button>

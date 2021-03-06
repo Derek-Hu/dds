@@ -35,12 +35,17 @@ const columns = [
     },
   },
   {
-    title: "Reward(DDS)",
-    dataIndex: "reward",
-    key: "reward",
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+  },
+  {
+    title: "Open Price",
+    dataIndex: "operate",
+    key: "operate",
     render: (time: string) => {
-      return numeral(time).format("0,0");
-    },
+      return <Button type="primary">增加补仓</Button>
+    }
   },
 ];
 
@@ -50,6 +55,7 @@ export interface ILockedData {
   fee: number;
   reward: number;
   time: number;
+  status: string;
 }
 export default ({ data }: { data: ILockedData[] }) => {
   return (
