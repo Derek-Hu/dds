@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom';
-
+// import './common.less';
 import './index.less';
 // import './tool.less';
 import settings from './routers/settings';

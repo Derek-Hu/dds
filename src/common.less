@@ -1,0 +1,37 @@
+@colors-friendly: {
+    yellow: #F59A23;
+    blue: #1346FF;
+    red: #F55858;
+    bg: #F9FAFC;
+    dark: #333;
+    addition: #37DBFF;
+    green: #15B384;
+    white: #FFF;
+    gray: #E7EBF4;
+}
+
+each(@colors-friendly, {
+  .color-@{key} {
+    color: @value;
+  }
+  .bg-@{key} {
+    background-color: @value
+  }
+});
+
+@colors: 3, 6, 9, 80;
+each(@colors, {
+    .color-@{value} {
+        color: color(@value, @value, @value);
+    }
+    .bg-@{value} {
+        background-color: color(@value, @value, @value);
+    }
+});
+
+@font-sizes: 12, 20, 24, 40, 48;
+each(@font-sizes, {
+    .font-@{value} {
+      font-size: unit(@value, px);
+    }
+});
