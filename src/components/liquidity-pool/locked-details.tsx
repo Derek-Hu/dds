@@ -35,17 +35,17 @@ const columns = [
     },
   },
   {
-    title: "Status",
-    dataIndex: "status",
-    key: "status",
+    title: 'Status',
+    dataIndex: 'status',
+    key: 'status',
   },
   {
-    title: "Open Price",
-    dataIndex: "operate",
-    key: "operate",
+    title: 'Open Price',
+    dataIndex: 'operate',
+    key: 'operate',
     render: (time: string) => {
-      return <Button type="primary">增加补仓</Button>
-    }
+      return <Button type="primary">增加补仓</Button>;
+    },
   },
 ];
 

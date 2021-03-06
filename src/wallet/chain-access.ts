@@ -1,9 +1,8 @@
-import { ABI, ContractProxy, UserAccountInfo } from '~/wallet/contract-interface';
+import { ABI, ContractParam, ContractProxy, UserAccountInfo } from '~/wallet/contract-interface';
 import { BehaviorSubject, from, Observable, of, interval } from 'rxjs';
 import * as ethers from 'ethers';
-import { catchError, filter, map, startWith, switchMap, take, tap, timeout } from 'rxjs/operators';
+import { catchError, filter, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { BigNumber } from '@ethersproject/bignumber';
-import { ETH_WEI, toEthers } from '../util/ethers';
 import { isMetaMaskInstalled } from './metamask';
 import { ContractAddress, DAIAddress, DataRefreshInterval, DefaultNetwork, Wallet } from '~/constant';
 import { chainDataState, ChainDataState } from '~/wallet/chain-connect-state';
@@ -47,19 +46,19 @@ abstract class BaseContractAccessor implements ContractProxy {
     this.contract = this.getContract();
   }
 
-  public getPriceByETHDAI(): Observable<string> {
+  public getPriceByETHDAI(): Observable<BigNumber> {
     if (this.contract) {
       return from(this.contract.functions.getPriceByETHDAI()).pipe(
         map((num: BigNumber[]) => {
-          return toEthers(num[0], 4);
+          return num[0];
         })
       );
     } else {
-      return of('');
+      return of(BigNumber.from(0));
     }
   }
 
-  public watchPriceByETHDAI(): Observable<string> {
+  public watchPriceByETHDAI(): Observable<BigNumber> {
     return this.timer.pipe(
       switchMap(() => {
         return this.getPriceByETHDAI();
@@ -137,6 +136,14 @@ abstract class BaseContractAccessor implements ContractProxy {
         return from(rs.wait());
       })
     );
+  }
+
+  public createContract(param: ContractParam): Observable<any> {
+    if (!this.contract) {
+      return of(false);
+    }
+
+    return from(this.contract.functions.creatContract(param.exchangeType, param.number, param.contractType)).pipe();
   }
 
   //
@@ -231,11 +238,11 @@ export class ContractAccessor implements ContractProxy {
     this.accessor.next(accessor);
   }
 
-  public getPriceByETHDAI(): Observable<string> {
+  public getPriceByETHDAI(): Observable<BigNumber> {
     return this.accessor.getValue().getPriceByETHDAI();
   }
 
-  public watchPriceByETHDAI(): Observable<string> {
+  public watchPriceByETHDAI(): Observable<BigNumber> {
     return this.accessor.pipe(
       switchMap((accessor: BaseContractAccessor) => {
         return accessor.watchPriceByETHDAI();
@@ -279,6 +286,10 @@ export class ContractAccessor implements ContractProxy {
         return of(false);
       })
     );
+  }
+
+  public createContract(param: ContractParam): Observable<any> {
+    return of();
   }
 }
 

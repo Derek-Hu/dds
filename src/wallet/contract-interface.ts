@@ -1038,9 +1038,9 @@ export const ABI = [
 ];
 
 export interface ContractProxy {
-  getPriceByETHDAI(): Observable<string>;
+  getPriceByETHDAI(): Observable<BigNumber>;
 
-  watchPriceByETHDAI(): Observable<string>;
+  watchPriceByETHDAI(): Observable<BigNumber>;
 
   getUserAccount(address: string): Observable<UserAccountInfo>;
 
@@ -1049,9 +1049,17 @@ export interface ContractProxy {
   depositToken(count: string): Observable<any>;
 
   withdrawToken(count: string): Observable<any>;
+
+  createContract(param: ContractParam): Observable<any>;
 }
 
 export interface UserAccountInfo {
   deposit: BigNumber;
   available: BigNumber;
+}
+
+export interface ContractParam {
+  exchangeType: 'ETHDAI';
+  number: BigNumber;
+  contractType: 1 | 2;
 }

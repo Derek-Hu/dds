@@ -1,32 +1,32 @@
-import { Component } from "react";
-import Pool, { IPool } from "./pool";
-import { Tabs, Button, Modal, Table, Row, Select, Input, Col } from "antd";
-import styles from "./balance.module.less";
-import commonStyles from "../funding-balance/modals/style.module.less";
-import ColumnConvert from "../column-convert/index";
-import dayjs from "dayjs";
-import numeral from "numeral";
-import { CustomTabKey, SupportedCoins } from "../../constant/index";
-import ModalRender from "../modal-render/index";
-import SiteContext from "../../layouts/SiteContext";
-import CardInfo from "../card-info/index";
+import { Component } from 'react';
+import Pool, { IPool } from './pool';
+import { Tabs, Button, Modal, Table, Row, Select, Input, Col } from 'antd';
+import styles from './balance.module.less';
+import commonStyles from '../funding-balance/modals/style.module.less';
+import ColumnConvert from '../column-convert/index';
+import dayjs from 'dayjs';
+import numeral from 'numeral';
+import { CustomTabKey, SupportedCoins } from '../../constant/index';
+import ModalRender from '../modal-render/index';
+import SiteContext from '../../layouts/SiteContext';
+import CardInfo from '../card-info/index';
 
 const { TabPane } = Tabs;
 const { Option } = Select;
 
 const BalancePool = {
-  title: "Liquidity Balance",
+  title: 'Liquidity Balance',
   items: [
     {
-      label: "DAI",
+      label: 'DAI',
       value: 647,
     },
     {
-      label: "USDC",
+      label: 'USDC',
       value: 638,
     },
     {
-      label: "USDT",
+      label: 'USDT',
       value: 7378,
     },
   ],
@@ -39,25 +39,25 @@ const BalancePool = {
 
 interface ITransfer {
   time: number;
-  type: "WithDraw" | "Deposit";
+  type: 'WithDraw' | 'Deposit';
   amount: number;
   balance: number;
 }
 
 const columns = ColumnConvert<ITransfer, {}>({
   column: {
-    time: "Time",
-    type: "Type",
-    amount: "Amount",
-    balance: "Balance",
+    time: 'Time',
+    type: 'Type',
+    amount: 'Amount',
+    balance: 'Balance',
   },
   render(value, key) {
     switch (key) {
-      case "time":
-        return dayjs(value).format("YYYY-MM-DD");
-      case "amount":
-      case "balance":
-        return numeral(value).format("0,0.0000");
+      case 'time':
+        return dayjs(value).format('YYYY-MM-DD');
+      case 'amount':
+      case 'balance':
+        return numeral(value).format('0,0.0000');
       default:
         return value;
     }
@@ -67,66 +67,66 @@ const columns = ColumnConvert<ITransfer, {}>({
 const data: ITransfer[] = [
   {
     time: new Date().getTime(),
-    type: "WithDraw",
+    type: 'WithDraw',
     amount: 100,
     balance: 892.03,
   },
   {
     time: new Date().getTime(),
-    type: "WithDraw",
+    type: 'WithDraw',
     amount: 100,
     balance: 892.03,
   },
   {
     time: new Date().getTime(),
-    type: "WithDraw",
+    type: 'WithDraw',
     amount: 100,
     balance: 892.03,
   },
   {
     time: new Date().getTime(),
-    type: "WithDraw",
+    type: 'WithDraw',
     amount: 100,
     balance: 892.03,
   },
   {
     time: new Date().getTime(),
-    type: "WithDraw",
+    type: 'WithDraw',
     amount: 100,
     balance: 892.03,
   },
   {
     time: new Date().getTime(),
-    type: "WithDraw",
+    type: 'WithDraw',
     amount: 100,
     balance: 892.03,
   },
   {
     time: new Date().getTime(),
-    type: "WithDraw",
+    type: 'WithDraw',
     amount: 100,
     balance: 892.03,
   },
   {
     time: new Date().getTime(),
-    type: "WithDraw",
+    type: 'WithDraw',
     amount: 100,
     balance: 892.03,
   },
   {
     time: new Date().getTime(),
-    type: "WithDraw",
+    type: 'WithDraw',
     amount: 100,
     balance: 892.03,
   },
   {
     time: new Date().getTime(),
-    type: "WithDraw",
+    type: 'WithDraw',
     amount: 100,
     balance: 892.03,
   },
 ];
-export default class PoolPage extends Component<{isPrivate: boolean}, any> {
+export default class PoolPage extends Component<{ isPrivate: boolean }, any> {
   state = {
     withDrawVisible: false,
     recordVisible: false,
@@ -161,18 +161,10 @@ export default class PoolPage extends Component<{isPrivate: boolean}, any> {
         {({ isMobile }) => (
           <div>
             <CardInfo theme="inner" {...BalancePool}>
-              <Button
-                type="primary"
-                onClick={this.showWithDraw}
-                className={styles.btn}
-              >
+              <Button type="primary" onClick={this.showWithDraw} className={styles.btn}>
                 Withdraw
               </Button>
-              <Button
-                type="link"
-                onClick={this.showRecord}
-                className={styles.link}
-              >
+              <Button type="link" onClick={this.showRecord} className={styles.link}>
                 Liquidity Balance Record
               </Button>
             </CardInfo>
@@ -207,41 +199,28 @@ export default class PoolPage extends Component<{isPrivate: boolean}, any> {
               visible={this.state.withDrawVisible}
               title="Liquidity Withdraw"
               className={commonStyles.commonModal}
-              okText={"Claim"}
+              okText={'Claim'}
               height={420}
               onCancel={this.closeWithDraw}
               footer={null}
             >
-              <Row
-                gutter={[16, 16]}
-                type="flex"
-                justify="space-between"
-                align="middle"
-              >
+              <Row gutter={[16, 16]} type="flex" justify="space-between" align="middle">
                 <Col xs={24} sm={24} md={6} lg={6}>
-                  <Select
-                    defaultValue="DAI"
-                    style={{ width: "100%", height: 50 }}
-                  >
+                  <Select defaultValue="DAI" style={{ width: '100%', height: 50 }}>
                     {SupportedCoins.map((coin) => (
                       <Option value={coin}>{coin}</Option>
                     ))}
                   </Select>
                 </Col>
                 <Col xs={24} sm={24} md={18} lg={18}>
-                  <span className={[styles.maxWithdraw, isMobile ? styles.mobile : ""].join(' ')}>
+                  <span className={[styles.maxWithdraw, isMobile ? styles.mobile : ''].join(' ')}>
                     Max Withdraw Balance: <span>3278392</span> DAI
                   </span>
                 </Col>
                 <Col span={24}>
-                  <div
-                    className={[
-                      styles.repay,
-                      isMobile ? styles.mobile : "",
-                    ].join(" ")}
-                  >
+                  <div className={[styles.repay, isMobile ? styles.mobile : ''].join(' ')}>
                     <Input placeholder="Withdraw amount" />
-                    { isPrivate ? null : <p>XXX reDAI you need to pay</p> }
+                    {isPrivate ? null : <p>XXX reDAI you need to pay</p>}
                   </div>
                 </Col>
               </Row>
