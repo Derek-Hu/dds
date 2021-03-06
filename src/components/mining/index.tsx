@@ -197,7 +197,7 @@ export default class Mining extends Component {
 
   state = {
     visible: false,
-    isLogin: true,
+    isLogin: false,
     isUnlockType: false,
     claimModalVisible: false,
     lockReModalVisible: false,
