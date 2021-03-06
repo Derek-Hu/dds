@@ -17,6 +17,7 @@ export interface IRecord {
   price: number;
   amount: number;
   cost: number;
+  costCoin: string;
   fee: number;
   pl: {
     val: number;
@@ -42,7 +43,7 @@ export default class Balance extends Component<{ data: IRecord[] }, any> {
       type: 'Type',
       price: 'Order Price',
       amount: 'Amount',
-      cost: 'Funding Cost ($)',
+      cost: 'Funding Cost',
       fee: 'Settlements Fee ($)',
       pl: 'P&L',
       status: 'Status',
@@ -55,6 +56,7 @@ export default class Balance extends Component<{ data: IRecord[] }, any> {
         case 'price':
         case 'amount':
         case 'cost':
+          return `${record.cost}(${record.costCoin})`;
         case 'fee':
           return numeral(value).format('0,0.0000');
         case 'pl':

@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { Row, Col } from 'antd';
 import TradeBonus, { IRecord } from '../components/trade-bonus/index';
-import TradeInfo from '../components/trade-info/index';
+import TradeInfo from '../components/card-info/index';
 import TradePool from '../components/trade-pool/index';
 import styles from './style.module.less';
 import KLine from '../components/k-line/index';
@@ -15,6 +15,7 @@ const data: IRecord[] = [
     type: 'Buy',
     price: 400.65,
     amount: 10.36,
+    costCoin: 'DAI',
     cost: 5.23,
     fee: 0.1,
     pl: {
@@ -30,6 +31,7 @@ const data: IRecord[] = [
     type: 'Buy',
     price: 400.65,
     amount: 10.36,
+    costCoin: 'USDT',
     cost: 5.23,
     fee: 0.1,
     pl: {
@@ -45,6 +47,7 @@ const data: IRecord[] = [
     type: 'Short',
     price: 400.65,
     amount: 10.36,
+    costCoin: 'USDC',
     cost: 5.23,
     fee: 0.1,
     pl: {
@@ -56,6 +59,17 @@ const data: IRecord[] = [
   },
 ];
 
+const infos = {
+  'Ticker Root': 20,
+  'Expiry Date': 'Funding Rate',
+  'Settlements Fee Rate': 'Funding Rate',
+  'Forced Liquidation Rate': 'Funding Rate',
+  Type: 'Funding Rate',
+  Exercise: 'Funding Rate',
+  'Funding Rate': 'Funding Rate',
+};
+// @ts-ignore
+const infoItems = Object.keys(infos).map((key) => ({ label: key, val: infos[key] }));
 export default class TradePage extends Component {
   componentDidMount() {
     console.log('mount');
@@ -64,7 +78,7 @@ export default class TradePage extends Component {
     return (
       <SiteContext.Consumer>
         {({ isMobile, account }) => {
-          const { coins } = account || {};
+          const { coins, address } = account || {};
           const usdt = coins?.USDC;
 
           return (
@@ -77,16 +91,27 @@ export default class TradePage extends Component {
                   <FundingBalance />
                 </Col>
               </Row>
-              <TradeBonus data={data} />
+              {address ? <TradeBonus data={data} /> : null}
               <div>
-                <Row gutter={isMobile ? 0 : 20}>
-                  <Col xs={24} sm={24} md={12} lg={12}>
-                    <TradePool />
-                  </Col>
-                  <Col xs={24} sm={24} md={12} lg={12}>
-                    <TradeInfo />
-                  </Col>
-                </Row>
+                {/* <Row gutter={isMobile? 0: 20}>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <TradePool />
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <TradeInfo theme="outer" title="Info" items={infoItems}/>
+                </Col>
+              </Row> */}
+                <TradeBonus data={data} />
+                <div>
+                  <Row gutter={isMobile ? 0 : 20}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                      <TradePool />
+                    </Col>
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                      <TradeInfo theme="outer" title="Info" items={infoItems} />
+                    </Col>
+                  </Row>
+                </div>
               </div>
             </div>
           );

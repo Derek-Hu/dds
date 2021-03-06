@@ -1038,9 +1038,9 @@ export const ABI = [
 ];
 
 export interface ContractProxy {
-  getPriceByETHDAI(): Observable<string>;
+  getPriceByETHDAI(): Observable<BigNumber>;
 
-  watchPriceByETHDAI(): Observable<string>;
+  watchPriceByETHDAI(): Observable<BigNumber>;
 
   getUserAccount(address: string): Observable<UserAccountInfo>;
 

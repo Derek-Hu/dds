@@ -44,7 +44,7 @@ export default () => {
               <div className={styles.bar} style={{ height: height + 'px' }}>
                 <div className={styles.percentBar} style={{ height: right.percentage + '%' }}></div>
                 <p>DDS Circulating Supply ×{right.percentage}%</p>
-                <span>{right.percentage}%</span>
+                <span className={styles.rightPecentage}>{right.percentage}%</span>
               </div>
               <div className={styles.amount}>{right.value} USD</div>
             </div>
