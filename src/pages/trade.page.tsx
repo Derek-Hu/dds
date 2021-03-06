@@ -69,11 +69,12 @@ const infos = {
   'Funding Rate': 'Funding Rate',
 };
 // @ts-ignore
-const infoItems = Object.keys(infos).map((key) => ({ label: key, val: infos[key] }));
+const infoItems = Object.keys(infos).map((key) => ({ label: key, value: infos[key] }));
 export default class TradePage extends Component {
   componentDidMount() {
     console.log('mount');
   }
+
   render() {
     return (
       <SiteContext.Consumer>
