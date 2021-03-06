@@ -7,7 +7,6 @@ import commonStyles from '../funding-balance/modals/style.module.less';
 import { metamaskWallet } from '../../wallet/metamask';
 import { Subscription } from 'rxjs';
 import { SupportedWallets, Wallet } from '~/constant';
-import { chainDataState } from '~/wallet/chain-state';
 
 const { Option } = Select;
 
@@ -30,8 +29,6 @@ export default class ConnectWallet extends Component<any, any> {
   }
 
   switchWallet = (walletType: Wallet) => {
-    chainDataState.setCurWallet(walletType);
-
     this.setState(
       {
         walletType,
@@ -79,14 +76,12 @@ export default class ConnectWallet extends Component<any, any> {
 
     switch (this.state.walletType) {
       case Wallet.Metamask: {
-        this.accSub = metamaskWallet
-          .watchAccount()
-          .subscribe((account: string | null) => {
-            this.setState({
-              isConnected: account !== null,
-              account,
-            });
+        this.accSub = metamaskWallet.watchAccount().subscribe((account: string | null) => {
+          this.setState({
+            isConnected: account !== null,
+            account,
           });
+        });
         break;
       }
       default: {
@@ -113,14 +108,8 @@ export default class ConnectWallet extends Component<any, any> {
             >
               <Row gutter={[16, 24]} type="flex" className={styles.coinList}>
                 {SupportedWallets.map((name) => (
-                  <Col
-                    key={name}
-                    span={24}
-                    className={walletType === name ? styles.active : ''}
-                  >
-                    <Button onClick={() => this.switchWallet(name)}>
-                      {name}
-                    </Button>
+                  <Col key={name} span={24} className={walletType === name ? styles.active : ''}>
+                    <Button onClick={() => this.switchWallet(name)}>{name}</Button>
                   </Col>
                 ))}
                 {isConnected ? (
@@ -130,9 +119,7 @@ export default class ConnectWallet extends Component<any, any> {
                       value={this.state.account}
                       style={{ width: '100%', height: 50 }}
                     >
-                      <Option value={this.state.account}>
-                        {this.state.account}
-                      </Option>
+                      <Option value={this.state.account}>{this.state.account}</Option>
                     </Select>
                   </Col>
                 ) : null}

@@ -13,5 +13,7 @@ export function toEthers(num: BigNumber, decimal: number): string {
     decimals = decimals.substring(0, decimal);
   }
   const integers: string = numStr.substring(0, numStr.length - ETH_WEI) || '0';
-  return integers + '.' + decimals;
+  const rs = integers + '.' + decimals;
+
+  return _.trimEnd(_.trimEnd(rs, '0'), '.');
 }
