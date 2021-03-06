@@ -1,4 +1,4 @@
-import { Row, Col, Radio, Input, Progress, Button } from 'antd';
+import { Row, Col, Radio, Input, Tag, Button } from 'antd';
 import styles from './style.module.less';
 import DespositModal from './modals/deposit';
 import WithdrawModal from './modals/withdraw';
