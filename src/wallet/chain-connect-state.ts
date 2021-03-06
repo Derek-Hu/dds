@@ -8,7 +8,11 @@ export class ChainDataState {
     return this.curWallet.getValue();
   }
 
+  // 必须是连接成功后才进行设置
   setCurWallet(wallet: Wallet) {
+    if (this.curWallet.getValue() === wallet) {
+      return;
+    }
     this.curWallet.next(wallet);
   }
 
