@@ -73,7 +73,11 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                                 </span>
                               </Col>
                               <Col xs={10} sm={10} md={8} lg={8}>
-                                <Select defaultValue="DAI" className={styles.coinDropdown} style={{ width: '100%', height: 50 }}>
+                                <Select
+                                  defaultValue="DAI"
+                                  className={styles.coinDropdown}
+                                  style={{ width: '100%', height: 50 }}
+                                >
                                   {CoinSelectOption}
                                 </Select>
                               </Col>

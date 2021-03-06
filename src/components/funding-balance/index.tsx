@@ -12,7 +12,7 @@ import { ETH_WEIGHT } from '~/constant';
 import { walletManager } from '~/wallet/wallet-manager';
 import { WalletInterface } from '~/wallet/wallet-interface';
 import { filter, map, switchMap } from 'rxjs/operators';
-import { toEthers } from '~/util/ethers';
+import { keepDecimal, toEthers } from '~/util/ethers';
 
 export default class Balance extends Component {
   state = {
@@ -21,9 +21,11 @@ export default class Balance extends Component {
     orderConfirmVisible: false,
     tradeType: 'Long',
     curPrice: '--',
+    curPriceNum: BigNumber.from(1),
     balance: '--',
     locked: '--',
     available: '--',
+    availableEth: '--',
     depositAmount: 0,
     withdrawAmount: 0,
   };
@@ -31,8 +33,13 @@ export default class Balance extends Component {
   private subs: Subscription[] = [];
 
   componentDidMount = () => {
-    const sub = contractAccessor.watchPriceByETHDAI().subscribe((price: string) => {
-      this.setState({ curPrice: price });
+    const sub = contractAccessor.watchPriceByETHDAI().subscribe((price: BigNumber) => {
+      const curPrice = toEthers(price, 4);
+      this.setState({
+        curPrice: curPrice,
+        curPriceNum: price,
+        availableEth: this.computeDaiToEth(this.state.available, curPrice),
+      });
     });
 
     const sub2 = walletManager
@@ -56,10 +63,13 @@ export default class Balance extends Component {
       )
       .subscribe(({ deposit, available }) => {
         const locked: BigNumber = BigNumber.from(deposit).sub(BigNumber.from(available));
+        const availableDai: string = toEthers(available, 4);
+
         this.setState({
           balance: toEthers(deposit, 4),
           locked: toEthers(locked, 4),
-          available: toEthers(available, 4),
+          available: availableDai,
+          availableEth: this.computeDaiToEth(availableDai, this.state.curPrice),
         });
       });
 
@@ -69,6 +79,10 @@ export default class Balance extends Component {
   componentWillUnmount = () => {
     this.subs.forEach((one) => one.unsubscribe());
   };
+
+  computeDaiToEth(dai: string, price: string) {
+    return keepDecimal(Number(dai) / Number(price), 4);
+  }
 
   showDepositModal = () => {
     this.setState({
@@ -141,9 +155,9 @@ export default class Balance extends Component {
   changeType = (e: any) => {
     console.log(e);
     this.setState({
-      tradeType: e.target.value
-    })
-  }
+      tradeType: e.target.value,
+    });
+  };
 
   render() {
     const { depositVisible, withdrawVisible, orderConfirmVisible, tradeType } = this.state;
@@ -174,7 +188,9 @@ export default class Balance extends Component {
             <Row className={styles.radioBtn}>
               <Radio.Group defaultValue="Long" onChange={this.changeType}>
                 <Radio.Button value="Long">Long</Radio.Button>
-                <Radio.Button value="Short" className={styles.green}>Short</Radio.Button>
+                <Radio.Button value="Short" className={styles.green}>
+                  Short
+                </Radio.Button>
               </Radio.Group>
             </Row>
             <p className={styles.price}>Current Price: {this.state.curPrice} DAI</p>
@@ -182,15 +198,22 @@ export default class Balance extends Component {
             <Input placeholder="0.00" suffix={'ETH'} />
 
             <Row className={styles.utilMax} type="flex" justify="space-between">
-              <Col span={12}><Tag color="#1346FF">Max</Tag></Col>
-              <Col span={12} style={{textAlign: 'right'}}>323.34 ETH</Col>
+              <Col span={12}>
+                <Tag color="#1346FF">Max</Tag>
+              </Col>
+              <Col span={12} style={{ textAlign: 'right' }}>
+                {this.state.availableEth} ETH
+              </Col>
             </Row>
             <p className={styles.settlement}>Settlements Fee : 0.00 DAI</p>
             {/* <Progress strokeColor="#1346FF" showInfo={false} percent={30} strokeWidth={20} /> */}
-              <Button className={tradeType==='Short'? 'buttonGreen': ''} type="primary" onClick={this.showOrderConfirmModal}>
+            <Button
+              className={tradeType === 'Short' ? 'buttonGreen' : ''}
+              type="primary"
+              onClick={this.showOrderConfirmModal}
+            >
               Open
             </Button>
-            
 
             <DespositModal
               onDeposit={this.deposit}

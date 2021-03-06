@@ -1,28 +1,22 @@
-import { Progress } from "antd";
-import FillGrid from "../fill-grid";
-import styles from "./with.module.less";
+import { Progress } from 'antd';
+import FillGrid from '../fill-grid';
+import styles from './with.module.less';
 
 export interface IIndicatorProgress {
   label: string;
   percentage: number;
   val?: any;
 }
-export default ({
-  data,
-  totalMode,
-}: {
-  data: IIndicatorProgress;
-  totalMode: boolean;
-}) => {
+export default ({ data, totalMode }: { data: IIndicatorProgress; totalMode: boolean }) => {
   const { label, percentage, val } = data;
   const style = totalMode
     ? {
-        color: "#333333",
-        left: "auto",
+        color: '#333333',
+        left: 'auto',
         right: 0,
-        transform: "translate(0, 0)",
+        transform: 'translate(0, 0)',
       }
-    : { left: percentage + "%" };
+    : { left: percentage + '%' };
   return (
     <div className={styles.root}>
       <FillGrid

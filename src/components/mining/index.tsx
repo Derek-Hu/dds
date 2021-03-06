@@ -14,7 +14,7 @@ import currStyles from '../trade-bonus/modals/style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import LockedDetails, { ILockedData } from '../liquidity-pool/locked-details';
 import SystemRanking from './system-ranking';
-import CardInfo from "../card-info/index";
+import CardInfo from '../card-info/index';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -22,17 +22,21 @@ const { TabPane } = Tabs;
 const SystemFundBalance = {
   title: 'System Fund Balance',
   // desc: <span>Total Liquidity: <span style={style}>23534.33</span> USD</span>,
-  items: [{
+  items: [
+    {
       label: 'DAI',
-      value: <span>647</span>
-  },{
+      value: <span>647</span>,
+    },
+    {
       label: 'USDC',
-      value: <span>638</span>
-  },{
+      value: <span>638</span>,
+    },
+    {
       label: 'USDT',
-      value: <span>7378</span>
-  }],
-}
+      value: <span>7378</span>,
+    },
+  ],
+};
 
 const TabName = {
   Liquidity: 'liquidity',
@@ -81,7 +85,6 @@ const ReTokenBalance = {
     },
   ],
 };
-
 
 const LockBalance: IPool = {
   title: 'Locked',
@@ -248,7 +251,11 @@ export default class Mining extends Component {
           <div className={[styles.root, isMobile ? styles.mobile : ''].join(' ')}>
             <h2>Mining</h2>
             <div className={styles.tabContainer}>
-              <Tabs defaultActiveKey={selectedTab} className={[CustomTabKey, 'miningTabs'].join(' ')} onChange={this.callback}>
+              <Tabs
+                defaultActiveKey={selectedTab}
+                className={[CustomTabKey, 'miningTabs'].join(' ')}
+                onChange={this.callback}
+              >
                 <TabPane tab={<span className={styles.uppercase}>{TabName.Liquidity}</span>} key={TabName.Liquidity}>
                   <h3>{isLogin ? 'Your Liquidity Mining Reward' : 'Liquidity Mining Reward Today'}</h3>
                   <p className={styles.coins}>{numeral(mining.money).format('0,0')} DDS</p>
@@ -418,19 +425,19 @@ export default class Mining extends Component {
               </ModalRender>
             </div>
             <div className={styles.bottomArea}>
-              {selectedTab === TabName.Liquiditor ? 
-              <SystemRanking isLogin={false}>
-                <CardInfo theme="inner" {...SystemFundBalance} />
-              </SystemRanking>
-               : null}
+              {selectedTab === TabName.Liquiditor ? (
+                <SystemRanking isLogin={false}>
+                  <CardInfo theme="inner" {...SystemFundBalance} />
+                </SystemRanking>
+              ) : null}
               {isLogin && selectedTab === TabName.Liquidity ? (
                 <div className={styles.panels}>
                   <Row gutter={24}>
                     <Col xs={24} sm={24} md={12} lg={12}>
                       <CardInfo theme="inner" {...ReTokenBalance}></CardInfo>
-                      
+
                       {/* <Pool {...ReTokenBalance} smallSize={true}> */}
-                        {/* <Button type="primary" className={styles.lock} onClick={() => this.showLockModal(false)}>
+                      {/* <Button type="primary" className={styles.lock} onClick={() => this.showLockModal(false)}>
                           Lock reTokens
                         </Button>
                         <p>Lock reTokens to start receving rewards inDDS tokens</p> 

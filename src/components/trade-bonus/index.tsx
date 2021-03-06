@@ -39,27 +39,27 @@ export default class Balance extends Component<{ data: IRecord[] }, any> {
 
   columns = ColumnConvert<IRecord, {}>({
     column: {
-      time: "Time",
-      type: "Type",
-      price: "Order Price",
-      amount: "Amount",
-      cost: "Funding Cost",
-      fee: "Settlements Fee ($)",
-      pl: "P&L",
-      status: "Status",
-      exercise: "Exercise",
+      time: 'Time',
+      type: 'Type',
+      price: 'Order Price',
+      amount: 'Amount',
+      cost: 'Funding Cost',
+      fee: 'Settlements Fee ($)',
+      pl: 'P&L',
+      status: 'Status',
+      exercise: 'Exercise',
     },
     render: (value, key, record) => {
       switch (key) {
-        case "time":
-          return dayjs(value).format("YYYY-MM-DD");
-        case "price":
-        case "amount":
-        case "cost":
+        case 'time':
+          return dayjs(value).format('YYYY-MM-DD');
+        case 'price':
+        case 'amount':
+        case 'cost':
           return `${record.cost}(${record.costCoin})`;
-        case "fee":
-          return numeral(value).format("0,0.0000");
-        case "pl":
+        case 'fee':
+          return numeral(value).format('0,0.0000');
+        case 'pl':
           const { val, percentage } = record[key];
           const flag = percentage === 0 ? '' : percentage < 0 ? <span>-</span> : <span>+</span>;
           const color = percentage === 0 ? '#383838' : percentage < 0 ? '#FA4D56' : '#02B464';
