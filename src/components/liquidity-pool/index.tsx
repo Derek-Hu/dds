@@ -22,6 +22,7 @@ import { CustomTabKey, CoinSelectOption } from "../../constant/index";
 import ModalRender from "../modal-render/index";
 import SiteContext from "../../layouts/SiteContext";
 import LockedDetails, { ILockedData } from '../liquidity-pool/locked-details';
+import CardInfo from "../card-info/index";
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -92,39 +93,20 @@ const PublicProvidedPool: IPool = {
   ],
 };
 
-const PublicNetPool: IPool = {
+const PublicNetPool = {
   title: "Net P&L",
   usd: 637,
-  coins: [
+  items: [
     {
-      name: "DAI",
+      label: "DAI",
       value: 74,
     },
     {
-      name: "USDC",
+      label: "USDC",
       value: 3,
     },
     {
-      name: "USDT",
-      value: 445,
-    },
-  ],
-};
-
-const PrivatePool = {
-  title: "PRIVATE POOL",
-  usd: 734890,
-  coins: [
-    {
-      name: "DAI",
-      value: 74,
-    },
-    {
-      name: "USDC",
-      value: 3,
-    },
-    {
-      name: "USDT",
+      label: "USDT",
       value: 445,
     },
   ],
@@ -271,10 +253,10 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                           <SharePool />
                         </Col>
                         <Col xs={24} sm={24} md={8} lg={8}>
-                          <Balance />
+                          <Balance isPrivate={false}/>
                         </Col>
                         <Col xs={24} sm={24} md={8} lg={8}>
-                          <NetPL />
+                          <CardInfo theme="inner" {...PublicNetPool}></CardInfo>
                         </Col>
                       </Row>
                     ) : (
@@ -283,7 +265,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                           <Pool {...PublicProvidedPool} />
                         </Col>
                         <Col xs={24} sm={24} md={12} lg={12}>
-                          <Pool {...PublicNetPool} />
+                          <CardInfo theme="inner" {...PublicNetPool}></CardInfo>
                         </Col>
                       </Row>
                     )}
@@ -297,7 +279,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                             <AvailablePool />
                           </Col>
                           <Col  xs={24} sm={24} md={8} lg={8}>
-                            <Balance />
+                            <Balance isPrivate={true}/>
                           </Col>
                           <Col  xs={24} sm={24} md={8} lg={8}>
                             <NetPL>

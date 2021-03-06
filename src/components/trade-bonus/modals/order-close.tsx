@@ -1,4 +1,4 @@
-import { Form, Button, Row, Col, Select, Input } from "antd";
+import { Form, Button, Row, Col, Select, Descriptions } from "antd";
 import styles from "../../funding-balance/modals/style.module.less";
 import currStyles from "./style.module.less";
 import ModalRender from "../../modal-render/index";
@@ -18,19 +18,23 @@ export default (props: any) => {
       title={title}
       className={styles.commonModal}
     >
-      <Row type="flex" justify="space-between" align="middle">
-        <Col xs={20} sm={20} md={20} lg={20}>
-          <Input
-            placeholder="How many DDS do you want to swap and burn?"
-          />
-        </Col>
-        <Col xs={4} sm={4} md={4} lg={4} style={{    textAlign: 'center'}}>
-          <span>DDS</span>
-        </Col>
-      </Row>
-      <p className={currStyles.tips}>
-        Total Amount: 10.36 <Button type="link">Close All</Button>
-      </p>
+      <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
+        <Descriptions.Item label="Type" span={24}>
+          LONG
+        </Descriptions.Item>
+        <Descriptions.Item label="Open Price" span={24}>
+          644.05 DAI
+        </Descriptions.Item>
+        <Descriptions.Item label="Amount" span={24}>
+          10 ETH
+        </Descriptions.Item>
+        <Descriptions.Item label="Close Price" span={24}>
+          905 DAI
+        </Descriptions.Item>
+        <Descriptions.Item label="P&L" span={24}>
+          5 DAI (+15%)
+        </Descriptions.Item>
+      </Descriptions>
       <Row className={styles.actionBtns} gutter={[16, 16]} type="flex">
         <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
           <Button>Cancel</Button>

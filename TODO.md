@@ -46,9 +46,9 @@ Read Liquiditor Docs 链接
 (Done) Liquiditor Ranking 间距
 (Done) Funding Cost ($) 显示具体的Coin
 (Done) Max Open： 改为标签可点击Max
-
-Close Order 确认
-三横排改成三行
+(Done) Liquidity Balance Record 表格合并
+(Done) 三横排改成三行
+(Done) Close Order 确认
 
 Tab选中颜色高亮
 弹窗一一过
@@ -57,9 +57,7 @@ Install MetaMask 跳转官网
 检测是否安装  
 连接钱包没有地址选择
 Deposit / Withdraw未登录点击时自动弹出连接钱包, 出现Loading后轮询
-Close Order弹窗
 
-Liquidity Balance Record 表格合并
 Orders 自动下拉刷新数据
 Liquidity Balance Record自动下拉刷新数据
 

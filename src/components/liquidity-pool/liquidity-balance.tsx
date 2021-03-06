@@ -9,33 +9,33 @@ import numeral from "numeral";
 import { CustomTabKey, SupportedCoins } from "../../constant/index";
 import ModalRender from "../modal-render/index";
 import SiteContext from "../../layouts/SiteContext";
+import CardInfo from "../card-info/index";
 
 const { TabPane } = Tabs;
 const { Option } = Select;
 
-const BalancePool: IPool = {
+const BalancePool = {
   title: "Liquidity Balance",
-  usd: 748830,
-  coins: [
+  items: [
     {
-      name: "DAI",
+      label: "DAI",
       value: 647,
     },
     {
-      name: "USDC",
+      label: "USDC",
       value: 638,
     },
     {
-      name: "USDT",
+      label: "USDT",
       value: 7378,
     },
   ],
 };
 
-const TabName = {
-  Transfer: "TRANSFER",
-  PNL: "PNL",
-};
+// const TabName = {
+//   Transfer: "TRANSFER",
+//   PNL: "PNL",
+// };
 
 interface ITransfer {
   time: number;
@@ -126,7 +126,7 @@ const data: ITransfer[] = [
     balance: 892.03,
   },
 ];
-export default class PoolPage extends Component {
+export default class PoolPage extends Component<{isPrivate: boolean}, any> {
   state = {
     withDrawVisible: false,
     recordVisible: false,
@@ -155,11 +155,12 @@ export default class PoolPage extends Component {
   };
 
   render() {
+    const { isPrivate } = this.props;
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => (
           <div>
-            <Pool {...BalancePool} smallSize={true}>
+            <CardInfo theme="inner" {...BalancePool}>
               <Button
                 type="primary"
                 onClick={this.showWithDraw}
@@ -174,8 +175,10 @@ export default class PoolPage extends Component {
               >
                 Liquidity Balance Record
               </Button>
-            </Pool>
-
+            </CardInfo>
+            {/* <Pool {...BalancePool} smallSize={true}>
+              
+            </Pool> */}
             <ModalRender
               visible={this.state.recordVisible}
               title="Liquidity Balance Record"
@@ -185,48 +188,18 @@ export default class PoolPage extends Component {
               width={600}
               footer={null}
             >
-              <Tabs
-                defaultActiveKey={TabName.Transfer}
-                className={CustomTabKey}
-              >
-                <TabPane
-                  tab={
-                    <span className={styles.uppercase}>{TabName.Transfer}</span>
-                  }
-                  key={TabName.Transfer}
-                >
-                  <Tabs defaultActiveKey="DAI" className={styles.innerTab}>
-                    {SupportedCoins.map((coin) => (
-                      <TabPane tab={coin} key={coin}>
-                        <Table
-                          rowKey="coin"
-                          scroll={{ y: 200, x: 600 }}
-                          columns={columns}
-                          pagination={false}
-                          dataSource={data}
-                        />
-                      </TabPane>
-                    ))}
-                  </Tabs>
-                </TabPane>
-                <TabPane
-                  tab={<span className={styles.uppercase}>{TabName.PNL}</span>}
-                  key={TabName.PNL}
-                >
-                  <Tabs defaultActiveKey="DAI" className={styles.innerTab}>
-                    {SupportedCoins.map((coin) => (
-                      <TabPane tab={coin} key={coin}>
-                        <Table
-                          rowKey="coin"
-                          scroll={{ y: 300 }}
-                          columns={columns}
-                          pagination={false}
-                          dataSource={data}
-                        />
-                      </TabPane>
-                    ))}
-                  </Tabs>
-                </TabPane>
+              <Tabs defaultActiveKey="DAI" className={styles.innerTab}>
+                {SupportedCoins.map((coin) => (
+                  <TabPane tab={coin} key={coin}>
+                    <Table
+                      rowKey="coin"
+                      scroll={{ y: 200, x: 600 }}
+                      columns={columns}
+                      pagination={false}
+                      dataSource={data}
+                    />
+                  </TabPane>
+                ))}
               </Tabs>
             </ModalRender>
 
@@ -268,7 +241,7 @@ export default class PoolPage extends Component {
                     ].join(" ")}
                   >
                     <Input placeholder="Withdraw amount" />
-                    <p>XXX reDAI you need to pay</p>
+                    { isPrivate ? null : <p>XXX reDAI you need to pay</p> }
                   </div>
                 </Col>
               </Row>

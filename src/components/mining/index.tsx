@@ -24,13 +24,13 @@ const SystemFundBalance = {
   // desc: <span>Total Liquidity: <span style={style}>23534.33</span> USD</span>,
   items: [{
       label: 'DAI',
-      val: <span>647</span>
+      value: <span>647</span>
   },{
       label: 'USDC',
-      val: <span>638</span>
+      value: <span>638</span>
   },{
       label: 'USDT',
-      val: <span>7378</span>
+      value: <span>7378</span>
   }],
 }
 
@@ -64,20 +64,19 @@ const utilization = {
   ddsCount: 1000000,
 };
 
-const ReTokenBalance: IPool = {
+const ReTokenBalance = {
   title: 'Your reToken Balance',
-  usd: 748830,
-  coins: [
+  items: [
     {
-      name: 'reDAI',
+      label: 'reDAI',
       value: 647,
     },
     {
-      name: 'reUSDC',
+      label: 'reUSDC',
       value: 638,
     },
     {
-      name: 'reUSDT',
+      label: 'reUSDT',
       value: 7378,
     },
   ],
@@ -428,12 +427,14 @@ export default class Mining extends Component {
                 <div className={styles.panels}>
                   <Row gutter={24}>
                     <Col xs={24} sm={24} md={12} lg={12}>
-                      <Pool {...ReTokenBalance} smallSize={true}>
+                      <CardInfo theme="inner" {...ReTokenBalance}></CardInfo>
+                      
+                      {/* <Pool {...ReTokenBalance} smallSize={true}> */}
                         {/* <Button type="primary" className={styles.lock} onClick={() => this.showLockModal(false)}>
                           Lock reTokens
                         </Button>
-                        <p>Lock reTokens to start receving rewards inDDS tokens</p> */}
-                      </Pool>
+                        <p>Lock reTokens to start receving rewards inDDS tokens</p> 
+                      </Pool>*/}
                     </Col>
                     {/* <Col xs={24} sm={24} md={8} lg={8}>
                       <Pool {...LockBalance} smallSize={true}>

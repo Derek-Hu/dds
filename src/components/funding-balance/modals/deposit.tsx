@@ -22,7 +22,7 @@ export default (props: any) => {
           <div>
             {/* <h4>{title}</h4> */}
             <Row gutter={[16, 16]}>
-              <Col xs={24} sm={24} md={18} lg={18}>
+              <Col xs={24} sm={24} md={24} lg={24}>
                 <Input placeholder="Deposit amount" onChange={onAmountChange} />
               </Col>
             </Row>

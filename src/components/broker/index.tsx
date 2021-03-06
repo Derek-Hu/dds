@@ -39,13 +39,13 @@ const LockBalance = {
   // desc: <span>Total Liquidity: <span style={style}>23534.33</span> USD</span>,
   items: [{
       label: 'DAI',
-      val: <span>647</span>
+      value: <span>647</span>
   },{
       label: 'USDC',
-      val: <span>638</span>
+      value: <span>638</span>
   },{
       label: 'USDT',
-      val: <span>7378</span>
+      value: <span>7378</span>
   }],
 }
 
