@@ -4,7 +4,6 @@ import styles from './style.module.less';
 import numeral from 'numeral';
 import Pool, { IPool } from './pool';
 import Balance from './liquidity-balance';
-import FillGrid from '../fill-grid';
 import commonStyles from '../funding-balance/modals/style.module.less';
 import SharePool from './share-pool';
 import AvailablePool from './available-pool';
@@ -14,6 +13,7 @@ import ModalRender from '../modal-render/index';
 import SiteContext from '../../layouts/SiteContext';
 import LockedDetails, { ILockedData } from '../liquidity-pool/locked-details';
 import CardInfo from '../card-info/index';
+import LiquidityProvided from './liquidity-provided';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -64,24 +64,24 @@ const lockedData: ILockedData[] = [
   },
 ];
 
-const PublicProvidedPool: IPool = {
-  title: 'Liquidity Provided',
-  usd: 748830,
-  coins: [
-    {
-      name: 'DAI',
-      value: 647,
-    },
-    {
-      name: 'USDC',
-      value: 638,
-    },
-    {
-      name: 'USDT',
-      value: 7378,
-    },
-  ],
-};
+// const PublicProvidedPool: IPool = {
+//   title: 'Liquidity Provided',
+//   usd: 748830,
+//   coins: [
+//     {
+//       name: 'DAI',
+//       value: 647,
+//     },
+//     {
+//       name: 'USDC',
+//       value: 638,
+//     },
+//     {
+//       name: 'USDT',
+//       value: 7378,
+//     },
+//   ],
+// };
 
 const PublicNetPool = {
   title: 'Net P&L',
@@ -103,7 +103,7 @@ const PublicNetPool = {
 };
 
 const rates = [-53, 1453, 0];
-export default class PoolArea extends Component<{ isLogin: boolean }, any> {
+export default class PoolArea extends Component<{ address?: string }, any> {
   state = {
     selectedTab: TabName.Collaborative,
     depositModalVisible: false,
@@ -129,7 +129,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
   };
 
   render() {
-    const { isLogin } = this.props;
+    const { address } = this.props;
     const { selectedTab } = this.state;
     return (
       <SiteContext.Consumer>
@@ -143,37 +143,10 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                     tab={<span className={styles.uppercase}>{TabName.Collaborative}</span>}
                     key={TabName.Collaborative}
                   >
-                    <h3>ARP</h3>
-                    <p className={styles.coins}>{numeral(mining.money).format('0,0')}%</p>
-
-                    {isLogin ? (
-                      <div className={styles.actionArea}>
-                        <Row gutter={[isMobile ? 0 : 12, isMobile ? 15 : 0]}>
-                          <Col xs={24} sm={24} md={8} lg={6}>
-                            <Select
-                              defaultValue="DAI"
-                              style={{ width: '100%', height: 50 }}
-                              className={styles.coinDropdown}
-                              // onChange={handleChange}
-                            >
-                              {CoinSelectOption}
-                            </Select>
-                          </Col>
-                          <Col xs={24} sm={24} md={16} lg={18}>
-                            <Input placeholder="amount for providing to the pool" />
-                          </Col>
-                        </Row>
-                        <p className={styles.cal}>
-                          You Will Receive: <span>94204</span> reDAI
-                        </p>
-                        <Button type="primary" className={styles.btn} onClick={this.showDepositModal}>
-                          Deposit
-                        </Button>
-                      </div>
-                    ) : null}
+                    
                   </TabPane>
                   <TabPane tab={<span className={styles.uppercase}>{TabName.Private}</span>} key={TabName.Private}>
-                    {isLogin && selectedTab === TabName.Private ? (
+                    {address && selectedTab === TabName.Private ? (
                       <Alert
                         className={styles.poolMsg}
                         message="Private pool is extremely risky. If you are not a hedging expert, please stay away!!!"
@@ -196,7 +169,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                           <Input placeholder="amount for providing to the pool" />
                         </Col>
                       </Row>
-                      {isLogin ? (
+                      {address ? (
                         <Button type="primary" className={styles.btn} onClick={this.showDepositModal}>
                           Deposit
                         </Button>
@@ -212,7 +185,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
               <div className={styles.panels}>
                 {selectedTab === TabName.Collaborative ? (
                   <div>
-                    {isLogin ? (
+                    {address ? (
                       <Row gutter={isMobile ? 0 : 12}>
                         <Col xs={24} sm={24} md={8} lg={8}>
                           <SharePool />
@@ -226,11 +199,8 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                       </Row>
                     ) : (
                       <Row gutter={isMobile ? 0 : 12}>
-                        <Col xs={24} sm={24} md={12} lg={12}>
-                          <Pool {...PublicProvidedPool} />
-                        </Col>
-                        <Col xs={24} sm={24} md={12} lg={12}>
-                          <CardInfo theme="inner" {...PublicNetPool}></CardInfo>
+                        <Col xs={24} sm={24} md={24} lg={24}>
+                          <LiquidityProvided />
                         </Col>
                       </Row>
                     )}
@@ -238,7 +208,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                 ) : null}
                 {selectedTab === TabName.Private ? (
                   <div>
-                    {isLogin ? (
+                    {address ? (
                       <div>
                         <Row gutter={isMobile ? 0 : 12}>
                           <Col xs={24} sm={24} md={8} lg={8}>
@@ -267,7 +237,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                           <AvailablePool />
                         </Col>
                         <Col xs={24} sm={24} md={12} lg={12}>
-                          <Pool {...PublicProvidedPool} />
+                          {/* <Pool {...PublicProvidedPool} /> */}
                         </Col>
                       </Row>
                     )}

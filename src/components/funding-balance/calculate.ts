@@ -1,23 +1,32 @@
-export const getMaxFromCoin = (balanceInfo: IBalanceInfo | null | undefined, price: number) => {
+export const getMaxFromCoin = (balanceInfo?: IBalanceInfo, price?: number) => {
     if(!balanceInfo){
-        return 0;
+        return;
+    }
+    if(typeof price !== 'number') {
+        return;
     }
     const { balance, locked } = balanceInfo;
 
     return (balance - locked)/price;
 }
 
-export const getFee = (amount: number | null | undefined, price: number) => {
-    if(amount === undefined || amount === null) {
-        return 0;
+export const getFee = (amount: any | undefined, price: any) => {
+    if(typeof amount !== 'number') {
+        return;
+    }
+    if(typeof price !== 'number') {
+        return;
     }
     return amount * price / 1000;
 }
 
 // TODO
-export const getLocked = (amount: number | null | undefined, price: number) => {
-    if(amount === undefined || amount === null) {
-        return 0;
+export const getLocked = (amount: any | undefined, price: any | undefined) => {
+    if(typeof amount !== 'number') {
+        return;
+    }
+    if(typeof price !== 'number') {
+        return;
     }
     return amount * price / 1000;
 }

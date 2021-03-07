@@ -98,3 +98,10 @@ declare interface IPriceGraph {
     timestamp: number;
   }>;
 }
+
+
+// Pool 页面
+declare interface IPoolCoinAmount {
+  coin: IUSDCoins
+  amount: number;
+}

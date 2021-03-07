@@ -7,15 +7,15 @@ const NetPool: IPool = {
   usd: 637,
   coins: [
     {
-      name: 'DAI',
+      label: 'DAI',
       value: 74,
     },
     {
-      name: 'USDC',
+      label: 'USDC',
       value: 3,
     },
     {
-      name: 'USDT',
+      label: 'USDT',
       value: 445,
     },
   ],

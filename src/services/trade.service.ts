@@ -44,7 +44,7 @@ export const openOrder = async (orderParam: ITradeOpenParam): Promise<boolean> =
   return returnVal(true);
 };
 
-export const getPriceGraphData = (duration: IGraphDuration): Promise<IPriceGraph> => {
+export const getPriceGraphData = (coins: { from: IFromCoins; to: IUSDCoins } , duration: IGraphDuration): Promise<IPriceGraph> => {
   return returnVal(graphData);
 }
 /**

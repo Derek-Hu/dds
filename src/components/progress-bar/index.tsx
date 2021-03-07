@@ -3,11 +3,11 @@ import styles from './style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 
 export interface IBarData {
-  title: string;
-  percentage: number;
-  desc: string;
-  value: any;
-  unit: string;
+  title?: string;
+  percentage?: number;
+  desc?: string;
+  value?: any;
+  unit?: string;
 }
 export default ({ percentage, value, desc, title, unit }: IBarData) => {
   return (

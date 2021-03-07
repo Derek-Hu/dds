@@ -20,7 +20,7 @@ interface IState {
 
 type TModalKeys = Pick<IState, 'withdrawVisible' | 'depositVisible' | 'orderConfirmVisible'>;
 
-export default class Balance extends Component<{ coins: { from: IFromCoins; to: IUSDCoins }; graphData: IPriceGraph }> {
+export default class Balance extends Component<{ coins: { from: IFromCoins; to: IUSDCoins }; graphData?: IPriceGraph }> {
   state: IState = {
     depositVisible: false,
     withdrawVisible: false,
@@ -81,7 +81,7 @@ export default class Balance extends Component<{ coins: { from: IFromCoins; to: 
   onMaxOpenClick = () => {
     const { balanceInfo } = this.state;
     const { graphData } = this.props;
-    const maxNumber = getMaxFromCoin(balanceInfo, graphData.price);
+    const maxNumber = getMaxFromCoin(balanceInfo, graphData?.price);
     this.setState({
       openAmount: maxNumber,
     });
@@ -96,7 +96,7 @@ export default class Balance extends Component<{ coins: { from: IFromCoins; to: 
     const { coins, graphData } = this.props;
     const { from, to } = coins;
 
-    const price = graphData.price;
+    const price = graphData?.price;
     const maxNumber = getMaxFromCoin(balanceInfo, price);
 
     const fee = format(getFee(openAmount, price));
@@ -141,7 +141,7 @@ export default class Balance extends Component<{ coins: { from: IFromCoins; to: 
               </Radio.Group>
             </Row>
             <p className={styles.price}>
-              Current Price: {graphData.price} {to}
+              Current Price: {graphData?.price} {to}
             </p>
             <p className={styles.amountTip}>Amount</p>
             <Input value={openAmount} onChange={this.onOpenAmountChange} placeholder="0.00" suffix={'ETH'} />

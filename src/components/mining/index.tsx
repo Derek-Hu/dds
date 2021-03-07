@@ -91,15 +91,15 @@ const LockBalance: IPool = {
   usd: 748830,
   coins: [
     {
-      name: 'reDAI',
+      label: 'reDAI',
       value: 647,
     },
     {
-      name: 'reUSDC',
+      label: 'reUSDC',
       value: 638,
     },
     {
-      name: 'reUSDT',
+      label: 'reUSDT',
       value: 7378,
     },
   ],
