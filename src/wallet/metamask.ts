@@ -1,8 +1,8 @@
 import MetaMaskOnboarding from '@metamask/onboarding';
 import { BehaviorSubject, from, Observable } from 'rxjs';
 import { chainDataState } from './chain-connect-state';
-import { Wallet } from '~/constant';
-import { WalletInterface } from '~/wallet/wallet-interface';
+import { Wallet } from '../constant';
+import { WalletInterface } from '../wallet/wallet-interface';
 
 declare const window: Window & { ethereum: any };
 
