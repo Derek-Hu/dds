@@ -81,7 +81,6 @@ declare interface ITradeInfo {
  * 行情图数据时间区间
  */
 declare type IGraphDuration = 'day' | 'week' | 'month';
-
 /**
  * 行情图数据
  */
