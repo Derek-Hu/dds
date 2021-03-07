@@ -115,7 +115,7 @@ module.exports = {
       tsJson.compilerOptions.paths = {
         "~/*": ["src/*"],
       };
-      tsJson.compilerOptions.baseUrl = ".";
+      tsJson.compilerOptions.baseUrl = "src";
 
       fs.writeFileSync(tsJSONPath, JSON.stringify(tsJson, null, 2));
 

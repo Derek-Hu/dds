@@ -8,11 +8,11 @@ import SiteContext from '../../layouts/SiteContext';
 import { contractAccessor } from '../../wallet/chain-access';
 import { NEVER, Subscription } from 'rxjs';
 import { BigNumber } from 'ethers';
-import { ETH_WEIGHT } from '~/constant';
-import { walletManager } from '~/wallet/wallet-manager';
-import { WalletInterface } from '~/wallet/wallet-interface';
+import { ETH_WEIGHT } from '../../constant';
+import { walletManager } from '../../wallet/wallet-manager';
+import { WalletInterface } from '../../wallet/wallet-interface';
 import { filter, map, switchMap } from 'rxjs/operators';
-import { keepDecimal, toEthers } from '~/util/ethers';
+import { keepDecimal, toEthers } from '../../util/ethers';
 
 export default class Balance extends Component {
   state = {

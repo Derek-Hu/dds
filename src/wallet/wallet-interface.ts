@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { Wallet } from '~/constant';
+import { Wallet } from '../constant';
 
 export interface WalletInterface {
   walletType: Wallet;

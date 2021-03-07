@@ -35,7 +35,7 @@ declare interface IRecord {
 /**
  * Trade Order Status
  */
-declare type IStatus = 'ACTIVE' | 'CLOSED';
+declare type IOrderStatus = 'ACTIVE' | 'CLOSED';
 
 /**
  * Trade Order 记录
@@ -43,7 +43,7 @@ declare type IStatus = 'ACTIVE' | 'CLOSED';
 declare interface ITradeRecord {
   id: string;
   time: number;
-  type: string;
+  type: 'long' | 'short';
   price: number;
   amount: number;
   cost: number;
@@ -53,7 +53,7 @@ declare interface ITradeRecord {
     val: number;
     percentage: number;
   };
-  status: IStatus;
+  status: IOrderStatus;
 }
 
 /**

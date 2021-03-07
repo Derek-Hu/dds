@@ -1,12 +1,12 @@
-import { ABI, ContractParam, ContractProxy, UserAccountInfo } from '~/wallet/contract-interface';
+import { ABI, ContractParam, ContractProxy, UserAccountInfo } from '../wallet/contract-interface';
 import { BehaviorSubject, from, Observable, of, interval } from 'rxjs';
 import * as ethers from 'ethers';
 import { catchError, filter, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { BigNumber } from '@ethersproject/bignumber';
 import { isMetaMaskInstalled } from './metamask';
-import { ContractAddress, DAIAddress, DataRefreshInterval, DefaultNetwork, Wallet } from '~/constant';
-import { chainDataState, ChainDataState } from '~/wallet/chain-connect-state';
-import { walletManager } from '~/wallet/wallet-manager';
+import { ContractAddress, DAIAddress, DataRefreshInterval, DefaultNetwork, Wallet } from '../constant';
+import { chainDataState, ChainDataState } from '../wallet/chain-connect-state';
+import { walletManager } from '../wallet/wallet-manager';
 
 declare const window: Window & { ethereum: any };
 

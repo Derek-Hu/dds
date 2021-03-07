@@ -22,7 +22,7 @@ export const orders: ITradeRecord[] = [
   {
     id: '001',
     time: new Date().getTime(),
-    type: 'Buy',
+    type: 'short',
     price: 400.65,
     amount: 10.36,
     costCoin: 'DAI',
@@ -37,7 +37,7 @@ export const orders: ITradeRecord[] = [
   {
     id: '002',
     time: new Date().getTime(),
-    type: 'Buy',
+    type: 'short',
     price: 400.65,
     amount: 10.36,
     costCoin: 'USDT',
@@ -52,7 +52,7 @@ export const orders: ITradeRecord[] = [
   {
     id: '003',
     time: new Date().getTime(),
-    type: 'Short',
+    type: 'long',
     price: 400.65,
     amount: 10.36,
     costCoin: 'USDC',
