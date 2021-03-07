@@ -1,9 +1,10 @@
+declare type ITradeType = 'Long' | 'Short';
 /**
  * Funding Balance 下单入参
  */
 declare interface ITradeOpenParam {
   amount: number;
-  type: 'long' | 'short';
+  type: ITradeType;
   referal: string;
   coin: 'DAI' | 'USDT' | 'USDC';
 }
@@ -14,7 +15,7 @@ declare interface ITradeOpenParam {
 declare interface IBalanceInfo {
   balance: number;
   locked: number;
-  available: number;
+  available?: number;
 }
 
 // Funding Balance Deposit
@@ -23,6 +24,8 @@ declare interface IRecord {
   coin: 'DAI' | 'USDT' | 'USDC';
   amount: number;
 }
+
+declare type IFromCoins = 'ETH' | 'BTC';
 
 declare type IUSDCoins = 'DAI' | 'USDT' | 'USDC';
 // Funding Balance Withdraw
@@ -43,7 +46,7 @@ declare type IOrderStatus = 'ACTIVE' | 'CLOSED';
 declare interface ITradeRecord {
   id: string;
   time: number;
-  type: 'long' | 'short';
+  type: ITradeType;
   price: number;
   amount: number;
   cost: number;

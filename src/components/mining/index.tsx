@@ -50,17 +50,17 @@ const mining = {
   ddsCount: 25000000,
 };
 
-const barData: IBarData = {
-  left: {
-    title: 'Distributed today',
-    percentage: 70,
-  },
-  right: {
-    title: 'Total daily amount',
-    value: 25000000,
-  },
-  unit: 'DDS',
-};
+// const barData: IBarData = {
+//   left: {
+//     title: 'Distributed today',
+//     percentage: 70,
+//   },
+//   right: {
+//     title: 'Total daily amount',
+//     value: 25000000,
+//   },
+//   unit: 'DDS',
+// };
 
 const utilization = {
   money: 530400,

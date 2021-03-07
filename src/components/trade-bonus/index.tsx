@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import styles from './style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import { Component } from 'react';
-import { getTradeOrders } from '../../services/trade';
+import { getTradeOrders } from '../../services/trade.service';
 import { Form, Row, Col, Select, Descriptions } from 'antd';
 import modalStyles from '../funding-balance/modals/style.module.less';
 import ModalRender from '../modal-render/index';
@@ -21,6 +21,7 @@ interface IState {
   orders: ITradeRecord[];
   page: number;
   selectedItem?: ITradeRecord;
+  loading: boolean;
 }
 
 type TModalKeys = Pick<IState, 'orderCloseVisible'>;
@@ -42,18 +43,23 @@ const getPL = (value?: {val: number, percentage: number}) => {
     </span>
   );
 };
-export default class Balance extends Component<{ currentPrice: number; coin: IUSDCoins }, IState> {
+export default class Balance extends Component<{ graphData?: IPriceGraph; coin: IUSDCoins }, IState> {
   state: IState = {
     orderCloseVisible: false,
     orders: [],
     page: 1,
+    loading: false,
   };
 
   async componentDidMount() {
     const { page } = this.state;
+    this.setState({
+      loading: true,
+    });
     const orders = await getTradeOrders(page);
     this.setState({
       orders,
+      loading: false,
     });
   }
 
@@ -124,16 +130,16 @@ export default class Balance extends Component<{ currentPrice: number; coin: IUS
   orderModalVisible = this.setModalVisible('orderCloseVisible');
 
   render() {
-    const { orderCloseVisible, orders, selectedItem } = this.state;
+    const { orderCloseVisible, orders, selectedItem, loading } = this.state;
     const { type, price, amount, pl } = selectedItem || {};
-    const { currentPrice, coin } = this.props;
+    const { graphData, coin } = this.props;
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => (
           <div className={styles.root}>
             <h2>Orders</h2>
             <div className={styles.tableWpr}>
-              <Table rowKey="id" columns={this.columns} pagination={false} dataSource={orders} scroll={{ x: 1000 }} />
+              <Table loading={loading} rowKey="id" columns={this.columns} pagination={false} dataSource={orders} scroll={{ x: 1000 }} />
             </div>
             <ModalRender
               visible={orderCloseVisible}
@@ -154,7 +160,7 @@ export default class Balance extends Component<{ currentPrice: number; coin: IUS
                   {amount}
                 </Descriptions.Item>
                 <Descriptions.Item label="Close Price" span={24}>
-                  {currentPrice}{coin}
+                  {graphData?.price}{coin}
                 </Descriptions.Item>
                 <Descriptions.Item label="P&L" span={24}>
                   {getPL(pl)}
@@ -162,10 +168,10 @@ export default class Balance extends Component<{ currentPrice: number; coin: IUS
               </Descriptions>
               <Row className={modalStyles.actionBtns} gutter={[16, 16]} type="flex">
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                  <Button>Cancel</Button>
+                  <Button onClick={this.orderModalVisible.hide}>Cancel</Button>
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
-                  <Button type="primary">Close</Button>
+                  <Button type="primary">Close Order</Button>
                 </Col>
               </Row>
             </ModalRender>

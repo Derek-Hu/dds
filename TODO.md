@@ -10,45 +10,11 @@ Read Liquiditor Docs链接
 About Blog 跳转Medium
 Read Liquiditor Docs 链接
 
-(Done) WBTC / DAI加粗
-(Done) Current Swap Price未登录输入框隐藏
-(Done) Swap 10%样式
-(Done) 21,087 USD = 1,078 DDS 改为1 DDS = xx USD
-(Done) Current Swap Price 未登录输入框隐藏
-(Done) Ecosystem Logo与链接，测试网隐藏
-(Done) 行情图不允许缩放
-(Done) Funding Balance: 24h +1.58 隐藏
-(Done) Short颜色绿色，按钮绿色
-(Done) Funding Balance 按钮文字Open
-(Done) Trading Bonus未登录不展示
-(Done)Tab位置上移
-(Done) Become DDerivatives's Spark 2-2排列
-(Done) Status 没有LIQUIDATING状态
-(Done) Private pool is extremely risky放入Tab内
-(Done) Your Share In The Pool - Total Liquidity删除
-(Done) Available Liquidity - Total Liquidity删除
-(Done) Net P&L Public Pool 删除百分比
-(Done) Available Liquidity 进度条颜色
-(Done)Broker未登录，Tab不存在
-(Done)Mining: Liquidity Tab: 文案 Liquidity Mining Reward 登录与未登录区别
-(Done) Broker Summary -> 
-    (Done) My Referal Tab 的Bonus 居中
-    (Done) 增加Claim
-    (Done) Commission、Campaign Rewards 0 USD删除
-(Done) Current Swap Price DDS Circulating 颜色绿色
-(Done) System Fund Balance 数组展示
-(Done) 未登录 Pool -> COLLABORATIVE  输入框隐藏，计算预估reDai
-(Done) Broker -> Campaign Rewards Pool 使用进度条形式展示
-(Done) Pool -> Comfirm Deposit 增加14天说明
-(Done) Private  Comfirm Deposit 没有14天冻结，没有receive reDai
-(Done) Funding Deposit 去除下拉选择，增加Max
-(Done) LIQUIDITY LOCKED DETAIL 移到Private Pool下面，删除列Reward(DDS)，增加Status列， Open Price；增加
-(Done) Liquiditor Ranking 间距
-(Done) Funding Cost ($) 显示具体的Coin
-(Done) Max Open： 改为标签可点击Max
-(Done) Liquidity Balance Record 表格合并
-(Done) 三横排改成三行
-(Done) Close Order 确认
+
+Orders Close
+Funding Balance
+Price Graph
+
 
 Tab选中颜色高亮
 弹窗一一过

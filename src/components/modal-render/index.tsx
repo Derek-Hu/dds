@@ -22,7 +22,6 @@ export default (props: any) => {
             title={title}
             onCancel={onCancel}
             className={className}
-            // popup={popup === undefined ? isMobile : popup}
           >
             {children}
           </DModal>
@@ -30,20 +29,3 @@ export default (props: any) => {
     </SiteContext.Consumer>
   );
 };
-
-// return isMobile ? <MModal
-//           {...props}
-//           animationType="slide-up"
-//           onClose={onCancel}
-//           popup={popup === undefined ? isMobile : popup}
-//         >
-//           {children}
-//         </MModal> : <DModal
-//           {...props}
-//           animationType="slide-up"
-//           onCancel={onCancel}
-//           className={className}
-//           popup={popup === undefined ? isMobile : popup}
-//         >
-//           {children}
-//         </DModal>;

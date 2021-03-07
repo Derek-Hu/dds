@@ -7,23 +7,28 @@ import styles from './style.module.less';
 import KLine from '../components/k-line/index';
 import FundingBalance from '../components/funding-balance/index';
 import SiteContext from '../layouts/SiteContext';
-import { getFundingBalanceInfo, getTradeOrders, getTradeInfo, getTradeLiquidityPoolInfo } from '../services/trade';
+import { getFundingBalanceInfo, getTradeOrders, getTradeInfo, getTradeLiquidityPoolInfo } from '../services/trade.service';
 
 interface IState {
   coin: IUSDCoins
-  currentPrice: number;
+  graphData?: IPriceGraph;
+  tradeInfos?: ITradeInfo[]
 }
 export default class TradePage extends Component {
   state:IState = {
     coin: 'DAI',
-    currentPrice: 100,
   }
-  componentDidMount() {
-    console.log('mount');
+  
+  async componentDidMount() {
+    const { coin } = this.state;
+    const tradeInfos = await getTradeInfo(coin);
+    this.setState({
+      tradeInfos,
+    });
   }
 
   render() {
-    const { coin, currentPrice} = this.state;
+    const { coin, graphData, tradeInfos } = this.state;
     return (
       <SiteContext.Consumer>
         {({ isMobile, account }) => {
@@ -36,19 +41,19 @@ export default class TradePage extends Component {
                   <KLine />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={8}>
-                  <FundingBalance />
+                  <FundingBalance graphData={graphData}/>
                 </Col>
               </Row>
               
               <div>
-                {address ? <TradeBonus coin={coin} currentPrice={currentPrice} /> : null}
+                {address ? <TradeBonus coin={coin} graphData={graphData} /> : null}
                 <div>
                   <Row gutter={isMobile ? 0 : 20}>
                     <Col xs={24} sm={24} md={12} lg={12}>
-                      <TradePool />
+                      <TradePool coin={coin} />
                     </Col>
                     <Col xs={24} sm={24} md={12} lg={12}>
-                      {/* <TradeInfo theme="outer" title="Info"/> */}
+                      { tradeInfos ? <TradeInfo items={tradeInfos} theme="outer" title="Info"/> : null }
                     </Col>
                   </Row>
                 </div>

@@ -6,6 +6,16 @@ export const balance: IBalanceInfo = {
 
 export const curPrice: number = 1500.0;
 
+export const poolInfo = {
+  public: {
+    value: 3532,
+    total: 43248
+  },
+  private: {
+    value: 353,
+    total: 432482
+  }
+}
 const infos = {
   'Ticker Root': 20,
   'Expiry Date': 'Funding Rate',
