@@ -7,10 +7,9 @@ import styles from './style.module.less';
 import KLine from '../components/k-line/index';
 import FundingBalance from '../components/funding-balance/index';
 import SiteContext from '../layouts/SiteContext';
+import { infoItems } from '~/services/mock/trade.mock';
 
-const data: IRecord[] = [
-  
-];
+const data: IRecord[] = [];
 
 export default class TradePage extends Component {
   componentDidMount() {

@@ -1,4 +1,4 @@
-import { orders, balance, infoItems, curPrice } from './mock/trade.mock';
+import { orders, balance, infoItems, curPrice, poolInfo } from './mock/trade.mock';
 
 /**
  * Trade Page
@@ -15,15 +15,15 @@ export const getTradeInfo = async (coin: IUSDCoins): Promise<ITradeInfo[]> => {
   return Promise.resolve(infoItems);
 };
 
-export const getTradeLiquidityPoolInfo = async (coin: IUSDCoins): Promise<ITradeInfo[]> => {
-  return Promise.resolve(infoItems);
+export const getTradeLiquidityPoolInfo = async (coin: IUSDCoins): Promise<ITradePoolInfo> => {
+  return Promise.resolve(poolInfo);
 };
 
-export const deposit = async (amount: IRecord): Promise<boolean> => {
+export const deposit = async (amount: ICoinAmount): Promise<boolean> => {
   return Promise.resolve(true);
 };
 
-export const withdraw = async (amount: IRecord): Promise<boolean> => {
+export const withdraw = async (amount: ICoinAmount): Promise<boolean> => {
   return Promise.resolve(true);
 };
 
@@ -32,6 +32,10 @@ export const getCurPrice = async (coin: IUSDCoins): Promise<number> => {
 };
 
 export const openOrder = async (orderParam: ITradeOpenParam): Promise<boolean> => {
+  return Promise.resolve(true);
+};
+
+export const closeOrder = async (order: ITradeRecord): Promise<boolean> => {
   return Promise.resolve(true);
 };
 
