@@ -18,6 +18,17 @@ const infos = {
 // @ts-ignore
 export const infoItems: ITradeInfo[] = Object.keys(infos).map((key) => ({ label: key, value: infos[key] }));
 
+export const poolInfo: ITradePoolInfo = {
+  public: {
+    value: 37863,
+    total: 65349,
+  },
+  private: {
+    value: 37863,
+    total: 65349,
+  },
+};
+
 export const orders: ITradeRecord[] = [
   {
     id: '001',

@@ -5,7 +5,7 @@ declare interface ITradeOpenParam {
   amount: number;
   type: 'long' | 'short';
   referal: string;
-  coin: 'DAI' | 'USDT' | 'USDC';
+  coin: IUSDCoins;
 }
 
 /**
@@ -19,8 +19,8 @@ declare interface IBalanceInfo {
 
 // Funding Balance Deposit
 // 入参：
-declare interface IRecord {
-  coin: 'DAI' | 'USDT' | 'USDC';
+declare interface ICoinAmount {
+  coin: IUSDCoins;
   amount: number;
 }
 
@@ -28,7 +28,7 @@ declare type IUSDCoins = 'DAI' | 'USDT' | 'USDC';
 // Funding Balance Withdraw
 // 入参：
 declare interface IRecord {
-  coin: 'DAI' | 'USDT' | 'USDC';
+  coin: IUSDCoins;
   amount: number;
 }
 
@@ -56,18 +56,17 @@ declare interface ITradeRecord {
   status: IOrderStatus;
 }
 
+declare interface PoolAvailableInfo {
+  value: number;
+  total: number;
+}
+
 /**
  * Trade Liquidity Pool
  */
 declare interface ITradePoolInfo {
-  public: {
-    value: number;
-    total: number;
-  };
-  private: {
-    value: number;
-    total: number;
-  };
+  public: PoolAvailableInfo;
+  private: PoolAvailableInfo;
 }
 
 /**
@@ -82,7 +81,6 @@ declare interface ITradeInfo {
  * 行情图数据时间区间
  */
 declare type IGraphDuration = 'day' | 'week' | 'month';
-
 /**
  * 行情图数据
  */
@@ -94,4 +92,29 @@ declare interface IPriceGraph {
     value: number;
     timestamp: number;
   }>;
+}
+
+/*pool type*/
+declare type IPoolType = 'public' | 'private';
+
+declare interface PoolPercentInfo {
+  DAI: PoolAvailableInfo;
+  USDT: PoolAvailableInfo;
+  USDC: PoolAvailableInfo;
+}
+
+declare interface PoolValueInfo {
+  DAI: number;
+  USDT: number;
+  USDC: number;
+}
+
+declare interface PoolContractDetail {
+  id: string;
+  time: number;
+  amount: number;
+  locked: number;
+  coin: IUSDCoins;
+  fee: number;
+  status: 'Closed' | 'Active';
 }

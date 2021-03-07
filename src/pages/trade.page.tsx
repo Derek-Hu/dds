@@ -10,20 +10,20 @@ import SiteContext from '../layouts/SiteContext';
 import { getFundingBalanceInfo, getTradeOrders, getTradeInfo, getTradeLiquidityPoolInfo } from '../services/trade';
 
 interface IState {
-  coin: IUSDCoins
+  coin: IUSDCoins;
   currentPrice: number;
 }
 export default class TradePage extends Component {
-  state:IState = {
+  state: IState = {
     coin: 'DAI',
     currentPrice: 100,
-  }
+  };
   componentDidMount() {
     console.log('mount');
   }
 
   render() {
-    const { coin, currentPrice} = this.state;
+    const { coin, currentPrice } = this.state;
     return (
       <SiteContext.Consumer>
         {({ isMobile, account }) => {
@@ -39,7 +39,7 @@ export default class TradePage extends Component {
                   <FundingBalance />
                 </Col>
               </Row>
-              
+
               <div>
                 {address ? <TradeBonus coin={coin} currentPrice={currentPrice} /> : null}
                 <div>
