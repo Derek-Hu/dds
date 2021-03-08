@@ -1,9 +1,9 @@
-import { userPoolBalance, userPoolInfo } from '~/services/mock/pool.mock';
+import { userPoolBalance, userPoolInfo } from '../services/mock/pool.mock';
 
 /**
  * 获取ARP值
  */
-export const getPubPoolArp = (): Promise<number> => {
+export const getPubPoolArp = async (): Promise<number> => {
   return Promise.resolve(5300);
 };
 
@@ -14,7 +14,7 @@ export const getPubPoolArp = (): Promise<number> => {
  * @param coinAmount
  * @return reCoinAmount
  */
-export const getDepositReCoinAmountFromCoin = (coinAmount: ICoinAmount): Promise<number> => {
+export const getDepositReCoinAmountFromCoin = async (coinAmount: ICoinAmount): Promise<number> => {
   return Promise.resolve(coinAmount.amount);
 };
 
@@ -25,7 +25,7 @@ export const getDepositReCoinAmountFromCoin = (coinAmount: ICoinAmount): Promise
  * @param coinAmount
  * @return reCoinAmount
  */
-export const getWithdrawReCoinAmountFromCoin = (coinAmount: ICoinAmount): Promise<number> => {
+export const getWithdrawReCoinAmountFromCoin = async (coinAmount: ICoinAmount): Promise<number> => {
   return Promise.resolve(coinAmount.amount);
 };
 
@@ -35,7 +35,7 @@ export const getWithdrawReCoinAmountFromCoin = (coinAmount: ICoinAmount): Promis
  * @param coinAmount - 法币数量
  * @param poolType - 池子类型
  */
-export const provideCoinToPool = (coinAmount: ICoinAmount, poolType: IPoolType): Promise<boolean> => {
+export const provideCoinToPool = async (coinAmount: ICoinAmount, poolType: IPoolType): Promise<boolean> => {
   return Promise.resolve(true);
 };
 
@@ -44,7 +44,7 @@ export const provideCoinToPool = (coinAmount: ICoinAmount, poolType: IPoolType):
  * @param poolType - 资金池类型
  * @param isPublic - 是否登陆，ture: 未登录，false：已登陆
  */
-export const getPoolAvailableInfo = (poolType: IPoolType, isPublic: boolean): Promise<PoolPercentInfo> => {
+export const getPoolAvailableInfo = async (poolType: IPoolType, isPublic: boolean): Promise<PoolPercentInfo> => {
   return Promise.resolve(userPoolInfo);
 };
 
@@ -53,7 +53,7 @@ export const getPoolAvailableInfo = (poolType: IPoolType, isPublic: boolean): Pr
  * @param poolType - 资金池类型
  * @param isPublic - 是否登陆，ture: 未登录，false：已登陆
  */
-export const getPoolBalanceInfo = (poolType: IPoolType, isPublic: boolean): Promise<PoolValueInfo> => {
+export const getPoolBalanceInfo = async (poolType: IPoolType, isPublic: boolean): Promise<CoinValueInfo> => {
   return Promise.resolve(userPoolBalance);
 };
 
@@ -62,7 +62,7 @@ export const getPoolBalanceInfo = (poolType: IPoolType, isPublic: boolean): Prom
  * @param poolType - 资金池类型
  * @param coinAmount - 需要取出的法币coin数量
  */
-export const withdrawFromPool = (poolType: IPoolType, coinAmount: ICoinAmount): Promise<boolean> => {
+export const withdrawFromPool = async (poolType: IPoolType, coinAmount: ICoinAmount): Promise<boolean> => {
   return Promise.resolve(true);
 };
 
@@ -72,7 +72,10 @@ export const withdrawFromPool = (poolType: IPoolType, coinAmount: ICoinAmount): 
  * @param detail - 锁仓订单
  * @param coinAmount - 补仓数量
  */
-export const appendCoinToPrivatePool = (detail: PoolContractDetail, coinAmount: ICoinAmount): Promise<boolean> => {
+export const appendCoinToPrivatePool = async (
+  detail: PoolContractDetail,
+  coinAmount: ICoinAmount
+): Promise<boolean> => {
   return Promise.resolve(true);
 };
 
@@ -82,6 +85,6 @@ export const appendCoinToPrivatePool = (detail: PoolContractDetail, coinAmount: 
  * @param page - from 1
  * @param pageSize - 每页数量
  */
-export const getLiquidityLockedDetails = (page: number, pageSize: number = 10): Promise<PoolContractDetail[]> => {
+export const getLiquidityLockedDetails = async (page: number, pageSize: number = 10): Promise<PoolContractDetail[]> => {
   return Promise.resolve([]);
 };
