@@ -44,10 +44,11 @@ declare interface ITradeRecord {
   id: string;
   time: number;
   type: 'long' | 'short';
-  price: number;
+  openPrice: number;
+  curPrice: number;
   amount: number;
   cost: number;
-  costCoin: string;
+  costCoin: IUSDCoins;
   fee: number;
   pl: {
     val: number;
@@ -56,7 +57,7 @@ declare interface ITradeRecord {
   status: IOrderStatus;
 }
 
-declare interface PoolAvailableInfo {
+declare interface CoinAvailableInfo {
   value: number;
   total: number;
 }
@@ -65,8 +66,8 @@ declare interface PoolAvailableInfo {
  * Trade Liquidity Pool
  */
 declare interface ITradePoolInfo {
-  public: PoolAvailableInfo;
-  private: PoolAvailableInfo;
+  public: CoinAvailableInfo;
+  private: CoinAvailableInfo;
 }
 
 /**
@@ -81,6 +82,7 @@ declare interface ITradeInfo {
  * 行情图数据时间区间
  */
 declare type IGraphDuration = 'day' | 'week' | 'month';
+
 /**
  * 行情图数据
  */
@@ -98,15 +100,22 @@ declare interface IPriceGraph {
 declare type IPoolType = 'public' | 'private';
 
 declare interface PoolPercentInfo {
-  DAI: PoolAvailableInfo;
-  USDT: PoolAvailableInfo;
-  USDC: PoolAvailableInfo;
+  DAI: CoinAvailableInfo;
+  USDT: CoinAvailableInfo;
+  USDC: CoinAvailableInfo;
 }
 
-declare interface PoolValueInfo {
+declare interface CoinValueInfo {
   DAI: number;
   USDT: number;
   USDC: number;
+}
+
+declare interface SwapValueInfo extends CoinValueInfo {
+  USD: number; // DAI+USDT+USDC总数
+  DDS: number; // DDS总数
+  DDSPartAmount: number; // 1/10数量的DDS，用于页面显示
+  DDSPrice: number; // 一个DDS能兑换多少个USD
 }
 
 declare interface PoolContractDetail {
@@ -116,5 +125,40 @@ declare interface PoolContractDetail {
   locked: number;
   coin: IUSDCoins;
   fee: number;
-  status: 'Closed' | 'Active';
+  status: IOrderStatus;
+}
+
+declare interface MiningTokenBalance {
+  reDAI: number;
+  reUSDT: number;
+  reUSDC: number;
+}
+
+declare type LiquiditorRanking = [string, string, string];
+
+declare type RewardRecord = {
+  id: string;
+  amount: number;
+  time: number;
+  price: number;
+  reward: number;
+};
+
+declare interface SwapParam {
+  ddsAmount: number;
+  coin: IUSDCoins;
+}
+
+declare interface MyReferralSummary {
+  bonus: number;
+  level: string;
+  ranking: number;
+  referrals: number;
+}
+
+declare type TimeStamp = number;
+
+declare interface CampaignRewardPool {
+  nextDistribution: TimeStamp;
+  coins: CoinValueInfo;
 }

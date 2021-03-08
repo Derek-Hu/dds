@@ -13,7 +13,7 @@ export const userPoolInfo: PoolPercentInfo = {
   },
 };
 
-export const userPoolBalance: PoolValueInfo = {
+export const userPoolBalance: CoinValueInfo = {
   USDC: 638,
   USDT: 7378,
   DAI: 647,
