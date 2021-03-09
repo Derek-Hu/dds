@@ -18,7 +18,7 @@ interface IState {
   duration: IGraphDuration;
 }
 export default class TradePage extends Component {
-  state:IState = {
+  state: IState = {
     coin: 'DAI',
     duration: 'day',
   }
@@ -50,7 +50,7 @@ export default class TradePage extends Component {
                   <FundingBalance coins={{from, to: coin }} graphData={graphData}/>
                 </Col>
               </Row>
-              
+
               <div>
                 {address ? <TradeBonus coin={coin} graphData={graphData} /> : null}
                 <div>

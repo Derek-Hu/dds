@@ -27,7 +27,7 @@ export default class Balance extends Component<{ coins: { from: IFromCoins; to: 
     orderConfirmVisible: false,
     openAmount: undefined,
 
-    tradeType: 'Long',
+    tradeType: 'long',
   };
 
   componentDidMount = async () => {
@@ -161,7 +161,7 @@ export default class Balance extends Component<{ coins: { from: IFromCoins; to: 
             </p>
             {/* <Progress strokeColor="#1346FF" showInfo={false} percent={30} strokeWidth={20} /> */}
             <Button
-              className={tradeType === 'Short' ? 'buttonGreen' : ''}
+              className={tradeType === 'short' ? 'buttonGreen' : ''}
               type="primary"
               onClick={this.orderConfirmVisible.show}
             >

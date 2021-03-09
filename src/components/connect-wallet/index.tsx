@@ -6,7 +6,7 @@ import ModalRender from '../modal-render/index';
 import commonStyles from '../funding-balance/modals/style.module.less';
 import { metamaskWallet } from '../../wallet/metamask';
 import { Subscription } from 'rxjs';
-import { SupportedWallets, Wallet } from '.../../constant/index';
+import { SupportedWallets, Wallet } from '../../constant/index';
 
 const { Option } = Select;
 

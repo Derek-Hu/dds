@@ -6,16 +6,6 @@ export const balance: IBalanceInfo = {
 
 export const curPrice: number = 1500.0;
 
-export const poolInfo = {
-  public: {
-    value: 3532,
-    total: 43248
-  },
-  private: {
-    value: 353,
-    total: 432482
-  }
-}
 const infos = {
   'Ticker Root': 20,
   'Expiry Date': 'Funding Rate',
@@ -28,11 +18,22 @@ const infos = {
 // @ts-ignore
 export const infoItems: ITradeInfo[] = Object.keys(infos).map((key) => ({ label: key, value: infos[key] }));
 
+export const poolInfo: ITradePoolInfo = {
+  public: {
+    value: 37863,
+    total: 65349,
+  },
+  private: {
+    value: 37863,
+    total: 65349,
+  },
+};
+
 export const orders: ITradeRecord[] = [
   {
     id: '001',
     time: new Date().getTime(),
-    type: 'Short',
+    type: 'short',
     price: 400.65,
     amount: 10.36,
     costCoin: 'DAI',
@@ -47,7 +48,7 @@ export const orders: ITradeRecord[] = [
   {
     id: '002',
     time: new Date().getTime(),
-    type: 'Short',
+    type: 'short',
     price: 400.65,
     amount: 10.36,
     costCoin: 'USDT',
@@ -62,7 +63,7 @@ export const orders: ITradeRecord[] = [
   {
     id: '003',
     time: new Date().getTime(),
-    type: 'Long',
+    type: 'long',
     price: 400.65,
     amount: 10.36,
     costCoin: 'USDC',

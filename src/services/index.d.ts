@@ -1,4 +1,4 @@
-declare type ITradeType = 'Long' | 'Short';
+declare type ITradeType = 'long' | 'short';
 /**
  * Funding Balance 下单入参
  */
@@ -6,7 +6,7 @@ declare interface ITradeOpenParam {
   amount: number;
   type: ITradeType;
   referal: string;
-  coin: 'DAI' | 'USDT' | 'USDC';
+  coin: IUSDCoins;
 }
 
 /**
@@ -20,8 +20,8 @@ declare interface IBalanceInfo {
 
 // Funding Balance Deposit
 // 入参：
-declare interface IRecord {
-  coin: 'DAI' | 'USDT' | 'USDC';
+declare interface ICoinAmount {
+  coin: IUSDCoins;
   amount: number;
 }
 
@@ -31,7 +31,7 @@ declare type IUSDCoins = 'DAI' | 'USDT' | 'USDC';
 // Funding Balance Withdraw
 // 入参：
 declare interface IRecord {
-  coin: 'DAI' | 'USDT' | 'USDC';
+  coin: IUSDCoins;
   amount: number;
 }
 
@@ -48,9 +48,11 @@ declare interface ITradeRecord {
   time: number;
   type: ITradeType;
   price: number;
+  // openPrice: number;
+  // curPrice: number;
   amount: number;
   cost: number;
-  costCoin: string;
+  costCoin: IUSDCoins;
   fee: number;
   pl: {
     val: number;
@@ -59,18 +61,17 @@ declare interface ITradeRecord {
   status: IOrderStatus;
 }
 
+declare interface CoinAvailableInfo {
+  value: number;
+  total: number;
+}
+
 /**
  * Trade Liquidity Pool
  */
 declare interface ITradePoolInfo {
-  public: {
-    value: number;
-    total: number;
-  };
-  private: {
-    value: number;
-    total: number;
-  };
+  public: CoinAvailableInfo;
+  private: CoinAvailableInfo;
 }
 
 /**
@@ -104,4 +105,70 @@ declare interface IPriceGraph {
 declare interface IPoolCoinAmount {
   coin: IUSDCoins
   amount: number;
+}
+/*pool type*/
+declare type IPoolType = 'public' | 'private';
+
+declare interface PoolPercentInfo {
+  DAI: CoinAvailableInfo;
+  USDT: CoinAvailableInfo;
+  USDC: CoinAvailableInfo;
+}
+
+declare interface CoinValueInfo {
+  DAI: number;
+  USDT: number;
+  USDC: number;
+}
+
+declare interface SwapValueInfo extends CoinValueInfo {
+  USD: number; // DAI+USDT+USDC总数
+  DDS: number; // DDS总数
+  DDSPartAmount: number; // 1/10数量的DDS，用于页面显示
+  DDSPrice: number; // 一个DDS能兑换多少个USD
+}
+
+declare interface PoolContractDetail {
+  id: string;
+  time: number;
+  amount: number;
+  locked: number;
+  coin: IUSDCoins;
+  fee: number;
+  status: IOrderStatus;
+}
+
+declare interface MiningTokenBalance {
+  reDAI: number;
+  reUSDT: number;
+  reUSDC: number;
+}
+
+declare type LiquiditorRanking = [string, string, string];
+
+declare type RewardRecord = {
+  id: string;
+  amount: number;
+  time: number;
+  price: number;
+  reward: number;
+};
+
+declare interface SwapParam {
+  ddsAmount: number;
+  coin: IUSDCoins;
+}
+
+declare interface MyReferralSummary {
+  bonus: number;
+  level: string;
+  ranking: number;
+  referrals: number;
+}
+
+declare type TimeStamp = number;
+
+declare interface CampaignRewardPool {
+  nextDistribution: TimeStamp;
+  coins: CoinValueInfo;
 }

@@ -26,8 +26,8 @@ interface IState {
 
 type TModalKeys = Pick<IState, 'orderCloseVisible'>;
 
-const getPL = (value?: {val: number, percentage: number}) => {
-  if(!value){
+const getPL = (value?: { val: number; percentage: number }) => {
+  if (!value) {
     return null;
   }
   const { val, percentage } = value;
@@ -35,11 +35,12 @@ const getPL = (value?: {val: number, percentage: number}) => {
   const color = percentage === 0 ? '#383838' : percentage < 0 ? '#FA4D56' : '#02B464';
   return (
     <span>
-      {format(val)}
-      (<span style={{ color }}>
+      {format(val)}(
+      <span style={{ color }}>
         {flag}
         {Math.abs(percentage)}%
-      </span>)
+      </span>
+      )
     </span>
   );
 };
