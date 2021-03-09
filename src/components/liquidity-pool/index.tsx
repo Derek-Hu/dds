@@ -14,7 +14,7 @@ import SiteContext from '../../layouts/SiteContext';
 import LockedDetails, { ILockedData } from '../liquidity-pool/locked-details';
 import CardInfo from '../card-info/index';
 import LiquidityProvided from './liquidity-provided';
-
+import LiquidityARP from './collaborative-arp';
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -129,7 +129,7 @@ export default class PoolArea extends Component<{ address?: string }, any> {
   };
 
   render() {
-    const { address } = this.props;
+    const {address } = this.props;
     const { selectedTab } = this.state;
     return (
       <SiteContext.Consumer>
@@ -143,7 +143,7 @@ export default class PoolArea extends Component<{ address?: string }, any> {
                     tab={<span className={styles.uppercase}>{TabName.Collaborative}</span>}
                     key={TabName.Collaborative}
                   >
-                    
+                    <LiquidityARP address={address}/>
                   </TabPane>
                   <TabPane tab={<span className={styles.uppercase}>{TabName.Private}</span>} key={TabName.Private}>
                     {address && selectedTab === TabName.Private ? (

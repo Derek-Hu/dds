@@ -16,3 +16,12 @@ export const getCollaborativeLiquidityProvided = async (): Promise<IPoolCoinAmou
 export const getCollaborativeArp = async (): Promise<number> => {
   return returnVal(1002);
 };
+
+export const getCollaborativeDepositRe = async ({amount, coin }: { coin: IUSDCoins; amount: number }): Promise<number> => {
+  return returnVal(Math.random() * 10000);
+};
+
+
+export const doCollaborativeDeposit = async ({amount, reAmount, coin }: { coin: IUSDCoins; amount: number, reAmount: number}): Promise<number> => {
+  return returnVal(Math.random() * 10000);
+};
