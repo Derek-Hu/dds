@@ -1037,6 +1037,9 @@ export const ABI = [
   },
 ];
 
+/**
+ * 合约接口
+ */
 export interface ContractProxy {
   getPriceByETHDAI(): Observable<BigNumber>;
 

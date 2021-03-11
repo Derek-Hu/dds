@@ -1,9 +1,33 @@
 import { orders, balance, infoItems, curPrice, poolInfo } from './mock/trade.mock';
+import { walletManager } from '../wallet/wallet-manager';
+import { map, switchMap } from 'rxjs/operators';
+import { WalletInterface } from '../wallet/wallet-interface';
+import { contractAccessor } from '../wallet/chain-access';
+import { of } from 'rxjs';
+import { UserAccountInfo } from '../wallet/contract-interface';
+import { BigNumber } from 'ethers';
 
 /**
- * Trade Page
+ * 获取交易账户余额信息
+ * @param coin - 当前币种
  */
 export const getFundingBalanceInfo = async (coin: IUSDCoins): Promise<IBalanceInfo> => {
+  walletManager.watchWalletInstance().pipe(
+    switchMap((wallet: WalletInterface | null) => {
+      return wallet === null ? of(null) : wallet.watchAccount();
+    }),
+    switchMap((address: string | null) => {
+      return address === null ? of(null) : contractAccessor.watchUserAccount(address);
+    }),
+    map((accountInfo: UserAccountInfo | null) => {
+      if (accountInfo === null) {
+      } else {
+        const deposit: BigNumber = accountInfo.deposit;
+        const availed: BigNumber = accountInfo.available;
+      }
+    })
+  );
+
   return Promise.resolve(balance);
 };
 

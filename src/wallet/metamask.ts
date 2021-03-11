@@ -8,6 +8,9 @@ declare const window: Window & { ethereum: any };
 
 export const { isMetaMaskInstalled } = MetaMaskOnboarding;
 
+/**
+ * Metamask钱包实例
+ */
 export class MetamaskWallet implements WalletInterface {
   public readonly walletType: Wallet = Wallet.Metamask;
   private accounts: string[] = [];

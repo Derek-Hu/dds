@@ -198,7 +198,7 @@ class MetamaskContractAccessor extends BaseContractAccessor {
 }
 
 /**
- *
+ * 合约访问工具
  */
 export class ContractAccessor implements ContractProxy {
   private readonly chainData: ChainDataState = chainDataState;
