@@ -10,15 +10,15 @@ const PublicProvidedPool: IPool = {
   usd: 748830,
   coins: [
     {
-      name: 'DAI',
+      label: 'DAI',
       value: 647,
     },
     {
-      name: 'USDC',
+      label: 'USDC',
       value: 638,
     },
     {
-      name: 'USDT',
+      label: 'USDT',
       value: 7378,
     },
   ],

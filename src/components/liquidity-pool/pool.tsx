@@ -6,7 +6,7 @@ import SiteContext from '../../layouts/SiteContext';
 export interface IPool {
   title: string;
   usd?: number;
-  coins: Array<{ name: string; value: number }>;
+  coins: Array<{ label: string; value: number }>;
   children?: React.ReactElement | React.ReactElement[];
   smallSize?: boolean;
 }
@@ -17,18 +17,20 @@ export default (props: IPool) => {
       {({ isMobile }) => (
         <div className={[styles.root, smallSize ? styles.small : '', isMobile ? styles.mobile : ''].join(' ')}>
           <h4>{title}</h4>
-          {usd === null || usd === undefined ? (
+          {usd === null || usd === undefined ? null : (
             <p className={styles.numbers}>
               {numeral(usd).format('0,0')} <span>USD</span>
             </p>
-          ) : null}
+          )}
           <Row>
-            {coins.map(({ name, value }) => (
-              <Col key={name} span={8}>
-                <p className={styles.coinName}>{name}</p>
-                <span>{value}</span>
-              </Col>
-            ))}
+            {coins
+              ? coins.map(({ label, value }) => (
+                  <Col key={label} span={8}>
+                    <p className={styles.coinName}>{label}</p>
+                    <span>{value}</span>
+                  </Col>
+                ))
+              : null}
           </Row>
           {children}
         </div>

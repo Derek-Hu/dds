@@ -3,7 +3,7 @@
  */
 declare interface ITradeOpenParam {
   amount: number;
-  type: 'long' | 'short';
+  type: ITradeType;
   referal: string;
   coin: IUSDCoins;
 }
@@ -14,7 +14,7 @@ declare interface ITradeOpenParam {
 declare interface IBalanceInfo {
   balance: number;
   locked: number;
-  available: number;
+  available?: number;
 }
 
 // Funding Balance Deposit
@@ -23,6 +23,8 @@ declare interface ICoinAmount {
   coin: IUSDCoins;
   amount: number;
 }
+
+declare type IFromCoins = 'ETH' | 'BTC';
 
 declare type IUSDCoins = 'DAI' | 'USDT' | 'USDC';
 // Funding Balance Withdraw
@@ -43,9 +45,10 @@ declare type IOrderStatus = 'ACTIVE' | 'CLOSED';
 declare interface ITradeRecord {
   id: string;
   time: number;
-  type: 'long' | 'short';
-  openPrice: number;
-  curPrice: number;
+  type: ITradeType;
+  price: number;
+  // openPrice: number;
+  // curPrice: number;
   amount: number;
   cost: number;
   costCoin: IUSDCoins;
@@ -96,6 +99,11 @@ declare interface IPriceGraph {
   }>;
 }
 
+// Pool 页面
+declare interface IPoolCoinAmount {
+  coin: IUSDCoins;
+  amount: number;
+}
 /*pool type*/
 declare type IPoolType = 'public' | 'private';
 
