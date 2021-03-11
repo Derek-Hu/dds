@@ -1,8 +1,7 @@
-import WithIndicator, {
-  IIndicatorProgress,
-} from "./with-indicator";
+import WithIndicator, { IIndicatorProgress } from "./with-indicator";
 import styles from './pool.module.less';
 import SiteContext from "../../layouts/SiteContext";
+
 
 export interface IMiningShare {
   title: string;

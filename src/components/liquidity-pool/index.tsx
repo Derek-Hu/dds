@@ -5,17 +5,18 @@ import numeral from 'numeral';
 import Pool, { IPool } from './pool';
 import Balance from './liquidity-balance';
 import commonStyles from '../funding-balance/modals/style.module.less';
-import SharePool from './share-pool';
-import AvailablePool from './available-pool';
-import NetPL from './net-pl';
+import SharePool from './public/share-pool';
+import AvailablePool from './private/available-pool';
 import { CustomTabKey, CoinSelectOption } from '../../constant/index';
 import ModalRender from '../modal-render/index';
 import SiteContext from '../../layouts/SiteContext';
 import LockedDetails, { ILockedData } from '../liquidity-pool/locked-details';
 import CardInfo from '../card-info/index';
 import LiquidityProvided from './liquidity-provided';
-import LiquidityARP from './collaborative-arp';
-const { Option } = Select;
+import LiquidityARP from './public/collaborative-arp';
+import { Visible } from '../builtin/hidden';
+import Auth, { Public } from '../builtin/auth';
+
 const { TabPane } = Tabs;
 
 const mining = {
@@ -129,7 +130,7 @@ export default class PoolArea extends Component<{ address?: string }, any> {
   };
 
   render() {
-    const {address } = this.props;
+    const { address } = this.props;
     const { selectedTab } = this.state;
     return (
       <SiteContext.Consumer>
@@ -138,21 +139,23 @@ export default class PoolArea extends Component<{ address?: string }, any> {
             <div className={[styles.root, isMobile ? styles.mobile : ''].join(' ')}>
               <h2>LIQUIDITY POOL</h2>
               <div className={styles.tabContainer}>
-                <Tabs className={CustomTabKey} defaultActiveKey={selectedTab} onChange={this.callback}>
+                <Tabs className={CustomTabKey} defaultActiveKey={selectedTab} animated={false} onChange={this.callback}>
                   <TabPane
                     tab={<span className={styles.uppercase}>{TabName.Collaborative}</span>}
                     key={TabName.Collaborative}
                   >
-                    <LiquidityARP address={address}/>
+                    <LiquidityARP />
                   </TabPane>
                   <TabPane tab={<span className={styles.uppercase}>{TabName.Private}</span>} key={TabName.Private}>
-                    {address && selectedTab === TabName.Private ? (
-                      <Alert
-                        className={styles.poolMsg}
-                        message="Private pool is extremely risky. If you are not a hedging expert, please stay away!!!"
-                        type="warning"
-                      />
-                    ) : null}
+                    <Auth>
+                      <Visible when={selectedTab === TabName.Private}>
+                        <Alert
+                          className={styles.poolMsg}
+                          message="Private pool is extremely risky. If you are not a hedging expert, please stay away!!!"
+                          type="warning"
+                        />
+                      </Visible>
+                    </Auth>
                     <div className={[styles.actionArea, styles.privateArea].join(' ')}>
                       <Row gutter={[isMobile ? 0 : 12, isMobile ? 15 : 0]}>
                         <Col xs={24} sm={24} md={8} lg={6}>
@@ -183,55 +186,43 @@ export default class PoolArea extends Component<{ address?: string }, any> {
                 </Tabs>
               </div>
               <div className={styles.panels}>
-                {selectedTab === TabName.Collaborative ? (
+                <Visible when={selectedTab === TabName.Collaborative}>
                   <div>
-                    {address ? (
+                    <Auth>
                       <Row gutter={isMobile ? 0 : 12}>
-                        <Col xs={24} sm={24} md={8} lg={8}>
+                        <Col xs={24} sm={24} md={12} lg={12}>
                           <SharePool />
                         </Col>
-                        <Col xs={24} sm={24} md={8} lg={8}>
+                        <Col xs={24} sm={24} md={12} lg={12}>
                           <Balance isPrivate={false} />
                         </Col>
-                        <Col xs={24} sm={24} md={8} lg={8}>
-                          <CardInfo theme="inner" {...PublicNetPool}></CardInfo>
-                        </Col>
                       </Row>
-                    ) : (
+                    </Auth>
+                    <Public>
                       <Row gutter={isMobile ? 0 : 12}>
                         <Col xs={24} sm={24} md={24} lg={24}>
                           <LiquidityProvided />
                         </Col>
                       </Row>
-                    )}
+                    </Public>
                   </div>
-                ) : null}
-                {selectedTab === TabName.Private ? (
+                </Visible>
+                <Visible when={selectedTab === TabName.Private}>
                   <div>
-                    {address ? (
+                    <Auth>
                       <div>
                         <Row gutter={isMobile ? 0 : 12}>
-                          <Col xs={24} sm={24} md={8} lg={8}>
+                          <Col xs={24} sm={24} md={12} lg={12}>
                             <AvailablePool />
                           </Col>
-                          <Col xs={24} sm={24} md={8} lg={8}>
+                          <Col xs={24} sm={24} md={12} lg={12}>
                             <Balance isPrivate={true} />
-                          </Col>
-                          <Col xs={24} sm={24} md={8} lg={8}>
-                            <NetPL>
-                              <Row>
-                                {rates.map((val) => (
-                                  <Col className={styles.rate} span={8}>
-                                    {val}%
-                                  </Col>
-                                ))}
-                              </Row>
-                            </NetPL>
                           </Col>
                         </Row>
                         <LockedDetails data={lockedData} />
                       </div>
-                    ) : (
+                    </Auth>
+                    <Public>
                       <Row gutter={isMobile ? 0 : 12}>
                         <Col xs={24} sm={24} md={12} lg={12}>
                           <AvailablePool />
@@ -240,9 +231,9 @@ export default class PoolArea extends Component<{ address?: string }, any> {
                           {/* <Pool {...PublicProvidedPool} /> */}
                         </Col>
                       </Row>
-                    )}
+                    </Public>
                   </div>
-                ) : null}
+                </Visible>
               </div>
               <ModalRender
                 visible={this.state.depositModalVisible}

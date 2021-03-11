@@ -172,3 +172,13 @@ declare interface CampaignRewardPool {
   nextDistribution: TimeStamp;
   coins: CoinValueInfo;
 }
+
+interface ICoinItem {
+  coin: IUSDCoins;
+  amount: number;
+  total: number;
+}
+
+declare interface IPoolShareInPool extends ICoinItem{
+  
+}

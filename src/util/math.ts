@@ -14,5 +14,9 @@ export const percentage = (fenzi: any, fenmu: any) => {
     if(typeof fenmu !== 'number'){
         return;
     }
-    return Math.floor(100 * fenzi / fenmu);
+    return numeral(100 * fenzi / fenmu).format('0,0.0000');
+}
+
+export const dividedPecent = (fenzi: any, fenmu: any) => {
+    return 100 * fenzi/fenmu;
 }
