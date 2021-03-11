@@ -182,3 +182,9 @@ interface ICoinItem {
 declare interface IPoolShareInPool extends ICoinItem{
   
 }
+
+declare interface ISwapBurn {
+  usd: number;
+  dds: number;
+  rate: number;
+}

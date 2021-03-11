@@ -103,7 +103,6 @@ const PublicNetPool = {
   ],
 };
 
-const rates = [-53, 1453, 0];
 export default class PoolArea extends Component<{ address?: string }, any> {
   state = {
     selectedTab: TabName.Collaborative,
@@ -224,11 +223,8 @@ export default class PoolArea extends Component<{ address?: string }, any> {
                     </Auth>
                     <Public>
                       <Row gutter={isMobile ? 0 : 12}>
-                        <Col xs={24} sm={24} md={12} lg={12}>
+                        <Col xs={24} sm={24} md={24} lg={24}>
                           <AvailablePool />
-                        </Col>
-                        <Col xs={24} sm={24} md={12} lg={12}>
-                          {/* <Pool {...PublicProvidedPool} /> */}
                         </Col>
                       </Row>
                     </Public>

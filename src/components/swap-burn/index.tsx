@@ -7,6 +7,10 @@ import ModalRender from '../modal-render/index';
 import commonStyles from '../funding-balance/modals/style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import { CoinSelectOption } from '../../constant/index';
+import { Visible, Hidden } from '../builtin/hidden';
+import Auth, { Public } from '../builtin/auth';
+import { getSwapPrice } from '../../services/swap-burn.service';
+import { format } from '../../util/math';
 
 const { Option } = Select;
 
@@ -15,10 +19,30 @@ const swapInfo = {
   coin: 4.46,
   unit: 'DAI',
 };
-export default class PoolArea extends Component<{ isLogin: boolean }, any> {
-  state = {
+
+interface IState {
+  loading: boolean;
+  data?: ISwapBurn;
+  swapModalVisible: boolean;
+}
+
+export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
+  state: IState = {
     swapModalVisible: false,
+    loading: false,
   };
+
+  async componentDidMount() {
+    this.setState({ loading: true });
+    try {
+      const data = await getSwapPrice();
+      this.setState({
+        data
+      });
+    } catch (e) {}
+
+    this.setState({ loading: false });
+  }
 
   closeSwapModal = () => {
     this.setState({
@@ -33,21 +57,20 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
   };
 
   render() {
+    const { loading, data } = this.state;
     return (
       <SiteContext.Consumer>
-        {({ isMobile, account }) => {
-          const { coins, address } = account || {};
-          const usdt = coins?.USDC;
-          return (
-            <div className={[styles.root, isMobile ? styles.mobile : ''].join(' ')}>
+        {({ isMobile }) => {
+          return <Hidden when={loading}>
+            <div className={styles.root}>
               <h1>Swap & burn</h1>
               <div className={styles.card}>
                 <div className={styles.imgBar}>
-                  <SwapBar></SwapBar>
+                  <SwapBar leftAmount={format(data?.usd)} rightAmount={format(data?.dds)}></SwapBar>
                 </div>
                 <h3 className={styles.msg}>Current Swap Price</h3>
-                <p className={styles.calcute}>1 DDS ={numeral(swapInfo.coin).format('0,0.00')} USD</p>
-                {address ? (
+                <p className={styles.calcute}>1 DDS = {format(data?.rate)} USD</p>
+                <Auth>
                   <div className={styles.swapContainer}>
                     <Form className="login-form">
                       <Form.Item>
@@ -93,12 +116,12 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                       </Form.Item>
                       <Form.Item className={styles.lastRow}>
                         <Button type="primary" onClick={this.showSwapModal}>
-                          Connect Wallet
+                          Swap
                         </Button>
                       </Form.Item>
                     </Form>
                   </div>
-                ) : null}
+                </Auth>
               </div>
               <ModalRender
                 visible={this.state.swapModalVisible}
@@ -129,7 +152,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, any> {
                 </Row>
               </ModalRender>
             </div>
-          );
+          </Hidden>
         }}
       </SiteContext.Consumer>
     );
