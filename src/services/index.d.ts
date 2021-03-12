@@ -100,10 +100,9 @@ declare interface IPriceGraph {
   }>;
 }
 
-
 // Pool 页面
 declare interface IPoolCoinAmount {
-  coin: IUSDCoins
+  coin: IUSDCoins;
   amount: number;
 }
 /*pool type*/
@@ -179,9 +178,7 @@ interface ICoinItem {
   total: number;
 }
 
-declare interface IPoolShareInPool extends ICoinItem{
-  
-}
+declare interface IPoolShareInPool extends ICoinItem {}
 
 declare interface ISwapBurn {
   usd: number;

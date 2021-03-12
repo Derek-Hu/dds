@@ -188,7 +188,7 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
 
   render() {
     const { isPrivate } = this.props;
-    const { data, selectCoin, deadline,loading, deadlineLoading, coins } = this.state;
+    const { data, selectCoin, deadline, loading, deadlineLoading, coins } = this.state;
 
     return (
       <SiteContext.Consumer>

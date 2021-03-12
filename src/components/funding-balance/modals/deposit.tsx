@@ -6,24 +6,22 @@ import { Component } from 'react';
 
 const title = 'Funding Deposit';
 
-interface IProps{
+interface IProps {
   visible: boolean;
   onCancel: () => any;
   onConfirm: (depositAmount?: number) => any;
 }
 interface IState {
-  depositAmount?: number
+  depositAmount?: number;
 }
 export default class Balance extends Component<IProps, IState> {
+  state: IState = {};
 
-  state:IState = { }
-  
-  onAmountChange = (e:any) => {
+  onAmountChange = (e: any) => {
     this.setState({
       depositAmount: e.target.value,
     });
-  }
-
+  };
 
   render() {
     const { visible, onCancel, onConfirm } = this.props;

@@ -140,7 +140,14 @@ export default class Balance extends Component<{ graphData?: IPriceGraph; coin: 
           <div className={styles.root}>
             <h2>Orders</h2>
             <div className={styles.tableWpr}>
-              <Table loading={loading} rowKey="id" columns={this.columns} pagination={false} dataSource={orders} scroll={{ x: 1000 }} />
+              <Table
+                loading={loading}
+                rowKey="id"
+                columns={this.columns}
+                pagination={false}
+                dataSource={orders}
+                scroll={{ x: 1000 }}
+              />
             </div>
             <ModalRender
               visible={orderCloseVisible}
@@ -161,7 +168,8 @@ export default class Balance extends Component<{ graphData?: IPriceGraph; coin: 
                   {amount}
                 </Descriptions.Item>
                 <Descriptions.Item label="Close Price" span={24}>
-                  {graphData?.price}{coin}
+                  {graphData?.price}
+                  {coin}
                 </Descriptions.Item>
                 <Descriptions.Item label="P&L" span={24}>
                   {getPL(pl)}

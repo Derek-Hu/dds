@@ -20,8 +20,7 @@ interface IState {
   reAmount: number | undefined;
 }
 
-interface IProps {
-}
+interface IProps {}
 type TModalKeys = Pick<IState, 'modalVisible'>;
 
 export default class LiquidityProvided extends Component<IProps, IState> {

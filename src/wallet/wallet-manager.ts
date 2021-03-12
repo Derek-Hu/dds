@@ -1,10 +1,13 @@
-import { chainDataState } from '../wallet/chain-connect-state';
+import { chainDataState } from './chain-connect-state';
 import { Observable } from 'rxjs';
-import { WalletInterface } from '../wallet/wallet-interface';
+import { WalletInterface } from './wallet-interface';
 import { map } from 'rxjs/operators';
 import { Wallet } from '../constant';
-import { metamaskWallet } from '../wallet/metamask';
+import { metamaskWallet } from './metamask';
 
+/**
+ * 获取钱包实例
+ */
 export class WalletManager {
   watchWalletInstance(): Observable<WalletInterface | null> {
     return chainDataState.watchWallet().pipe(

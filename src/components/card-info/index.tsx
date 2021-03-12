@@ -24,11 +24,13 @@ export default ({ title, theme, children, items }: ICardInfo) => {
           <div className={styles.card}>
             {theme === 'inner' ? <h2>{title}</h2> : null}
             <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
-              {items ? items.map(({ label, value }) => (
-                <Descriptions.Item label={label} span={24}>
-                  {value}
-                </Descriptions.Item>
-              )) : null }
+              {items
+                ? items.map(({ label, value }) => (
+                    <Descriptions.Item label={label} span={24}>
+                      {value}
+                    </Descriptions.Item>
+                  ))
+                : null}
             </Descriptions>
             {children}
           </div>

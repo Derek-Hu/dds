@@ -55,7 +55,9 @@ export default ({ data: { price, type, amount, locked, fee, coins }, visible, on
               <Button onClick={onCancel}>Cancel</Button>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
-              <Button onClick={onConfirm} type="primary">Confirm</Button>
+              <Button onClick={onConfirm} type="primary">
+                Confirm
+              </Button>
             </Col>
           </Row>
         </ModalRender>
