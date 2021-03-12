@@ -1,10 +1,20 @@
 import { ABI, ContractParam, ContractProxy, UserAccountInfo } from '../wallet/contract-interface';
-import { BehaviorSubject, from, Observable, of, interval } from 'rxjs';
+import { BehaviorSubject, from, Observable, of, interval, EMPTY } from 'rxjs';
 import * as ethers from 'ethers';
-import { catchError, filter, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, map, mapTo, startWith, switchMap, tap } from 'rxjs/operators';
 import { BigNumber } from '@ethersproject/bignumber';
 import { isMetaMaskInstalled } from './metamask';
-import { ContractAddress, DAIAddress, DataRefreshInterval, DefaultNetwork, Wallet } from '../constant';
+import {
+  TradeDAIContractAddress,
+  DataRefreshInterval,
+  DefaultNetwork,
+  Wallet,
+  TradeUSDTContractAddress,
+  TradeUSDCContractAddress,
+  ERC20DAIAddress,
+  ETH_WEIGHT,
+  CoinWeight,
+} from '../constant';
 import { chainDataState, ChainDataState } from '../wallet/chain-connect-state';
 import { walletManager } from '../wallet/wallet-manager';
 
@@ -36,140 +46,122 @@ const erc20 = [
   },
 ];
 
-abstract class BaseContractAccessor implements ContractProxy {
+abstract class BaseTradeContractAccessor implements ContractProxy {
   public transferable: boolean = false; // 是否可以发起写入操作
 
-  protected contract: ethers.Contract | null = null;
+  protected contractMap: Map<IUSDCoins, ethers.Contract>;
   protected timer = interval(DataRefreshInterval).pipe(startWith(0));
 
   constructor() {
-    this.contract = this.getContract();
+    this.contractMap = this.getContractMap();
   }
 
-  public getPriceByETHDAI(): Observable<BigNumber> {
-    if (this.contract) {
-      return from(this.contract.functions.getPriceByETHDAI()).pipe(
-        map((num: BigNumber[]) => {
-          return num[0];
-        })
-      );
-    } else {
-      return of(BigNumber.from(0));
-    }
+  public getPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber> {
+    return this.getContract(coin).pipe(
+      switchMap((contract: ethers.Contract) => contract.functions.getPriceByETHDAI()),
+      map((num: BigNumber[]) => num[0])
+    );
   }
 
-  public watchPriceByETHDAI(): Observable<BigNumber> {
+  public watchPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber> {
     return this.timer.pipe(
       switchMap(() => {
-        return this.getPriceByETHDAI();
+        return this.getPriceByETHDAI(coin);
       })
     );
   }
 
-  public getUserAccount(address: string): Observable<UserAccountInfo> {
-    if (this.contract) {
-      return from(this.contract.functions.userAccount(address)).pipe(
-        map((num: BigNumber[]) => {
-          return { deposit: num[0], available: num[1] };
-        }),
-        catchError((err) => {
-          return of({ deposit: BigNumber.from(0), available: BigNumber.from(0) });
-        })
-      );
-    } else {
-      return of({ deposit: BigNumber.from(0), available: BigNumber.from(0) });
-    }
+  public getUserAccount(address: string, coin: IUSDCoins): Observable<UserAccountInfo> {
+    return this.getContract(coin).pipe(
+      switchMap((contract: ethers.Contract) => contract.functions.userAccount(address)),
+      map((num: BigNumber[]) => ({ deposit: num[0], available: num[1] })),
+      catchError((err) => of({ deposit: BigNumber.from(0), available: BigNumber.from(0) }))
+    );
   }
 
-  public watchUserAccount(address: string): Observable<UserAccountInfo> {
-    if (this.contract) {
-      return this.timer.pipe(
-        switchMap(() => {
-          return this.getUserAccount(address);
-        })
-      );
-    } else {
-      return of({ deposit: BigNumber.from(0), available: BigNumber.from(0) });
-    }
+  public watchUserAccount(address: string, coin: IUSDCoins): Observable<UserAccountInfo> {
+    return this.timer.pipe(
+      switchMap(() => {
+        return this.getUserAccount(address, coin);
+      })
+    );
   }
 
-  public depositToken(count: string): Observable<any> {
-    if (this.contract) {
-      const dai: ethers.Contract | null = this.getDaiContract(this.getProvider());
+  public depositToken(count: number, coin: IUSDCoins): Observable<boolean> {
+    return this.getContract(coin).pipe(
+      switchMap((contract: ethers.Contract) => {
+        const daiContract = this.getERC20DAIContract();
+        const countNum: BigNumber = BigNumber.from(count).mul(ETH_WEIGHT);
 
-      if (dai === null) {
-        return of(false);
-      }
+        if (!daiContract) {
+          return of(false);
+        }
 
-      return from(dai.approve(ContractAddress, BigNumber.from(count))).pipe(
-        switchMap((rs: any) => {
-          return from(rs.wait());
-        }),
-        switchMap(() => {
-          const countNum: BigNumber = BigNumber.from(count);
-          if (this.contract === null) {
-            return of(false);
-          }
-          return from(this.contract.deposit(countNum)).pipe(
-            switchMap((rs: any) => {
-              return from(rs.wait());
-            })
-          );
-        })
-      );
-    } else {
-      return of(false);
-    }
+        return from(daiContract.approve(TradeDAIContractAddress, countNum.toString())).pipe(
+          switchMap((rs: any) => from(rs.wait())),
+          switchMap(() => {
+            return from(contract.deposit(countNum));
+          }),
+          switchMap((rs: any) => from(rs.wait())),
+          tap(() => console.log('d true')),
+          mapTo(true),
+          catchError((err) => of(false))
+        );
+      })
+    );
   }
 
-  public withdrawToken(count: string): Observable<any> {
-    if (!this.contract) {
-      return of(false);
-    }
-
-    const amount: BigNumber = BigNumber.from(count);
-    return from(this.contract.functions.withdraw(amount)).pipe(
-      tap((rs) => {
-        console.log('rs', rs);
+  public withdrawToken(count: number, coin: IUSDCoins): Observable<any> {
+    return this.getContract(coin).pipe(
+      switchMap((contract: ethers.Contract) => {
+        const amount: BigNumber = BigNumber.from(count).mul(CoinWeight.get(coin) as string);
+        return from(contract.withdraw(amount));
       }),
-      switchMap((rs: { wait: Function }) => {
-        return from(rs.wait());
-      })
+      switchMap((rs: any) => from(rs.wait())),
+      mapTo(true),
+      catchError((err) => of(false))
     );
   }
 
-  public createContract(param: ContractParam): Observable<any> {
-    if (!this.contract) {
-      return of(false);
-    }
-
-    return from(this.contract.functions.creatContract(param.exchangeType, param.number, param.contractType)).pipe();
+  public createContract(param: ContractParam): Observable<boolean> {
+    return of(false);
   }
 
   //
-  protected abstract getContract(): ethers.Contract | null;
+  protected getContract(coin: IUSDCoins): Observable<ethers.Contract> {
+    return of(this.contractMap.get(coin)).pipe(filter(Boolean)) as Observable<ethers.Contract>;
+  }
+
+  protected getERC20DAIContract(): ethers.Contract {
+    return new ethers.Contract(ERC20DAIAddress, erc20, this.getSigner());
+  }
+
+  protected abstract getContractMap(): Map<IUSDCoins, ethers.Contract>;
 
   protected abstract getProvider(): ethers.providers.BaseProvider;
 
-  public abstract getDaiContract(provider: ethers.providers.BaseProvider): ethers.Contract | null;
+  protected abstract getSigner(): ethers.Signer | undefined;
 }
 
 /**
  * 当没有metamask时，默认的网络连接
  */
-class DefaultContractAccessor extends BaseContractAccessor {
+class DefaultContractAccessor extends BaseTradeContractAccessor {
   public readonly transferable = false;
 
-  protected getContract(): ethers.Contract | null {
-    let contract = new ethers.Contract(ContractAddress, ABI, this.getProvider());
-    return contract;
+  protected getContractMap(): Map<IUSDCoins, ethers.Contract> {
+    return new Map<IUSDCoins, ethers.Contract>();
   }
 
   protected getProvider(): ethers.providers.EtherscanProvider {
     return new ethers.providers.EtherscanProvider(DefaultNetwork);
   }
 
-  public getDaiContract(): ethers.Contract | null {
+  protected getSigner(): undefined {
+    return undefined;
+  }
+
+  public getUSDContract(): null {
     return null;
   }
 }
@@ -177,23 +169,34 @@ class DefaultContractAccessor extends BaseContractAccessor {
 /**
  * 通过Metamask访问network
  */
-class MetamaskContractAccessor extends BaseContractAccessor {
+class MetamaskContractAccessor extends BaseTradeContractAccessor {
   public readonly transferable = true;
 
-  protected getContract(): ethers.Contract | null {
-    if (!isMetaMaskInstalled()) {
-      return null;
+  protected getContractMap(): Map<IUSDCoins, ethers.Contract> {
+    const rsMap = new Map<IUSDCoins, ethers.Contract>();
+    const signer = this.getProvider().getSigner();
+
+    const daiContract = new ethers.Contract(TradeDAIContractAddress, ABI, signer);
+    rsMap.set('DAI', daiContract);
+
+    if (TradeUSDTContractAddress) {
+      const usdtContract = new ethers.Contract(TradeUSDTContractAddress, ABI, signer);
+      rsMap.set('USDT', usdtContract);
     }
 
-    return new ethers.Contract(ContractAddress, ABI, this.getProvider().getSigner());
+    if (TradeUSDCContractAddress) {
+      const usdcContract = new ethers.Contract(TradeUSDCContractAddress, ABI, signer);
+      rsMap.set('USDC', usdcContract);
+    }
+    return rsMap;
   }
 
   protected getProvider(): ethers.providers.Web3Provider {
     return new ethers.providers.Web3Provider(window.ethereum, 'any');
   }
 
-  public getDaiContract(provider: ethers.providers.Web3Provider): ethers.Contract | null {
-    return new ethers.Contract(DAIAddress, erc20, provider.getSigner());
+  protected getSigner(): ethers.Signer {
+    return this.getProvider().getSigner();
   }
 }
 
@@ -203,9 +206,10 @@ class MetamaskContractAccessor extends BaseContractAccessor {
 export class ContractAccessor implements ContractProxy {
   private readonly chainData: ChainDataState = chainDataState;
   private readonly defaultAccessor = new DefaultContractAccessor();
+
   private readonly metamaskAccessor = new MetamaskContractAccessor();
 
-  private readonly accessor: BehaviorSubject<BaseContractAccessor> = new BehaviorSubject<BaseContractAccessor>(
+  private readonly accessor: BehaviorSubject<BaseTradeContractAccessor> = new BehaviorSubject<BaseTradeContractAccessor>(
     new DefaultContractAccessor()
   );
 
@@ -227,62 +231,60 @@ export class ContractAccessor implements ContractProxy {
     });
   }
 
-  public watchContractAccessor(): Observable<BaseContractAccessor> {
+  public watchContractAccessor(): Observable<BaseTradeContractAccessor> {
     return this.accessor;
   }
 
-  private changeAccessor(accessor: BaseContractAccessor) {
+  private changeAccessor(accessor: BaseTradeContractAccessor) {
     if (this.accessor.getValue() === accessor) {
       return;
     }
     this.accessor.next(accessor);
   }
 
-  public getPriceByETHDAI(): Observable<BigNumber> {
-    return this.accessor.getValue().getPriceByETHDAI();
+  public getPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber> {
+    return this.accessor.getValue().getPriceByETHDAI(coin);
   }
 
-  public watchPriceByETHDAI(): Observable<BigNumber> {
+  public watchPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber> {
     return this.accessor.pipe(
-      switchMap((accessor: BaseContractAccessor) => {
-        return accessor.watchPriceByETHDAI();
+      switchMap((accessor: BaseTradeContractAccessor) => {
+        return accessor.watchPriceByETHDAI(coin);
       })
     );
   }
 
-  public getUserAccount(address: string): Observable<UserAccountInfo> {
-    return this.accessor.getValue().getUserAccount(address);
+  public getUserAccount(address: string, coin: IUSDCoins): Observable<UserAccountInfo> {
+    return this.accessor.getValue().getUserAccount(address, coin);
   }
 
-  public watchUserAccount(address: string): Observable<UserAccountInfo> {
+  public watchUserAccount(address: string, coin: IUSDCoins): Observable<UserAccountInfo> {
     return this.accessor.pipe(
-      switchMap((accessor: BaseContractAccessor) => {
-        return accessor.watchUserAccount(address);
+      switchMap((accessor: BaseTradeContractAccessor) => {
+        return accessor.watchUserAccount(address, coin);
       })
     );
   }
 
-  public depositToken(count: string): Observable<any> {
+  public depositToken(count: number, coin: IUSDCoins): Observable<boolean> {
     return this.accessor.pipe(
-      filter((accessor: BaseContractAccessor) => accessor.transferable),
-      switchMap((accessor: BaseContractAccessor) => {
-        return accessor.depositToken(count);
+      filter((accessor: BaseTradeContractAccessor) => accessor.transferable),
+      switchMap((accessor: BaseTradeContractAccessor) => {
+        return accessor.depositToken(count, coin);
       }),
       catchError((err) => {
-        console.log('err=', err);
         return of(false);
       })
     );
   }
 
-  public withdrawToken(count: string): Observable<any> {
+  public withdrawToken(count: number, coin: IUSDCoins): Observable<any> {
     return this.accessor.pipe(
-      filter((accessor: BaseContractAccessor) => accessor.transferable),
-      switchMap((accessor: BaseContractAccessor) => {
-        return accessor.withdrawToken(count);
+      filter((accessor: BaseTradeContractAccessor) => accessor.transferable),
+      switchMap((accessor: BaseTradeContractAccessor) => {
+        return accessor.withdrawToken(count, coin);
       }),
       catchError((err) => {
-        console.log('err = ', err);
         return of(false);
       })
     );

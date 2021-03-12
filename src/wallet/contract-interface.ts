@@ -23,37 +23,6 @@ export const ABI = [
     inputs: [
       {
         indexed: true,
-        internalType: 'uint256',
-        name: 'id',
-        type: 'uint256',
-      },
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'settlementFee',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'totalFee',
-        type: 'uint256',
-      },
-    ],
-    name: 'Create',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
         internalType: 'address',
         name: 'sender',
         type: 'address',
@@ -213,6 +182,25 @@ export const ABI = [
       },
     ],
     name: 'DDSWithdraw',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'previousOwner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
+    ],
+    name: 'OwnershipTransferred',
     type: 'event',
   },
   {
@@ -447,7 +435,7 @@ export const ABI = [
         type: 'string',
       },
     ],
-    name: 'getCurrentPriceInDAI',
+    name: 'getCurrPriceByEx',
     outputs: [
       {
         internalType: 'uint256',
@@ -786,6 +774,19 @@ export const ABI = [
     type: 'function',
   },
   {
+    inputs: [],
+    name: 'owner',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [
       {
         internalType: 'uint256',
@@ -837,6 +838,13 @@ export const ABI = [
   },
   {
     inputs: [],
+    name: 'renounceOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'repayFudAddr',
     outputs: [
       {
@@ -862,29 +870,6 @@ export const ABI = [
       },
     ],
     name: 'riskControl',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'orderID',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'profit',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'currentPrice',
-        type: 'uint256',
-      },
-    ],
-    name: 'riskHandle',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -986,6 +971,19 @@ export const ABI = [
     type: 'function',
   },
   {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
+    ],
+    name: 'transferOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
     inputs: [],
     name: 'uniswapRouter',
     outputs: [
@@ -1041,19 +1039,19 @@ export const ABI = [
  * 合约接口
  */
 export interface ContractProxy {
-  getPriceByETHDAI(): Observable<BigNumber>;
+  getPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber>;
 
-  watchPriceByETHDAI(): Observable<BigNumber>;
+  watchPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber>;
 
-  getUserAccount(address: string): Observable<UserAccountInfo>;
+  getUserAccount(address: string, coin: IUSDCoins): Observable<UserAccountInfo>;
 
-  watchUserAccount(address: string): Observable<UserAccountInfo>;
+  watchUserAccount(address: string, coin: IUSDCoins): Observable<UserAccountInfo>;
 
-  depositToken(count: string): Observable<any>;
+  depositToken(count: number, coin: IUSDCoins): Observable<boolean>;
 
-  withdrawToken(count: string): Observable<any>;
+  withdrawToken(count: number, coin: IUSDCoins): Observable<boolean>;
 
-  createContract(param: ContractParam): Observable<any>;
+  createContract(param: ContractParam): Observable<boolean>;
 }
 
 export interface UserAccountInfo {
