@@ -3,7 +3,7 @@ import ProgressBar from '../progress-bar/index';
 import styles from './style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import { getTradeLiquidityPoolInfo } from '../../services/trade.service';
-import { percentage } from '../../util/math';
+import { dividedPecent } from '../../util/math';
 
 interface IState {
   poolInfo?: ITradePoolInfo;
@@ -32,7 +32,7 @@ export default class TradePool extends Component<{ coin: IUSDCoins }, IState> {
               {poolInfo.public.value}/ {poolInfo.public.total}
             </span>
           ),
-          percentage: percentage(poolInfo.public.value, poolInfo.public.total),
+          percentage: dividedPecent(poolInfo.public.value, poolInfo.public.total),
           unit: coin,
         }
       : null;
@@ -46,7 +46,7 @@ export default class TradePool extends Component<{ coin: IUSDCoins }, IState> {
               {poolInfo.private.value}/ {poolInfo.private.total}
             </span>
           ),
-          percentage: percentage(poolInfo.private.value, poolInfo.private.total),
+          percentage: dividedPecent(poolInfo.private.value, poolInfo.private.total),
           unit: coin,
         }
       : null;

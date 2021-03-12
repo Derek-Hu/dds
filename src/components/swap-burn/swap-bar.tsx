@@ -2,8 +2,8 @@ import styles from './swap-bar.module.less';
 import SiteContext from '../../layouts/SiteContext';
 
 const datas = {
-  left: { percentage: 100, value: 647738.46 },
-  right: { percentage: 10, value: 647738.46 },
+  left: { percentage: 100 },
+  right: { percentage: 10 },
 };
 
 const shadowRect = {
@@ -15,7 +15,7 @@ const mobileRect = {
   height: 215,
 };
 
-export default () => {
+export default ({ leftAmount, rightAmount }: { leftAmount?: number | string; rightAmount?: number | string }) => {
   const { left, right } = datas;
   return (
     <SiteContext.Consumer>
@@ -26,14 +26,14 @@ export default () => {
         const rightBottom = ((100 - right.percentage) * height) / 100;
 
         return (
-          <div className={[styles.root, isMobile ? styles.mobile : ''].join(' ')}>
+          <div className={styles.root}>
             <div className={styles.leftBar}>
               <div className={styles.bar} style={{ height: height + 'px' }}>
                 <div className={styles.percentBar} style={{ height: 100 - left.percentage + '%' }}></div>
                 <p>DDerivatives Net Income</p>
                 <span>{left.percentage}%</span>
               </div>
-              <div className={styles.amount}>{left.value} USD</div>
+              <div className={styles.amount}>{leftAmount} USD</div>
             </div>
             <div className={styles.shadow} style={{ width: width + 'px', height: height + 'px' }}>
               <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height={height} width={width}>
@@ -46,7 +46,7 @@ export default () => {
                 <p>DDS Circulating Supply ×{right.percentage}%</p>
                 <span className={styles.rightPecentage}>{right.percentage}%</span>
               </div>
-              <div className={styles.amount}>{right.value} USD</div>
+              <div className={styles.amount}>{rightAmount} USD</div>
             </div>
           </div>
         );

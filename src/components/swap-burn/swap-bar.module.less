@@ -1,14 +1,16 @@
 @opacity: 0.5;
 
-.root {
-  position: relative;
-  &.mobile {
+:global {
+  .root {
     padding: 0 10px;
     .leftBar,
     .rightBar {
       width: 100px;
     }
   }
+}
+.root {
+  position: relative;
   .leftBar,
   .rightBar {
     position: relative;
