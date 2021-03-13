@@ -1,13 +1,13 @@
 import { Row, Col } from 'antd';
-import numeral from 'numeral';
-import styles from './become-spark.module.less';
+import styles from '../become-spark.module.less';
+import { formatInt, format } from '../../../util/math';
 
 export interface ISpark {
-  percentage: number;
+  percentage?: number;
   contry: string;
   sparks: number;
-  referals: number;
-  bonus: number;
+  referals?: number;
+  bonus?: number;
 }
 
 export default ({ percentage, contry, sparks, referals, bonus }: ISpark) => {
@@ -23,15 +23,15 @@ export default ({ percentage, contry, sparks, referals, bonus }: ISpark) => {
           <span>Countries</span>
         </Col>
         <Col xs={24} sm={12} md={12} lg={12} className={styles.col}>
-          <span className={styles.ads}>{sparks}</span>
+          <span className={styles.ads}>{formatInt(sparks)}</span>
           <span>Sparks</span>
         </Col>
         <Col xs={24} sm={12} md={12} lg={12} className={styles.col}>
-          <span className={styles.ads}>{referals}</span>
+          <span className={styles.ads}>{formatInt(referals)}</span>
           <span>Referals</span>
         </Col>
         <Col xs={24} sm={12} md={12} lg={12} className={styles.col}>
-          <span className={styles.ads}>{numeral(bonus).format('0,0')}</span>
+          <span className={styles.ads}>{format(bonus)}</span>
           <span>Bonus(USD)</span>
         </Col>
       </Row>

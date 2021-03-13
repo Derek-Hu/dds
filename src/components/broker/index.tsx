@@ -4,7 +4,6 @@ import styles from './style.module.less';
 import numeral from 'numeral';
 import Step from './steps';
 import dayjs from 'dayjs';
-import ReferalDetails, { IData } from './referal-details';
 import { CustomTabKey } from '../../constant/index';
 import commonStyles from '../funding-balance/modals/style.module.less';
 import SiteContext from '../../layouts/SiteContext';
@@ -12,112 +11,24 @@ import ModalRender from '../modal-render/index';
 import Pool, { IPool } from '../liquidity-pool/pool';
 import CampionPool from './campion-pool';
 import ColumnConvert from '../column-convert/index';
-import BecomeSpark, { ISpark } from './become-spark';
-import PoolProgress, { IMiningShare } from '../progress-bar/pool-progress';
+import BecomeSpark, { ISpark } from './spark/become-spark';
+import MyReferal from './referal/my-referal';
 import CardInfo from '../card-info/index';
-
-// const LockBalance: IPool = {
-//   title: 'Commission',
-//   coins: [
-//     {
-//       name: 'DAI',
-//       value: 647,
-//     },
-//     {
-//       name: 'USDC',
-//       value: 638,
-//     },
-//     {
-//       name: 'USDT',
-//       value: 7378,
-//     },
-//   ],
-// };
-
-const LockBalance = {
-  title: 'Commission',
-  // desc: <span>Total Liquidity: <span style={style}>23534.33</span> USD</span>,
-  items: [
-    {
-      label: 'DAI',
-      value: <span>647</span>,
-    },
-    {
-      label: 'USDC',
-      value: <span>638</span>,
-    },
-    {
-      label: 'USDT',
-      value: <span>7378</span>,
-    },
-  ],
-};
+import { Visible, Hidden } from '../builtin/hidden';
+import Auth, { Public } from '../builtin/auth';
+import { getSparkData, getMyReferalInfo } from '../../services/broker.service';
+import CampaignRewards from './referal/campaign-rewards';
+import CampaignRewardsPool from './referal/campaign-rewards-pool';
+import Commission from './referal/commission';
 
 const { TabPane } = Tabs;
-
-const CampaignRewards = {
-  title: 'Campaign Rewards',
-  items: [
-    {
-      label: 'DAI',
-      value: 647,
-    },
-    {
-      label: 'USDC',
-      value: 638,
-    },
-    {
-      label: 'USDT',
-      value: 7378,
-    },
-  ],
-};
 
 const tabName = {
   spark: 'spark',
   referal: 'referral',
 };
-const adsData: ISpark = {
-  percentage: 40,
-  contry: '20+',
-  sparks: 124,
-  referals: 9824,
-  bonus: 98247489,
-};
 
 const url = 'http://www.dds.com/home/78998d798';
-
-const referalInfo = {
-  referrals: 9824,
-  bonus: 98247489,
-};
-
-const data: IData[] = [
-  {
-    bonus: 3243,
-    fee: 100,
-    address: '0xfs328xkdfwr23rew9328320',
-    time: new Date().getTime(),
-  },
-  {
-    bonus: 3243,
-    fee: 10320,
-    address: '0xfs328xkdfwr23rew9328320',
-    time: new Date().getTime(),
-  },
-  {
-    bonus: 3243,
-    fee: 100,
-    address: '0xfs328xkdfwr23rew9328320',
-    time: new Date().getTime(),
-  },
-  {
-    bonus: 3243,
-    fee: 100,
-    address: '0xfs328xkdfwr23rew9328320',
-    time: new Date().getTime(),
-  },
-];
 
 interface ICommission {
   time: number;
@@ -129,30 +40,6 @@ interface ICommission {
   amount: number;
   reward: number;
 }
-const CommissionColumns = ColumnConvert<ICommission, {}>({
-  column: {
-    time: 'Time',
-    pair: 'Friend Address',
-    amount: 'Amount',
-    price: 'Settlements Fee',
-    reward: 'Commission',
-  },
-  render(value, key, record) {
-    switch (key) {
-      case 'time':
-        return dayjs(value).format('YYYY-MM-DD');
-      case 'pair':
-        const { from, to } = record[key];
-        return from + '/' + to;
-      case 'amount':
-      case 'price':
-      case 'reward':
-        return numeral(value).format('0,0.0000');
-      default:
-        return value;
-    }
-  },
-});
 
 interface ICampion {
   time: number;
@@ -186,19 +73,6 @@ const CampionColumns = ColumnConvert<ICampion, {}>({
   },
 });
 
-const commissionData: ICommission[] = [
-  {
-    time: new Date().getTime(),
-    pair: {
-      from: 'ETH',
-      to: 'DAI',
-    },
-    price: 32432,
-    amount: 32,
-    reward: 32,
-  },
-];
-
 const campionData: ICampion[] = [
   {
     time: new Date().getTime(),
@@ -210,15 +84,37 @@ const campionData: ICampion[] = [
     amount: 32,
   },
 ];
+interface IState {
+  data?: IBrokerSpark;
+  loading: boolean;
+  selectedTab: string;
+  commissionVisible: boolean;
+  campaignVisible: boolean;
+  referalInfo?: IBrokerReferal;
+}
 
-export default class Broker extends Component {
-  state = {
+export default class Broker extends Component<any, IState> {
+  state: IState = {
     selectedTab: tabName.spark,
     commissionVisible: false,
     campaignVisible: false,
-    isLogin: true,
+    loading: false,
   };
-  componentDidMount() {}
+
+  async componentDidMount() {
+    this.setState({ loading: true });
+    const data = await getSparkData();
+    this.setState({
+      data,
+    });
+
+    const referalInfo = await getMyReferalInfo();
+    this.setState({
+      referalInfo,
+    });
+
+    this.setState({ loading: false });
+  }
 
   showCommissionModal = () => {
     this.setState({
@@ -248,8 +144,19 @@ export default class Broker extends Component {
     });
   };
 
+  onClaim = () => {
+
+  }
+
   render() {
-    const { isLogin, campaignVisible, commissionVisible } = this.state;
+    const { campaignVisible, commissionVisible, data, loading, referalInfo } = this.state;
+    const adsData: ISpark = {
+      percentage: data?.commission,
+      contry: '20+',
+      sparks: 124,
+      referals: data?.referals,
+      bonus: data?.bonus,
+    };
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => (
@@ -264,7 +171,7 @@ export default class Broker extends Component {
                 <Icon type="qrcode" style={{ fontSize: 32 }} />
               </div> */}
             </div>
-            {isLogin ? (
+            <Auth>
               <div className={styles.tabContainer}>
                 <Tabs
                   animated={false}
@@ -273,88 +180,39 @@ export default class Broker extends Component {
                   onChange={this.callback}
                 >
                   <TabPane tab={<span className={styles.uppercase}>spark program</span>} key={tabName.spark}>
-                    <BecomeSpark {...adsData} />
+                    <Hidden when={loading || !data}>
+                      <BecomeSpark {...adsData} />
+                    </Hidden>
                   </TabPane>
                   <TabPane tab={<span className={styles.uppercase}>My referral</span>} key={tabName.referal}>
-                    <h3>Summary</h3>
-                    <Row className="padding-bottom-60">
-                      <Col xs={24} sm={24} md={8} lg={8} className={styles.col}>
-                        <span className={styles.ads}>{'A'}</span>
-                        <span>Current Level</span>
-                      </Col>
-                      <Col xs={24} sm={24} md={8} lg={8} className={styles.col}>
-                        <span className={styles.ads}>{referalInfo.referrals}</span>
-                        <span>Ranking</span>
-                      </Col>
-                      <Col xs={24} sm={24} md={8} lg={8} className={styles.col}>
-                        <span className={styles.ads}>{referalInfo.referrals}</span>
-                        <span>Referrals</span>
-                      </Col>
-                    </Row>
-                    <div style={{ marginTop: '48px', paddingBottom: '40px' }}>
-                      <span className={styles.ads}>{referalInfo.bonus}</span>
-                      <span>Bonus(USD)</span>
-                      <div>
-                        <Button style={{ width: '120px', margin: '20px' }} type="primary">
-                          Claim
-                        </Button>
-                      </div>
-                    </div>
+                      <MyReferal data={referalInfo} onClaim={this.onClaim}/>
                   </TabPane>
                 </Tabs>
               </div>
-            ) : (
+            </Auth>
+            <Public>
               <div className={styles.becomeContainer}>
                 <BecomeSpark {...adsData} />
               </div>
-            )}
-            {this.state.selectedTab === tabName.spark ? (
+            </Public>
+            <Visible when={this.state.selectedTab === tabName.spark}>
               <Step />
-            ) : (
-              <>
-                <Row gutter={20} style={{ marginTop: '20px' }}>
-                  <Col xs={24} sm={24} md={8} lg={8}>
-                    <CardInfo theme="inner" {...LockBalance}>
-                      <Button type="link" onClick={this.showCommissionModal}>
-                        Commission Record
-                      </Button>
-                    </CardInfo>
-                    {/* <Pool {...LockBalance}>
-                      <Button type="link" onClick={this.showCommissionModal}>Commission Record</Button>
-                    </Pool> */}
-                  </Col>
-                  <Col xs={24} sm={24} md={8} lg={8}>
-                    <CampionPool />
-                  </Col>
-                  <Col xs={24} sm={24} md={8} lg={8}>
-                    <CardInfo theme="inner" {...LockBalance}>
-                      <Button type="link" onClick={this.showCampaignModal}>
-                        Rewards Record
-                      </Button>
-                    </CardInfo>
-                    {/* <Pool {...CampaignRewards}>
-                      
-                    </Pool> */}
-                  </Col>
-                </Row>
-                {/* <ReferalDetails data={data} /> */}
-              </>
-            )}
-            <ModalRender
-              visible={commissionVisible}
-              title="Commission Record"
-              className={styles.modal}
-              height={420}
-              onCancel={this.closeCommissionModal}
-              footer={null}
-            >
-              <Table
-                scroll={{ y: 300, x: 500 }}
-                columns={CommissionColumns}
-                pagination={false}
-                dataSource={commissionData}
-              />
-            </ModalRender>
+            </Visible>
+            <Visible when={this.state.selectedTab === tabName.referal}>
+              <Row gutter={20} style={{ marginTop: '20px' }}>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <Commission />
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <CampaignRewards />
+                </Col>
+              </Row>
+              <Row style={{marginTop: '24px'}}>
+                <Col xs={24} sm={24} md={24} lg={24}>
+                  <CampaignRewardsPool />
+                </Col>
+              </Row>
+            </Visible>
             <ModalRender
               visible={campaignVisible}
               title="Campaign Rewards Record"

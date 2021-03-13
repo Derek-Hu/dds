@@ -100,10 +100,9 @@ declare interface IPriceGraph {
   }>;
 }
 
-
 // Pool 页面
 declare interface IPoolCoinAmount {
-  coin: IUSDCoins
+  coin: IUSDCoins;
   amount: number;
 }
 /*pool type*/
@@ -179,12 +178,50 @@ interface ICoinItem {
   total: number;
 }
 
-declare interface IPoolShareInPool extends ICoinItem{
-  
+declare interface ICoinValue {
+  coin: IUSDCoins;
+  value: number;
 }
+declare interface IPoolShareInPool extends ICoinItem {}
 
 declare interface ISwapBurn {
   usd: number;
   dds: number;
   rate: number;
+}
+
+declare interface IBrokerSpark {
+  commission: number;
+  bonus: number;
+  referals: number;
+}
+
+// BROKER - MY REFERRAL
+declare interface IBrokerReferal {
+  bonus: number;
+  level: string;
+  ranking: number;
+  referals: number;
+}
+
+declare interface IBrokerCommissionRecord {
+  time: number;
+  pair: {
+    from: 'ETH';
+    to: 'DAI';
+  };
+  price: number;
+  amount: number;
+  reward: number;
+}
+
+declare interface IBrokerCampaignRecord {
+  time: number;
+  pair: {
+    from: 'ETH';
+    to: 'DAI';
+  };
+  price: number;
+  amount: number;
+  reward: number;
 }

@@ -12,14 +12,6 @@ import Auth, { Public } from '../builtin/auth';
 import { getSwapPrice } from '../../services/swap-burn.service';
 import { format } from '../../util/math';
 
-const { Option } = Select;
-
-const swapInfo = {
-  dds: 1078,
-  coin: 4.46,
-  unit: 'DAI',
-};
-
 interface IState {
   loading: boolean;
   data?: ISwapBurn;

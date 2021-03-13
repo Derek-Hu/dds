@@ -1,7 +1,7 @@
 import { Descriptions } from 'antd';
 import styles from './style.module.less';
 import SiteContext from '../../layouts/SiteContext';
-
+import { format } from '../../util/math';
 interface ICardInfo {
   title: string;
   items?: Array<{
@@ -26,7 +26,7 @@ export default ({ title, theme, children, items }: ICardInfo) => {
             <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
               {items ? items.map(({ label, value }) => (
                 <Descriptions.Item label={label} span={24}>
-                  {value}
+                  {format(value)}
                 </Descriptions.Item>
               )) : null }
             </Descriptions>
