@@ -3434,6 +3434,12 @@ export interface ContractProxy {
   //
 
   provideToPrivatePool(coin: IUSDCoins, coinAmount: number): Observable<boolean>;
+
+  withdrawFromPrivatePool(coin: IUSDCoins, coinAmount: number): Observable<boolean>;
+
+  priPoolBalanceOf(address: string): Observable<Map<IUSDCoins, BigNumber>>;
+
+  priPoolBalanceWhole(): Observable<Map<IUSDCoins, BigNumber>>;
 }
 
 export interface UserAccountInfo {
