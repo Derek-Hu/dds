@@ -14,7 +14,7 @@ interface IProps {
   service: () => Promise<ICoinItem[]>;
   children?: any;
   desc?: any;
-  totalMode: boolean;
+  totalMode: boolean; 
 }
 
 export default class CoinProgress extends Component<IProps, IState> {

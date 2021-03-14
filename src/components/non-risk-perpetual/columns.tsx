@@ -1,13 +1,7 @@
 import ColumnConvert from '../column-convert/index';
 import styles from './style.module.less';
 import { ICoins, ISupporttedUSD } from '../../constant';
-export interface INonRiskPerpetual {
-  fromCoin: ICoins;
-  toCoin: ISupporttedUSD;
-  price: number;
-  change: number;
-  chart?: string;
-}
+
 
 export default ColumnConvert<INonRiskPerpetual, { coin: any; action: any }>({
   column: {

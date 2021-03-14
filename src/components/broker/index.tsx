@@ -10,6 +10,8 @@ import Auth, { Public } from '../builtin/auth';
 import CampaignRewards from './referal/campaign-rewards';
 import CampaignRewardsPool from './referal/campaign-rewards-pool';
 import Commission from './referal/commission';
+import SiteContext from "../../layouts/SiteContext";
+import { account2ReferalCode } from '../../services/broker.service';
 
 const { TabPane } = Tabs;
 
@@ -18,9 +20,10 @@ const tabName = {
   referal: 'referral',
 };
 
-const url = 'http://www.dds.com/home/78998d798';
-
 export default class Broker extends Component<any, any> {
+
+  static contextType = SiteContext;
+
   state = {
     selectedTab: tabName.spark,
   };
@@ -32,19 +35,20 @@ export default class Broker extends Component<any, any> {
   };
 
   render() {
+    const referalCode = account2ReferalCode(this.context.account.address);
     return (
       <div className={styles.root}>
         <h2>Broker</h2>
-        <div className={styles.referalInfo}>
-          <Input value={url} disabled={true} className={styles.input} />
-          <Button type="primary" className={styles.btn}>
-            Copy referral link
-          </Button>
-          {/* <div className={styles.qrcode}>
-                <Icon type="qrcode" style={{ fontSize: 32 }} />
-              </div> */}
-        </div>
         <Auth>
+          <div className={styles.referalInfo}>
+            <Input value={`http://www.dds.com/home/${referalCode}`} disabled={true} className={styles.input} />
+            <Button type="primary" className={styles.btn}>
+              Copy referral link
+            </Button>
+            {/* <div className={styles.qrcode}>
+                  <Icon type="qrcode" style={{ fontSize: 32 }} />
+                </div> */}
+          </div>
           <div className={styles.tabContainer}>
             <Tabs animated={false} activeKey={this.state.selectedTab} className={CustomTabKey} onChange={this.callback}>
               <TabPane tab={<span className={styles.uppercase}>spark program</span>} key={tabName.spark}>

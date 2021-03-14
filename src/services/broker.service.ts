@@ -6,6 +6,9 @@ const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   });
 };
 
+export const account2ReferalCode = (address: string) => {
+  return address;
+}
 export const getSparkData = async (): Promise<IBrokerSpark> => {
 
   return returnVal({

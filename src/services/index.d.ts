@@ -225,3 +225,16 @@ declare interface IBrokerCampaignRecord {
   amount: number;
   reward: number;
 }
+
+declare interface INonRiskPerpetual {
+  fromCoin: IFromCoins;
+  toCoin: IUSDCoins;
+  price: number;
+  change: number;
+  chart?: string;
+}
+
+declare interface INonRecords {
+  total: number;
+  data: INonRiskPerpetual[];
+}
