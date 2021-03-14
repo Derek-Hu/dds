@@ -5,9 +5,9 @@ import WithdrawModal from './modals/withdraw';
 import OrderConfirm from './modals/order-confirm';
 import { Component } from 'react';
 import SiteContext from '../../layouts/SiteContext';
-import { getCurPrice, getFundingBalanceInfo, deposit, withdraw } from '../../services/trade.service';
+import { getCurPrice, getFundingBalanceInfo, deposit, withdraw, openOrder } from '../../services/trade.service';
 import { getMaxFromCoin, getFee, getLocked } from './calculate';
-import { format } from '../../util/math';
+import { format, isNotZeroLike } from '../../util/math';
 
 interface IState {
   depositVisible: boolean;
@@ -17,6 +17,7 @@ interface IState {
   balanceInfo?: IBalanceInfo;
   openAmount: number | undefined;
   curPrice?: number;
+  maxNumber?: number;
 }
 
 type TModalKeys = Pick<IState, 'withdrawVisible' | 'depositVisible' | 'orderConfirmVisible'>;
@@ -36,57 +37,45 @@ export default class Balance extends Component<{
 
   static contextType = SiteContext;
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
+    this.loadBalanceInfo();
+  };
+
+  loadBalanceInfo = async () => {
     const { coins } = this.props;
     const { to } = coins;
     const balanceInfo = await getFundingBalanceInfo(to);
     const curPrice = await getCurPrice(to);
-
+    const maxNumber = getMaxFromCoin(balanceInfo, curPrice);
     this.setState({
       balanceInfo,
       curPrice,
+      maxNumber,
     });
-  };
+  }
 
-  deposit = (amount?: number) => {
+  deposit = async (amount?: number) => {
     if (!amount || amount <= 0) {
       return;
     }
 
+    this.depositVisible.hide();
     const { coins } = this.props;
-    // TODO 加载动画，禁止用户操作
-    deposit({ amount, coin: coins.to })
-      .then((rs: boolean) => {
-        // TODO 停止动画
-        console.log('get rs', rs);
-        if (rs) {
-          this.depositVisible.hide();
-          // TODO 重新获取账户余额
-        } else {
-          // TODO 提示操作失败
-        }
-      })
-      .catch((err) => {
-        // TODO 未知错误
-      });
+    const success = await deposit({ amount, coin: coins.to });
+    if(success){
+      this.loadBalanceInfo();
+    }
   };
 
-  withdraw = (coin: IUSDCoins, amount?: number) => {
+  withdraw = async (amount: number, coin: IUSDCoins ) => {
     if (!amount || amount <= 0) {
       return;
     }
-    // TODO 启动动画
-    withdraw({ amount, coin })
-      .then((rs: boolean) => {
-        // TODO 关闭动画
-        if (rs) {
-          this.withdrawVisible.hide();
-          // TODO 刷新账户余额
-        } else {
-          // TODO 操作失败
-        }
-      })
-      .catch((err) => {});
+    this.withdrawVisible.hide();
+    const success =  await withdraw({ amount, coin });
+    if(success){
+      this.loadBalanceInfo();
+    }
   };
 
   setModalVisible = (key: keyof TModalKeys) => {
@@ -120,16 +109,20 @@ export default class Balance extends Component<{
   };
 
   onMaxOpenClick = () => {
-    const { balanceInfo } = this.state;
-    const { graphData } = this.props;
-    const maxNumber = getMaxFromCoin(balanceInfo, this.state.curPrice);
+    const { maxNumber } = this.state;
     this.setState({
       openAmount: maxNumber,
     });
   };
 
-  onOpen = () => {
-    console.log('onOpen');
+  onOpen = async () => {
+    const { coins } = this.props;
+    const { to } = coins;
+    const {
+      tradeType,
+      openAmount,
+    } = this.state;
+    const success = await openOrder(to, tradeType, openAmount!);
   };
 
   render() {
@@ -141,13 +134,13 @@ export default class Balance extends Component<{
       balanceInfo,
       openAmount,
       curPrice,
+      maxNumber,
     } = this.state;
     const { coins } = this.props;
     const { from, to } = coins;
 
     const price = curPrice;
     const address = this.context.account.address;
-    const maxNumber = getMaxFromCoin(balanceInfo, price);
 
     const fee = getFee(openAmount, price);
     const locked = openAmount! + fee;
@@ -197,6 +190,7 @@ export default class Balance extends Component<{
             <Input
               className={styles.orderInput}
               value={openAmount}
+              type="number"
               onChange={this.onOpenAmountChange}
               placeholder="0.00"
               suffix={'ETH'}
@@ -219,6 +213,7 @@ export default class Balance extends Component<{
             <Button
               className={tradeType === 'short' ? 'buttonGreen' : ''}
               type="primary"
+              disabled={!isNotZeroLike(openAmount)}
               onClick={this.orderConfirmVisible.show}
             >
               Open

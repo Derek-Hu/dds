@@ -5,12 +5,13 @@ import ModalRender from '../../modal-render/index';
 import { CoinSelectOption } from '../../../constant/index';
 import SiteContext from '../../../layouts/SiteContext';
 import { Component } from 'react';
+import { format, isNotZeroLike } from '../../../util/math';
 
 const title = 'Funding Withdraw';
 interface IProps {
   visible: boolean;
   onCancel: () => any;
-  onConfirm: (coin: IUSDCoins, amount?: number) => any;
+  onConfirm: (amount: number, coin: IUSDCoins) => any;
   max?: number;
   coin: IUSDCoins;
 }
@@ -43,7 +44,7 @@ export default class Balance extends Component<IProps, IState> {
   };
 
   render() {
-    const { visible, onCancel, onConfirm, max } = this.props;
+    const { visible, onCancel, onConfirm, max, coin } = this.props;
     const { amount, selectedCoin } = this.state;
 
     return (
@@ -59,17 +60,17 @@ export default class Balance extends Component<IProps, IState> {
           >
             <Row gutter={[16, 16]} type="flex" justify="space-between" align="middle">
               <Col xs={24} sm={24} md={6} lg={6}>
-                <Select defaultValue={selectedCoin} onChange={this.onCoinChange} style={{ width: '100%', height: 50 }}>
+                <Select defaultValue={coin} disabled={true} onChange={this.onCoinChange} style={{ width: '100%', height: 50 }}>
                   {CoinSelectOption}
                 </Select>
               </Col>
               <Col xs={24} sm={24} md={18} lg={18}>
                 <span className={styles.maxWithdraw} style={{ marginLeft: 0 }}>
-                  Max Withdraw Balance: <span>{max}</span> DAI
+                  Max Withdraw Balance: <span>{max}</span> {coin}
                 </span>
               </Col>
               <Col span={24}>
-                <Input onChange={this.onAmountChange} placeholder="Withdraw amount" />
+                <Input type="number" value={amount} onChange={this.onAmountChange} placeholder="Withdraw amount" />
               </Col>
             </Row>
 
@@ -78,7 +79,7 @@ export default class Balance extends Component<IProps, IState> {
                 <Button onClick={onCancel}>Cancel</Button>
               </Col>
               <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
-                <Button type="primary" onClick={() => onConfirm(selectedCoin, amount)}>
+                <Button type="primary" disabled={!isNotZeroLike(amount)} onClick={() => onConfirm(amount, coin)}>
                   Withdraw
                 </Button>
               </Col>

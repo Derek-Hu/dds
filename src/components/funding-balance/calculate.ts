@@ -4,20 +4,20 @@ export const getMaxFromCoin = (balanceInfo?: IBalanceInfo, price?: number) => {
   if (!balanceInfo) {
     return;
   }
-  if (typeof price !== 'number') {
-    return;
-  }
   const { balance, locked } = balanceInfo;
 
-  return (balance - locked) / price;
+  if (isNumberLike(balance) && isNumberLike(locked) && isNumberLike(price)) {
+    // @ts-ignore
+    return parseFloat(balance) - parseFloat(locked) / parseFloat(price);
+  }
 };
 
 export const getFee = (amount: any | undefined, price: any) => {
-    if(isNumberLike(amount) && isNumberLike(price)){
-        return parseFloat(amount) * parseFloat(price) / 10000;
-    }
-    return 0;
-}
+  if (isNumberLike(amount) && isNumberLike(price)) {
+    return (parseFloat(amount) * parseFloat(price)) / 10000;
+  }
+  return 0;
+};
 
 // TODO
 export const getLocked = (amount: any | undefined, price: any | undefined) => {

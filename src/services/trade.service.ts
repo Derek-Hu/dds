@@ -9,6 +9,7 @@ import { UserAccountInfo } from '../wallet/contract-interface';
 import { BigNumber } from 'ethers';
 import { toEthers } from '../util/ethers';
 import * as request from 'superagent';
+import withLoading from './withLoading';
 
 /**
  * Trade Page
@@ -135,11 +136,11 @@ export const getTradeLiquidityPoolInfo = async (coin: IUSDCoins): Promise<ITrade
 };
 
 export const deposit = async (amount: IRecord): Promise<boolean> => {
-  return contractAccessor.depositToken(amount.amount, amount.coin).pipe(take(1)).toPromise();
+  return withLoading(contractAccessor.depositToken(amount.amount, amount.coin).pipe(take(1)).toPromise());
 };
 
 export const withdraw = async (amount: IRecord): Promise<boolean> => {
-  return contractAccessor.withdrawToken(amount.amount, amount.coin).pipe(take(1)).toPromise();
+  return withLoading(contractAccessor.withdrawToken(amount.amount, amount.coin).pipe(take(1)).toPromise());
 };
 
 export const getCurPrice = async (coin: IUSDCoins): Promise<number> => {
@@ -159,7 +160,7 @@ export const getCurPrice = async (coin: IUSDCoins): Promise<number> => {
  * @param amount - eth的数量
  */
 export const openOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: number): Promise<boolean> => {
-  return contractAccessor.createContract(coin, tradeType, amount).pipe(take(1)).toPromise();
+  return withLoading(contractAccessor.createContract(coin, tradeType, amount).pipe(take(1)).toPromise());
 };
 
 /**
@@ -168,7 +169,7 @@ export const openOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: 
  * @param closePrice - 用户看到并认可的的此刻价格
  */
 export const closeOrder = async (order: ITradeRecord, closePrice: number): Promise<boolean> => {
-  return contractAccessor.closeContract(order, closePrice).pipe(take(1)).toPromise();
+  return withLoading(contractAccessor.closeContract(order, closePrice).pipe(take(1)).toPromise());
 };
 
 export const getPriceGraphData = (
