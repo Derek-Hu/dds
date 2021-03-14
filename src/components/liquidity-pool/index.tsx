@@ -170,7 +170,7 @@ export default class PoolArea extends Component<{ address?: string }, any> {
                       </div>
                     </Auth>
                     <Public>
-                      <Row gutter={isMobile ? 0 : 12}>
+                      <Row>
                         <Col xs={24} sm={24} md={24} lg={24}>
                           <AvailablePoolUnlogin />
                         </Col>
