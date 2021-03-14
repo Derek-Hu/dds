@@ -1,4 +1,73 @@
-b. Read Docs链接
+1. Home页面
+* Banner位图片更新
+* Read Docs链接
+* 首页文案更新
+* Non-Risk Perpetual数据对接
+* Non-Risk Perpetual点击Trade按钮，跳转至Trade页面带参数
+* Footer链接更新
+* Contact DDerivatives链接&Logo更新
+
+2. Trade页面
+* Liquidity Pool数据对接
+* Info模块数据对接
+* 行情图数据对接
+* 行情图切换时间区间
+* Funding Balance(DAI)
+    未登录时，Deposit/Withdraw点击不可用，按钮Open改为Connect Wallet
+    已登录 Settlements Fee : DAI计算
+* Orders数据对接、分页
+* Orders Close订单
+
+3. Pool页面
+* COLLABORATIVE Tab
+    * ARP 数据对接
+    * 已登录
+        * Deposit 功能
+        * Your Share In The Pool 数据对接
+        * Liquidity Balance 数据对接、分页
+        * Liquidity Balance Withdraw对接
+        * Liquidity Balance Record 对接
+
+    * 未登录
+        * Liquidity Provided数据对接
+
+* Private Tab
+    * 已登录
+        * Deposit
+        * Available Liquidity 数据对接
+        * Liquidity Balance 数据对接
+        * Liquidity Balance Withdraw对接
+        * Liquidity Balance Record 对接、分页
+        * LIQUIDITY LOCKED DETAIL表格数据对接\分页
+        * LIQUIDITY LOCKED DETAIL补仓
+        * LIQUIDITY LOCKED DETAIL停止接单
+
+    * 未登录
+        * Available Liquidity数据对接
+
+4. Swap & Burn页面
+* Current Swap Price数据对接
+* Swap功能
+
+5. Broker页面
+* Copy referal link提示
+* 从address映射至referal link
+* Become DDerivatives's Spark数据对接
+* My Referal数据对接
+* My Referal Claim功能
+
+* My Referal Commission数据对接
+* My Referal Commission Record数据对接、分页
+
+* My Referal Campaign Rewards数据对接、分页
+* My Referal Campaign Rewards Record数据对接、分页
+
+* My Referal Campaign Rewards Pool数据对接
+
+6. Ming页面
+
+
+------------------
 d. Trade按钮跳转到Trade页面相应交易对
 e. Why Choose DDerivatives文案
 f. What is DDerivatives文案
