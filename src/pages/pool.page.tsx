@@ -22,7 +22,7 @@ export default class PoolPage extends Component {
       visible: false,
     });
 
-    if(this.state.agreed){
+    if (this.state.agreed) {
       localStorage.setItem(cacheKey, cacheVal);
     }
   };

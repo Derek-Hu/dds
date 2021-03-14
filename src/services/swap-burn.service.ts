@@ -13,6 +13,6 @@ export const getSwapPrice = async (): Promise<ISwapBurn> => {
   return returnVal({
     usd,
     dds,
-    rate: dds/usd,
+    rate: dds / usd,
   });
 };

@@ -2,8 +2,8 @@ import styles from './swap-bar.module.less';
 import SiteContext from '../../layouts/SiteContext';
 
 const datas = {
-  left: { percentage: 100  },
-  right: { percentage: 10},
+  left: { percentage: 100 },
+  right: { percentage: 10 },
 };
 
 const shadowRect = {
@@ -15,7 +15,7 @@ const mobileRect = {
   height: 215,
 };
 
-export default ({ leftAmount, rightAmount} : {leftAmount?: number | string, rightAmount?: number | string}) => {
+export default ({ leftAmount, rightAmount }: { leftAmount?: number | string; rightAmount?: number | string }) => {
   const { left, right } = datas;
   return (
     <SiteContext.Consumer>

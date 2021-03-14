@@ -15,15 +15,15 @@ export const formatInt = (value: any) => {
 }
 
 export const percentage = (fenzi: any, fenmu: any) => {
-    if(typeof fenzi !== 'number'){
-        return;
-    }
-    if(typeof fenmu !== 'number'){
-        return;
-    }
-    return numeral(100 * fenzi / fenmu).format('0,0.0000');
-}
+  if (typeof fenzi !== 'number') {
+    return;
+  }
+  if (typeof fenmu !== 'number') {
+    return;
+  }
+  return numeral((100 * fenzi) / fenmu).format('0,0.0000');
+};
 
 export const dividedPecent = (fenzi: any, fenmu: any) => {
-    return 100 * fenzi/fenmu;
-}
+  return (100 * fenzi) / fenmu;
+};
