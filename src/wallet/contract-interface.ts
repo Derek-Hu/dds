@@ -3386,6 +3386,693 @@ export const Pl2ABI = [
     type: 'function',
   },
 ];
+export const RewardsABI = [
+  {
+    inputs: [
+      {
+        internalType: 'contract IERC20',
+        name: 'token',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'CalcAndSendRewardsForLP1',
+    type: 'event',
+  },
+  {
+    inputs: [],
+    name: 'TOTAL_REWARDS',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'lp',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'tokenType',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'reTokenAmount',
+        type: 'uint256',
+      },
+    ],
+    name: 'calcAndSendRewardsForLP1',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'lp',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'orderFee',
+        type: 'uint256',
+      },
+    ],
+    name: 'calcAndSendRewardsForLP2',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'liquidor',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'gasUsedByStable',
+        type: 'uint256',
+      },
+    ],
+    name: 'calcAndSendRewardsForLiquidor',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'claimRewardsForLP2',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ddsLocked',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ddsPriceForRewardsDenominator',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ddsPriceForRewardsNumerator',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ddsShareForRewardsDenominator',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ddsShareForRewardsNumerator',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ddsThreshold',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ddsUnlocked',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ddsUnlockedForLP2',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ddsUnlockedForLp1',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getParmsAfterHalving',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getTotalCouldClaimed',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getTotalMinted',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getUnlockInfo',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'halveTime',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'lpsInfo',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'oriTokenAmount',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'share',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'reTokenAmount',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'queryRewardsForAllLiquidors',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'lp',
+        type: 'address',
+      },
+    ],
+    name: 'queryRewardsForLP1',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'lp',
+        type: 'address',
+      },
+    ],
+    name: 'queryRewardsForLP2',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'liquidor',
+        type: 'address',
+      },
+    ],
+    name: 'queryRewardsForLiquidor',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'lp',
+        type: 'address',
+      },
+    ],
+    name: 'queryStakeInfoForLP1',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'oriTokenAmount',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'share',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'reTokenAmount',
+            type: 'uint256',
+          },
+        ],
+        internalType: 'struct DDSRewards.LpInfo',
+        name: '',
+        type: 'tuple',
+      },
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'oriTokenAmount',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'share',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'reTokenAmount',
+            type: 'uint256',
+          },
+        ],
+        internalType: 'struct DDSRewards.LpInfo',
+        name: '',
+        type: 'tuple',
+      },
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'oriTokenAmount',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'share',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'reTokenAmount',
+            type: 'uint256',
+          },
+        ],
+        internalType: 'struct DDSRewards.LpInfo',
+        name: '',
+        type: 'tuple',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'lp',
+        type: 'address',
+      },
+    ],
+    name: 'queryStakeShareInfoForLP1',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'queryTotalRewardsForLP2',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'rewardsPerBlockForLP1',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'rewardsToken',
+    outputs: [
+      {
+        internalType: 'contract IERC20',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'setParmsAfterHalving',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'lp',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'tokenType',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'oriTokenAmount',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'reTokenAmount',
+        type: 'uint256',
+      },
+    ],
+    name: 'stakeRewardsForLP1',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'totalShared',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'totalStaked',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+];
 
 /**
  * 合约接口
@@ -3431,6 +4118,8 @@ export interface ContractProxy {
 
   pubPoolBalanceWhole(): Observable<Map<IUSDCoins, BigNumber>>;
 
+  getReTokenBalance(address: string): Observable<CoinBalance[]>;
+
   //
 
   provideToPrivatePool(coin: IUSDCoins, coinAmount: number): Observable<boolean>;
@@ -3440,6 +4129,12 @@ export interface ContractProxy {
   priPoolBalanceOf(address: string): Observable<Map<IUSDCoins, BigNumber>>;
 
   priPoolBalanceWhole(): Observable<Map<IUSDCoins, BigNumber>>;
+
+  //
+
+  getLiquidityMiningReward(address: string): Observable<BigNumber>;
+
+  getLiquidityMiningShare(address: string): Observable<CoinShare[]>;
 }
 
 export interface UserAccountInfo {
@@ -3451,4 +4146,15 @@ export interface ContractParam {
   exchangeType: 'ETHDAI';
   number: BigNumber;
   contractType: 1 | 2;
+}
+
+export interface CoinShare {
+  coin: IUSDCoins;
+  value: BigNumber;
+  total: BigNumber;
+}
+
+export interface CoinBalance {
+  coin: IUSDCoins | IReUSDCoins;
+  balance: BigNumber;
 }

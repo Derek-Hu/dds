@@ -1,3 +1,11 @@
+import { contractAccessor } from '../wallet/chain-access';
+import { curUserAccount, loginUserAccount } from './account';
+import { from, Observable, of, zip } from 'rxjs';
+import { filter, map, switchMap, take } from 'rxjs/operators';
+import { BigNumber } from 'ethers';
+import { toEthers } from '../util/ethers';
+import { CoinBalance, CoinShare } from '../wallet/contract-interface';
+
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -12,10 +20,30 @@ export const getLiquidityMiningReward = (
   amount: number;
   refactor: number;
 }> => {
-  return returnVal({
-    amount: 23849320,
-    refactor: 32893220,
-  });
+  const reward$: Observable<number> = from(curUserAccount()).pipe(
+    filter((account) => account !== null),
+    map((account) => account as string),
+    switchMap((account: string) => {
+      return contractAccessor.getLiquidityMiningReward(account);
+    }),
+    map((re: BigNumber) => {
+      return Number(toEthers(re, 4));
+    })
+  );
+
+  const refactor$ = of(32893220);
+
+  return zip(reward$, refactor$)
+    .pipe(
+      map((nums: [number, number]) => {
+        return {
+          amount: nums[0],
+          refactor: nums[1],
+        };
+      }),
+      take(1)
+    )
+    .toPromise();
 };
 
 export const getLiquidityLockedReward = (type: 'public' | 'private'): Promise<number> => {
@@ -45,20 +73,22 @@ export const getLiquiditorReward = (type: 'public' | 'private'): Promise<{ campa
 };
 
 export const getLiquidityReTokenBalance = (): Promise<ICoinValue[]> => {
-  return returnVal([
-    {
-      coin: 'reDAI',
-      value: 100,
-    },
-    {
-      coin: 'reUSDT',
-      value: 2200,
-    },
-    {
-      coin: 'reUSDC',
-      value: 300,
-    },
-  ]);
+  return from(loginUserAccount())
+    .pipe(
+      switchMap((account: string) => {
+        return contractAccessor.getReTokenBalance(account);
+      }),
+      map((balances: CoinBalance[]) => {
+        return balances.map((one) => {
+          return {
+            coin: one.coin,
+            value: Number(toEthers(one.balance, 4)),
+          };
+        });
+      }),
+      take(1)
+    )
+    .toPromise();
 };
 
 export const getLiquiditorSystemBalance = (): Promise<ICoinValue[]> => {
@@ -79,21 +109,25 @@ export const getLiquiditorSystemBalance = (): Promise<ICoinValue[]> => {
 };
 
 export const getLiquidityMiningShare = (): Promise<ICoinItem[]> => {
-  return returnVal([
-    {
-      coin: 'USDC',
-      amount: Math.random() * 1000,
-      total: Math.random() * 10000,
-    },
-    {
-      coin: 'USDT',
-      amount: Math.random() * 1000,
-      total: Math.random() * 10000,
-    },
-    {
-      coin: 'DAI',
-      amount: Math.random() * 1000,
-      total: Math.random() * 10000,
-    },
-  ]);
+  return from(curUserAccount())
+    .pipe(
+      filter((account) => account !== null),
+      map((account) => account as string),
+      switchMap((account: string) => {
+        return contractAccessor.getLiquidityMiningShare(account);
+      }),
+      map((rs: any) => {
+        return rs.map((one: CoinShare) => {
+          return {
+            coin: one.coin,
+            amount: toEthers(one.value, 4),
+            total: toEthers(one.total, 4),
+          };
+        });
+      }),
+      take(1)
+    )
+    .toPromise();
 };
+
+getLiquidityMiningShare().then((r) => console.log('r', r));
