@@ -14,6 +14,7 @@ import { percentage } from '../../../util/math';
 interface IState {
   data: Array<IIndicatorProgress>;
   loading: boolean;
+  nextDistribution?: string;
 }
 
 export default class CampaignRewardsPool extends Component<any, IState> {
@@ -25,19 +26,20 @@ export default class CampaignRewardsPool extends Component<any, IState> {
   async componentDidMount() {
     this.setState({ loading: true });
 
-    const data = await getBrokerCampaignPool();
+    const { data, nextDistribution } = await getBrokerCampaignPool();
     this.setState({
       data: data.map(({ amount, total, coin }) => ({
         label: coin,
         percentage: percentage(amount, total),
         val: <span>{amount}/{total}</span>
       })),
+      nextDistribution
     });
     this.setState({ loading: false });
   }
 
   render() {
-    const { data, loading } = this.state;
+    const { data, loading, nextDistribution } = this.state;
     return loading ? null : (
       <div>
         <PoolProgress
@@ -47,9 +49,9 @@ export default class CampaignRewardsPool extends Component<any, IState> {
           desc={
             <div>
               <p className="text-center">
-                Next distribution time
+              Next distribution time
                 <br />
-                <span>2020-10-09</span>
+                <span>{nextDistribution}</span>
               </p>
               ,
               <p className={styles.shareTotalTip}>

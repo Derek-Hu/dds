@@ -1,5 +1,5 @@
 1. Home页面
-* Banner位图片更新
+* (Done) Banner位图片更新
 * Read Docs链接
 * 首页文案更新
 * Non-Risk Perpetual数据对接

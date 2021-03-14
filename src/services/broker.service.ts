@@ -43,9 +43,9 @@ export const getBrokerCampaignRewardData = async (): Promise<ICoinValue[]> => {
   }]);
 };
 
-export const getBrokerCampaignPool = async (): Promise<ICoinItem[]> => {
+export const getBrokerCampaignPool = async (): Promise<{ nextDistribution: string; data: ICoinItem[]}> => {
 
-  return returnVal([{
+  return returnVal({ data: [{
     coin: 'USDT',
     amount: Math.random() * 10000000,
     total: Math.random() * 10000000,
@@ -57,7 +57,7 @@ export const getBrokerCampaignPool = async (): Promise<ICoinItem[]> => {
     coin: 'DAI',
     amount: Math.random() * 10000000,
     total: Math.random() * 10000000,
-  }]);
+  }], nextDistribution: '2020-02-10'});
 };
 
 export const getBrokerCampaignRewardsPool = async (): Promise<IBrokerCampaignRecord[]> => {
