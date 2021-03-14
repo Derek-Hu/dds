@@ -1,15 +1,15 @@
 import { Component } from 'react';
 import { Table, Row, Col } from 'antd';
 import styles from './style.module.less';
-import numeral from 'numeral';
+import { format, isNumberLike } from '../../util/math';
 import SiteContext from '../../layouts/SiteContext';
-import columns from './columns';
 import { Hidden } from '../builtin/hidden';
 import { getNonRisks } from '../../services/home.service';
+import ColumnConvert from '../column-convert/index';
 
 interface IState {
   loading: boolean;
-  nonRisksInfo?: INonRecords;
+  nonRisksInfo?: INonRecords | null;
 }
 
 export default class BecomeSpark extends Component<any, IState> {
@@ -17,9 +17,43 @@ export default class BecomeSpark extends Component<any, IState> {
     loading: false,
   };
 
+  columns = ColumnConvert<INonRiskPerpetual, { coin: any; action: any }>({
+    column: {
+      coin: 'Coin',
+      price: <span className={styles.price}>Last Price</span>,
+      change: <span className={styles.change}>24h Change</span>,
+      // chart: "Chart",
+      action: 'Action',
+    },
+    render(value, key, record) {
+      switch (key) {
+        case 'coin':
+          return (
+            <span>
+              <span className={styles.coin}>{record.fromCoin}</span>
+              <span className={styles.usdt}> / {record.toCoin}</span>
+            </span>
+          );
+        case 'price':
+          return <span className={styles.priceVal}>{value}</span>;
+        case 'change':
+          return (
+            <span className={[styles.changeVal, value < 0 ? styles.negative : ''].join(' ')}>
+              {value > 0 ? '+' : ''}
+              {value}%
+            </span>
+          );
+        case 'action':
+          return <span className={styles.tradeBtn}>Trade</span>;
+        default:
+          return value;
+      }
+    },
+  })  
+
   async componentDidMount() {
     this.setState({ loading: true });
-    const nonRisksInfo = await getNonRisks();
+    const nonRisksInfo = await getNonRisks().catch(() => null);
     this.setState({
       nonRisksInfo,
     });
@@ -40,21 +74,21 @@ export default class BecomeSpark extends Component<any, IState> {
                     <Col xs={24} sm={24} md={24} lg={12} className={styles.col}>
                       <h2>Non-Risk Perpetual</h2>
                     </Col>
-                    {isMobile ? null : (
+                    {isMobile ? null : isNumberLike(total) ? (
                       <Col xs={24} sm={24} md={24} lg={12} className={[styles.col, styles.summary].join(' ')}>
                         <span>
-                          24h trading volumn: <span className={styles.total}>{numeral(total).format('0,0')}</span> USD
+                          24h trading volumn: <span className={styles.total}>{format(total)}</span> USD
                         </span>
                       </Col>
-                    )}
+                    ) : null}
                   </Row>
                 </div>
                 <Table
                   rowKey="coin"
-                  columns={columns}
+                  columns={this.columns}
                   scroll={isMobile ? { x: 800 } : undefined}
                   pagination={false}
-                  dataSource={data}
+                  dataSource={data || []}
                 />
               </div>
             </div>
