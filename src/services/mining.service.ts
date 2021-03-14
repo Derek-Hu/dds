@@ -20,6 +20,20 @@ export const getLiquidityLockedReward = (type: 'public'|'private'): Promise<numb
   return returnVal(Math.random() * 100000);
 }
 
+export const getLiquiditorBalanceRecord = (): Promise<ILiquiditorBalanceRecord[]> => {
+  return returnVal([{
+    time: new Date().getTime(),
+    pair: {
+      from: 'ETH',
+      to: 'DAI',
+    },
+    price: 32432,
+    amount: 32,
+    reward: 32,
+  }]);
+}
+
+
 export const getLiquiditorReward = (type: 'public'|'private'): Promise<{ campaign: number; compensate: number }> => {
   return returnVal({
     campaign: Math.random() * 100000,

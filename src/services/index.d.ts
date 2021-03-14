@@ -226,6 +226,17 @@ declare interface IBrokerCampaignRecord {
   reward: number;
 }
 
+declare interface ILiquiditorBalanceRecord {
+  time: number;
+  pair: {
+    from: 'ETH';
+    to: 'DAI';
+  };
+  price: number;
+  amount: number;
+  reward: number;
+}
+
 declare interface INonRiskPerpetual {
   fromCoin: IFromCoins;
   toCoin: IUSDCoins;
