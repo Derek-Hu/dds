@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { Button, Table } from 'antd';
 import styles from '../style.module.less';
-import { getLiquidityLockedReward, getLiquiditorBalanceRecord } from '../../../services/mining.service';
+import { getLiquidityLockedReward, getLiquiditorBalanceRecord, claimLiquidityLocked } from '../../../services/mining.service';
 import { Hidden } from '../../builtin/hidden';
 import SiteContext from '../../../layouts/SiteContext';
 import Auth, { Public } from '../../builtin/auth';
@@ -80,6 +80,9 @@ export default class LiquiditorReward extends Component<any, IState> {
     
   }
 
+  cofirmClaim = async () => {
+    await claimLiquidityLocked();
+  };
   
   setModalVisible = (key: 'visible') => {
     return {
@@ -107,7 +110,7 @@ export default class LiquiditorReward extends Component<any, IState> {
             <span>Only reward for liquidity locked in private pool</span>
           </p>
           <div>
-            <Button type="primary" className={[styles.btn, styles.cliamBtn].join(' ')} onClick={this.showClaimModal}>
+            <Button type="primary" className={[styles.btn, styles.cliamBtn].join(' ')} onClick={this.cofirmClaim}>
               Claim
             </Button>
             <div>

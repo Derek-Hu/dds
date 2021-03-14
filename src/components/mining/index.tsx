@@ -158,7 +158,7 @@ export default class Mining extends Component {
                 </TabPane>
               </Tabs>
 
-              <ModalRender
+              {/* <ModalRender
                 visible={claimModalVisible}
                 onCancel={this.closeClaimModal}
                 footer={null}
@@ -185,8 +185,8 @@ export default class Mining extends Component {
                     <Button type="primary">Claim</Button>
                   </Col>
                 </Row>
-              </ModalRender>
-              <ModalRender
+              </ModalRender> */}
+              {/* <ModalRender
                 visible={lockReModalVisible}
                 onCancel={this.closeLockModal}
                 footer={null}
@@ -213,9 +213,6 @@ export default class Mining extends Component {
                     </div>
                   </Col>
                 </Row>
-                {/* <Row >
-              
-            </Row> */}
                 <Row gutter={[16, 16]} className={commonStyles.actionBtns} type="flex">
                   <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
                     <Button>Cancel</Button>
@@ -224,8 +221,8 @@ export default class Mining extends Component {
                     <Button type="primary">Confirm</Button>
                   </Col>
                 </Row>
-              </ModalRender>
-              <ModalRender
+              </ModalRender> */}
+              {/* <ModalRender
                 visible={visible}
                 title="Rewards Record"
                 className={styles.modal}
@@ -234,7 +231,7 @@ export default class Mining extends Component {
                 footer={null}
               >
                 <Table scroll={{ y: 300, x: 500 }} columns={columns} pagination={false} dataSource={data} />
-              </ModalRender>
+              </ModalRender> */}
             </div>
             <div className={styles.bottomArea}>
               <Visible when={selectedTab === TabName.Liquidity}>

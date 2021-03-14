@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { Button, Col } from 'antd';
 import styles from '../style.module.less';
-import { getLiquidityMiningReward } from '../../../services/mining.service';
+import { getLiquidityMiningReward, claimLiquidity } from '../../../services/mining.service';
 import { Hidden } from '../../builtin/hidden';
 import SiteContext from '../../../layouts/SiteContext';
 import Auth, { Public } from '../../builtin/auth';
@@ -12,7 +12,7 @@ interface IState {
   data?: {
     amount: number;
     refactor: number;
-  }
+  };
 }
 export default class LiquidityMiningReward extends Component<any, IState> {
   state: IState = {
@@ -30,9 +30,9 @@ export default class LiquidityMiningReward extends Component<any, IState> {
     this.setState({ loading: false });
   }
 
-  showClaimModal = () => {
-
-  }
+  cofirmClaim = async () => {
+    await claimLiquidity();
+  };
 
   render() {
     const { data, loading } = this.state;
@@ -47,16 +47,16 @@ export default class LiquidityMiningReward extends Component<any, IState> {
         </Public>
         <p className={styles.coins}>{format(amount)} DDS</p>
         <Auth>
-        <p className={styles.dynamic}>
+          <p className={styles.dynamic}>
             <span>Current reward factor </span>
             <br />
             {refactor} <span>DDS/Block</span>
           </p>
-          <Button type="primary" className={styles.btn} onClick={this.showClaimModal}>
+          <Button type="primary" className={styles.btn} onClick={this.cofirmClaim}>
             Claim
           </Button>
         </Auth>
       </Hidden>
-    )
+    );
   }
 }

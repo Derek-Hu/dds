@@ -1,3 +1,5 @@
+import Mask from '../components/mask';
+
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -14,6 +16,28 @@ export const getLiquidityMiningReward = (type: 'public'|'private'): Promise<{
     amount: 23849320,
     refactor: 32893220
   });
+}
+
+export const claimLiquidity = async () => {
+  Mask.showLoading();
+  const isSuccess = await returnVal(false);
+  if(isSuccess){
+    Mask.showSuccess();
+  }else{
+    Mask.showFail();
+  }
+  return isSuccess;
+}
+
+export const claimLiquidityLocked = async () => {
+  Mask.showLoading();
+  const isSuccess = await returnVal(true);
+  if(isSuccess){
+    Mask.showSuccess();
+  }else{
+    Mask.showFail();
+  }
+  return isSuccess;
 }
 
 export const getLiquidityLockedReward = (type: 'public'|'private'): Promise<number> => {
