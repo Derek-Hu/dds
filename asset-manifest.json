@@ -1,24 +1,31 @@
 {
   "files": {
-    "main.css": "/dds/static/css/main.ea2cd902.chunk.css",
-    "main.js": "/dds/static/js/main.8d689bb6.chunk.js",
-    "main.js.map": "/dds/static/js/main.8d689bb6.chunk.js.map",
+    "main.css": "/dds/static/css/main.ac776133.chunk.css",
+    "main.js": "/dds/static/js/main.14ccbaf1.chunk.js",
+    "main.js.map": "/dds/static/js/main.14ccbaf1.chunk.js.map",
     "runtime-main.js": "/dds/static/js/runtime-main.0f588031.js",
     "runtime-main.js.map": "/dds/static/js/runtime-main.0f588031.js.map",
-    "static/css/2.61fb7a2c.chunk.css": "/dds/static/css/2.61fb7a2c.chunk.css",
-    "static/js/2.1cbe64ce.chunk.js": "/dds/static/js/2.1cbe64ce.chunk.js",
-    "static/js/2.1cbe64ce.chunk.js.map": "/dds/static/js/2.1cbe64ce.chunk.js.map",
+    "static/css/2.7b4bfb01.chunk.css": "/dds/static/css/2.7b4bfb01.chunk.css",
+    "static/js/2.393e2931.chunk.js": "/dds/static/js/2.393e2931.chunk.js",
+    "static/js/2.393e2931.chunk.js.map": "/dds/static/js/2.393e2931.chunk.js.map",
     "index.html": "/dds/index.html",
-    "static/css/2.61fb7a2c.chunk.css.map": "/dds/static/css/2.61fb7a2c.chunk.css.map",
-    "static/css/main.ea2cd902.chunk.css.map": "/dds/static/css/main.ea2cd902.chunk.css.map",
-    "static/js/2.1cbe64ce.chunk.js.LICENSE.txt": "/dds/static/js/2.1cbe64ce.chunk.js.LICENSE.txt",
-    "static/media/index.less": "/dds/static/media/gilroy-bold-4.a64a9abe.otf"
+    "static/css/2.7b4bfb01.chunk.css.map": "/dds/static/css/2.7b4bfb01.chunk.css.map",
+    "static/css/main.ac776133.chunk.css.map": "/dds/static/css/main.ac776133.chunk.css.map",
+    "static/js/2.393e2931.chunk.js.LICENSE.txt": "/dds/static/js/2.393e2931.chunk.js.LICENSE.txt",
+    "static/media/adsImage.1c18ab39.png": "/dds/static/media/adsImage.1c18ab39.png",
+    "static/media/style.module.less": "/dds/static/media/banner.9952ca1c.png",
+    "static/media/campaign.cb1005aa.png": "/dds/static/media/campaign.cb1005aa.png",
+    "static/media/index.less": "/dds/static/media/gilroy-bold-4.a64a9abe.otf",
+    "static/media/icon1.39c94014.png": "/dds/static/media/icon1.39c94014.png",
+    "static/media/icon2.9bfdf399.png": "/dds/static/media/icon2.9bfdf399.png",
+    "static/media/icon3.813b557a.png": "/dds/static/media/icon3.813b557a.png",
+    "static/media/logo.5d3c92d3.png": "/dds/static/media/logo.5d3c92d3.png"
   },
   "entrypoints": [
     "static/js/runtime-main.0f588031.js",
-    "static/css/2.61fb7a2c.chunk.css",
-    "static/js/2.1cbe64ce.chunk.js",
-    "static/css/main.ea2cd902.chunk.css",
-    "static/js/main.8d689bb6.chunk.js"
+    "static/css/2.7b4bfb01.chunk.css",
+    "static/js/2.393e2931.chunk.js",
+    "static/css/main.ac776133.chunk.css",
+    "static/js/main.14ccbaf1.chunk.js"
   ]
 }
