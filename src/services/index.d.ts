@@ -29,7 +29,7 @@ declare interface ICoinAmount {
 declare type IFromCoins = 'ETH' | 'BTC';
 
 declare type IUSDCoins = 'DAI' | 'USDT' | 'USDC';
-
+declare type IReUSDCoins = 'reDAI' | 'reUSDT' | 'reUSDC';
 declare type IExchangePair = 'ETHDAI' | 'EHTUSDT' | 'ETHUSDC' | 'BTCDAI' | 'BTCUSDT' | 'BTCUSDC';
 
 // Funding Balance Withdraw
@@ -187,6 +187,7 @@ declare interface ICoinValue {
   coin: string;
   value: number;
 }
+
 declare interface IPoolShareInPool extends ICoinItem {}
 
 declare interface ISwapBurn {
