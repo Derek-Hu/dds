@@ -9,7 +9,7 @@ import { SupportedCoins } from '../../constant/index';
 import ModalRender from '../modal-render/index';
 import SiteContext from '../../layouts/SiteContext';
 import CardInfo from '../card-info/index';
-import { getPoolBalance, getPoolWithDrawDeadline } from '../../services/pool.service';
+import { getPoolBalance, doPoolWithdraw, getPoolWithDrawDeadline } from '../../services/pool.service';
 import { dividedPecent, format } from '../../util/math';
 import Hidden from '../builtin/hidden';
 
@@ -43,68 +43,68 @@ const columns = ColumnConvert<ITransfer, {}>({
   },
 });
 
-const data: ITransfer[] = [
-  {
-    time: new Date().getTime(),
-    type: 'WithDraw',
-    amount: 100,
-    balance: 892.03,
-  },
-  {
-    time: new Date().getTime(),
-    type: 'WithDraw',
-    amount: 100,
-    balance: 892.03,
-  },
-  {
-    time: new Date().getTime(),
-    type: 'WithDraw',
-    amount: 100,
-    balance: 892.03,
-  },
-  {
-    time: new Date().getTime(),
-    type: 'WithDraw',
-    amount: 100,
-    balance: 892.03,
-  },
-  {
-    time: new Date().getTime(),
-    type: 'WithDraw',
-    amount: 100,
-    balance: 892.03,
-  },
-  {
-    time: new Date().getTime(),
-    type: 'WithDraw',
-    amount: 100,
-    balance: 892.03,
-  },
-  {
-    time: new Date().getTime(),
-    type: 'WithDraw',
-    amount: 100,
-    balance: 892.03,
-  },
-  {
-    time: new Date().getTime(),
-    type: 'WithDraw',
-    amount: 100,
-    balance: 892.03,
-  },
-  {
-    time: new Date().getTime(),
-    type: 'WithDraw',
-    amount: 100,
-    balance: 892.03,
-  },
-  {
-    time: new Date().getTime(),
-    type: 'WithDraw',
-    amount: 100,
-    balance: 892.03,
-  },
-];
+// const data: ITransfer[] = [
+//   {
+//     time: new Date().getTime(),
+//     type: 'WithDraw',
+//     amount: 100,
+//     balance: 892.03,
+//   },
+//   {
+//     time: new Date().getTime(),
+//     type: 'WithDraw',
+//     amount: 100,
+//     balance: 892.03,
+//   },
+//   {
+//     time: new Date().getTime(),
+//     type: 'WithDraw',
+//     amount: 100,
+//     balance: 892.03,
+//   },
+//   {
+//     time: new Date().getTime(),
+//     type: 'WithDraw',
+//     amount: 100,
+//     balance: 892.03,
+//   },
+//   {
+//     time: new Date().getTime(),
+//     type: 'WithDraw',
+//     amount: 100,
+//     balance: 892.03,
+//   },
+//   {
+//     time: new Date().getTime(),
+//     type: 'WithDraw',
+//     amount: 100,
+//     balance: 892.03,
+//   },
+//   {
+//     time: new Date().getTime(),
+//     type: 'WithDraw',
+//     amount: 100,
+//     balance: 892.03,
+//   },
+//   {
+//     time: new Date().getTime(),
+//     type: 'WithDraw',
+//     amount: 100,
+//     balance: 892.03,
+//   },
+//   {
+//     time: new Date().getTime(),
+//     type: 'WithDraw',
+//     amount: 100,
+//     balance: 892.03,
+//   },
+//   {
+//     time: new Date().getTime(),
+//     type: 'WithDraw',
+//     amount: 100,
+//     balance: 892.03,
+//   },
+// ];
 interface IState {
   withDrawVisible: boolean;
   recordVisible: boolean;
@@ -114,6 +114,7 @@ interface IState {
   coins: { [key: string]: number };
   deadline: string;
   deadlineLoading: boolean;
+  amount: any;
 }
 
 type TModalKeys = Pick<IState, 'withDrawVisible' | 'recordVisible'>;
@@ -127,7 +128,15 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
     selectCoin: 'DAI',
     coins: {},
     deadline: '',
+    amount: '',
     deadlineLoading: true,
+  };
+
+  onAmountChange = (e: any) => {
+    const val = e.target.value;
+    this.setState({
+      amount: val,
+    });
   };
 
   setModalVisible = (key: keyof TModalKeys) => {
@@ -186,8 +195,13 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
     this.setState({ selectCoin });
   };
 
-  render() {
+  doWithdraw = async () => {
+    this.withDrawVisible.hide();
     const { isPrivate } = this.props;
+    const { selectCoin, amount } = this.state;
+    await doPoolWithdraw({ amount, coin: selectCoin, type: isPrivate? 'private' : 'public' })
+  }
+  render() {
     const { data, selectCoin, deadline,loading, deadlineLoading, coins } = this.state;
 
     return (
@@ -205,9 +219,9 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
                   >
                     {deadline ? `Withdraw until ${deadline}` : 'Withdraw'}
                   </Button>
-                  <Button type="link" onClick={this.recordVisible.show} className={styles.link}>
+                  {/* <Button type="link" onClick={this.recordVisible.show} className={styles.link}>
                     Liquidity Balance Record
-                  </Button>
+                  </Button> */}
                 </Hidden>
               </CardInfo>
               <ModalRender
@@ -262,17 +276,17 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
                   </Col>
                   <Col span={24}>
                     <div className={[styles.repay, isMobile ? styles.mobile : ''].join(' ')}>
-                      <Input placeholder="Withdraw amount" />
-                      {isPrivate ? null : <p>XXX reDAI you need to pay</p>}
+                      <Input type="number" onChange={this.onAmountChange} placeholder="Withdraw amount" max={coins[selectCoin]} />
+                      {/* {isPrivate ? null : <p>XXX reDAI you need to pay</p>} */}
                     </div>
                   </Col>
                 </Row>
                 <Row className={commonStyles.actionBtns} gutter={[16, 16]}>
                   <Col xs={24} sm={24} md={12} lg={12}>
-                    <Button>Cancel</Button>
+                    <Button onClick={this.withDrawVisible.hide}>Cancel</Button>
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={12}>
-                    <Button type="primary">Withdraw</Button>
+                    <Button type="primary" onClick={this.doWithdraw}>Withdraw</Button>
                   </Col>
                 </Row>
               </ModalRender>

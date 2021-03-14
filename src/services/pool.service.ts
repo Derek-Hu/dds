@@ -112,3 +112,15 @@ export const doPrivateDeposit = async ({amount, coin }: { coin: any; amount: any
 };
 
 
+export const doPoolWithdraw = async ({amount, coin, type }: { coin: any; amount: any, type: 'public' | 'private' }): Promise<boolean> => {
+  Mask.showLoading();
+  const isSuccess = await returnVal(false);
+  if(isSuccess){
+    Mask.showSuccess();
+  }else{
+    Mask.showFail();
+  }
+  return isSuccess;
+};
+
+
