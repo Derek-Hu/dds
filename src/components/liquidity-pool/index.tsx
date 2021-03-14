@@ -2,6 +2,7 @@ import { Component } from 'react';
 import { Tabs, Button, Row, Col, Select, Input, Alert, Descriptions } from 'antd';
 import styles from './style.module.less';
 import Balance from './liquidity-balance';
+import { format, isNotZeroLike } from '../../util/math';
 import commonStyles from '../funding-balance/modals/style.module.less';
 import SharePool from './public/share-pool';
 import AvailablePool from './private/available-pool';
@@ -13,7 +14,9 @@ import LockedDetails, { ILockedData } from '../liquidity-pool/locked-details';
 import LiquidityProvided from './public/liquidity-provided';
 import LiquidityARP from './public/collaborative-arp';
 import { Visible } from '../builtin/hidden';
+import { doPrivateDeposit } from '../../services/pool.service';
 import Auth, { Public } from '../builtin/auth';
+
 
 const { TabPane } = Tabs;
 
@@ -61,6 +64,8 @@ export default class PoolArea extends Component<{ address?: string }, any> {
   state = {
     selectedTab: TabName.Collaborative,
     depositModalVisible: false,
+    amount: '',
+    selectedCoin: 'DAI',
   };
   componentDidMount() {}
 
@@ -82,9 +87,26 @@ export default class PoolArea extends Component<{ address?: string }, any> {
     });
   };
 
+  onSelectChange = (selectedCoin: any) => {
+    this.setState({
+      selectedCoin,
+    });
+  };
+
+  onAmountChange = (e: any) => {
+    const val = e.target.value;
+    this.setState({
+      amount: val,
+    });
+  };
+
+  confirmPrivateDeposit = async () => {
+    this.closeDepositModal();
+    const { amount, selectedCoin } = this.state;
+    await doPrivateDeposit({ amount: amount!, coin: selectedCoin });
+  };
   render() {
-    const { address } = this.props;
-    const { selectedTab } = this.state;
+    const { selectedTab, selectedCoin, amount } = this.state;
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => (
@@ -112,19 +134,19 @@ export default class PoolArea extends Component<{ address?: string }, any> {
                         <Row gutter={[isMobile ? 0 : 12, isMobile ? 15 : 0]}>
                           <Col xs={24} sm={24} md={8} lg={6}>
                             <Select
-                              defaultValue="DAI"
+                              defaultValue={selectedCoin}
                               style={{ width: '100%', height: 50 }}
                               className={styles.coinDropdown}
-                              // onChange={handleChange}
+                              onChange={this.onSelectChange}
                             >
                               {CoinSelectOption}
                             </Select>
                           </Col>
                           <Col xs={24} sm={24} md={16} lg={18}>
-                            <Input placeholder="amount for providing to the pool" />
+                            <Input value={amount} onChange={this.onAmountChange} placeholder="amount for providing to the pool" />
                           </Col>
                         </Row>
-                        <Button type="primary" className={styles.btn} onClick={this.showDepositModal}>
+                        <Button type="primary" disabled={!isNotZeroLike(amount)} className={styles.btn} onClick={this.showDepositModal}>
                           Deposit
                         </Button>
                       </div>
@@ -189,21 +211,15 @@ export default class PoolArea extends Component<{ address?: string }, any> {
               >
                 <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
                   <Descriptions.Item label="Deposit Amount" span={24}>
-                    10.36 DAI
+                    {amount} {selectedCoin}
                   </Descriptions.Item>
-                  {selectedTab === TabName.Private ? null : (
-                    <Descriptions.Item label="Receive" span={24}>
-                      10.36 reDAI
-                    </Descriptions.Item>
-                  )}
                 </Descriptions>
-                {selectedTab === TabName.Private ? null : <p>说明：将冻结14天</p>}
                 <Row className={commonStyles.actionBtns} gutter={[16, 16]} type="flex">
                   <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                    <Button>Cancel</Button>
+                    <Button onClick={this.closeDepositModal}>Cancel</Button>
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
-                    <Button type="primary">Comfirm</Button>
+                    <Button onClick={this.confirmPrivateDeposit} type="primary">Comfirm</Button>
                   </Col>
                 </Row>
               </ModalRender>

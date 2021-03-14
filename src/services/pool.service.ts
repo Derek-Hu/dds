@@ -1,4 +1,5 @@
 import { liquidityProvided } from './mock/pool.mock';
+import Mask from '../components/mask';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   return new Promise((resolve) => {
@@ -88,6 +89,26 @@ export const getCollaborativeDepositRe = async ({amount, coin }: { coin: IUSDCoi
 };
 
 
-export const doCollaborativeDeposit = async ({amount, reAmount, coin }: { coin: IUSDCoins; amount: number, reAmount: number}): Promise<number> => {
-  return returnVal(Math.random() * 10000);
+export const doCollaborativeDeposit = async ({amount, reAmount, coin }: { coin: IUSDCoins; amount: number, reAmount: number}): Promise<boolean> => {
+  Mask.showLoading();
+  const isSuccess = await returnVal(false);
+  if(isSuccess){
+    Mask.showSuccess();
+  }else{
+    Mask.showFail();
+  }
+  return isSuccess;
 };
+
+export const doPrivateDeposit = async ({amount, coin }: { coin: any; amount: any }): Promise<boolean> => {
+  Mask.showLoading();
+  const isSuccess = await returnVal(false);
+  if(isSuccess){
+    Mask.showSuccess();
+  }else{
+    Mask.showFail();
+  }
+  return isSuccess;
+};
+
+

@@ -3,7 +3,7 @@ import { Tabs, Button, Row, Col, Select, Input, Alert, Descriptions } from 'antd
 import styles from '../style.module.less';
 import SiteContext from '../../../layouts/SiteContext';
 import { Component } from 'react';
-import { format } from '../../../util/math';
+import { format, isNotZeroLike } from '../../../util/math';
 import { getCollaborativeArp } from '../../../services/pool.service';
 import ModalRender from '../../modal-render/index';
 import commonStyles from '../../funding-balance/modals/style.module.less';
@@ -20,8 +20,7 @@ interface IState {
   reAmount: number | undefined;
 }
 
-interface IProps {
-}
+interface IProps {}
 type TModalKeys = Pick<IState, 'modalVisible'>;
 
 export default class LiquidityProvided extends Component<IProps, IState> {
@@ -80,6 +79,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
   };
 
   confirmDeposit = async () => {
+    this.modalVisible.hide();
     const { amount, selectedCoin, reAmount } = this.state;
     await doCollaborativeDeposit({ amount: amount!, reAmount: reAmount!, coin: selectedCoin });
   };
@@ -126,10 +126,17 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                         />
                       </Col>
                     </Row>
-                    <p className={styles.cal}>
-                      You Will Receive: <span>{format(reAmount)}</span> re{selectedCoin}
-                    </p>
-                    <Button type="primary" className={styles.btn} onClick={this.modalVisible.show}>
+                    {isNotZeroLike(amount) ? (
+                      <p className={styles.cal}>
+                        You Will Receive: <span>{format(reAmount)}</span> re{selectedCoin}
+                      </p>
+                    ) : null}
+                    <Button
+                      type="primary"
+                      disabled={!isNotZeroLike(amount)}
+                      className={styles.btn}
+                      onClick={this.modalVisible.show}
+                    >
                       Deposit
                     </Button>
                   </div>
@@ -148,7 +155,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                       {amount} {selectedCoin}
                     </Descriptions.Item>
                     <Descriptions.Item label="Receive" span={24}>
-                      10.36 reDAI
+                      {reAmount} re{selectedCoin}
                     </Descriptions.Item>
                   </Descriptions>
                   <p>说明：将冻结14天</p>
