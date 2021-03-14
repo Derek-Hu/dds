@@ -1,4 +1,4 @@
-import { ABI, ContractProxy, UserAccountInfo } from '../wallet/contract-interface';
+import { ABI, ContractProxy, Pl1ABI, Pl2ABI, UserAccountInfo } from '../wallet/contract-interface';
 import { BehaviorSubject, from, Observable, of, interval, EMPTY, zip, merge } from 'rxjs';
 import * as ethers from 'ethers';
 import { catchError, filter, map, mapTo, startWith, switchMap, take, tap } from 'rxjs/operators';
@@ -12,6 +12,7 @@ import {
   ERC20DAIAddress,
   ETH_WEIGHT,
   CoinWeight,
+  Lp1DAIContractAddress,
 } from '../constant';
 import { walletManager } from '../wallet/wallet-manager';
 import { WalletInterface } from './wallet-interface';
@@ -49,10 +50,15 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   public transferable: boolean = false; // 是否可以发起写入操作
 
   protected contractMap: Map<IUSDCoins, ethers.Contract>;
+  protected pubContractMap: Map<IUSDCoins, ethers.Contract>;
+  protected priContractMap: Map<IUSDCoins, ethers.Contract>;
+
   protected timer = interval(DataRefreshInterval).pipe(startWith(0));
 
   constructor() {
     this.contractMap = this.getContractMap();
+    this.pubContractMap = this.getPubPoolContractMap();
+    this.priContractMap = this.getPrivatePoolContractMap();
   }
 
   public getPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber> {
@@ -91,11 +97,9 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       switchMap((contract: ethers.Contract) => {
         // 用户输入数字转成接口精度
         const usdAmount: BigNumber = BigNumber.from(1207000000).mul(ETH_WEIGHT);
-        console.log('ex', exchange, usdAmount);
         return contract.functions.getMaxOpenAmount(exchange, usdAmount);
       }),
       map((num: BigNumber[]) => {
-        console.log('get res num', num);
         return num[0];
       }),
       catchError((err) => {
@@ -130,7 +134,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     return this.getContract(coin).pipe(
       switchMap((contract: ethers.Contract) => {
         const daiContract = this.getERC20DAIContract();
-        const countNum: BigNumber = BigNumber.from(count).mul(ETH_WEIGHT);
+        const countNum: BigNumber = toBigNumber(count, 18);
 
         if (!daiContract) {
           return of(false);
@@ -142,7 +146,6 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
             return from(contract.deposit(countNum));
           }),
           switchMap((rs: any) => from(rs.wait())),
-          tap(() => console.log('d true')),
           mapTo(true),
           catchError((err) => of(false))
         );
@@ -153,7 +156,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   public withdrawToken(count: number, coin: IUSDCoins): Observable<any> {
     return this.getContract(coin).pipe(
       switchMap((contract: ethers.Contract) => {
-        const amount: BigNumber = BigNumber.from(count).mul(CoinWeight.get(coin) as string);
+        const amount: BigNumber = toBigNumber(count, 18);
         return from(contract.withdraw(amount));
       }),
       switchMap((rs: any) => from(rs.wait())),
@@ -166,13 +169,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     return this.getContract(coin).pipe(
       switchMap((contract: ethers.Contract) => {
         const bigAmount = toBigNumber(amount, 18);
-
         const contractType = orderType === 'long' ? 1 : 2;
-        console.log('do create ', bigAmount);
         return contract.functions.creatContract('ETHDAI', bigAmount, contractType);
       }),
       switchMap((rs: any) => {
-        console.log('rs is', rs);
         return rs.wait();
       }),
       mapTo(true),
@@ -183,7 +183,26 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
-  public getUserOrders(address: string, curPrice: BigNumber, page: number, pageSize: number): Observable<any[]> {
+  public closeContract(order: ITradeRecord, curPrice: number): Observable<boolean> {
+    return this.getContract(order.costCoin).pipe(
+      switchMap((contract: ethers.Contract) => {
+        const id = BigNumber.from(order.id);
+        const price = toBigNumber(curPrice, 18);
+        return contract.functions.closeContract(id, price);
+      }),
+      mapTo(true),
+      catchError((err) => {
+        return of(false);
+      })
+    );
+  }
+
+  public getUserOrders(
+    address: string,
+    curPrice: BigNumber,
+    page: number,
+    pageSize: number
+  ): Observable<ITradeRecord[]> {
     return this.getContract('DAI').pipe(
       switchMap((contract: ethers.Contract) => {
         return contract.functions.getUserOrderID(address);
@@ -242,7 +261,6 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         return zip(...obs).pipe(take(1));
       }),
       map((orderInfo: any[]) => {
-        console.log('orderInfo', orderInfo);
         return orderInfo;
       })
     );
@@ -259,8 +277,40 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         );
       }),
       map((rs: any) => {
-        console.log('funding lock', rs);
         return rs.marginFee;
+      })
+    );
+  }
+
+  //
+  public getPubPoolInfo(coin: IUSDCoins): Observable<CoinAvailableInfo> {
+    return this.getPubPoolContract(coin).pipe(
+      switchMap((contract: ethers.Contract) => {
+        return contract.functions.getLPAmountInfo();
+      }),
+      map((rs: any) => {
+        const total: number = Number(toEthers(rs.deposit, 4));
+        const available: number = Number(toEthers(rs.availabe, 4));
+        return {
+          value: available,
+          total,
+        };
+      })
+    );
+  }
+
+  public getPrivatePoolInfo(coin: IUSDCoins): Observable<CoinAvailableInfo> {
+    return this.getPriPoolContract(coin).pipe(
+      switchMap((contract) => {
+        return contract.functions.getLPAmountInfo();
+      }),
+      map((rs: any) => {
+        const total: number = Number(toEthers(rs.deposit, 4));
+        const available: number = Number(toEthers(rs.availabe, 4));
+        return {
+          value: available,
+          total,
+        };
       })
     );
   }
@@ -270,11 +320,23 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     return of(this.contractMap.get(coin)).pipe(filter(Boolean)) as Observable<ethers.Contract>;
   }
 
+  protected getPubPoolContract(coin: IUSDCoins): Observable<ethers.Contract> {
+    return of(this.pubContractMap.get(coin)).pipe(filter(Boolean)) as Observable<ethers.Contract>;
+  }
+
+  protected getPriPoolContract(coin: IUSDCoins): Observable<ethers.Contract> {
+    return of(this.priContractMap.get(coin)).pipe(filter(Boolean)) as Observable<ethers.Contract>;
+  }
+
   protected getERC20DAIContract(): ethers.Contract {
     return new ethers.Contract(ERC20DAIAddress, erc20, this.getSigner());
   }
 
   protected abstract getContractMap(): Map<IUSDCoins, ethers.Contract>;
+
+  protected abstract getPubPoolContractMap(): Map<IUSDCoins, ethers.Contract>;
+
+  protected abstract getPrivatePoolContractMap(): Map<IUSDCoins, ethers.Contract>;
 
   protected abstract getProvider(): ethers.providers.BaseProvider;
 
@@ -286,6 +348,26 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
  */
 class MetamaskContractAccessor extends BaseTradeContractAccessor {
   public readonly transferable = true;
+
+  protected getPrivatePoolContractMap(): Map<IUSDCoins, ethers.Contract> {
+    const rsMap = new Map<IUSDCoins, ethers.Contract>();
+    const signer = this.getProvider().getSigner();
+
+    const daiCon = new ethers.Contract(Lp1DAIContractAddress, Pl2ABI, signer);
+    rsMap.set('DAI', daiCon);
+
+    return rsMap;
+  }
+
+  protected getPubPoolContractMap(): Map<IUSDCoins, ethers.Contract> {
+    const rsMap = new Map<IUSDCoins, ethers.Contract>();
+    const signer = this.getProvider().getSigner();
+
+    const daiCon = new ethers.Contract(Lp1DAIContractAddress, Pl1ABI, signer);
+    rsMap.set('DAI', daiCon);
+
+    return rsMap;
+  }
 
   protected getContractMap(): Map<IUSDCoins, ethers.Contract> {
     const rsMap = new Map<IUSDCoins, ethers.Contract>();
@@ -413,6 +495,10 @@ export class ContractAccessor implements ContractProxy {
     return this.accessor.pipe(switchMap((accessor) => accessor.createContract(coin, orderType, amount)));
   }
 
+  public closeContract(orderId: ITradeRecord, curPrice: number): Observable<boolean> {
+    return this.accessor.pipe(switchMap((accessor) => accessor.closeContract(orderId, curPrice)));
+  }
+
   public getUserOrders(address: string, curPrice: BigNumber, page: number, pageSize: number): Observable<any> {
     return this.accessor.pipe(switchMap((accessor) => accessor.getUserOrders(address, curPrice, page, pageSize)));
   }
@@ -421,43 +507,24 @@ export class ContractAccessor implements ContractProxy {
     return this.accessor.pipe(switchMap((accessor) => accessor.getFundingLockedAmount(coin, exchange, ethAmount)));
   }
 
+  public getPubPoolInfo(coin: IUSDCoins): Observable<CoinAvailableInfo> {
+    return this.accessor.pipe(switchMap((accessor) => accessor.getPubPoolInfo(coin)));
+  }
+
+  public getPrivatePoolInfo(coin: IUSDCoins): Observable<CoinAvailableInfo> {
+    return this.accessor.pipe(switchMap((accessor) => accessor.getPrivatePoolInfo(coin)));
+  }
+
   // ------------------------------------------------------------------------------------------
 
   private changeAccessor(accessor: BaseTradeContractAccessor | null) {
     if (this.curAccessor.getValue() === accessor) {
       return;
     }
-    console.log('set accessor', accessor);
     this.curAccessor.next(accessor);
   }
 }
 
 export const contractAccessor = new ContractAccessor();
 
-// contractAccessor.getMaxOpenAmount('DAI', 'ETHDAI', 1200)
-//   .subscribe((num: BigNumber) => {
-//     console.log("big is", num);
-//   })
-//
-//
-// contractAccessor.createContract('DAI', 'long', 0.1).subscribe((rs) => {
-//   console.log("create rs", rs);
-// })
-
-// walletManager.watchWalletInstance().pipe(
-//   filter((walletIns) => walletIns !== null),
-//   switchMap((walletIns: WalletInterface | null) => {
-//     return (walletIns as WalletInterface)?.watchAccount()
-//   }),
-//   filter(account => account !== null),
-//   take(1),
-//   switchMap((account: string | null) => {
-//     return contractAccessor.getPriceByETHDAI('DAI').pipe(
-//       switchMap((curPrice) => {
-//         return contractAccessor.getUserOrders(account as string, curPrice, 1, 5)
-//       })
-//     )
-//   })
-// ).subscribe()
-
-contractAccessor.getFundingLockedAmount('DAI', 'ETHDAI', 1).subscribe();
+contractAccessor.getPrivatePoolInfo('DAI').subscribe();

@@ -3,7 +3,7 @@ import { graphData } from './mock/trade-graph.mock';
 import { walletManager } from '../wallet/wallet-manager';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
-import { of } from 'rxjs';
+import { of, zip } from 'rxjs';
 import { contractAccessor } from '../wallet/chain-access';
 import { UserAccountInfo } from '../wallet/contract-interface';
 import { BigNumber } from 'ethers';
@@ -45,8 +45,6 @@ export const getFundingBalanceInfo = async (coin: IUSDCoins): Promise<IBalanceIn
             const deposit: BigNumber = accountInfo.deposit;
             const availed: BigNumber = accountInfo.available;
             const locked: BigNumber = deposit.sub(availed);
-
-            console.log('balance is', toEthers(deposit, 0), toEthers(availed, 0));
 
             return {
               balance: Number(toEthers(deposit, 4)),
@@ -121,7 +119,18 @@ export const getTradeInfo = async (coin: IUSDCoins): Promise<ITradeInfo[]> => {
 };
 
 export const getTradeLiquidityPoolInfo = async (coin: IUSDCoins): Promise<ITradePoolInfo> => {
-  return returnVal(poolInfo);
+  const obs = [contractAccessor.getPubPoolInfo(coin), contractAccessor.getPrivatePoolInfo(coin)];
+  return zip(...obs)
+    .pipe(
+      map((infoList: CoinAvailableInfo[]) => {
+        return {
+          public: infoList[0],
+          private: infoList[1],
+        };
+      }),
+      take(1)
+    )
+    .toPromise();
 };
 
 export const deposit = async (amount: IRecord): Promise<boolean> => {
@@ -142,17 +151,23 @@ export const getCurPrice = async (coin: IUSDCoins): Promise<number> => {
     .toPromise();
 };
 
+/**
+ * 开仓下单操作
+ * @param coin -
+ * @param tradeType
+ * @param amount - eth的数量
+ */
 export const openOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: number): Promise<boolean> => {
   return contractAccessor.createContract(coin, tradeType, amount).pipe(take(1)).toPromise();
 };
 
 /**
  * 关仓操作
- * @param orderId - 订单号
- * @param closePrice - 用户看到的此刻价格
+ * @param order - 订单对象，从返回的order列表中选取
+ * @param closePrice - 用户看到并认可的的此刻价格
  */
-export const closeOrder = async (orderId: string, closePrice: number): Promise<boolean> => {
-  return Promise.resolve(false);
+export const closeOrder = async (order: ITradeRecord, closePrice: number): Promise<boolean> => {
+  return contractAccessor.closeContract(order, closePrice).pipe(take(1)).toPromise();
 };
 
 export const getPriceGraphData = (
@@ -161,6 +176,3 @@ export const getPriceGraphData = (
 ): Promise<IPriceGraph> => {
   return returnVal(graphData);
 };
-/**
- * Pool Page
- */

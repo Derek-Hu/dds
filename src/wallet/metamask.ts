@@ -103,5 +103,3 @@ export class MetamaskWallet implements WalletInterface {
     }
   }
 }
-
-export const metamaskWallet = new MetamaskWallet();

@@ -4,9 +4,11 @@ import styles from './style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import ModalRender from '../modal-render/index';
 import commonStyles from '../funding-balance/modals/style.module.less';
-import { metamaskWallet } from '../../wallet/metamask';
-import { Subscription } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { SupportedWallets, Wallet } from '../../constant/index';
+import { walletManager } from '../../wallet/wallet-manager';
+import { filter, switchMap } from 'rxjs/operators';
+import { WalletInterface } from '../../wallet/wallet-interface';
 
 const { Option } = Select;
 
@@ -55,14 +57,7 @@ export default class ConnectWallet extends Component<any, any> {
       return;
     }
 
-    switch (this.state.walletType) {
-      case Wallet.Metamask: {
-        metamaskWallet.doConnect();
-        break;
-      }
-      default: {
-      }
-    }
+    walletManager.doSelectWallet(this.state.walletType);
   };
 
   unWatchWalletAccount() {
@@ -74,19 +69,23 @@ export default class ConnectWallet extends Component<any, any> {
   watchWalletAccount() {
     this.unWatchWalletAccount();
 
-    switch (this.state.walletType) {
-      case Wallet.Metamask: {
-        this.accSub = metamaskWallet.watchAccount().subscribe((account: string | null) => {
-          this.setState({
-            isConnected: account !== null,
-            account,
-          });
+    this.accSub = walletManager
+      .watchWalletInstance()
+      .pipe(
+        switchMap((walletIns: WalletInterface | null) => {
+          if (walletIns) {
+            return walletIns?.watchAccount();
+          } else {
+            return of(null);
+          }
+        })
+      )
+      .subscribe((account: string | null) => {
+        this.setState({
+          isConnected: account !== null,
+          account,
         });
-        break;
-      }
-      default: {
-      }
-    }
+      });
   }
 
   render() {

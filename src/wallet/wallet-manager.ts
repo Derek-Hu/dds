@@ -1,9 +1,8 @@
-import { chainDataState } from './chain-connect-state';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { WalletInterface } from './wallet-interface';
 import { map, tap } from 'rxjs/operators';
 import { Wallet } from '../constant';
-import { MetamaskWallet, metamaskWallet } from './metamask';
+import { MetamaskWallet } from './metamask';
 
 /**
  * 获取钱包实例
@@ -29,7 +28,7 @@ export class WalletManager {
     return this.curWallet.pipe(
       map((wallet: Wallet | null) => {
         if (wallet === Wallet.Metamask) {
-          return metamaskWallet as WalletInterface;
+          return this.metamask as WalletInterface;
         } else {
           return null;
         }
@@ -37,6 +36,15 @@ export class WalletManager {
     );
   }
 
+  public doSelectWallet(wallet: Wallet) {
+    if (wallet === Wallet.Metamask) {
+      this.metamask.doConnect();
+    }
+  }
+
+  // -------------------------------------------------------------------
+
+  // 监听钱包状态，设置当前使用的钱包
   private selectConnectedWallet() {
     combineLatest([this.metamask.wasConnected()])
       .pipe(
