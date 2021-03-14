@@ -14,7 +14,7 @@ interface IProps {
   service: () => Promise<ICoinItem[]>;
   children?: any;
   desc?: any;
-  totalMode: boolean; 
+  totalMode: boolean;
 }
 
 export default class CoinProgress extends Component<IProps, IState> {
@@ -33,7 +33,11 @@ export default class CoinProgress extends Component<IProps, IState> {
       data: data.map(({ amount, total, coin }) => ({
         label: coin,
         percentage: percentage(amount, total),
-        val: <span>{amount} / {total}</span>
+        val: (
+          <span>
+            {amount} / {total}
+          </span>
+        ),
       })),
     });
     this.setState({ loading: false });
@@ -46,7 +50,7 @@ export default class CoinProgress extends Component<IProps, IState> {
       <Hidden when={loading}>
         <div>
           <PoolProgress totalMode={totalMode} desc={desc} title={title} coins={data}>
-              {children}
+            {children}
           </PoolProgress>
         </div>
       </Hidden>

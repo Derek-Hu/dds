@@ -23,12 +23,14 @@ export default (props: IPool) => {
             </p>
           )}
           <Row>
-            {coins ? coins.map(({ label, value }) => (
-              <Col key={label} span={8}>
-                <p className={styles.coinName}>{label}</p>
-                <span>{value}</span>
-              </Col>
-            )): null}
+            {coins
+              ? coins.map(({ label, value }) => (
+                  <Col key={label} span={8}>
+                    <p className={styles.coinName}>{label}</p>
+                    <span>{value}</span>
+                  </Col>
+                ))
+              : null}
           </Row>
           {children}
         </div>

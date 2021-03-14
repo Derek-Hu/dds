@@ -4,7 +4,7 @@ import styles from '../style.module.less';
 import { formatInt, format, isNotZeroLike } from '../../../util/math';
 import { getMyReferalInfo, claimReferalInfo } from '../../../services/broker.service';
 import { Hidden, Visible } from '../../builtin/hidden';
-import Mask from '../../mask';
+import Mask from '../../mask/index';
 
 interface IState {
   loading: boolean;

@@ -5,7 +5,7 @@ import WithdrawModal from './modals/withdraw';
 import OrderConfirm from './modals/order-confirm';
 import { Component } from 'react';
 import SiteContext from '../../layouts/SiteContext';
-import { getFundingBalanceInfo } from '../../services/trade.service';
+import { getCurPrice, getFundingBalanceInfo, deposit, withdraw } from '../../services/trade.service';
 import { getMaxFromCoin, getFee, getLocked } from './calculate';
 import { format } from '../../util/math';
 
@@ -16,11 +16,15 @@ interface IState {
   tradeType: ITradeType;
   balanceInfo?: IBalanceInfo;
   openAmount: number | undefined;
+  curPrice?: number;
 }
 
 type TModalKeys = Pick<IState, 'withdrawVisible' | 'depositVisible' | 'orderConfirmVisible'>;
 
-export default class Balance extends Component<{ coins: { from: IFromCoins; to: IUSDCoins }; graphData?: IPriceGraph }> {
+export default class Balance extends Component<{
+  coins: { from: IFromCoins; to: IUSDCoins };
+  graphData?: IPriceGraph;
+}> {
   state: IState = {
     depositVisible: false,
     withdrawVisible: false,
@@ -34,18 +38,53 @@ export default class Balance extends Component<{ coins: { from: IFromCoins; to: 
     const { coins } = this.props;
     const { to } = coins;
     const balanceInfo = await getFundingBalanceInfo(to);
+    const curPrice = await getCurPrice(to);
 
     this.setState({
       balanceInfo,
+      curPrice,
     });
   };
 
-  deposit = () => {
-    console.log('deposit');
+  deposit = (amount?: number) => {
+    if (!amount || amount <= 0) {
+      return;
+    }
+
+    const { coins } = this.props;
+    // TODO 加载动画，禁止用户操作
+    deposit({ amount, coin: coins.to })
+      .then((rs: boolean) => {
+        // TODO 停止动画
+        console.log('get rs', rs);
+        if (rs) {
+          this.depositVisible.hide();
+          // TODO 重新获取账户余额
+        } else {
+          // TODO 提示操作失败
+        }
+      })
+      .catch((err) => {
+        // TODO 未知错误
+      });
   };
 
-  withdraw = () => {
-    console.log('withdraw');
+  withdraw = (coin: IUSDCoins, amount?: number) => {
+    if (!amount || amount <= 0) {
+      return;
+    }
+    // TODO 启动动画
+    withdraw({ amount, coin })
+      .then((rs: boolean) => {
+        // TODO 关闭动画
+        if (rs) {
+          this.withdrawVisible.hide();
+          // TODO 刷新账户余额
+        } else {
+          // TODO 操作失败
+        }
+      })
+      .catch((err) => {});
   };
 
   setModalVisible = (key: keyof TModalKeys) => {
@@ -81,7 +120,7 @@ export default class Balance extends Component<{ coins: { from: IFromCoins; to: 
   onMaxOpenClick = () => {
     const { balanceInfo } = this.state;
     const { graphData } = this.props;
-    const maxNumber = getMaxFromCoin(balanceInfo, graphData?.price);
+    const maxNumber = getMaxFromCoin(balanceInfo, this.state.curPrice);
     this.setState({
       openAmount: maxNumber,
     });
@@ -92,11 +131,19 @@ export default class Balance extends Component<{ coins: { from: IFromCoins; to: 
   };
 
   render() {
-    const { depositVisible, withdrawVisible, orderConfirmVisible, tradeType, balanceInfo, openAmount } = this.state;
+    const {
+      depositVisible,
+      withdrawVisible,
+      orderConfirmVisible,
+      tradeType,
+      balanceInfo,
+      openAmount,
+      curPrice,
+    } = this.state;
     const { coins, graphData } = this.props;
     const { from, to } = coins;
 
-    const price = graphData?.price;
+    const price = curPrice; // graphData?.price;
     const maxNumber = getMaxFromCoin(balanceInfo, price);
 
     const fee = format(getFee(openAmount, price));
@@ -141,7 +188,7 @@ export default class Balance extends Component<{ coins: { from: IFromCoins; to: 
               </Radio.Group>
             </Row>
             <p className={styles.price}>
-              Current Price: {graphData?.price} {to}
+              Current Price: {this.state.curPrice} {to}
             </p>
             <p className={styles.amountTip}>Amount</p>
             <Input value={openAmount} onChange={this.onOpenAmountChange} placeholder="0.00" suffix={'ETH'} />

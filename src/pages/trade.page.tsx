@@ -12,24 +12,24 @@ import { getFundingBalanceInfo, getTradeOrders, getTradeInfo, getPriceGraphData 
 const from = 'ETH';
 
 interface IState {
-  coin: IUSDCoins
+  coin: IUSDCoins;
   graphData?: IPriceGraph;
-  tradeInfos?: ITradeInfo[]
+  tradeInfos?: ITradeInfo[];
   duration: IGraphDuration;
 }
 export default class TradePage extends Component {
   state: IState = {
     coin: 'DAI',
     duration: 'day',
-  }
-  
+  };
+
   async componentDidMount() {
     const { coin, duration } = this.state;
     const tradeInfos = await getTradeInfo(coin);
-    const graphData = await getPriceGraphData({ from, to: coin}, duration);
+    const graphData = await getPriceGraphData({ from, to: coin }, duration);
     this.setState({
       tradeInfos,
-      graphData
+      graphData,
     });
   }
 
@@ -47,7 +47,7 @@ export default class TradePage extends Component {
                   <KLine />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={8}>
-                  <FundingBalance coins={{from, to: coin }} graphData={graphData}/>
+                  <FundingBalance coins={{ from, to: coin }} graphData={graphData} />
                 </Col>
               </Row>
 
@@ -59,7 +59,7 @@ export default class TradePage extends Component {
                       <TradePool coin={coin} />
                     </Col>
                     <Col xs={24} sm={24} md={12} lg={12}>
-                      { tradeInfos ? <TradeInfo items={tradeInfos} theme="outer" title="Info"/> : null }
+                      {tradeInfos ? <TradeInfo items={tradeInfos} theme="outer" title="Info" /> : null}
                     </Col>
                   </Row>
                 </div>

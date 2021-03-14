@@ -31,9 +31,13 @@ export default class CampaignRewardsPool extends Component<any, IState> {
       data: data.map(({ amount, total, coin }) => ({
         label: coin,
         percentage: percentage(amount, total),
-        val: <span>{amount}/{total}</span>
+        val: (
+          <span>
+            {amount}/{total}
+          </span>
+        ),
       })),
-      nextDistribution
+      nextDistribution,
     });
     this.setState({ loading: false });
   }
@@ -49,7 +53,7 @@ export default class CampaignRewardsPool extends Component<any, IState> {
           desc={
             <div>
               <p className="text-center">
-              Next distribution time
+                Next distribution time
                 <br />
                 <span>{nextDistribution}</span>
               </p>

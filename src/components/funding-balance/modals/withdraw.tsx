@@ -16,11 +16,11 @@ interface IProps {
 }
 interface IState {
   amount?: number;
-  selectedCoin: IUSDCoins
+  selectedCoin: IUSDCoins;
 }
 export default class Balance extends Component<IProps, IState> {
   state: IState = {
-    selectedCoin: this.props.coin
+    selectedCoin: this.props.coin,
   };
 
   onAmountChange = (e: any) => {
@@ -38,9 +38,9 @@ export default class Balance extends Component<IProps, IState> {
 
   onCoinChange = (selectedCoin: IUSDCoins) => {
     this.setState({
-      selectedCoin
+      selectedCoin,
     });
-  }
+  };
 
   render() {
     const { visible, onCancel, onConfirm, max } = this.props;
