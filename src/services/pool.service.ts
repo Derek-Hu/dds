@@ -1,11 +1,11 @@
 import { liquidityProvided } from './mock/pool.mock';
-import Mask from '../components/mask';
 import { contractAccessor } from '../wallet/chain-access';
 import { toEthers } from '../util/ethers';
 import { BigNumber } from 'ethers';
 import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { curUserAccount } from './account';
 import { EMPTY, from, zip } from 'rxjs';
+import {withLoading } from './utils';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   return new Promise((resolve) => {
@@ -23,6 +23,7 @@ export const getCollaborativeArp = async (): Promise<number> => {
   return returnVal(1002);
 };
 
+/** Done */
 export const getPoolBalance = async (type: 'public' | 'private'): Promise<ICoinItem[]> => {
   return from(curUserAccount())
     .pipe(
@@ -58,6 +59,7 @@ export const getPoolWithDrawDeadline = async (type: 'public' | 'private'): Promi
   return returnVal(new Date().getTime());
 };
 
+/** Done */
 export const getCollaborativeShareInPool = async (): Promise<IPoolShareInPool[]> => {
   return from(curUserAccount())
     .pipe(
@@ -78,6 +80,7 @@ export const getCollaborativeShareInPool = async (): Promise<IPoolShareInPool[]>
     .toPromise();
 };
 
+/** Done */
 export const getPrivateSharePool = async (): Promise<ICoinItem[]> => {
   return from(curUserAccount())
     .pipe(
@@ -139,34 +142,22 @@ export const getCollaborativeWithdrawRe = async ({ amount, coin }: IRecord): Pro
     .toPromise();
 };
 
+/** Done */
 export const doCollaborativeDeposit = async ({
   amount,
-  reAmount,
   coin,
 }: {
   coin: IUSDCoins;
   amount: number;
-  reAmount: number;
 }): Promise<boolean> => {
-  Mask.showLoading();
-  const isSuccess = await contractAccessor.provideToPubPool(coin, amount).pipe(take(1)).toPromise();;
-  if(isSuccess){
-    Mask.showSuccess();
-  }else{
-    Mask.showFail();
-  }
-  return isSuccess;
+  return await withLoading(contractAccessor.provideToPubPool(coin, amount).pipe(take(1)).toPromise());
 };
 
-export const doPoolWithdraw = async ({amount, coin, type }: { coin: any; amount: any, type: 'public' | 'private' }): Promise<boolean> => {
-  Mask.showLoading();
-  const isSuccess = await returnVal(false);
-  if(isSuccess){
-    Mask.showSuccess();
-  }else{
-    Mask.showFail();
+export const doPoolWithdraw = async ({amount, reAmount, coin, type }: { reAmount?: number; coin: any; amount: any, type: 'public' | 'private' }): Promise<boolean> => {
+  if(type==='public'){
+    return doCollaborativeWithdraw({coin, reAmount: reAmount!});
   }
-  return isSuccess;
+  return doPrivateWithdraw({coin, amount});
 }
 /**
  * 公池取出
@@ -180,16 +171,17 @@ export const doCollaborativeWithdraw = async ({
   coin: IUSDCoins;
   reAmount: number;
 }): Promise<boolean> => {
-  return contractAccessor.withdrawFromPubPool(coin, reAmount).pipe(take(1)).toPromise();
+  return withLoading(contractAccessor.withdrawFromPubPool(coin, reAmount).pipe(take(1)).toPromise());
 };
 
+/** Done */
 /**
  * 向私池存入
  * @param coin - IUSDCoins
  * @param amount - DAI的数量
  */
 export const doPrivateDeposit = async ({ coin, amount }: { coin: IUSDCoins; amount: number }): Promise<boolean> => {
-  return contractAccessor.provideToPrivatePool(coin, amount).pipe(take(1)).toPromise();
+  return withLoading(contractAccessor.provideToPrivatePool(coin, amount).pipe(take(1)).toPromise());
 };
 
 /**
@@ -198,5 +190,5 @@ export const doPrivateDeposit = async ({ coin, amount }: { coin: IUSDCoins; amou
  * @param amount
  */
 export const doPrivateWithdraw = async ({ coin, amount }: { coin: IUSDCoins; amount: number }): Promise<boolean> => {
-  return contractAccessor.withdrawFromPrivatePool(coin, amount).pipe(take(1)).toPromise();
+  return withLoading(contractAccessor.withdrawFromPrivatePool(coin, amount).pipe(take(1)).toPromise());
 };

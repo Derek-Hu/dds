@@ -153,4 +153,4 @@ export const getLiquidityMiningShare = (): Promise<ICoinItem[]> => {
     .toPromise();
 };
 
-getLiquidityMiningShare().then((r) => console.log('r', r));
+// getLiquidityMiningShare().then((r) => console.log('r', r));

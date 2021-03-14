@@ -80,8 +80,8 @@ export default class LiquidityProvided extends Component<IProps, IState> {
 
   confirmDeposit = async () => {
     this.modalVisible.hide();
-    const { amount, selectedCoin, reAmount } = this.state;
-    await doCollaborativeDeposit({ amount: amount!, reAmount: reAmount!, coin: selectedCoin });
+    const { amount, selectedCoin } = this.state;
+    await doCollaborativeDeposit({ amount: amount!, coin: selectedCoin });
   };
 
   calculateRe = async ({ amount, coin }: { amount: number | string; coin: IUSDCoins }) => {
