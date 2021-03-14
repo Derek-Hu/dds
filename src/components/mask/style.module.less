@@ -1,12 +1,18 @@
 .tooltip {
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
   z-index: 1000;
-  background-color: rgba(255, 255, 255, 0.6);
-  & > div {
+  background-color: rgba(0, 0, 0, 0.7);
+  .wpr{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .content {
       width: 560px;
       height: 311px;
       background-color: #FFF;
@@ -14,18 +20,22 @@
       position: relative;
       padding: 30px;
       text-align: center;
+
+
   }
   .close {
     position: absolute;
     top: 24px;
     right: 44px;
+    cursor: pointer;
   }
 
   .imgContent{
-    margin: 15px auto 55px;
+    margin: 15px auto 15px;
   }
 
   p {
     margin-bottom: 43px;
+    margin-top: 0;
   }
 }

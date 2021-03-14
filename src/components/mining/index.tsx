@@ -35,8 +35,8 @@ const TabName = {
 interface IReward {
   time: number;
   pair: {
-    from: 'ETH';
-    to: 'DAI';
+    from: string;
+    to: string;
   };
   price: number;
   amount: number;
@@ -79,46 +79,6 @@ const data: IReward[] = [
     reward: 32,
   },
 ];
-const MiningShare: IMiningShare = {
-  title: 'Your Liauidity Mining share',
-  desc: (
-    <p className={styles.shareTotalTip}>
-      <span>
-        Your
-        <br />
-        share
-      </span>
-      <span>
-        Total
-        <br />
-        Locked
-      </span>
-    </p>
-  ),
-  coins: [
-    {
-      label: 'DAI',
-      percentage: 25,
-      val: <span>37863</span>,
-    },
-    {
-      label: 'USDC',
-      percentage: 75,
-      val: <span>37863</span>,
-    },
-    {
-      label: 'USDT',
-      percentage: 55,
-      val: <span>37863349</span>,
-    },
-  ],
-  totalMode: true,
-};
-
-const totalRewards = {
-  Campaign: 530400,
-  Compensate: 530400,
-};
 export default class Mining extends Component {
   componentDidMount() {}
 

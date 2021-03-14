@@ -29,6 +29,17 @@ export const getMyReferalInfo = async (): Promise<IBrokerReferal> => {
   });
 };
 
+export const claimReferalInfo = async (): Promise<boolean> => {
+
+
+  return returnVal({
+    bonus: 329,
+    level: 'A',
+    ranking: 39,
+    referals: 389203,
+  });
+};
+
 export const getBrokerCampaignRewardData = async (): Promise<ICoinValue[]> => {
 
   return returnVal([{
