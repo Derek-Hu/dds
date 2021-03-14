@@ -20,7 +20,10 @@ interface IState {
 
 type TModalKeys = Pick<IState, 'withdrawVisible' | 'depositVisible' | 'orderConfirmVisible'>;
 
-export default class Balance extends Component<{ coins: { from: IFromCoins; to: IUSDCoins }; graphData?: IPriceGraph }> {
+export default class Balance extends Component<{
+  coins: { from: IFromCoins; to: IUSDCoins };
+  graphData?: IPriceGraph;
+}> {
   state: IState = {
     depositVisible: false,
     withdrawVisible: false,
@@ -134,8 +137,10 @@ export default class Balance extends Component<{ coins: { from: IFromCoins; to: 
             </Row>
             <Row className={styles.radioBtn}>
               <Radio.Group value={tradeType} onChange={this.changeType}>
-                <Radio.Button value="Long">Long</Radio.Button>
-                <Radio.Button value="Short" className={styles.green}>
+                <Radio.Button value="long" className={styles.red}>
+                  Long
+                </Radio.Button>
+                <Radio.Button value="short" className={styles.green}>
                   Short
                 </Radio.Button>
               </Radio.Group>
@@ -161,7 +166,7 @@ export default class Balance extends Component<{ coins: { from: IFromCoins; to: 
             </p>
             {/* <Progress strokeColor="#1346FF" showInfo={false} percent={30} strokeWidth={20} /> */}
             <Button
-              className={tradeType === 'short' ? 'buttonGreen' : ''}
+              className={tradeType === 'short' ? 'buttonGreen' : 'buttonRed'}
               type="primary"
               onClick={this.orderConfirmVisible.show}
             >

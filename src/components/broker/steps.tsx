@@ -2,6 +2,7 @@ import { Icon, Row, Col } from 'antd';
 import styles from './style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import Bar from './bar';
+import CampaignImg from '../../assets/imgs/campaign.png';
 
 const percentages = {
   center: 30,
@@ -93,47 +94,7 @@ export default () => {
                   <span>Rewards Pool</span>
                   <span>Commission Rate</span>
                 </div>
-                <div className={styles.container} style={{ width: rect.width + 'px', height: rect.height + 'px' }}>
-                  <Bar percentage={40} width={rect.bar} />
-                  <Bar percentage={40} width={rect.bar} />
-                  <Bar
-                    percentage={percentages.center}
-                    style={{ left: leftCenter + 'px' }}
-                    width={rect.center}
-                    height={rect.height}
-                    vertical={true}
-                  />
-                  <Bar percentage={40} width={rect.bar} right={true} />
-                  <Bar percentage={40} width={rect.bar} right={true} />
-                  <div className={styles.layers} style={{ width: gap + 'px', left: rect.bar + 'px' }}>
-                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height={rect.height} width={gap}>
-                      <polygon
-                        points={`0,${rect.barHeight} ${gap},${((100 - percentages.center) * rect.height) / 100} 0,${
-                          rect.height - rect.barHeight
-                        }`}
-                        stroke-width="0"
-                        fill="#fff"
-                      />
-                    </svg>
-                  </div>
-                  <div className={styles.layers} style={{ width: gap + 'px', right: rect.bar + 'px' }}>
-                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height={rect.height} width={gap}>
-                      <polygon
-                        points={`${gap},${rect.barHeight} 0,${
-                          ((100 - percentages.center) * rect.height) / 100
-                        } ${gap},${rect.height - rect.barHeight}`}
-                        stroke-width="0"
-                        fill="#fff"
-                      />
-                    </svg>
-                  </div>
-                  <div className={styles.categoryLabel}>
-                    <span>A</span>
-                    <span>B</span>
-                    <span>C</span>
-                    <span>D</span>
-                  </div>
-                </div>
+                <img src={CampaignImg} width="87%" alt="" />
               </div>
               <p>Rewards distribute every 30 days</p>
             </div>

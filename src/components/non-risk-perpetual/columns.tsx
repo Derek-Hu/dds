@@ -1,7 +1,7 @@
 import ColumnConvert from '../column-convert/index';
 import styles from './style.module.less';
 import { ICoins, ISupporttedUSD } from '../../constant';
-
+import { NavLink as Link } from 'react-router-dom';
 
 export default ColumnConvert<INonRiskPerpetual, { coin: any; action: any }>({
   column: {
@@ -30,7 +30,11 @@ export default ColumnConvert<INonRiskPerpetual, { coin: any; action: any }>({
           </span>
         );
       case 'action':
-        return <span className={styles.tradeBtn}>Trade</span>;
+        return (
+          <span className={styles.tradeBtn}>
+            <Link to={`/trade?fromCoin=${record.fromCoin}&toCoin=${record.toCoin}`}>Trade</Link>
+          </span>
+        );
       default:
         return value;
     }

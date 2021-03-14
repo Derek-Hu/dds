@@ -1,10 +1,11 @@
 import { Row, Col } from 'antd';
 import styles from './style.module.less';
 import SiteContext from '../../../layouts/SiteContext';
+import AdsImage from '~/assets/imgs/adsImage.png';
 
 const adsImage = (
   <Col xs={24} sm={24} md={24} lg={10} className={styles.imgContainer}>
-    <img alt="" src="https://via.placeholder.com/335x210.png" />
+    <img alt="" src={AdsImage} width="56%" />
   </Col>
 );
 
