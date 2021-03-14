@@ -12,24 +12,19 @@ import Auth, { Public } from '../builtin/auth';
 import { getSwapPrice } from '../../services/swap-burn.service';
 import { format } from '../../util/math';
 
-const { Option } = Select;
-
-const swapInfo = {
-  dds: 1078,
-  coin: 4.46,
-  unit: 'DAI',
-};
-
 interface IState {
   loading: boolean;
   data?: ISwapBurn;
   swapModalVisible: boolean;
+  selectedCoin: IUSDCoins;
+  amount?: string;
 }
 
 export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
   state: IState = {
     swapModalVisible: false,
     loading: false,
+    selectedCoin: 'DAI',
   };
 
   async componentDidMount() {
@@ -44,6 +39,18 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
     this.setState({ loading: false });
   }
 
+  onCoinChange = (selectedCoin: IUSDCoins) => {
+    this.setState({
+      selectedCoin,
+    });
+  };
+
+  onAmountChange = (e: any) => {
+    this.setState({
+      amount: e.target.value,
+    });
+  };
+
   closeSwapModal = () => {
     this.setState({
       swapModalVisible: false,
@@ -57,7 +64,9 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
   };
 
   render() {
-    const { loading, data } = this.state;
+    const { loading, data, selectedCoin, amount } = this.state;
+    const transfed = Number(amount) * data?.rate!;
+    const transferText = isNaN(transfed) ? '' : format(transfed);
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => {
@@ -78,7 +87,9 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
                           <Row>
                             <Col xs={20} sm={20} md={20} lg={20}>
                               <Input
+                                value={amount}
                                 className={styles.ddsInput}
+                                onChange={this.onAmountChange}
                                 placeholder="How many DDS do you want to swap and burn?"
                               />
                             </Col>
@@ -98,7 +109,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
                                 </Col>
                                 <Col xs={10} sm={10} md={8} lg={8}>
                                   <Select
-                                    defaultValue="DAI"
+                                    defaultValue={selectedCoin}
                                     className={styles.coinDropdown}
                                     style={{ width: '100%', height: 50 }}
                                   >
@@ -106,7 +117,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
                                   </Select>
                                 </Col>
                                 <Col xs={11} sm={11} md={13} lg={13}>
-                                  <Input placeholder="" />
+                                  <Input value={transferText} disabled={true} placeholder="" />
                                 </Col>
                               </Row>
                             </Col>
@@ -134,13 +145,13 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
                 >
                   <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
                     <Descriptions.Item label="Swap Ratio" span={24}>
-                      1DDS : 644.05 DAI
+                      1DDS : {format(data?.rate)} DAI
                     </Descriptions.Item>
                     <Descriptions.Item label="Swap Amount" span={24}>
-                      10 DDS
+                      {amount} DDS
                     </Descriptions.Item>
                     <Descriptions.Item label="Receive" span={24}>
-                      6440.5 DAI
+                      {transferText} {selectedCoin}
                     </Descriptions.Item>
                   </Descriptions>
                   <Row className={commonStyles.actionBtns} gutter={[16, 16]} type="flex">

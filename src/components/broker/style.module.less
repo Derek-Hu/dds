@@ -8,13 +8,8 @@
   border-radius: 8px;
 }
 
-.root {
-  margin: 0 auto;
-  margin-bottom: 140px;
-  padding: 0 1em;
-  background-color: #f9fafc;
-  max-width: 900px;
-  &.mobile {
+:global(.mobile) {
+  .root {
     margin-bottom: 60px;
     & > h2 {
       font-size: 18px;
@@ -55,8 +50,23 @@
         display: none;
       }
     }
-  }
 
+    .steps {
+      h4 {
+        margin-bottom: 0;
+      }
+      & > div > div {
+        margin-top: 48px;
+      }
+    }
+  }
+}
+.root {
+  margin: 0 auto;
+  margin-bottom: 140px;
+  padding: 0 1em;
+  background-color: #f9fafc;
+  max-width: 900px;
   .tableList {
     max-width: 900px;
     margin: 0 auto;
@@ -272,14 +282,6 @@
       }
     }
 
-    &.mobile {
-      h4 {
-        margin-bottom: 0;
-      }
-      & > div > div {
-        margin-top: 48px;
-      }
-    }
     p {
       font-size: 16px;
       font-weight: bold;

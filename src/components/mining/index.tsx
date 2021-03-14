@@ -13,96 +13,23 @@ import ModalRender from '../modal-render/index';
 import currStyles from '../trade-bonus/modals/style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import LockedDetails, { ILockedData } from '../liquidity-pool/locked-details';
-import SystemRanking from './system-ranking';
 import CardInfo from '../card-info/index';
+import Liquidity from './liquidity/your-liquidity-mining-reward';
+import LiquidityLocked from './liquidity-locked/your-liquidity-locked-reward';
+import Liquiditor from './liquiditor/your-liquiditor-mining-reward';
+import { Visible } from 'components/builtin/hidden';
+import Auth, { Public } from '../builtin/auth';
+import ReTokenBalance from './liquidity/re-token-balance';
+import SystemFundBalance from './liquiditor/system-fund-balance';
+import YourMiningShare from './liquidity/your-mining-share';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
-
-const SystemFundBalance = {
-  title: 'System Fund Balance',
-  // desc: <span>Total Liquidity: <span style={style}>23534.33</span> USD</span>,
-  items: [
-    {
-      label: 'DAI',
-      value: <span>647</span>,
-    },
-    {
-      label: 'USDC',
-      value: <span>638</span>,
-    },
-    {
-      label: 'USDT',
-      value: <span>7378</span>,
-    },
-  ],
-};
 
 const TabName = {
   Liquidity: 'liquidity',
   Utilization: 'liquidity locked',
   Liquiditor: 'liquiditor',
-};
-
-const mining = {
-  money: 530400,
-  percentage: 70,
-  ddsCount: 25000000,
-};
-
-// const barData: IBarData = {
-//   left: {
-//     title: 'Distributed today',
-//     percentage: 70,
-//   },
-//   right: {
-//     title: 'Total daily amount',
-//     value: 25000000,
-//   },
-//   unit: 'DDS',
-// };
-
-const utilization = {
-  money: 530400,
-  percentage: 90,
-  ddsCount: 1000000,
-};
-
-const ReTokenBalance = {
-  title: 'Your reToken Balance',
-  items: [
-    {
-      label: 'reDAI',
-      value: 647,
-    },
-    {
-      label: 'reUSDC',
-      value: 638,
-    },
-    {
-      label: 'reUSDT',
-      value: 7378,
-    },
-  ],
-};
-
-const LockBalance: IPool = {
-  title: 'Locked',
-  usd: 748830,
-  coins: [
-    {
-      label: 'reDAI',
-      value: 647,
-    },
-    {
-      label: 'reUSDC',
-      value: 638,
-    },
-    {
-      label: 'reUSDT',
-      value: 7378,
-    },
-  ],
 };
 
 interface IReward {
@@ -197,7 +124,7 @@ export default class Mining extends Component {
 
   state = {
     visible: false,
-    isLogin: false,
+    isLogin: true,
     isUnlockType: false,
     claimModalVisible: false,
     lockReModalVisible: false,
@@ -253,96 +180,21 @@ export default class Mining extends Component {
             <div className={styles.tabContainer}>
               <Tabs
                 defaultActiveKey={selectedTab}
+                animated={false}
                 className={[CustomTabKey, 'miningTabs'].join(' ')}
                 onChange={this.callback}
               >
                 <TabPane tab={<span className={styles.uppercase}>{TabName.Liquidity}</span>} key={TabName.Liquidity}>
-                  <h3>{isLogin ? 'Your Liquidity Mining Reward' : 'Liquidity Mining Reward Today'}</h3>
-                  <p className={styles.coins}>{numeral(mining.money).format('0,0')} DDS</p>
-                  {isLogin ? null : (
-                    <p className={styles.dynamic}>
-                      <span>Current reward factor </span>
-                      <br />
-                      32 <span>DDS/Block</span>
-                    </p>
-                  )}
-
-                  {isLogin ? (
-                    <Button type="primary" className={styles.btn} onClick={this.showClaimModal}>
-                      Claim
-                    </Button>
-                  ) : null}
-                  {/* 
-                  <ProgressBar data={barData} />
-                  <p className={styles.fifo}>First come first served</p> */}
+                  <Liquidity />
                 </TabPane>
                 <TabPane
                   tab={<span className={styles.uppercase}>{TabName.Utilization}</span>}
                   key={TabName.Utilization}
                 >
-                  <h3>{isLogin ? 'Your Liquidity Locked Rewards' : 'Liquidity Locked Rewards Today'}</h3>
-                  <p className={styles.coins}>{numeral(utilization.money).format('0,0')} DDS</p>
-                  {isLogin ? null : (
-                    <p className={styles.dynamic}>
-                      <span>Only reward for liquidity locked in private pool</span>
-                    </p>
-                  )}
-
-                  {/* <h4 className={styles.clockTitle}>Rewards Colck</h4>
-              <p className={styles.rule}>
-                Start liquidity utilization mining if there is no trading within
-                30min
-              </p>
-              <div className={styles.cicleBar}>
-                <Progress
-                  type="circle"
-                  width={160}
-                  strokeWidth={20}
-                  percent={70}
-                  strokeColor="#1346FF"
-                  strokeLinecap="square"
-                  format={(percent) => `${percent} Days`}
-                />
-              </div>
-               */}
-                  {isLogin ? (
-                    <div>
-                      <Button
-                        type="primary"
-                        className={[styles.btn, styles.cliamBtn].join(' ')}
-                        onClick={this.showClaimModal}
-                      >
-                        Claim
-                      </Button>
-                      <div>
-                        <Button type="link" onClick={this.showWithDraw} className={styles.recordLink}>
-                          Rewards Balance Record
-                        </Button>
-                      </div>
-                    </div>
-                  ) : null}
+                  <LiquidityLocked />
                 </TabPane>
                 <TabPane tab={<span className={styles.uppercase}>{TabName.Liquiditor}</span>} key={TabName.Liquiditor}>
-                  <div className={styles.liquiditorWpr}>
-                    <h3>{isLogin ? 'Your Liquiditor Mining Rewards' : 'Liquiditor Mining Rewards'}</h3>
-                    <p>Win the liquiditor Campaign or get compensated when fund is empty</p>
-                    <Row>
-                      <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
-                        <span className={styles.ads}>{totalRewards.Campaign} DDS</span>
-                        <span>Campaign Rewards</span>
-                      </Col>
-                      <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
-                        <span className={styles.ads}>{totalRewards.Compensate} DDS</span>
-                        <span>Compensate Rewards</span>
-                      </Col>
-                    </Row>
-                    {isLogin ? null : (
-                      <>
-                        <p className={styles.wantoBe}>Want to become a liquiditor?</p>
-                        <Button type="primary">Read Liquiditor Docs</Button>
-                      </>
-                    )}
-                  </div>
+                  <Liquiditor />
                 </TabPane>
               </Tabs>
 
@@ -425,25 +277,20 @@ export default class Mining extends Component {
               </ModalRender>
             </div>
             <div className={styles.bottomArea}>
-              {selectedTab === TabName.Liquiditor ? (
-                <SystemRanking isLogin={false}>
-                  <CardInfo theme="inner" {...SystemFundBalance} />
-                </SystemRanking>
-              ) : null}
-              {isLogin && selectedTab === TabName.Liquidity ? (
-                <div className={styles.panels}>
-                  <Row gutter={24}>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <CardInfo theme="inner" {...ReTokenBalance}></CardInfo>
-
-                      {/* <Pool {...ReTokenBalance} smallSize={true}> */}
-                      {/* <Button type="primary" className={styles.lock} onClick={() => this.showLockModal(false)}>
+              <Visible when={selectedTab === TabName.Liquidity}>
+                <Auth>
+                  <div className={styles.panels}>
+                    <Row gutter={24}>
+                      <Col xs={24} sm={24} md={12} lg={12}>
+                        <ReTokenBalance />
+                        {/* <Pool {...ReTokenBalance} smallSize={true}> */}
+                        {/* <Button type="primary" className={styles.lock} onClick={() => this.showLockModal(false)}>
                           Lock reTokens
                         </Button>
                         <p>Lock reTokens to start receving rewards inDDS tokens</p> 
                       </Pool>*/}
-                    </Col>
-                    {/* <Col xs={24} sm={24} md={8} lg={8}>
+                      </Col>
+                      {/* <Col xs={24} sm={24} md={8} lg={8}>
                       <Pool {...LockBalance} smallSize={true}>
                         <Button type="primary" className={styles.lock} onClick={() => this.showLockModal(true)}>
                           Unlock reTokens
@@ -451,12 +298,16 @@ export default class Mining extends Component {
                         <p>Unlock reToken to be able to withdraw your reToken from the liquidity mining</p>
                       </Pool>
                     </Col> */}
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <PoolProgress {...MiningShare} />
-                    </Col>
-                  </Row>
-                </div>
-              ) : null}
+                      <Col xs={24} sm={24} md={12} lg={12}>
+                        <YourMiningShare />
+                      </Col>
+                    </Row>
+                  </div>
+                </Auth>
+              </Visible>
+              <Visible when={selectedTab === TabName.Liquiditor}>
+                <SystemFundBalance />
+              </Visible>
             </div>
           </div>
         )}

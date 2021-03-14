@@ -5,7 +5,7 @@ import numeral from 'numeral';
 
 export interface IIndicatorProgress {
   label: string;
-  percentage?: number;
+  percentage?: any;
   val?: any;
 }
 export default ({ data, totalMode }: { data: IIndicatorProgress; totalMode: boolean }) => {

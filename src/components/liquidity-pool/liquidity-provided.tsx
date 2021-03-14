@@ -19,7 +19,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
     try {
       const data = await getCollaborativeLiquidityProvided();
       this.setState({
-        data: data ? data.map(({ coin, amount }) => ({ label: coin as string, value: amount })) : [],
+        data: data ? data.map(({ coin, value }) => ({ label: coin as string, value: value })) : [],
       });
     } catch (e) {}
 

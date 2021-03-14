@@ -7,10 +7,11 @@ export interface IMiningShare {
   desc?: any;
   coins: Array<IIndicatorProgress>;
   totalMode: boolean;
+  children?: any;
 }
 
 export default (props: IMiningShare) => {
-  const { title, desc, coins, totalMode } = props;
+  const { title, desc, coins, totalMode, children } = props;
 
   return (
     <SiteContext.Consumer>
@@ -21,6 +22,7 @@ export default (props: IMiningShare) => {
           {coins.map((coin) => (
             <WithIndicator totalMode={totalMode} data={coin} />
           ))}
+          {children}
         </div>
       )}
     </SiteContext.Consumer>

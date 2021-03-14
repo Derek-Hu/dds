@@ -2,9 +2,16 @@ import numeral from 'numeral';
 
 export const format = (value: any) => {
   if (typeof value !== 'number') {
-    return;
+    return value;
   }
   return numeral(value).format('0,0.0000');
+};
+
+export const formatInt = (value: any) => {
+  if (typeof value !== 'number') {
+    return value;
+  }
+  return numeral(value).format('0,0');
 };
 
 export const percentage = (fenzi: any, fenmu: any) => {
