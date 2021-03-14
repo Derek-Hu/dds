@@ -9,5 +9,9 @@ export interface WalletInterface {
 
   doConnect(): void;
 
+  wasConnected(): Observable<boolean>;
+
   watchAccount(): Observable<string | null>;
+
+  getAccount(): string | null;
 }

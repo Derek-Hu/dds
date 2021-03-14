@@ -1,8 +1,8 @@
 import MetaMaskOnboarding from '@metamask/onboarding';
 import { BehaviorSubject, from, Observable } from 'rxjs';
-import { chainDataState } from './chain-connect-state';
 import { Wallet } from '../constant';
 import { WalletInterface } from '../wallet/wallet-interface';
+import { filter, map } from 'rxjs/operators';
 
 declare const window: Window & { ethereum: any };
 
@@ -13,22 +13,16 @@ export const { isMetaMaskInstalled } = MetaMaskOnboarding;
  */
 export class MetamaskWallet implements WalletInterface {
   public readonly walletType: Wallet = Wallet.Metamask;
-  private accounts: string[] = [];
   private curSelectedAccount: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
   constructor() {
+    // 初始化时自动尝试连接
     this.syncAccount();
-  }
-
-  public isChainConnected(): boolean {
-    if (isMetaMaskInstalled()) {
-      return window.ethereum.isConnected();
-    }
-    return false;
   }
 
   /**
    * user click connect button.
+   * 用户手动连接
    */
   public doConnect() {
     if (isMetaMaskInstalled()) {
@@ -40,19 +34,26 @@ export class MetamaskWallet implements WalletInterface {
     }
   }
 
-  public getAccounts(): string[] {
-    return this.accounts || [];
+  public wasConnected(): Observable<boolean> {
+    return this.curSelectedAccount.pipe(map((account) => account !== null));
   }
 
-  public getCurSelectedAccount(): string | null {
+  public getAccount(): string | null {
     return this.curSelectedAccount.getValue();
   }
 
   public watchAccount(): Observable<string | null> {
-    return this.curSelectedAccount;
+    return this.curSelectedAccount.pipe(filter((account) => account !== null));
   }
 
   // --------------------------------------------------------------------------
+
+  private isChainConnected(): boolean {
+    if (isMetaMaskInstalled()) {
+      return window.ethereum.isConnected();
+    }
+    return false;
+  }
 
   private boardingMetamask() {
     if (isMetaMaskInstalled()) {
@@ -66,13 +67,8 @@ export class MetamaskWallet implements WalletInterface {
 
   private updateAccount(accounts: string[]) {
     if (accounts && accounts.length > 0) {
-      // 当前只有metamask钱包，当获取到账号时，直接更新全局状态
-      chainDataState.setCurWallet(Wallet.Metamask);
-
-      this.accounts = accounts;
       this.curSelectedAccount.next(accounts[0]);
     } else {
-      this.accounts = [];
       this.curSelectedAccount.next(null);
     }
   }

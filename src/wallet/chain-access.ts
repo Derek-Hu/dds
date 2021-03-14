@@ -1,13 +1,11 @@
-import { ABI, ContractParam, ContractProxy, UserAccountInfo } from '../wallet/contract-interface';
-import { BehaviorSubject, from, Observable, of, interval, EMPTY } from 'rxjs';
+import { ABI, ContractProxy, UserAccountInfo } from '../wallet/contract-interface';
+import { BehaviorSubject, from, Observable, of, interval, EMPTY, zip, merge } from 'rxjs';
 import * as ethers from 'ethers';
-import { catchError, filter, map, mapTo, startWith, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, map, mapTo, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { BigNumber } from '@ethersproject/bignumber';
-import { isMetaMaskInstalled } from './metamask';
 import {
   TradeDAIContractAddress,
   DataRefreshInterval,
-  DefaultNetwork,
   Wallet,
   TradeUSDTContractAddress,
   TradeUSDCContractAddress,
@@ -15,8 +13,9 @@ import {
   ETH_WEIGHT,
   CoinWeight,
 } from '../constant';
-import { chainDataState, ChainDataState } from '../wallet/chain-connect-state';
 import { walletManager } from '../wallet/wallet-manager';
+import { WalletInterface } from './wallet-interface';
+import { toBigNumber, toEthers } from '../util/ethers';
 
 declare const window: Window & { ethereum: any };
 
@@ -87,6 +86,46 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
+  public getMaxOpenAmount(coin: IUSDCoins, exchange: IExchangePair, maxUSDAmount: number): Observable<BigNumber> {
+    return this.getContract(coin).pipe(
+      switchMap((contract: ethers.Contract) => {
+        // 用户输入数字转成接口精度
+        const usdAmount: BigNumber = BigNumber.from(1207000000).mul(ETH_WEIGHT);
+        console.log('ex', exchange, usdAmount);
+        return contract.functions.getMaxOpenAmount(exchange, usdAmount);
+      }),
+      map((num: BigNumber[]) => {
+        console.log('get res num', num);
+        return num[0];
+      }),
+      catchError((err) => {
+        console.warn('error', err);
+        return of(BigNumber.from(0));
+      })
+    );
+  }
+
+  public watchMaxOpenAmount(coin: IUSDCoins, exchange: IExchangePair): Observable<BigNumber> {
+    return this.timer.pipe(
+      switchMap(() => {
+        return walletManager.watchWalletInstance().pipe(
+          filter((walletIns: WalletInterface | null) => walletIns !== null),
+          switchMap((walletIns: WalletInterface | null) => {
+            return (walletIns as WalletInterface).watchAccount();
+          }),
+          filter((account: string | null) => account !== null)
+        );
+      }),
+      switchMap((userAddress: string | null) => {
+        return this.watchUserAccount(userAddress as string, coin);
+      }),
+      switchMap((info: UserAccountInfo) => {
+        const maxAmount: number = Number(toEthers(info.available, 0));
+        return this.getMaxOpenAmount(coin, exchange, maxAmount);
+      })
+    );
+  }
+
   public depositToken(count: number, coin: IUSDCoins): Observable<boolean> {
     return this.getContract(coin).pipe(
       switchMap((contract: ethers.Contract) => {
@@ -123,8 +162,107 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
-  public createContract(param: ContractParam): Observable<boolean> {
-    return of(false);
+  public createContract(coin: IUSDCoins, orderType: ITradeType, amount: number): Observable<boolean> {
+    return this.getContract(coin).pipe(
+      switchMap((contract: ethers.Contract) => {
+        const bigAmount = toBigNumber(amount, 18);
+
+        const contractType = orderType === 'long' ? 1 : 2;
+        console.log('do create ', bigAmount);
+        return contract.functions.creatContract('ETHDAI', bigAmount, contractType);
+      }),
+      switchMap((rs: any) => {
+        console.log('rs is', rs);
+        return rs.wait();
+      }),
+      mapTo(true),
+      catchError((err) => {
+        console.warn('error', err);
+        return of(false);
+      })
+    );
+  }
+
+  public getUserOrders(address: string, curPrice: BigNumber, page: number, pageSize: number): Observable<any[]> {
+    return this.getContract('DAI').pipe(
+      switchMap((contract: ethers.Contract) => {
+        return contract.functions.getUserOrderID(address);
+      }),
+      switchMap((ids: BigNumber[][]) => {
+        const orderIds: BigNumber[] = ids[0];
+        if (orderIds.length === 0) {
+          return of([]);
+        }
+
+        let begin = (page - 1) * pageSize;
+        if (begin >= orderIds.length) {
+          return of([]);
+        }
+
+        let end = page * pageSize;
+        if (end > orderIds.length) {
+          end = orderIds.length;
+        }
+
+        const pageOrderIds: BigNumber[] = orderIds.slice(begin, end);
+        const obs: Observable<any>[] = pageOrderIds.map((id: BigNumber) =>
+          this.getContract('DAI').pipe(
+            switchMap((contract: ethers.Contract) => {
+              return from(contract.functions.getOrderInfo(id)).pipe(map((info) => ({ id, info })));
+            }),
+            map((order: { id: BigNumber; info: any }) => {
+              const stateSign: '1' | '2' = order.info.state.toString();
+              const diffPrice: BigNumber =
+                stateSign === '1'
+                  ? curPrice.sub(order.info.openPrice)
+                  : order.info.closePrice.sub(order.info.openPrice);
+              const plPercent: number =
+                Number(toEthers(diffPrice.mul('100'), 0)) / Number(toEthers(order.info.openPrice, 0));
+              const pl: number = Number(toEthers(diffPrice, 0)) * Number(toEthers(order.info.number, 0));
+              return {
+                id: order.id.toString(),
+                time: Number(order.info.startTime.toString()),
+                type: order.info.contractType.toString() === '1' ? 'long' : 'short',
+                amount: Number(toEthers(order.info.number, 4)),
+                price: Number(toEthers(order.info.openPrice, 4)),
+                costCoin: 'DAI',
+                exchange: order.info.exchangeType,
+                cost: Number(toEthers((order.info.lockFee as BigNumber).add(order.info.newLockFee as BigNumber), 4)),
+                status: stateSign === '1' ? 'ACTIVE' : 'CLOSED',
+                fee: Number(toEthers(order.info.exFee, 4)),
+                pl: {
+                  val: Math.round(pl * 10000) / 10000,
+                  percentage: Math.round(plPercent * 100) / 100,
+                },
+              } as ITradeRecord;
+            })
+          )
+        );
+
+        return zip(...obs).pipe(take(1));
+      }),
+      map((orderInfo: any[]) => {
+        console.log('orderInfo', orderInfo);
+        return orderInfo;
+      })
+    );
+  }
+
+  public getFundingLockedAmount(coin: IUSDCoins, exchange: IExchangePair, ethAmount: number): Observable<BigNumber> {
+    return this.getContract(coin).pipe(
+      switchMap((contract: ethers.Contract) => {
+        return this.getPriceByETHDAI(coin).pipe(
+          switchMap((price: BigNumber) => {
+            const amount: BigNumber = toBigNumber(ethAmount, 18);
+            return contract.functions.getLockedAmount(amount, price, exchange, '2');
+          })
+        );
+      }),
+      map((rs: any) => {
+        console.log('funding lock', rs);
+        return rs.marginFee;
+      })
+    );
   }
 
   //
@@ -141,29 +279,6 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   protected abstract getProvider(): ethers.providers.BaseProvider;
 
   protected abstract getSigner(): ethers.Signer | undefined;
-}
-
-/**
- * 当没有metamask时，默认的网络连接
- */
-class DefaultContractAccessor extends BaseTradeContractAccessor {
-  public readonly transferable = false;
-
-  protected getContractMap(): Map<IUSDCoins, ethers.Contract> {
-    return new Map<IUSDCoins, ethers.Contract>();
-  }
-
-  protected getProvider(): ethers.providers.EtherscanProvider {
-    return new ethers.providers.EtherscanProvider(DefaultNetwork);
-  }
-
-  protected getSigner(): undefined {
-    return undefined;
-  }
-
-  public getUSDContract(): null {
-    return null;
-  }
 }
 
 /**
@@ -204,50 +319,50 @@ class MetamaskContractAccessor extends BaseTradeContractAccessor {
  * 合约访问工具
  */
 export class ContractAccessor implements ContractProxy {
-  private readonly chainData: ChainDataState = chainDataState;
-  private readonly defaultAccessor = new DefaultContractAccessor();
-
+  //
   private readonly metamaskAccessor = new MetamaskContractAccessor();
 
-  private readonly accessor: BehaviorSubject<BaseTradeContractAccessor> = new BehaviorSubject<BaseTradeContractAccessor>(
-    new DefaultContractAccessor()
+  private readonly curAccessor: BehaviorSubject<BaseTradeContractAccessor | null> = new BehaviorSubject<BaseTradeContractAccessor | null>(
+    null
   );
 
-  constructor() {
-    walletManager.watchWalletInstance();
+  public get accessor(): Observable<BaseTradeContractAccessor> {
+    return this.curAccessor.pipe(
+      filter((a: BaseTradeContractAccessor | null) => a !== null),
+      map((a) => a as BaseTradeContractAccessor),
+      take(1)
+    );
+  }
 
-    this.chainData.watchWallet().subscribe((wallet: Wallet | null) => {
-      if (wallet === null) {
-        this.changeAccessor(this.defaultAccessor);
-      } else if (wallet === Wallet.Metamask) {
-        if (isMetaMaskInstalled()) {
-          this.changeAccessor(this.metamaskAccessor);
-        } else {
-          this.changeAccessor(this.defaultAccessor);
-        }
-      } else {
-        // TODO add other wallet
-      }
-    });
+  constructor() {
+    const sub = walletManager
+      .watchWalletType()
+      .pipe(
+        tap((wallet: Wallet | null) => {
+          switch (wallet) {
+            case Wallet.Metamask: {
+              this.changeAccessor(this.metamaskAccessor);
+              break;
+            }
+            default: {
+              this.changeAccessor(null);
+            }
+          }
+        })
+      )
+      .subscribe();
   }
 
   public watchContractAccessor(): Observable<BaseTradeContractAccessor> {
-    return this.accessor;
-  }
-
-  private changeAccessor(accessor: BaseTradeContractAccessor) {
-    if (this.accessor.getValue() === accessor) {
-      return;
-    }
-    this.accessor.next(accessor);
+    return this.curAccessor.pipe(filter((a) => a !== null)) as Observable<BaseTradeContractAccessor>;
   }
 
   public getPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber> {
-    return this.accessor.getValue().getPriceByETHDAI(coin);
+    return this.accessor.pipe(switchMap((accessor) => accessor.getPriceByETHDAI(coin)));
   }
 
   public watchPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber> {
-    return this.accessor.pipe(
+    return this.watchContractAccessor().pipe(
       switchMap((accessor: BaseTradeContractAccessor) => {
         return accessor.watchPriceByETHDAI(coin);
       })
@@ -255,19 +370,23 @@ export class ContractAccessor implements ContractProxy {
   }
 
   public getUserAccount(address: string, coin: IUSDCoins): Observable<UserAccountInfo> {
-    return this.accessor.getValue().getUserAccount(address, coin);
+    return this.accessor.pipe(switchMap((accessor) => accessor.getUserAccount(address, coin)));
   }
 
   public watchUserAccount(address: string, coin: IUSDCoins): Observable<UserAccountInfo> {
-    return this.accessor.pipe(
+    return this.watchContractAccessor().pipe(
       switchMap((accessor: BaseTradeContractAccessor) => {
         return accessor.watchUserAccount(address, coin);
       })
     );
   }
 
+  public getMaxOpenAmount(coin: IUSDCoins, exchange: IExchangePair, maxUSDAmount: number): Observable<BigNumber> {
+    return this.accessor.pipe(switchMap((accessor) => accessor.getMaxOpenAmount(coin, exchange, maxUSDAmount)));
+  }
+
   public depositToken(count: number, coin: IUSDCoins): Observable<boolean> {
-    return this.accessor.pipe(
+    return this.watchContractAccessor().pipe(
       filter((accessor: BaseTradeContractAccessor) => accessor.transferable),
       switchMap((accessor: BaseTradeContractAccessor) => {
         return accessor.depositToken(count, coin);
@@ -279,7 +398,7 @@ export class ContractAccessor implements ContractProxy {
   }
 
   public withdrawToken(count: number, coin: IUSDCoins): Observable<any> {
-    return this.accessor.pipe(
+    return this.watchContractAccessor().pipe(
       filter((accessor: BaseTradeContractAccessor) => accessor.transferable),
       switchMap((accessor: BaseTradeContractAccessor) => {
         return accessor.withdrawToken(count, coin);
@@ -290,9 +409,55 @@ export class ContractAccessor implements ContractProxy {
     );
   }
 
-  public createContract(param: ContractParam): Observable<any> {
-    return of();
+  public createContract(coin: IUSDCoins, orderType: ITradeType, amount: number): Observable<any> {
+    return this.accessor.pipe(switchMap((accessor) => accessor.createContract(coin, orderType, amount)));
+  }
+
+  public getUserOrders(address: string, curPrice: BigNumber, page: number, pageSize: number): Observable<any> {
+    return this.accessor.pipe(switchMap((accessor) => accessor.getUserOrders(address, curPrice, page, pageSize)));
+  }
+
+  public getFundingLockedAmount(coin: IUSDCoins, exchange: IExchangePair, ethAmount: number): Observable<BigNumber> {
+    return this.accessor.pipe(switchMap((accessor) => accessor.getFundingLockedAmount(coin, exchange, ethAmount)));
+  }
+
+  // ------------------------------------------------------------------------------------------
+
+  private changeAccessor(accessor: BaseTradeContractAccessor | null) {
+    if (this.curAccessor.getValue() === accessor) {
+      return;
+    }
+    console.log('set accessor', accessor);
+    this.curAccessor.next(accessor);
   }
 }
 
 export const contractAccessor = new ContractAccessor();
+
+// contractAccessor.getMaxOpenAmount('DAI', 'ETHDAI', 1200)
+//   .subscribe((num: BigNumber) => {
+//     console.log("big is", num);
+//   })
+//
+//
+// contractAccessor.createContract('DAI', 'long', 0.1).subscribe((rs) => {
+//   console.log("create rs", rs);
+// })
+
+// walletManager.watchWalletInstance().pipe(
+//   filter((walletIns) => walletIns !== null),
+//   switchMap((walletIns: WalletInterface | null) => {
+//     return (walletIns as WalletInterface)?.watchAccount()
+//   }),
+//   filter(account => account !== null),
+//   take(1),
+//   switchMap((account: string | null) => {
+//     return contractAccessor.getPriceByETHDAI('DAI').pipe(
+//       switchMap((curPrice) => {
+//         return contractAccessor.getUserOrders(account as string, curPrice, 1, 5)
+//       })
+//     )
+//   })
+// ).subscribe()
+
+contractAccessor.getFundingLockedAmount('DAI', 'ETHDAI', 1).subscribe();

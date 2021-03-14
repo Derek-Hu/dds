@@ -1047,11 +1047,19 @@ export interface ContractProxy {
 
   watchUserAccount(address: string, coin: IUSDCoins): Observable<UserAccountInfo>;
 
+  getMaxOpenAmount(coin: IUSDCoins, exchange: IExchangePair, maxUSDAmount: number): Observable<BigNumber>;
+
   depositToken(count: number, coin: IUSDCoins): Observable<boolean>;
 
   withdrawToken(count: number, coin: IUSDCoins): Observable<boolean>;
 
-  createContract(param: ContractParam): Observable<boolean>;
+  createContract(coin: IUSDCoins, orderType: ITradeType, amount: number): Observable<boolean>;
+
+  // closeContract(id: string): Observable<boolean>;
+
+  getFundingLockedAmount(coin: IUSDCoins, exchange: IExchangePair, ethAmount: number): Observable<BigNumber>;
+
+  getUserOrders(address: string, curPrice: BigNumber, page: number, pageSize: number): Observable<any>;
 }
 
 export interface UserAccountInfo {

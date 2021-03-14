@@ -55,5 +55,17 @@ export const CoinWeight = new Map<IUSDCoins, string>([
   ['USDC', '1000000'],
 ]);
 
+export const CoinEthExchange: { [c: string]: IExchangePair } = {
+  DAI: 'ETHDAI',
+  USDT: 'EHTUSDT',
+  USDC: 'ETHUSDC',
+};
+
+export const CoinBTCExchange = new Map<IUSDCoins, IExchangePair>([
+  ['DAI', 'BTCDAI'],
+  ['USDT', 'BTCUSDT'],
+  ['USDC', 'BTCUSDC'],
+]);
+
 export type ISupporttedUSD = keyof typeof SupporttedUSD;
 export type ICoins = keyof typeof SupporttedCoins;

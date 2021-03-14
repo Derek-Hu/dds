@@ -46,6 +46,8 @@ export const getFundingBalanceInfo = async (coin: IUSDCoins): Promise<IBalanceIn
             const availed: BigNumber = accountInfo.available;
             const locked: BigNumber = deposit.sub(availed);
 
+            console.log('balance is', toEthers(deposit, 0), toEthers(availed, 0));
+
             return {
               balance: Number(toEthers(deposit, 4)),
               locked: Number(toEthers(locked, 4)),
@@ -59,8 +61,59 @@ export const getFundingBalanceInfo = async (coin: IUSDCoins): Promise<IBalanceIn
     .toPromise();
 };
 
-export const getTradeOrders = async (page: number, pageSize = 10): Promise<ITradeRecord[]> => {
-  return returnVal(orders);
+export const getMaxOpenAmount = async (
+  coin: IUSDCoins,
+  exchange: IExchangePair,
+  availedAmount: number
+): Promise<number> => {
+  return contractAccessor
+    .getMaxOpenAmount(coin, exchange, availedAmount)
+    .pipe(
+      map((num: BigNumber) => Number(toEthers(num, 0))),
+      take(1)
+    )
+    .toPromise();
+};
+
+// 订单确认弹框中funding lock的值
+export const getFundingLocked = async (coin: IUSDCoins, ethAmount: number): Promise<number> => {
+  return contractAccessor
+    .getFundingLockedAmount(coin, 'ETHDAI', ethAmount)
+    .pipe(
+      map((locked: BigNumber) => {
+        return Number(toEthers(locked, 4));
+      }),
+      take(1)
+    )
+    .toPromise();
+};
+
+/**
+ * 获取交易订单
+ *
+ * @param page
+ * @param pageSize
+ */
+export const getTradeOrders = async (page: number, pageSize: number = 5): Promise<ITradeRecord[]> => {
+  return walletManager
+    .watchWalletInstance()
+    .pipe(
+      filter((walletIns) => walletIns !== null),
+      switchMap((walletIns: WalletInterface | null) => {
+        return (walletIns as WalletInterface)?.watchAccount();
+      }),
+      filter((account) => account !== null),
+      take(1),
+      switchMap((account: string | null) => {
+        return contractAccessor.getPriceByETHDAI('DAI').pipe(
+          switchMap((curPrice) => {
+            return contractAccessor.getUserOrders(account as string, curPrice, page, pageSize);
+          })
+        );
+      }),
+      take(1)
+    )
+    .toPromise();
 };
 
 export const getTradeInfo = async (coin: IUSDCoins): Promise<ITradeInfo[]> => {
@@ -89,8 +142,17 @@ export const getCurPrice = async (coin: IUSDCoins): Promise<number> => {
     .toPromise();
 };
 
-export const openOrder = async (orderParam: ITradeOpenParam): Promise<boolean> => {
-  return returnVal(true);
+export const openOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: number): Promise<boolean> => {
+  return contractAccessor.createContract(coin, tradeType, amount).pipe(take(1)).toPromise();
+};
+
+/**
+ * 关仓操作
+ * @param orderId - 订单号
+ * @param closePrice - 用户看到的此刻价格
+ */
+export const closeOrder = async (orderId: string, closePrice: number): Promise<boolean> => {
+  return Promise.resolve(false);
 };
 
 export const getPriceGraphData = (
