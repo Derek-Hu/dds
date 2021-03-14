@@ -1,4 +1,5 @@
 declare type ITradeType = 'long' | 'short';
+
 /**
  * Funding Balance 下单入参
  */
@@ -28,6 +29,9 @@ declare interface ICoinAmount {
 declare type IFromCoins = 'ETH' | 'BTC';
 
 declare type IUSDCoins = 'DAI' | 'USDT' | 'USDC';
+
+declare type IExchangePair = 'ETHDAI' | 'EHTUSDT' | 'ETHUSDC' | 'BTCDAI' | 'BTCUSDT' | 'BTCUSDC';
+
 // Funding Balance Withdraw
 // 入参：
 declare interface IRecord {
@@ -105,6 +109,7 @@ declare interface IPoolCoinAmount {
   coin: IUSDCoins;
   amount: number;
 }
+
 /*pool type*/
 declare type IPoolType = 'public' | 'private';
 

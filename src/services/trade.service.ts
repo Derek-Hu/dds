@@ -3,7 +3,7 @@ import { graphData } from './mock/trade-graph.mock';
 import { walletManager } from '../wallet/wallet-manager';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
-import { of } from 'rxjs';
+import { of, zip } from 'rxjs';
 import { contractAccessor } from '../wallet/chain-access';
 import { UserAccountInfo } from '../wallet/contract-interface';
 import { BigNumber } from 'ethers';
@@ -59,8 +59,59 @@ export const getFundingBalanceInfo = async (coin: IUSDCoins): Promise<IBalanceIn
     .toPromise();
 };
 
-export const getTradeOrders = async (page: number, pageSize = 10): Promise<ITradeRecord[]> => {
-  return returnVal(orders);
+export const getMaxOpenAmount = async (
+  coin: IUSDCoins,
+  exchange: IExchangePair,
+  availedAmount: number
+): Promise<number> => {
+  return contractAccessor
+    .getMaxOpenAmount(coin, exchange, availedAmount)
+    .pipe(
+      map((num: BigNumber) => Number(toEthers(num, 0))),
+      take(1)
+    )
+    .toPromise();
+};
+
+// 订单确认弹框中funding lock的值
+export const getFundingLocked = async (coin: IUSDCoins, ethAmount: number): Promise<number> => {
+  return contractAccessor
+    .getFundingLockedAmount(coin, 'ETHDAI', ethAmount)
+    .pipe(
+      map((locked: BigNumber) => {
+        return Number(toEthers(locked, 4));
+      }),
+      take(1)
+    )
+    .toPromise();
+};
+
+/**
+ * 获取交易订单
+ *
+ * @param page
+ * @param pageSize
+ */
+export const getTradeOrders = async (page: number, pageSize: number = 5): Promise<ITradeRecord[]> => {
+  return walletManager
+    .watchWalletInstance()
+    .pipe(
+      filter((walletIns) => walletIns !== null),
+      switchMap((walletIns: WalletInterface | null) => {
+        return (walletIns as WalletInterface)?.watchAccount();
+      }),
+      filter((account) => account !== null),
+      take(1),
+      switchMap((account: string | null) => {
+        return contractAccessor.getPriceByETHDAI('DAI').pipe(
+          switchMap((curPrice) => {
+            return contractAccessor.getUserOrders(account as string, curPrice, page, pageSize);
+          })
+        );
+      }),
+      take(1)
+    )
+    .toPromise();
 };
 
 export const getTradeInfo = async (coin: IUSDCoins): Promise<ITradeInfo[]> => {
@@ -68,7 +119,18 @@ export const getTradeInfo = async (coin: IUSDCoins): Promise<ITradeInfo[]> => {
 };
 
 export const getTradeLiquidityPoolInfo = async (coin: IUSDCoins): Promise<ITradePoolInfo> => {
-  return returnVal(poolInfo);
+  const obs = [contractAccessor.getPubPoolInfo(coin), contractAccessor.getPrivatePoolInfo(coin)];
+  return zip(...obs)
+    .pipe(
+      map((infoList: CoinAvailableInfo[]) => {
+        return {
+          public: infoList[0],
+          private: infoList[1],
+        };
+      }),
+      take(1)
+    )
+    .toPromise();
 };
 
 export const deposit = async (amount: IRecord): Promise<boolean> => {
@@ -89,8 +151,23 @@ export const getCurPrice = async (coin: IUSDCoins): Promise<number> => {
     .toPromise();
 };
 
-export const openOrder = async (orderParam: ITradeOpenParam): Promise<boolean> => {
-  return returnVal(true);
+/**
+ * 开仓下单操作
+ * @param coin -
+ * @param tradeType
+ * @param amount - eth的数量
+ */
+export const openOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: number): Promise<boolean> => {
+  return contractAccessor.createContract(coin, tradeType, amount).pipe(take(1)).toPromise();
+};
+
+/**
+ * 关仓操作
+ * @param order - 订单对象，从返回的order列表中选取
+ * @param closePrice - 用户看到并认可的的此刻价格
+ */
+export const closeOrder = async (order: ITradeRecord, closePrice: number): Promise<boolean> => {
+  return contractAccessor.closeContract(order, closePrice).pipe(take(1)).toPromise();
 };
 
 export const getPriceGraphData = (
@@ -99,6 +176,3 @@ export const getPriceGraphData = (
 ): Promise<IPriceGraph> => {
   return returnVal(graphData);
 };
-/**
- * Pool Page
- */
