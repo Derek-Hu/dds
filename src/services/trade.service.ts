@@ -3,11 +3,12 @@ import { graphData } from './mock/trade-graph.mock';
 import { walletManager } from '../wallet/wallet-manager';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
-import { of, zip } from 'rxjs';
+import { AsyncSubject, of, zip } from 'rxjs';
 import { contractAccessor } from '../wallet/chain-access';
 import { UserAccountInfo } from '../wallet/contract-interface';
 import { BigNumber } from 'ethers';
 import { toEthers } from '../util/ethers';
+import * as request from 'superagent';
 
 /**
  * Trade Page
@@ -174,5 +175,26 @@ export const getPriceGraphData = (
   coins: { from: IFromCoins; to: IUSDCoins },
   duration: IGraphDuration
 ): Promise<IPriceGraph> => {
-  return returnVal(graphData);
+  console.log('c d', coins, duration);
+  const days = duration === 'day' ? 1 : duration === 'week' ? 7 : 30;
+
+  const rs = new AsyncSubject<IPriceGraph>();
+  request
+    .get('https://api.coingecko.com/api/v3/coins/ethereum/market_chart?vs_currency=USD&days=' + days)
+    .end((err, res) => {
+      if (!err) {
+        const obj = JSON.parse(res.text);
+        const data = obj.prices.map((el: number[]) => ({ timestamp: el[0], value: el[1] }));
+
+        const dataRs = {
+          price: 100.2,
+          percentage: -14.2,
+          range: 23,
+          data: data,
+        };
+        rs.next(dataRs);
+        rs.complete();
+      }
+    });
+  return rs.toPromise();
 };

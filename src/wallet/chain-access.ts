@@ -315,6 +315,18 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
+  public getPubPoolDepositReTokenFromToken(coin: IUSDCoins, tokenAmount: number): Observable<BigNumber> {
+    return this.getPubPoolContract(coin).pipe(
+      switchMap((contract) => {
+        const bigAmount = toBigNumber(tokenAmount, 18);
+        return contract.functions.getMintReDaiAmount(bigAmount);
+      }),
+      map((rs) => {
+        return rs.mintOtoken;
+      })
+    );
+  }
+
   //
   protected getContract(coin: IUSDCoins): Observable<ethers.Contract> {
     return of(this.contractMap.get(coin)).pipe(filter(Boolean)) as Observable<ethers.Contract>;
@@ -515,6 +527,14 @@ export class ContractAccessor implements ContractProxy {
     return this.accessor.pipe(switchMap((accessor) => accessor.getPrivatePoolInfo(coin)));
   }
 
+  public getPubPoolDepositReTokenFromToken(coin: IUSDCoins, tokenAmount: number): Observable<BigNumber> {
+    return this.accessor.pipe(
+      switchMap((accessor) => {
+        return accessor.getPubPoolDepositReTokenFromToken(coin, tokenAmount);
+      })
+    );
+  }
+
   // ------------------------------------------------------------------------------------------
 
   private changeAccessor(accessor: BaseTradeContractAccessor | null) {
@@ -528,3 +548,5 @@ export class ContractAccessor implements ContractProxy {
 export const contractAccessor = new ContractAccessor();
 
 contractAccessor.getPrivatePoolInfo('DAI').subscribe();
+
+contractAccessor.getPubPoolDepositReTokenFromToken('DAI', 1).subscribe();

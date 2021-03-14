@@ -3416,6 +3416,8 @@ export interface ContractProxy {
   getPubPoolInfo(coin: IUSDCoins): Observable<any>;
 
   getPrivatePoolInfo(coin: IUSDCoins): Observable<any>;
+
+  getPubPoolDepositReTokenFromToken(coin: IUSDCoins, tokenAmount: number): Observable<BigNumber>;
 }
 
 export interface UserAccountInfo {
