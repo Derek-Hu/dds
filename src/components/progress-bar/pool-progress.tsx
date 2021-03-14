@@ -14,7 +14,7 @@ export default (props: IMiningShare) => {
   const { title, desc, coins, totalMode, children } = props;
 
   return (
-    <SiteContext.Consumer> 
+    <SiteContext.Consumer>
       {({ isMobile }) => (
         <div className={[styles.root, isMobile ? styles.mobile : ''].join(' ')}>
           <h2>{title}</h2>

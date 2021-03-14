@@ -67,7 +67,7 @@ export default class CommissionPool extends Component<any, IState> {
 
   async componentDidMount() {
     this.setState({ loading: true });
-    
+
     const data = await getBrokerCommissionData();
     this.setState({
       data: data.map(({ value, coin }) => ({
@@ -80,15 +80,15 @@ export default class CommissionPool extends Component<any, IState> {
     this.tableLoad();
   }
 
-  tableLoad = async (page: number = 1) =>{
+  tableLoad = async (page: number = 1) => {
     this.setState({ tableLoading: true });
-    
+
     const tableData = await getBrokerCommissionRecords();
     this.setState({
-      tableData
+      tableData,
     });
     this.setState({ tableLoading: false });
-  }
+  };
 
   render() {
     const { data, loading, visible, tableData } = this.state;

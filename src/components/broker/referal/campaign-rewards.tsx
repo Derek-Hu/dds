@@ -67,7 +67,7 @@ export default class CampaignRewards extends Component<any, IState> {
 
   async componentDidMount() {
     this.setState({ loading: true });
-    
+
     const data = await getBrokerCampaignRewardData();
     this.setState({
       data: data.map(({ value, coin }) => ({
@@ -78,18 +78,17 @@ export default class CampaignRewards extends Component<any, IState> {
     this.setState({ loading: false });
 
     this.tableLoad();
-
   }
 
-  tableLoad = async (page: number = 1) =>{
+  tableLoad = async (page: number = 1) => {
     this.setState({ tableLoading: true });
-    
+
     const tableData = await getBrokerCampaignRewardsPool();
     this.setState({
-      tableData
+      tableData,
     });
     this.setState({ tableLoading: false });
-  }
+  };
 
   render() {
     const { data, loading, visible, tableData } = this.state;
@@ -97,7 +96,7 @@ export default class CampaignRewards extends Component<any, IState> {
       <div>
         <CardInfo theme="inner" title="Campaign Rewards" items={data}>
           <Button type="link" onClick={this.visible.show}>
-          Rewards Record
+            Rewards Record
           </Button>
         </CardInfo>
 

@@ -10,7 +10,7 @@ import Auth, { Public } from '../builtin/auth';
 import CampaignRewards from './referal/campaign-rewards';
 import CampaignRewardsPool from './referal/campaign-rewards-pool';
 import Commission from './referal/commission';
-import SiteContext from "../../layouts/SiteContext";
+import SiteContext from '../../layouts/SiteContext';
 import { account2ReferalCode } from '../../services/broker.service';
 
 const { TabPane } = Tabs;
@@ -21,7 +21,6 @@ const tabName = {
 };
 
 export default class Broker extends Component<any, any> {
-
   static contextType = SiteContext;
 
   state = {

@@ -180,7 +180,7 @@ declare interface CampaignRewardPool {
 interface ICoinItem {
   coin: IUSDCoins;
   amount: number;
-  total: number;
+  total?: number;
 }
 
 declare interface ICoinValue {

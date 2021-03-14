@@ -25,9 +25,7 @@ export default class Broker extends Component<any, IState> {
     this.setState({ loading: false });
   }
 
-  onClaim=() => {
-
-  }
+  onClaim = () => {};
 
   render() {
     const { loading, referalInfo } = this.state;

@@ -15,9 +15,8 @@ interface IState {
   data?: number;
   tableLoading: boolean;
   visible: boolean;
-  tableData: ILiquiditorBalanceRecord[]
+  tableData: ILiquiditorBalanceRecord[];
 }
-
 
 const CommissionColumns = ColumnConvert<ILiquiditorBalanceRecord, {}>({
   column: {
@@ -49,7 +48,7 @@ export default class LiquiditorReward extends Component<any, IState> {
     loading: false,
     visible: false,
     tableLoading: false,
-    tableData: []
+    tableData: [],
   };
 
   static contextType = SiteContext;
@@ -65,22 +64,19 @@ export default class LiquiditorReward extends Component<any, IState> {
     this.tableLoad();
   }
 
-  tableLoad = async (page: number = 1) =>{
+  tableLoad = async (page: number = 1) => {
     this.setState({ tableLoading: true });
-    
+
     const tableData = await getLiquiditorBalanceRecord();
     this.setState({
-      tableData
+      tableData,
     });
     this.setState({ tableLoading: false });
-  }
+  };
 
   showWithDraw = () => {};
-  showClaimModal = () => {
-    
-  }
+  showClaimModal = () => {};
 
-  
   setModalVisible = (key: 'visible') => {
     return {
       show: () =>
@@ -103,7 +99,7 @@ export default class LiquiditorReward extends Component<any, IState> {
         <h3>{this.context.account?.address ? 'Your Liquidity Locked Rewards' : 'Liquidity Locked Rewards Today'}</h3>
         <p className={styles.coins}>{format(data)} DDS</p>
         <Auth>
-        <p className={styles.dynamic}>
+          <p className={styles.dynamic}>
             <span>Only reward for liquidity locked in private pool</span>
           </p>
           <div>
@@ -128,7 +124,6 @@ export default class LiquiditorReward extends Component<any, IState> {
         >
           <Table scroll={{ y: 300, x: 500 }} columns={CommissionColumns} pagination={false} dataSource={tableData} />
         </ModalRender>
-
       </Hidden>
     );
   }

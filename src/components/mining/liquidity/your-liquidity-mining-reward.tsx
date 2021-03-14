@@ -12,7 +12,7 @@ interface IState {
   data?: {
     amount: number;
     refactor: number;
-  }
+  };
 }
 export default class LiquidityMiningReward extends Component<any, IState> {
   state: IState = {
@@ -30,9 +30,7 @@ export default class LiquidityMiningReward extends Component<any, IState> {
     this.setState({ loading: false });
   }
 
-  showClaimModal = () => {
-
-  }
+  showClaimModal = () => {};
 
   render() {
     const { data, loading } = this.state;
@@ -47,7 +45,7 @@ export default class LiquidityMiningReward extends Component<any, IState> {
         </Public>
         <p className={styles.coins}>{format(amount)} DDS</p>
         <Auth>
-        <p className={styles.dynamic}>
+          <p className={styles.dynamic}>
             <span>Current reward factor </span>
             <br />
             {refactor} <span>DDS/Block</span>
@@ -57,6 +55,6 @@ export default class LiquidityMiningReward extends Component<any, IState> {
           </Button>
         </Auth>
       </Hidden>
-    )
+    );
   }
 }

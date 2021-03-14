@@ -13,7 +13,6 @@ interface IState {
 }
 
 export default class BecomeSpark extends Component<any, IState> {
-
   state: IState = {
     loading: false,
   };

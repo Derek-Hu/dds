@@ -9,7 +9,7 @@ interface IState {
 
 interface IProps {
   title: string;
-  service: () => Promise<Array<{coin: string, value: number }>>;
+  service: () => Promise<Array<{ coin: string; value: number }>>;
   children?: any;
   theme: 'outer' | 'inner';
 }
@@ -41,7 +41,9 @@ export default class CoinCard extends Component<IProps, IState> {
     return (
       <Hidden when={loading}>
         <div>
-          <CardInfo theme={theme} title={title} items={data}>{children}</CardInfo>
+          <CardInfo theme={theme} title={title} items={data}>
+            {children}
+          </CardInfo>
         </div>
       </Hidden>
     );
