@@ -44,7 +44,7 @@ export default class TradePage extends Component {
             <div className={[styles.tradeInfoPool, isMobile ? styles.mobile : ''].join(' ')}>
               <Row className={styles.chartBalance} gutter={isMobile ? 0 : 24}>
                 <Col xs={24} sm={24} md={12} lg={16} className={styles.charWpr}>
-                  <KLine />
+                  {/* <KLine /> */}
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={8}>
                   <FundingBalance coins={{ from, to: coin }} graphData={graphData} />
@@ -52,7 +52,7 @@ export default class TradePage extends Component {
               </Row>
 
               <div>
-                {address ? <TradeBonus coin={coin} graphData={graphData} /> : null}
+                {/* {address ? <TradeBonus coin={coin} graphData={graphData} /> : null} */}
                 <div>
                   <Row gutter={isMobile ? 0 : 20}>
                     <Col xs={24} sm={24} md={12} lg={12}>

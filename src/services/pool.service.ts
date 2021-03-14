@@ -16,7 +16,7 @@ const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
 };
 
 export const getCollaborativeLiquidityProvided = async (): Promise<ICoinValue[]> => {
-  return returnVal(liquidityProvided);
+  return returnVal(liquidityProvided); 
 };
 
 export const getCollaborativeArp = async (): Promise<number> => {

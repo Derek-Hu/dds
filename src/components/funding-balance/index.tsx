@@ -34,6 +34,8 @@ export default class Balance extends Component<{
     tradeType: 'long',
   };
 
+  static contextType = SiteContext;
+
   componentDidMount = async () => {
     const { coins } = this.props;
     const { to } = coins;
@@ -140,14 +142,15 @@ export default class Balance extends Component<{
       openAmount,
       curPrice,
     } = this.state;
-    const { coins, graphData } = this.props;
+    const { coins } = this.props;
     const { from, to } = coins;
 
-    const price = curPrice; // graphData?.price;
+    const price = curPrice;
+    const address = this.context.account.address;
     const maxNumber = getMaxFromCoin(balanceInfo, price);
 
-    const fee = format(getFee(openAmount, price));
-    const locked = format(getLocked(openAmount, price));
+    const fee = getFee(openAmount, price);
+    const locked = openAmount! + fee;
     const openData = {
       type: tradeType,
       price,
@@ -169,20 +172,20 @@ export default class Balance extends Component<{
             </div>
             <Row className={styles.actionLink} type="flex" justify="space-between">
               <Col>
-                <Button type="link" onClick={() => this.depositVisible.show()}>
+                <Button type="link" onClick={() => address && this.depositVisible.show()}>
                   Deposit
                 </Button>
               </Col>
               <Col>
-                <Button type="link" onClick={() => this.withdrawVisible.show()}>
+                <Button type="link" onClick={() => address && this.withdrawVisible.show()}>
                   Withdraw
                 </Button>
               </Col>
             </Row>
             <Row className={styles.radioBtn}>
               <Radio.Group value={tradeType} onChange={this.changeType}>
-                <Radio.Button value="Long">Long</Radio.Button>
-                <Radio.Button value="Short" className={styles.green}>
+                <Radio.Button value="long">Long</Radio.Button>
+                <Radio.Button value="short" className={styles.green}>
                   Short
                 </Radio.Button>
               </Radio.Group>
@@ -191,7 +194,13 @@ export default class Balance extends Component<{
               Current Price: {this.state.curPrice} {to}
             </p>
             <p className={styles.amountTip}>Amount</p>
-            <Input value={openAmount} onChange={this.onOpenAmountChange} placeholder="0.00" suffix={'ETH'} />
+            <Input
+              className={styles.orderInput}
+              value={openAmount}
+              onChange={this.onOpenAmountChange}
+              placeholder="0.00"
+              suffix={'ETH'}
+            />
 
             <Row className={styles.utilMax} type="flex" justify="space-between">
               <Col span={12}>
