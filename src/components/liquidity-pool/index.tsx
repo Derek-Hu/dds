@@ -17,7 +17,6 @@ import { Visible } from '../builtin/hidden';
 import { doPrivateDeposit } from '../../services/pool.service';
 import Auth, { Public } from '../builtin/auth';
 
-
 const { TabPane } = Tabs;
 
 const TabName = {
@@ -103,7 +102,8 @@ export default class PoolArea extends Component<{ address?: string }, any> {
   confirmPrivateDeposit = async () => {
     this.closeDepositModal();
     const { amount, selectedCoin } = this.state;
-    await doPrivateDeposit({ amount: amount!, coin: selectedCoin });
+    // @ts-ignore
+    await doPrivateDeposit({ amount: parseFloat(amount), coin: selectedCoin });
   };
   render() {
     const { selectedTab, selectedCoin, amount } = this.state;
@@ -143,10 +143,19 @@ export default class PoolArea extends Component<{ address?: string }, any> {
                             </Select>
                           </Col>
                           <Col xs={24} sm={24} md={16} lg={18}>
-                            <Input value={amount} onChange={this.onAmountChange} placeholder="amount for providing to the pool" />
+                            <Input
+                              value={amount}
+                              onChange={this.onAmountChange}
+                              placeholder="amount for providing to the pool"
+                            />
                           </Col>
                         </Row>
-                        <Button type="primary" disabled={!isNotZeroLike(amount)} className={styles.btn} onClick={this.showDepositModal}>
+                        <Button
+                          type="primary"
+                          disabled={!isNotZeroLike(amount)}
+                          className={styles.btn}
+                          onClick={this.showDepositModal}
+                        >
                           Deposit
                         </Button>
                       </div>
@@ -219,7 +228,9 @@ export default class PoolArea extends Component<{ address?: string }, any> {
                     <Button onClick={this.closeDepositModal}>Cancel</Button>
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
-                    <Button onClick={this.confirmPrivateDeposit} type="primary">Comfirm</Button>
+                    <Button onClick={this.confirmPrivateDeposit} type="primary">
+                      Comfirm
+                    </Button>
                   </Col>
                 </Row>
               </ModalRender>

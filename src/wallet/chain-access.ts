@@ -1,4 +1,13 @@
-import { ABI, ContractProxy, Pl1ABI, Pl2ABI, UserAccountInfo } from '../wallet/contract-interface';
+import {
+  ABI,
+  CoinBalance,
+  CoinShare,
+  ContractProxy,
+  Pl1ABI,
+  Pl2ABI,
+  RewardsABI,
+  UserAccountInfo,
+} from '../wallet/contract-interface';
 import { BehaviorSubject, from, Observable, of, interval, EMPTY, zip, merge } from 'rxjs';
 import * as ethers from 'ethers';
 import { catchError, filter, map, mapTo, startWith, switchMap, take, tap } from 'rxjs/operators';
@@ -14,6 +23,7 @@ import {
   CoinWeight,
   Lp1DAIContractAddress,
   Lp2DAIContractAddress,
+  MiningRewardContractAddress,
 } from '../constant';
 import { walletManager } from '../wallet/wallet-manager';
 import { WalletInterface } from './wallet-interface';
@@ -57,7 +67,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   protected timer = interval(DataRefreshInterval).pipe(startWith(0));
 
   constructor() {
-    this.contractMap = this.getContractMap();
+    this.contractMap = this.getTradeContractMap();
     this.pubContractMap = this.getPubPoolContractMap();
     this.priContractMap = this.getPrivatePoolContractMap();
   }
@@ -372,7 +382,6 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         return contract.withdraw(bigAmount);
       }),
       map((rs) => {
-        console.log('rs', rs);
         return true;
       }),
       catchError((err) => {
@@ -384,7 +393,11 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   public pubPoolBalanceOf(address: string): Observable<Map<IUSDCoins, BigNumber>> {
     const daiBalance: Observable<BigNumber> = this.getPubPoolContract('DAI').pipe(
       switchMap((contract) => {
-        return contract.balanceOf(address);
+        return from(contract.balanceOf(address)).pipe(
+          switchMap((reToken: any) => {
+            return contract.getTokenAmountByreToken(reToken);
+          })
+        );
       }),
       map((rs: any) => {
         return rs;
@@ -429,6 +442,30 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
+  public getReTokenBalance(address: string): Observable<CoinBalance[]> {
+    const daiBalance: Observable<BigNumber> = this.getPubPoolContract('DAI').pipe(
+      switchMap((contract: ethers.Contract) => {
+        return contract.functions.getUserReToeknInfo(address);
+      }),
+      map((rs: any) => {
+        return rs.selfReToken as BigNumber;
+      })
+    );
+
+    const usdtBalance = of(BigNumber.from(0));
+    const usdcBalance = of(BigNumber.from(0));
+
+    return zip(daiBalance, usdtBalance, usdcBalance).pipe(
+      map((balances: BigNumber[]) => {
+        return [
+          { coin: 'reDAI', balance: balances[0] },
+          { coin: 'reUSDT', balance: balances[1] },
+          { coin: 'reUSDC', balance: balances[2] },
+        ];
+      })
+    );
+  }
+
   //
 
   public provideToPrivatePool(coin: IUSDCoins, coinAmount: number): Observable<boolean> {
@@ -457,6 +494,94 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
+  public withdrawFromPrivatePool(coin: IUSDCoins, coinAmount: number): Observable<boolean> {
+    return this.getPriPoolContract(coin).pipe(
+      switchMap((contract) => {
+        const bigAmount: BigNumber = toBigNumber(coinAmount, 18);
+        return contract.withdraw(bigAmount);
+      }),
+      switchMap((rs: any) => {
+        console.log('withdraw rs', rs);
+        return from(rs.wait());
+      }),
+      mapTo(true),
+      catchError((err) => {
+        return of(false);
+      })
+    );
+  }
+
+  public priPoolBalanceOf(address: string): Observable<Map<IUSDCoins, BigNumber>> {
+    const daiBalance = this.getPriPoolContract('DAI').pipe(
+      switchMap((contract) => {
+        return contract.functions.lpAccount(address);
+      }),
+      map((rs: BigNumber[]) => {
+        console.log('private balance rs is', rs);
+        return rs[0];
+      })
+    );
+
+    const usdtBalance = of(BigNumber.from(0));
+    const usdcBalance = of(BigNumber.from(0));
+
+    return zip(daiBalance, usdtBalance, usdcBalance).pipe(
+      map((balances: BigNumber[]) => {
+        const rs = new Map();
+        rs.set('DAI', balances[0]);
+        rs.set('USDT', balances[1]);
+        rs.set('USDC', balances[2]);
+        return rs;
+      })
+    );
+  }
+
+  public priPoolBalanceWhole(): Observable<Map<IUSDCoins, BigNumber>> {
+    const daiBalance: Observable<BigNumber> = this.getPriPoolContract('DAI').pipe(
+      switchMap((contract: ethers.Contract) => {
+        return contract.functions.getLPAmountInfo();
+      }),
+      map((rs: any) => {
+        return rs.availabe as BigNumber;
+      })
+    );
+
+    const usdtBalance = of(BigNumber.from(0));
+    const usdcBalance = of(BigNumber.from(0));
+
+    return zip(daiBalance, usdtBalance, usdcBalance).pipe(
+      map((balances: BigNumber[]) => {
+        const rs = new Map();
+        rs.set('DAI', balances[0]);
+        rs.set('USDT', balances[1]);
+        rs.set('USDC', balances[2]);
+        return rs;
+      })
+    );
+  }
+
+  //
+
+  public getLiquidityMiningReward(address: string): Observable<BigNumber> {
+    return from(this.getMiningRewardContract().functions.queryRewardsForLP1(address)).pipe(
+      map((rs) => {
+        return rs;
+      })
+    );
+  }
+
+  public getLiquidityMiningShare(address: string): Observable<CoinShare[]> {
+    return from(this.getMiningRewardContract().functions.queryStakeShareInfoForLP1(address)).pipe(
+      map((rs: BigNumber[]) => {
+        return [
+          { coin: 'DAI', value: rs[0], total: rs[3] },
+          { coin: 'USDT', value: rs[1], total: rs[4] },
+          { coin: 'USDC', value: rs[2], total: rs[5] },
+        ];
+      })
+    );
+  }
+
   //
   protected getContract(coin: IUSDCoins): Observable<ethers.Contract> {
     return of(this.contractMap.get(coin)).pipe(filter(Boolean)) as Observable<ethers.Contract>;
@@ -474,9 +599,11 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     return new ethers.Contract(ERC20DAIAddress, erc20, this.getSigner());
   }
 
-  protected abstract getContractMap(): Map<IUSDCoins, ethers.Contract>;
+  protected abstract getTradeContractMap(): Map<IUSDCoins, ethers.Contract>;
 
   protected abstract getPubPoolContractMap(): Map<IUSDCoins, ethers.Contract>;
+
+  protected abstract getMiningRewardContract(): ethers.Contract;
 
   protected abstract getPrivatePoolContractMap(): Map<IUSDCoins, ethers.Contract>;
 
@@ -490,6 +617,12 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
  */
 class MetamaskContractAccessor extends BaseTradeContractAccessor {
   public readonly transferable = true;
+
+  protected getMiningRewardContract(): ethers.Contract {
+    const signer = this.getProvider().getSigner();
+
+    return new ethers.Contract(MiningRewardContractAddress, RewardsABI, signer);
+  }
 
   protected getPrivatePoolContractMap(): Map<IUSDCoins, ethers.Contract> {
     const rsMap = new Map<IUSDCoins, ethers.Contract>();
@@ -511,7 +644,7 @@ class MetamaskContractAccessor extends BaseTradeContractAccessor {
     return rsMap;
   }
 
-  protected getContractMap(): Map<IUSDCoins, ethers.Contract> {
+  protected getTradeContractMap(): Map<IUSDCoins, ethers.Contract> {
     const rsMap = new Map<IUSDCoins, ethers.Contract>();
     const signer = this.getProvider().getSigner();
 
@@ -707,12 +840,62 @@ export class ContractAccessor implements ContractProxy {
     );
   }
 
+  public getReTokenBalance(address: string): Observable<CoinBalance[]> {
+    return this.accessor.pipe(
+      switchMap((accessor) => {
+        return accessor.getReTokenBalance(address);
+      })
+    );
+  }
+
   //
 
   public provideToPrivatePool(coin: IUSDCoins, coinAmount: number): Observable<boolean> {
     return this.accessor.pipe(
       switchMap((accessor) => {
         return accessor.provideToPrivatePool(coin, coinAmount);
+      })
+    );
+  }
+
+  public withdrawFromPrivatePool(coin: IUSDCoins, coinAmount: number): Observable<boolean> {
+    return this.accessor.pipe(
+      switchMap((accessor) => {
+        return accessor.withdrawFromPrivatePool(coin, coinAmount);
+      })
+    );
+  }
+
+  public priPoolBalanceOf(address: string): Observable<Map<IUSDCoins, BigNumber>> {
+    return this.accessor.pipe(
+      switchMap((accessor) => {
+        return accessor.priPoolBalanceOf(address);
+      })
+    );
+  }
+
+  public priPoolBalanceWhole(): Observable<Map<IUSDCoins, BigNumber>> {
+    return this.accessor.pipe(
+      switchMap((accessor) => {
+        return accessor.priPoolBalanceWhole();
+      })
+    );
+  }
+
+  //
+
+  public getLiquidityMiningReward(address: string): Observable<BigNumber> {
+    return this.accessor.pipe(
+      switchMap((accessor) => {
+        return accessor.getLiquidityMiningReward(address);
+      })
+    );
+  }
+
+  public getLiquidityMiningShare(address: string): Observable<CoinShare[]> {
+    return this.accessor.pipe(
+      switchMap((accessor) => {
+        return accessor.getLiquidityMiningShare(address);
       })
     );
   }
@@ -728,7 +911,3 @@ export class ContractAccessor implements ContractProxy {
 }
 
 export const contractAccessor = new ContractAccessor();
-
-contractAccessor.getPrivatePoolInfo('DAI').subscribe();
-
-contractAccessor.getPubPoolDepositReTokenFromToken('DAI', 1).subscribe();

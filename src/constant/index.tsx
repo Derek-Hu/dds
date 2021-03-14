@@ -44,6 +44,7 @@ export const Lp1USDCContractAddress = '';
 export const Lp2DAIContractAddress = '0x3C880894814cB0F4f1AD39989e129f27Acd53D1C';
 export const Lp2USDTContractAddress = '';
 export const Lp2USDCContractAddress = '';
+export const MiningRewardContractAddress = '0x536671b1687b996d3a6F72Cf975CE5Ae1F63a4Ad';
 
 export const ERC20DAIAddress = '0x113587939c8967e61aa2360613951b23ab2af49a';
 // 当没有连接metamask钱包的时候，网页默认从哪个网络获取数据

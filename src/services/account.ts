@@ -1,5 +1,5 @@
 import { walletManager } from '../wallet/wallet-manager';
-import { map, switchMap, take } from 'rxjs/operators';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
 import { Observable, of } from 'rxjs';
 
@@ -28,6 +28,20 @@ export const curUserAccount = async (): Promise<string | null> => {
       switchMap((wallet: WalletInterface | null) => {
         return wallet === null ? of(null) : wallet.watchAccount();
       }),
+      take(1)
+    )
+    .toPromise();
+};
+
+export const loginUserAccount = async (): Promise<string> => {
+  return walletManager
+    .watchWalletInstance()
+    .pipe(
+      switchMap((wallet: WalletInterface | null) => {
+        return wallet === null ? of(null) : wallet.watchAccount();
+      }),
+      filter((acc) => acc !== null),
+      map((acc) => acc as string),
       take(1)
     )
     .toPromise();
