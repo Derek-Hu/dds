@@ -180,7 +180,7 @@ export default class Balance extends Component<{ graphData?: IPriceGraph; coin: 
                   <Button onClick={this.orderModalVisible.hide}>Cancel</Button>
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
-                  <Button type="primary">Close Order</Button>
+                  <Button onClick={this.confirmClose} type="primary">Close Order</Button>
                 </Col>
               </Row>
             </ModalRender>

@@ -31,7 +31,6 @@ export default class Balance extends Component<{
     withdrawVisible: false,
     orderConfirmVisible: false,
     openAmount: undefined,
-
     tradeType: 'long',
   };
 
@@ -44,15 +43,19 @@ export default class Balance extends Component<{
   loadBalanceInfo = async () => {
     const { coins } = this.props;
     const { to } = coins;
-    const balanceInfo = await getFundingBalanceInfo(to);
-    const curPrice = await getCurPrice(to);
-    const maxNumber = getMaxFromCoin(balanceInfo, curPrice);
-    this.setState({
-      balanceInfo,
-      curPrice,
-      maxNumber,
-    });
-  }
+    try {
+      const balanceInfo = await getFundingBalanceInfo(to);
+      const curPrice = await getCurPrice(to);
+      const maxNumber = getMaxFromCoin(balanceInfo, curPrice);
+      this.setState({
+        balanceInfo,
+        curPrice,
+        maxNumber,
+      });
+    } catch (e){
+      console.error(e);
+    }
+  };
 
   deposit = async (amount?: number) => {
     if (!amount || amount <= 0) {
@@ -62,18 +65,18 @@ export default class Balance extends Component<{
     this.depositVisible.hide();
     const { coins } = this.props;
     const success = await deposit({ amount, coin: coins.to });
-    if(success){
+    if (success) {
       this.loadBalanceInfo();
     }
   };
 
-  withdraw = async (amount: number, coin: IUSDCoins ) => {
+  withdraw = async (amount: number, coin: IUSDCoins) => {
     if (!amount || amount <= 0) {
       return;
     }
     this.withdrawVisible.hide();
-    const success =  await withdraw({ amount, coin });
-    if(success){
+    const success = await withdraw({ amount, coin });
+    if (success) {
       this.loadBalanceInfo();
     }
   };
@@ -118,10 +121,7 @@ export default class Balance extends Component<{
   onOpen = async () => {
     const { coins } = this.props;
     const { to } = coins;
-    const {
-      tradeType,
-      openAmount,
-    } = this.state;
+    const { tradeType, openAmount } = this.state;
     const success = await openOrder(to, tradeType, openAmount!);
   };
 
@@ -140,7 +140,7 @@ export default class Balance extends Component<{
     const { from, to } = coins;
 
     const price = curPrice;
-    const address = this.context.account.address;
+    const address = this.context.account?.address;
 
     const fee = getFee(openAmount, price);
     const locked = openAmount! + fee;

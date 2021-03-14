@@ -8,7 +8,7 @@ import KLine from '../components/k-line/index';
 import FundingBalance from '../components/funding-balance/index';
 import SiteContext from '../layouts/SiteContext';
 import { getFundingBalanceInfo, getTradeOrders, getTradeInfo, getPriceGraphData } from '../services/trade.service';
-
+import Auth from '../components/builtin/auth';
 const from = 'ETH';
 
 interface IState {
@@ -38,8 +38,6 @@ export default class TradePage extends Component {
     return (
       <SiteContext.Consumer>
         {({ isMobile, account }) => {
-          const { address } = account || {};
-
           return (
             <div className={[styles.tradeInfoPool, isMobile ? styles.mobile : ''].join(' ')}>
               <Row className={styles.chartBalance} gutter={isMobile ? 0 : 24}>
@@ -52,7 +50,9 @@ export default class TradePage extends Component {
               </Row>
 
               <div>
-                {/* {address ? <TradeBonus coin={coin} graphData={graphData} /> : null} */}
+                <Auth>
+                  <TradeBonus coin={coin} graphData={graphData} />
+                </Auth>
                 <div>
                   <Row gutter={isMobile ? 0 : 20}>
                     <Col xs={24} sm={24} md={12} lg={12}>

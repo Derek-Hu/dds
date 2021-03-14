@@ -79,7 +79,7 @@ export default class Balance extends Component<IProps, IState> {
                 <Button onClick={onCancel}>Cancel</Button>
               </Col>
               <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
-                <Button type="primary" disabled={!isNotZeroLike(amount)} onClick={() => onConfirm(amount, coin)}>
+                <Button type="primary" disabled={!isNotZeroLike(amount)} onClick={() => onConfirm(amount!, coin)}>
                   Withdraw
                 </Button>
               </Col>

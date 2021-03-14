@@ -25,7 +25,10 @@ export const percentage = (fenzi: any, fenmu: any) => {
 };
 
 export const dividedPecent = (fenzi: any, fenmu: any) => {
-    return 100 * fenzi/fenmu;
+    if(isNumberLike(fenzi) && isNumberLike(fenmu)){
+      return 100 * parseFloat(fenzi)/parseFloat(fenmu);
+    }
+    return;
 }
 
 

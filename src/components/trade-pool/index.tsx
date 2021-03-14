@@ -13,10 +13,12 @@ export default class TradePool extends Component<{ coin: IUSDCoins }, IState> {
 
   async componentDidMount() {
     const { coin } = this.props;
-    const poolInfo = await getTradeLiquidityPoolInfo(coin);
-    this.setState({
-      poolInfo,
-    });
+    try{
+      const poolInfo = await getTradeLiquidityPoolInfo(coin);
+      this.setState({
+        poolInfo,
+      });
+    }catch{}
   }
 
   render() {
@@ -29,10 +31,10 @@ export default class TradePool extends Component<{ coin: IUSDCoins }, IState> {
           desc: 'Available Liquidity',
           value: (
             <span>
-              {poolInfo.public.value}/ {poolInfo.public.total}
+              {poolInfo.public?.value}/ {poolInfo.public?.total}
             </span>
           ),
-          percentage: dividedPecent(poolInfo.public.value, poolInfo.public.total),
+          percentage: dividedPecent(poolInfo.public?.value, poolInfo.public?.total),
           unit: coin,
         }
       : null;
@@ -43,10 +45,10 @@ export default class TradePool extends Component<{ coin: IUSDCoins }, IState> {
           desc: 'Available Liquidity',
           value: (
             <span>
-              {poolInfo.private.value}/ {poolInfo.private.total}
+              {poolInfo.private?.value}/ {poolInfo.private?.total}
             </span>
           ),
-          percentage: dividedPecent(poolInfo.private.value, poolInfo.private.total),
+          percentage: dividedPecent(poolInfo.private?.value, poolInfo.private?.total),
           unit: coin,
         }
       : null;
