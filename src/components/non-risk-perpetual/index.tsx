@@ -25,7 +25,7 @@ export default class BecomeSpark extends Component<any, IState> {
       // chart: "Chart",
       action: 'Action',
     },
-    render(value, key, record) {
+    render: (value, key, record) => {
       switch (key) {
         case 'coin':
           return (
@@ -44,13 +44,21 @@ export default class BecomeSpark extends Component<any, IState> {
             </span>
           );
         case 'action':
-          return <span className={styles.tradeBtn}>Trade</span>;
+          return <span className={styles.tradeBtn} onClick={() => this.gotoTrade({
+            fromCoin: record.fromCoin, toCoin: record.toCoin
+          })}>Trade</span>;
         default:
           return value;
       }
     },
   })  
 
+  gotoTrade = ({fromCoin, toCoin}: {fromCoin: string; toCoin: string}) => {
+    this.props.history.push({
+      pathname: '/trade',
+      search: `?from=${fromCoin}&to=${toCoin}`,
+    });
+  }
   async componentDidMount() {
     this.setState({ loading: true });
     const nonRisksInfo = await getNonRisks().catch(() => null);

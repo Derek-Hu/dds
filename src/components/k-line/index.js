@@ -2,41 +2,110 @@ import React, { Component } from 'react';
 // import echarts from "echarts/lib/echarts";
 import styles from './style.module.less';
 import option, { seryName } from './option';
-import MockData from './mock';
+// import MockData from './mock';
+import dayjs from "dayjs";
 import { Select, Row, Col, Button } from 'antd';
 import SiteContext from '../../layouts/SiteContext';
+import { getPriceGraphData } from '../../services/trade.service';
+import { format, isNumberLike } from '../../util/math';
 
 const { Option } = Select;
 
 const echarts = window.echarts;
 
+const Durations = {
+  day: '24 Hours',
+  week: '1W',
+  month: '1M',
+};
+
+const sig = (value) => {
+  if (isNumberLike(value)) {
+    const val = parseFloat(value);
+    return val > 0 ? '+' : val < 0 ? '-' : '';
+  }
+  return '';
+};
 export default class MainLayout extends Component {
   ref = React.createRef();
 
-  componentDidMount() {
-    const container = document.getElementById('k-line');
+  timer = null;
 
-    // eslint-disable-next-line
-    var myChart = echarts.init(container);
+  state = {
+    duration: 'day',
+  };
 
-    myChart.setOption(option);
+  chartInstance = null;
 
-    setTimeout(() => {
-      myChart.setOption({
-        xAxis: {
-          data: MockData[0],
+  loadGraph = async (from, to, duration) => {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
+    const graphData = await getPriceGraphData({ from, to }, duration).catch(() => {});
+
+    this.timer = setTimeout(() => {
+      this.loadGraph(from, to, duration);
+    }, 5000);
+
+    const { data } = graphData || {};
+    if (!data || !data.length) {
+      return;
+    }
+    this.setState({
+      graphData,
+    });
+
+    if (!this.chartInstance) {
+      const container = document.getElementById('k-line');
+      // eslint-disable-next-line
+      this.chartInstance = echarts.init(container);
+      this.chartInstance.setOption(option);
+    }
+    const { xData, yData } = data.reduce((all, { timestamp, value })=> {
+      all.xData.push(dayjs(timestamp).format('YYYY-MM-DD'));
+      all.yData.push(value);
+      return all;
+    }, { xData: [], yData: []})
+    this.chartInstance.setOption({
+      xAxis: {
+        data: xData,
+      },
+      series: [
+        {
+          // 根据名字对应到相应的系列
+          name: seryName,
+          data: yData,
         },
-        series: [
-          {
-            // 根据名字对应到相应的系列
-            name: seryName,
-            data: MockData[1],
-          },
-        ],
-      });
-    }, 2000);
+      ],
+    });
+  };
+  componentWillUnmount() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
   }
+  async componentDidMount() {
+    const { from = 'ETH', to = 'USDT' } = this.props;
+    const { duration } = this.state;
+
+    this.setState({
+      from: from.toUpperCase(),
+      to: to.toUpperCase(),
+    });
+
+    this.loadGraph(from, to, duration);
+  }
+
+  changeDuration = (key) => {
+    const { from, to } = this.state;
+    this.setState({
+      duration: key,
+    });
+    this.loadGraph(from, to, key);
+  };
   render() {
+    const { from, to, graphData, duration } = this.state;
+    const { price, percentage, range } = graphData || {};
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => {
@@ -44,7 +113,7 @@ export default class MainLayout extends Component {
           return (
             <div className={[styles.root, isMobile ? styles.mobile : ''].join(' ')}>
               <div className={styles.headArea}>
-                <Select defaultValue="ETH/DAI" style={{ width: 120 }}>
+                <Select defaultValue={`${from}/${to}`} style={{ width: 120 }}>
                   <Option value="ETH/DAI">ETH/DAI</Option>
                   <Option value="ETH/USDT">ETH/USDT</Option>
                   <Option value="ETH/USDC">ETH/USDC</Option>
@@ -55,17 +124,26 @@ export default class MainLayout extends Component {
               </div>
               <Row type="flex" justify="space-between" align="middle">
                 <Col xs={24} sm={24} md={12} lg={12} className={styles.currPrice}>
-                  <div className={styles.currVal}>174.8727 USDC</div>
+                  <div className={styles.currVal}>
+                    {format(price)} {to}
+                  </div>
                   <p className={styles.change}>
-                    -147.2416 USDC(-11.14%) <span>Past 24 Hours</span>
+                    {sig(range)}
+                    {format(range)} {to}({sig(percentage)}
+                    {format(percentage)}%) <span>Past {Durations[duration]}</span>
                   </p>
                 </Col>
                 <Col className={styles.range} xs={24} sm={24} md={12} lg={12}>
-                  <Button className={styles.current} type="link">
-                    24H
-                  </Button>
-                  <Button type="link">1W</Button>
-                  <Button type="link">1M</Button>
+                  {Object.keys(Durations).map((key) => (
+                    <Button
+                      key={key}
+                      onClick={() => this.changeDuration(key)}
+                      className={key === duration ? styles.current : ''}
+                      type="link"
+                    >
+                      {Durations[key]}
+                    </Button>
+                  ))}
                 </Col>
               </Row>
 
