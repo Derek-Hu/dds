@@ -77,11 +77,18 @@ export default class CampaignRewards extends Component<any, IState> {
     });
     this.setState({ loading: false });
 
+    this.tableLoad();
+
+  }
+
+  tableLoad = async (page: number = 1) =>{
+    this.setState({ tableLoading: true });
+    
     const tableData = await getBrokerCampaignRewardsPool();
     this.setState({
-        tableData
+      tableData
     });
-
+    this.setState({ tableLoading: false });
   }
 
   render() {

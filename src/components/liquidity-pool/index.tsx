@@ -1,29 +1,21 @@
 import { Component } from 'react';
 import { Tabs, Button, Row, Col, Select, Input, Alert, Descriptions } from 'antd';
 import styles from './style.module.less';
-import numeral from 'numeral';
-import Pool, { IPool } from './pool';
 import Balance from './liquidity-balance';
 import commonStyles from '../funding-balance/modals/style.module.less';
 import SharePool from './public/share-pool';
 import AvailablePool from './private/available-pool';
+import AvailablePoolUnlogin from './private/available-pool-unlogin';
 import { CustomTabKey, CoinSelectOption } from '../../constant/index';
 import ModalRender from '../modal-render/index';
 import SiteContext from '../../layouts/SiteContext';
 import LockedDetails, { ILockedData } from '../liquidity-pool/locked-details';
-import CardInfo from '../card-info/index';
-import LiquidityProvided from './liquidity-provided';
+import LiquidityProvided from './public/liquidity-provided';
 import LiquidityARP from './public/collaborative-arp';
 import { Visible } from '../builtin/hidden';
 import Auth, { Public } from '../builtin/auth';
 
 const { TabPane } = Tabs;
-
-const mining = {
-  money: 530400,
-  percentage: 70,
-  ddsCount: 25000000,
-};
 
 const TabName = {
   Collaborative: 'Collaborative',
@@ -64,44 +56,6 @@ const lockedData: ILockedData[] = [
     status: 'Closed',
   },
 ];
-
-// const PublicProvidedPool: IPool = {
-//   title: 'Liquidity Provided',
-//   usd: 748830,
-//   coins: [
-//     {
-//       name: 'DAI',
-//       value: 647,
-//     },
-//     {
-//       name: 'USDC',
-//       value: 638,
-//     },
-//     {
-//       name: 'USDT',
-//       value: 7378,
-//     },
-//   ],
-// };
-
-const PublicNetPool = {
-  title: 'Net P&L',
-  usd: 637,
-  items: [
-    {
-      label: 'DAI',
-      value: 74,
-    },
-    {
-      label: 'USDC',
-      value: 3,
-    },
-    {
-      label: 'USDT',
-      value: 445,
-    },
-  ],
-};
 
 export default class PoolArea extends Component<{ address?: string }, any> {
   state = {
@@ -154,33 +108,27 @@ export default class PoolArea extends Component<{ address?: string }, any> {
                           type="warning"
                         />
                       </Visible>
-                    </Auth>
-                    <div className={[styles.actionArea, styles.privateArea].join(' ')}>
-                      <Row gutter={[isMobile ? 0 : 12, isMobile ? 15 : 0]}>
-                        <Col xs={24} sm={24} md={8} lg={6}>
-                          <Select
-                            defaultValue="DAI"
-                            style={{ width: '100%', height: 50 }}
-                            className={styles.coinDropdown}
-                            // onChange={handleChange}
-                          >
-                            {CoinSelectOption}
-                          </Select>
-                        </Col>
-                        <Col xs={24} sm={24} md={16} lg={18}>
-                          <Input placeholder="amount for providing to the pool" />
-                        </Col>
-                      </Row>
-                      {address ? (
+                      <div className={[styles.actionArea, styles.privateArea].join(' ')}>
+                        <Row gutter={[isMobile ? 0 : 12, isMobile ? 15 : 0]}>
+                          <Col xs={24} sm={24} md={8} lg={6}>
+                            <Select
+                              defaultValue="DAI"
+                              style={{ width: '100%', height: 50 }}
+                              className={styles.coinDropdown}
+                              // onChange={handleChange}
+                            >
+                              {CoinSelectOption}
+                            </Select>
+                          </Col>
+                          <Col xs={24} sm={24} md={16} lg={18}>
+                            <Input placeholder="amount for providing to the pool" />
+                          </Col>
+                        </Row>
                         <Button type="primary" className={styles.btn} onClick={this.showDepositModal}>
                           Deposit
                         </Button>
-                      ) : (
-                        <Button type="primary" className={styles.btn}>
-                          Connect Wallet
-                        </Button>
-                      )}
-                    </div>
+                      </div>
+                    </Auth>
                   </TabPane>
                 </Tabs>
               </div>
@@ -224,7 +172,7 @@ export default class PoolArea extends Component<{ address?: string }, any> {
                     <Public>
                       <Row gutter={isMobile ? 0 : 12}>
                         <Col xs={24} sm={24} md={24} lg={24}>
-                          <AvailablePool />
+                          <AvailablePoolUnlogin />
                         </Col>
                       </Row>
                     </Public>

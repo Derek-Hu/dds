@@ -1,15 +1,15 @@
-export const liquidityProvided: IPoolCoinAmount[] = [
+export const liquidityProvided: ICoinValue[] = [
   {
     coin: 'DAI',
-    amount: 100,
+    value: 100,
   },
   {
     coin: 'USDT',
-    amount: 2200,
+    value: 2200,
   },
   {
     coin: 'USDC',
-    amount: 300,
+    value: 300,
   },
 ];
 export const userPoolInfo: PoolPercentInfo = {

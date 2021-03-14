@@ -8,7 +8,7 @@ const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   });
 };
 
-export const getCollaborativeLiquidityProvided = async (): Promise<IPoolCoinAmount[]> => {
+export const getCollaborativeLiquidityProvided = async (): Promise<ICoinValue[]> => {
   return returnVal(liquidityProvided);
 };
 
@@ -52,6 +52,22 @@ export const getCollaborativeShareInPool = async () : Promise<IPoolShareInPool[]
 };
 
 export const getPrivateSharePool = async () : Promise<ICoinItem[]> => {
+  return returnVal([{
+    coin: 'USDC',
+    amount: Math.random() * 1000,
+    total: Math.random() * 10000
+  },{
+    coin: 'USDT',
+    amount: Math.random() * 1000,
+    total: Math.random() * 10000
+  },{
+    coin: 'DAI',
+    amount: Math.random() * 1000,
+    total: Math.random() * 10000
+  }]);
+};
+
+export const getUnloginPrivateSharePool = async () : Promise<ICoinItem[]> => {
   return returnVal([{
     coin: 'USDC',
     amount: Math.random() * 1000,

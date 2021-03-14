@@ -43,7 +43,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
           isMobile,
           direction: 'ltr',
           account: {
-            address: '0x4329432493203',
+            address: '',
             coins: {
               USDT: 89303.23,
               DAI: 203032,
