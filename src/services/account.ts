@@ -20,3 +20,15 @@ export const isUserConnected = async (): Promise<boolean> => {
 
   return address$.toPromise();
 };
+
+export const curUserAccount = async (): Promise<string | null> => {
+  return walletManager
+    .watchWalletInstance()
+    .pipe(
+      switchMap((wallet: WalletInterface | null) => {
+        return wallet === null ? of(null) : wallet.watchAccount();
+      }),
+      take(1)
+    )
+    .toPromise();
+};

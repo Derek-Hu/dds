@@ -3417,7 +3417,23 @@ export interface ContractProxy {
 
   getPrivatePoolInfo(coin: IUSDCoins): Observable<any>;
 
+  //
+
   getPubPoolDepositReTokenFromToken(coin: IUSDCoins, tokenAmount: number): Observable<BigNumber>;
+
+  getPubPoolWithdrawReTokenFromToken(coin: IUSDCoins, tokenAmount: number): Observable<BigNumber>;
+
+  provideToPubPool(coin: IUSDCoins, coinAmount: number): Observable<boolean>;
+
+  withdrawFromPubPool(coin: IUSDCoins, reCoinAmount: number): Observable<boolean>;
+
+  pubPoolBalanceOf(address: string): Observable<Map<IUSDCoins, BigNumber>>;
+
+  pubPoolBalanceWhole(): Observable<Map<IUSDCoins, BigNumber>>;
+
+  //
+
+  provideToPrivatePool(coin: IUSDCoins, coinAmount: number): Observable<boolean>;
 }
 
 export interface UserAccountInfo {

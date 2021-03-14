@@ -31,6 +31,7 @@ export function keepDecimal(num: number, decimal: number): string {
   }
 }
 
+//
 export function toBigNumber(num: number, weight: number): BigNumber {
   const a = (num * 1000000).toString();
   const by = '1' + new Array(weight - 6).fill('0').join('');
