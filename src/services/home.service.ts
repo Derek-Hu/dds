@@ -9,12 +9,12 @@ export const getNonRisks = (): Promise<INonRecords> => {
   return returnVal({
     total: 32489320,
     data: [
-      {
-        fromCoin: 'WBTC',
-        toCoin: 'DAI',
-        price: 7173.77,
-        change: 8.23,
-      },
+      // {
+      //   fromCoin: 'WBTC',
+      //   toCoin: 'DAI',
+      //   price: 7173.77,
+      //   change: 8.23,
+      // },
       {
         fromCoin: 'ETH',
         toCoin: 'DAI',

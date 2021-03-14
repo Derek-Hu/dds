@@ -9,39 +9,39 @@ interface ILink {
 const Ecosystem: ILink[] = [
   {
     icon: <Icon type="wechat" />,
-    link: 'http://www.baidu.com',
+    link: '',
   },
   {
     icon: <Icon type="youtube" />,
-    link: 'http://www.baidu.com',
+    link: '',
   },
   {
     icon: <Icon type="gitlab" />,
-    link: 'http://www.baidu.com',
+    link: '',
   },
   {
     icon: <Icon type="dropbox" />,
-    link: 'http://www.baidu.com',
+    link: '',
   },
   {
     icon: <Icon type="codepen" />,
-    link: 'http://www.baidu.com',
+    link: '',
   },
   {
     icon: <Icon type="ant-cloud" />,
-    link: 'http://www.baidu.com',
+    link: '',
   },
   {
     icon: <Icon type="dribbble" />,
-    link: 'http://www.baidu.com',
+    link: '',
   },
   {
     icon: <Icon type="behance" />,
-    link: 'http://www.baidu.com',
+    link: '',
   },
   {
     icon: <Icon type="slack" />,
-    link: 'http://www.baidu.com',
+    link: '',
   },
 ];
 
@@ -52,39 +52,39 @@ const links: { [key: string]: ILink[] } = {
   Security: [
     {
       name: 'Audit',
-      link: 'http://www.baidu.com',
+      link: '',
     },
     {
       name: 'Bug Bounty',
-      link: 'http://www.baidu.com',
+      link: '',
     },
   ],
   API: [
     {
       name: 'Liquidator',
-      link: 'http://www.baidu.com',
+      link: '',
     },
     {
       name: 'Trade',
-      link: 'http://www.baidu.com',
+      link: '',
     },
   ],
   About: [
     {
       name: 'Blog',
-      link: 'http://www.baidu.com',
+      link: 'https://medium.com/@shielddaoofficial',
     },
     {
       name: 'Brand Assets',
-      link: 'http://www.baidu.com',
+      link: '',
     },
     {
       name: 'Terms of Service',
-      link: 'http://www.baidu.com',
+      link: '',
     },
     {
       name: 'Privacy Policy',
-      link: 'http://www.baidu.com',
+      link: '',
     },
   ],
 };

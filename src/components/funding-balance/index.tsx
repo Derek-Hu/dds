@@ -173,7 +173,9 @@ export default class Balance extends Component<{
             </Row>
             <Row className={styles.radioBtn}>
               <Radio.Group value={tradeType} onChange={this.changeType}>
-                <Radio.Button value="long">Long</Radio.Button>
+                <Radio.Button value="long" className={styles.red}>
+                  Long
+                </Radio.Button>
                 <Radio.Button value="short" className={styles.green}>
                   Short
                 </Radio.Button>
@@ -207,7 +209,7 @@ export default class Balance extends Component<{
             </p>
             {/* <Progress strokeColor="#1346FF" showInfo={false} percent={30} strokeWidth={20} /> */}
             <Button
-              className={tradeType === 'short' ? 'buttonGreen' : ''}
+              className={tradeType === 'short' ? 'buttonGreen' : 'buttonRed'}
               type="primary"
               disabled={!isNotZeroLike(openAmount)}
               onClick={this.orderConfirmVisible.show}

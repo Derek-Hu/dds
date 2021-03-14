@@ -8,6 +8,8 @@ import { Select, Row, Col, Button } from 'antd';
 import SiteContext from '../../layouts/SiteContext';
 import { getPriceGraphData } from '../../services/trade.service';
 import { format, isNumberLike } from '../../util/math';
+import Coin1 from '~/assets/imgs/coin1.png';
+import Coin2 from '~/assets/imgs/coin2.png';
 
 const { Option } = Select;
 
@@ -33,6 +35,8 @@ export default class MainLayout extends Component {
 
   state = {
     duration: 'day',
+    from: 'ETH',
+    to: 'DAI',
   };
 
   chartInstance = null;
@@ -85,7 +89,7 @@ export default class MainLayout extends Component {
     }
   }
   async componentDidMount() {
-    const { from = 'ETH', to = 'USDT' } = this.props;
+    const { from, to } = this.props;
     const { duration } = this.state;
 
     this.setState({
@@ -113,13 +117,25 @@ export default class MainLayout extends Component {
           return (
             <div className={[styles.root, isMobile ? styles.mobile : ''].join(' ')}>
               <div className={styles.headArea}>
-                <Select defaultValue={`${from}/${to}`} style={{ width: 120 }}>
+                <img src={Coin1} alt="" width="26px" style={{ position: 'relative', right: '-4px' }} />
+                <img src={Coin2} alt="" width="26px" />
+                <Select defaultValue="ETH/DAI" style={{ width: 120 }}>
                   <Option value="ETH/DAI">ETH/DAI</Option>
-                  <Option value="ETH/USDT">ETH/USDT</Option>
-                  <Option value="ETH/USDC">ETH/USDC</Option>
-                  <Option value="WBTC/DAI">WBTC/DAI</Option>
-                  <Option value="WBTC/USDT">WBTC/USDT</Option>
-                  <Option value="WBTC/USDC">WBTC/USDC</Option>
+                  <Option value="ETH/USDT" disabled>
+                    ETH/USDT
+                  </Option>
+                  <Option value="ETH/USDC" disabled>
+                    ETH/USDC
+                  </Option>
+                  <Option value="WBTC/DAI" disabled>
+                    WBTC/DAI
+                  </Option>
+                  <Option value="WBTC/USDT" disabled>
+                    WBTC/USDT
+                  </Option>
+                  <Option value="WBTC/USDC" disabled>
+                    WBTC/USDC
+                  </Option>
                 </Select>
               </div>
               <Row type="flex" justify="space-between" align="middle">

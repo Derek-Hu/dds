@@ -28,7 +28,7 @@ interface IState {
 export default class TradePage extends Component {
   state: IState = {
     from: 'ETH',
-    coin: 'USDT',
+    coin: 'DAI',
   };
 
   async componentDidMount() {
@@ -52,7 +52,9 @@ export default class TradePage extends Component {
   }
 
   render() {
-    const { coin, from, tradeInfos, curPrice } = this.state;
+    const { tradeInfos, curPrice } = this.state;
+    const coin = 'DAI';
+    const from = 'ETH';
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => {
