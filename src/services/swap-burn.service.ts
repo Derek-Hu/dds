@@ -1,3 +1,5 @@
+import Mask from '../components/mask';
+
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -16,3 +18,15 @@ export const getSwapPrice = async (): Promise<ISwapBurn> => {
     rate: dds/usd,
   });
 };
+
+export const conformSwap = async (data: any): Promise<boolean> => {
+  Mask.showLoading();
+  const isSuccess = await returnVal(false);
+  if(isSuccess){
+    Mask.showSuccess();
+  }else{
+    Mask.showFail();
+  }
+  return isSuccess;
+};
+

@@ -1,9 +1,9 @@
 import { Component } from 'react';
 import { Row, Col, Button } from 'antd';
 import styles from '../style.module.less';
-import { formatInt, format } from '../../../util/math';
+import { formatInt, format, isNotZeroLike } from '../../../util/math';
 import { getMyReferalInfo, claimReferalInfo } from '../../../services/broker.service';
-import { Hidden } from '../../builtin/hidden';
+import { Hidden, Visible } from '../../builtin/hidden';
 import Mask from '../../mask';
 
 interface IState {
@@ -26,15 +26,15 @@ export default class Broker extends Component<any, IState> {
     this.setState({ loading: false });
   }
 
-  onClaim= async () => {
+  onClaim = async () => {
     Mask.showLoading();
     const isSuccess = await claimReferalInfo();
-    if(isSuccess){
+    if (isSuccess) {
       Mask.showSuccess();
       return;
     }
     Mask.showFail();
-  }
+  };
 
   render() {
     const { loading, referalInfo } = this.state;
@@ -60,7 +60,7 @@ export default class Broker extends Component<any, IState> {
           <span className={styles.ads}>{format(bonus)}</span>
           <span>Bonus(USD)</span>
           <div>
-            <Button onClick={this.onClaim} style={{ width: '120px', margin: '20px' }} type="primary">
+            <Button disabled={!isNotZeroLike(bonus)} onClick={this.onClaim} style={{ width: '120px', margin: '20px' }} type="primary">
               Claim
             </Button>
           </div>

@@ -27,3 +27,21 @@ export const percentage = (fenzi: any, fenmu: any) => {
 export const dividedPecent = (fenzi: any, fenmu: any) => {
     return 100 * fenzi/fenmu;
 }
+
+
+export const isNumberLike = (value: string | number | null | undefined) => {
+    if(value===null || value ===undefined){
+      return false;
+    }
+    if (typeof value === 'number'){
+      return true;
+    }
+    if(String(parseFloat(value))===value){
+      return true;
+    }
+    return false;
+  }
+
+export const isNotZeroLike = (value: any) => {
+    return isNumberLike(value) && String(value) !== '0';
+}

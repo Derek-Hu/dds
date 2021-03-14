@@ -9,8 +9,8 @@ import SiteContext from '../../layouts/SiteContext';
 import { CoinSelectOption } from '../../constant/index';
 import { Visible, Hidden } from '../builtin/hidden';
 import Auth, { Public } from '../builtin/auth';
-import { getSwapPrice } from '../../services/swap-burn.service';
-import { format } from '../../util/math';
+import { getSwapPrice, conformSwap } from '../../services/swap-burn.service';
+import { format, isNotZeroLike } from '../../util/math';
 
 interface IState {
   loading: boolean;
@@ -62,6 +62,15 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
       swapModalVisible: true,
     });
   };
+
+  conformSwap = async () => {
+    this.closeSwapModal();
+    const { selectedCoin, amount } = this.state;
+    await conformSwap({
+      coin: selectedCoin,
+      amount
+    });
+  }
 
   render() {
     const { loading, data, selectedCoin, amount } = this.state;
@@ -126,7 +135,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
                         </Row>
                       </Form.Item>
                       <Form.Item className={styles.lastRow}>
-                        <Button type="primary" onClick={this.showSwapModal}>
+                        <Button type="primary" disabled={!isNotZeroLike(amount)} onClick={this.showSwapModal}>
                           Swap
                         </Button>
                       </Form.Item>
@@ -158,7 +167,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
                     <Button>Cancel</Button>
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
-                    <Button type="primary">Comfirm</Button>
+                    <Button onClick={this.conformSwap} type="primary">Comfirm</Button>
                   </Col>
                 </Row>
               </ModalRender>
