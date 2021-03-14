@@ -7,7 +7,7 @@ import styles from './style.module.less';
 import KLine from '../components/k-line/index';
 import FundingBalance from '../components/funding-balance/index';
 import SiteContext from '../layouts/SiteContext';
-import { getFundingBalanceInfo, getTradeOrders, getTradeInfo, getPriceGraphData } from '../services/trade.service';
+import { getFundingBalanceInfo, getCurPrice, getTradeOrders, getTradeInfo, getPriceGraphData } from '../services/trade.service';
 import Auth from '../components/builtin/auth';
 const from = 'ETH';
 
@@ -16,6 +16,7 @@ interface IState {
   graphData?: IPriceGraph;
   tradeInfos?: ITradeInfo[];
   duration: IGraphDuration;
+  curPrice?: number;
 }
 export default class TradePage extends Component {
   state: IState = {
@@ -25,16 +26,18 @@ export default class TradePage extends Component {
 
   async componentDidMount() {
     const { coin, duration } = this.state;
+    const curPrice = await getCurPrice(coin);
     const tradeInfos = await getTradeInfo(coin);
     const graphData = await getPriceGraphData({ from, to: coin }, duration);
     this.setState({
       tradeInfos,
       graphData,
+      curPrice,
     });
   }
 
   render() {
-    const { coin, graphData, tradeInfos } = this.state;
+    const { coin, graphData, tradeInfos, curPrice } = this.state;
     return (
       <SiteContext.Consumer>
         {({ isMobile, account }) => {
@@ -45,13 +48,12 @@ export default class TradePage extends Component {
                   {/* <KLine /> */}
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={8}>
-                  <FundingBalance coins={{ from, to: coin }} graphData={graphData} />
+                  <FundingBalance curPrice={curPrice} coins={{ from, to: coin }} />
                 </Col>
               </Row>
-
               <div>
                 <Auth>
-                  <TradeBonus coin={coin} graphData={graphData} />
+                  <TradeBonus coin={coin} curPrice={curPrice} />
                 </Auth>
                 <div>
                   <Row gutter={isMobile ? 0 : 20}>

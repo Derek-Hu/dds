@@ -9,7 +9,7 @@ import { UserAccountInfo } from '../wallet/contract-interface';
 import { BigNumber } from 'ethers';
 import { toEthers } from '../util/ethers';
 import * as request from 'superagent';
-import withLoading from './withLoading';
+import { withLoading } from './utils';
 
 /**
  * Trade Page

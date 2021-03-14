@@ -16,7 +16,6 @@ interface IState {
   tradeType: ITradeType;
   balanceInfo?: IBalanceInfo;
   openAmount: number | undefined;
-  curPrice?: number;
   maxNumber?: number;
 }
 
@@ -24,7 +23,7 @@ type TModalKeys = Pick<IState, 'withdrawVisible' | 'depositVisible' | 'orderConf
 
 export default class Balance extends Component<{
   coins: { from: IFromCoins; to: IUSDCoins };
-  graphData?: IPriceGraph;
+  curPrice?: number;
 }> {
   state: IState = {
     depositVisible: false,
@@ -41,15 +40,13 @@ export default class Balance extends Component<{
   };
 
   loadBalanceInfo = async () => {
-    const { coins } = this.props;
+    const { coins, curPrice } = this.props;
     const { to } = coins;
     try {
       const balanceInfo = await getFundingBalanceInfo(to);
-      const curPrice = await getCurPrice(to);
       const maxNumber = getMaxFromCoin(balanceInfo, curPrice);
       this.setState({
         balanceInfo,
-        curPrice,
         maxNumber,
       });
     } catch (e){
@@ -133,10 +130,9 @@ export default class Balance extends Component<{
       tradeType,
       balanceInfo,
       openAmount,
-      curPrice,
       maxNumber,
     } = this.state;
-    const { coins } = this.props;
+    const { coins, curPrice } = this.props;
     const { from, to } = coins;
 
     const price = curPrice;
@@ -184,7 +180,7 @@ export default class Balance extends Component<{
               </Radio.Group>
             </Row>
             <p className={styles.price}>
-              Current Price: {this.state.curPrice} {to}
+              Current Price: {curPrice} {to}
             </p>
             <p className={styles.amountTip}>Amount</p>
             <Input

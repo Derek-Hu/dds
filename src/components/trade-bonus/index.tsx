@@ -1,12 +1,12 @@
 import { Table, Button } from 'antd';
 import ColumnConvert from '../column-convert/index';
-import { format } from '../../util/math';
+import { format, isNumberLike } from '../../util/math';
 import { toCamelCase } from '../../util/string';
 import dayjs from 'dayjs';
 import styles from './style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import { Component } from 'react';
-import { getTradeOrders } from '../../services/trade.service';
+import { getTradeOrders, closeOrder } from '../../services/trade.service';
 import { Form, Row, Col, Select, Descriptions } from 'antd';
 import modalStyles from '../funding-balance/modals/style.module.less';
 import ModalRender from '../modal-render/index';
@@ -35,16 +35,22 @@ const getPL = (value?: { val: number; percentage: number }) => {
   const color = percentage === 0 ? '#383838' : percentage < 0 ? '#FA4D56' : '#02B464';
   return (
     <span>
-      {format(val)}(
-      <span style={{ color }}>
-        {flag}
-        {Math.abs(percentage)}%
-      </span>
-      )
+      {isNumberLike(val) ? (
+        <>
+          {format(val)}(
+          <span style={{ color }}>
+            {flag}
+            {Math.abs(percentage)}%
+          </span>
+          )
+        </>
+      ) : (
+        '-'
+      )}
     </span>
   );
 };
-export default class Balance extends Component<{ graphData?: IPriceGraph; coin: IUSDCoins }, IState> {
+export default class Balance extends Component<{ curPrice?: number; coin: IUSDCoins }, IState> {
   state: IState = {
     orderCloseVisible: false,
     orders: [],
@@ -54,15 +60,19 @@ export default class Balance extends Component<{ graphData?: IPriceGraph; coin: 
 
   async componentDidMount() {
     const { page } = this.state;
+    this.loadData(page);
+  }
+
+  loadData = async (page: number) => {
     this.setState({
       loading: true,
     });
-    const orders = await getTradeOrders(page);
+    const orders = await getTradeOrders(page).catch(() => []);
     this.setState({
       orders,
       loading: false,
     });
-  }
+  };
 
   columns = ColumnConvert<ITradeRecord, { exercise: any }>({
     column: {
@@ -130,10 +140,20 @@ export default class Balance extends Component<{ graphData?: IPriceGraph; coin: 
 
   orderModalVisible = this.setModalVisible('orderCloseVisible');
 
+  confirmClose = async () => {
+    const { selectedItem } = this.state;
+    const { curPrice } = this.props;
+    const success = await closeOrder(selectedItem!, curPrice!);
+    if (success) {
+      const { page } = this.state;
+      this.loadData(page);
+    }
+  };
+
   render() {
     const { orderCloseVisible, orders, selectedItem, loading } = this.state;
     const { type, price, amount, pl } = selectedItem || {};
-    const { graphData, coin } = this.props;
+    const { curPrice, coin } = this.props;
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => (
@@ -168,7 +188,7 @@ export default class Balance extends Component<{ graphData?: IPriceGraph; coin: 
                   {amount}
                 </Descriptions.Item>
                 <Descriptions.Item label="Close Price" span={24}>
-                  {graphData?.price}
+                  {curPrice}
                   {coin}
                 </Descriptions.Item>
                 <Descriptions.Item label="P&L" span={24}>
@@ -180,7 +200,9 @@ export default class Balance extends Component<{ graphData?: IPriceGraph; coin: 
                   <Button onClick={this.orderModalVisible.hide}>Cancel</Button>
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
-                  <Button onClick={this.confirmClose} type="primary">Close Order</Button>
+                  <Button onClick={this.confirmClose} type="primary">
+                    Close Order
+                  </Button>
                 </Col>
               </Row>
             </ModalRender>

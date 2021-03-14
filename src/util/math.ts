@@ -1,10 +1,10 @@
 import numeral from 'numeral';
 
 export const format = (value: any) => {
-  if (typeof value !== 'number') {
-    return value;
+  if(isNumberLike(value)){
+    return numeral(parseFloat(value)).format('0,0.0000');
   }
-  return numeral(value).format('0,0.0000');
+  return '';
 };
 
 export const formatInt = (value: any) => {
