@@ -179,7 +179,7 @@ interface ICoinItem {
 }
 
 declare interface ICoinValue {
-  coin: IUSDCoins;
+  coin: string;
   value: number;
 }
 declare interface IPoolShareInPool extends ICoinItem {}

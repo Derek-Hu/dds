@@ -9,7 +9,7 @@ interface IState {
 
 interface IProps {
   title: string;
-  service: () => Promise<ICoinValue[]>;
+  service: () => Promise<Array<{coin: string, value: number }>>;
   children?: any;
   theme: 'outer' | 'inner';
 }
