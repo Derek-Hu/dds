@@ -162,12 +162,12 @@ export default class Balance extends Component<{
             <Row className={styles.actionLink} type="flex" justify="space-between">
               <Col>
                 <Button type="link" onClick={() => address && this.depositVisible.show()}>
-                  Deposit
+                  DEPOSIT
                 </Button>
               </Col>
               <Col>
                 <Button type="link" onClick={() => address && this.withdrawVisible.show()}>
-                  Withdraw
+                  WITHDRAW
                 </Button>
               </Col>
             </Row>

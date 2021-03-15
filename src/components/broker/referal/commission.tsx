@@ -95,9 +95,9 @@ export default class CommissionPool extends Component<any, IState> {
     return loading ? null : (
       <div>
         <CardInfo theme="inner" title="Commission" items={data}>
-          <Button type="link" onClick={this.visible.show}>
+          {/* <Button type="link" onClick={this.visible.show}>
             Commission Record
-          </Button>
+          </Button> */}
         </CardInfo>
 
         <ModalRender

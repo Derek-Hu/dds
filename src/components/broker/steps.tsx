@@ -48,7 +48,7 @@ export default () => {
                 <div>Instantly get your bonus as DDS</div>
               </Col>
             </Row>
-            <div>
+            {/* <div>
               <h4>Level & Commission</h4>
               <p>due to the ranking of the network we have 4 level for broker</p>
               <Row>
@@ -81,8 +81,8 @@ export default () => {
                   </div>
                 </Col>
               </Row>
-            </div>
-            <div className={styles.campionLevels}>
+            </div> */}
+            {/* <div className={styles.campionLevels}>
               <h4>Campaign</h4>
               <p>
                 不同等级的返佣率不同，C、D等级将分别拿出10%和20%的手续费注入奖励池。
@@ -97,7 +97,7 @@ export default () => {
                 <img src={CampaignImg} width="87%" alt="" />
               </div>
               <p>Rewards distribute every 30 days</p>
-            </div>
+            </div> */}
           </div>
         );
       }}

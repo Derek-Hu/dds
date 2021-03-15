@@ -67,18 +67,18 @@ export default class Broker extends Component<any, any> {
         </Visible>
         <Visible when={this.state.selectedTab === tabName.referal}>
           <Row gutter={20} style={{ marginTop: '20px' }}>
-            <Col xs={24} sm={24} md={12} lg={12}>
+            <Col xs={24} sm={24} md={24} lg={24}>
               <Commission />
             </Col>
-            <Col xs={24} sm={24} md={12} lg={12}>
+            {/* <Col xs={24} sm={24} md={12} lg={12}>
               <CampaignRewards />
-            </Col>
+            </Col> */}
           </Row>
-          <Row style={{ marginTop: '24px' }}>
+          {/* <Row style={{ marginTop: '24px' }}>
             <Col xs={24} sm={24} md={24} lg={24}>
               <CampaignRewardsPool />
             </Col>
-          </Row>
+          </Row> */}
         </Visible>
       </div>
     );

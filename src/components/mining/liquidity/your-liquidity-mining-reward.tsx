@@ -52,9 +52,9 @@ export default class LiquidityMiningReward extends Component<any, IState> {
             <br />
             {refactor} <span>DDS/Block</span>
           </p>
-          <Button type="primary" className={styles.btn} onClick={this.cofirmClaim}>
+          {/* <Button type="primary" className={styles.btn} onClick={this.cofirmClaim}>
             Claim
-          </Button>
+          </Button> */}
         </Auth>
       </Hidden>
     );

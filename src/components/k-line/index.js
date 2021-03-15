@@ -66,7 +66,7 @@ export default class MainLayout extends Component {
       this.chartInstance.setOption(option);
     }
     const { xData, yData } = data.reduce((all, { timestamp, value })=> {
-      all.xData.push(dayjs(timestamp).format('YYYY-MM-DD'));
+      all.xData.push(dayjs(timestamp).format('MM/DD'));
       all.yData.push(value);
       return all;
     }, { xData: [], yData: []})
@@ -143,11 +143,11 @@ export default class MainLayout extends Component {
                   <div className={styles.currVal}>
                     {format(price)} {to}
                   </div>
-                  <p className={styles.change}>
+                  {/* <p className={styles.change}>
                     {sig(range)}
                     {format(range)} {to}({sig(percentage)}
                     {format(percentage)}%) <span>Past {Durations[duration]}</span>
-                  </p>
+                  </p> */}
                 </Col>
                 <Col className={styles.range} xs={24} sm={24} md={12} lg={12}>
                   {Object.keys(Durations).map((key) => (

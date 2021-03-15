@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import SwapBar from './swap-bar';
 import styles from './style.module.less';
-import { Button, Select, Form, Icon, Input, Row, Col, Descriptions } from 'antd';
+import { Button, Select, Form, Icon, Input, Row, Col, Descriptions, message } from 'antd';
 import numeral from 'numeral';
 import ModalRender from '../modal-render/index';
 import commonStyles from '../funding-balance/modals/style.module.less';
@@ -58,6 +58,10 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
   };
 
   showSwapModal = () => {
+    if (!isNotZeroLike(this.state.amount)) {
+      // message.warning('')
+      return;
+    }
     this.setState({
       swapModalVisible: true,
     });
@@ -126,7 +130,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
                                   </Select>
                                 </Col>
                                 <Col xs={11} sm={11} md={13} lg={13}>
-                                  <Input value={transferText} disabled={true} placeholder="" />
+                                  <Input value={transferText} readOnly={true} placeholder="" />
                                 </Col>
                               </Row>
                             </Col>
@@ -136,9 +140,13 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
                           </Row>
                         </Form.Item>
                         <Form.Item className={styles.lastRow}>
-                          <Button type="primary" disabled={!isNotZeroLike(amount)} onClick={this.showSwapModal}>
-                            Swap
-                          </Button>
+                          <Row>
+                            <Col xs={20} sm={20} md={20} lg={20}>
+                              <Button type="primary" onClick={this.showSwapModal}>
+                                Swap
+                              </Button>
+                            </Col>
+                          </Row>
                         </Form.Item>
                       </Form>
                     </div>

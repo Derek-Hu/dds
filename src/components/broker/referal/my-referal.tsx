@@ -43,26 +43,33 @@ export default class Broker extends Component<any, IState> {
       <Hidden when={loading}>
         <h3>Summary</h3>
         <Row className="padding-bottom-60">
-          <Col xs={24} sm={24} md={8} lg={8} className={styles.col}>
+          {/* <Col xs={24} sm={24} md={8} lg={8} className={styles.col}>
             <span className={styles.ads}>{level}</span>
             <span>Current Level</span>
           </Col>
           <Col xs={24} sm={24} md={8} lg={8} className={styles.col}>
             <span className={styles.ads}>{formatInt(ranking)}</span>
             <span>Ranking</span>
-          </Col>
-          <Col xs={24} sm={24} md={8} lg={8} className={styles.col}>
+          </Col> */}
+          <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
             <span className={styles.ads}>{formatInt(referals)}</span>
             <span>Referrals</span>
           </Col>
+          <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
+            <span className={styles.ads}>{format(bonus)}</span>
+            <span>Bonus(USD)</span>
+          </Col>
         </Row>
         <div style={{ marginTop: '48px', paddingBottom: '40px' }}>
-          <span className={styles.ads}>{format(bonus)}</span>
-          <span>Bonus(USD)</span>
           <div>
-            <Button disabled={!isNotZeroLike(bonus)} onClick={this.onClaim} style={{ width: '120px', margin: '20px' }} type="primary">
+            {isNotZeroLike(bonus) ? <Button
+              onClick={this.onClaim}
+              style={{ width: '120px', margin: '20px' }}
+              type="primary"
+            >
               Claim
-            </Button>
+            </Button> : null }
+            
           </div>
         </div>
       </Hidden>
