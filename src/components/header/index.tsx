@@ -5,6 +5,7 @@ import { NavLink as Link, Link as LLink, Redirect } from 'react-router-dom';
 import SiteContext from '../../layouts/SiteContext';
 import ConnectWallet from '../connect-wallet/index';
 import Logo from '~/assets/imgs/logo.png';
+import LogoWhite from '~/assets/imgs/logo-white.png';
 
 const { SubMenu } = Menu;
 
@@ -155,12 +156,11 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
           ) : (
             <div className={[styles.root, darkMode ? '' : styles.light].join(' ')}>
               <Row type="flex" justify="space-between" align="middle">
-                <Col span={20}>
+                <Col span={16}>
                   <Menu onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal">
                     <Menu.Item key="logo" className={styles.dderivatives}>
                       <Link to="/home" activeClassName="ant-menu-item-selected">
-                        <img src={Logo} alt="" width="36px" />
-                        Shield
+                        <img src={window.location.hash === '#/home' ? LogoWhite : Logo} alt="" width="120px" />
                       </Link>
                     </Menu.Item>
                     <Menu.Item key="trade">
@@ -207,7 +207,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                         Broker
                       </Link>
                     </Menu.Item>
-                    <Menu.Item key="analytics">
+                    {/* <Menu.Item key="analytics">
                       <Link to="/analytics" activeClassName="ant-menu-item-selected">
                         Analytics
                       </Link>
@@ -215,12 +215,17 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                     <Menu.Item key="support">
                       Support&nbsp;&nbsp;
                       <Icon type="down" />
-                    </Menu.Item>
+                    </Menu.Item> */}
                   </Menu>
                 </Col>
-                <Col span={4} className={styles.connectWpr}>
+                <Col className={styles.connectWpr}>
                   <ConnectWallet>
                     <Button className={styles.connectBtn}>Connect Wallet</Button>
+                    {/* <div className={styles.connectedBtn}>
+                      <span className={styles.first}>98 DDS</span>
+                      <span className={styles.second}>2.009USDT</span>
+                      <span>0x8317...c496</span>
+                    </div> */}
                   </ConnectWallet>
                 </Col>
               </Row>
