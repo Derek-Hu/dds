@@ -1,20 +1,23 @@
 import { Icon } from 'antd';
+import TelegramIcon from '~/assets/imgs/telegram-app.png';
+import DiscordIcon from '~/assets/imgs/discord.png';
+import styles from './style.module.less';
 
 export default [
   {
-    icon: <Icon type="twitter" style={{ color: '#1346FF' }} />,
+    icon: <Icon type="twitter" style={{ color: '#333333' }} />,
     url: 'https://twitter.com/shield_dao)',
   },
   {
-    icon: <Icon type="medium" style={{ color: '#1346FF' }} />,
+    icon: <Icon type="medium" style={{ color: '#333333' }} />,
     url: 'https://medium.com/@shielddaoofficial',
   },
   {
-    icon: <Icon type="telegram" />,
+    icon: <img src={TelegramIcon} alt="" className={styles.icon} />,
     url: 'https://t.me/shielddaoofficial',
   },
   {
-    icon: <img src="https://img.icons8.com/material-sharp/1x/ffffff/discord-logo.png" alt="" />,
+    icon: <img src={DiscordIcon} alt="" className={styles.icon} />,
     url: 'https://discord.com/invite/NAbGTHYgMg',
   },
 ];

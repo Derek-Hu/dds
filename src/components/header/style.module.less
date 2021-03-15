@@ -1,4 +1,4 @@
-.homeHeader{
+.homeHeader {
   background-color: #1346ff;
   color: #fff;
   font-size: 24px;
@@ -18,37 +18,38 @@
   z-index: 9;
   background-color: #1346ff;
   border-bottom: 1px solid #1346ff;
-  &.light{
-    background-color: #F9FAFC;
-    border-bottom: 1px solid #EEEEEE;
-    .connectBtn{
-      background-color: #1346FF;
+  &.light {
+    background-color: #f9fafc;
+    border-bottom: 1px solid #eeeeee;
+    .connectBtn {
+      background-color: #1346ff;
     }
-    &.mobileLight{
-      :global{
-        .ant-menu-item, .ant-menu-submenu-title{
+    &.mobileLight {
+      :global {
+        .ant-menu-item,
+        .ant-menu-submenu-title {
           padding: 0 15px;
         }
       }
     }
-    :global{
-      .ant-menu{
-        background-color: #F9FAFC;
+    :global {
+      .ant-menu {
+        background-color: #f9fafc;
         color: #333333;
-        border-bottom-color: #EEEEEE;
+        border-bottom-color: #eeeeee;
 
         .ant-menu-item:hover {
           border-bottom-color: transparent;
         }
-        .ant-menu-item.ant-menu-item-selected{
+        .ant-menu-item.ant-menu-item-selected {
           border-bottom-color: #1346ff;
         }
 
         .ant-menu-submenu-title:hover,
-        &:not(.ant-menu-inline) .ant-menu-submenu-open, 
+        &:not(.ant-menu-inline) .ant-menu-submenu-open,
         .ant-menu-submenu-active,
         &.ant-menu-horizontal > .ant-menu-submenu-selected,
-        &.ant-menu-horizontal > .ant-menu-submenu:hover{
+        &.ant-menu-horizontal > .ant-menu-submenu:hover {
           color: #333;
         }
         &.ant-menu-horizontal > .ant-menu-item > a {
@@ -58,8 +59,9 @@
     }
   }
 
-  .connectWpr{
+  .connectWpr {
     text-align: right;
+    margin-right: 12px;
   }
   .connectBtn {
     height: 40px;
@@ -67,7 +69,7 @@
     font-size: 16px;
     margin-right: 40px;
     background: rgba(229, 238, 255, 0.14);
-    color: #FFF;
+    color: #fff;
     border: 1px solid #3b6cff;
   }
 
@@ -90,4 +92,24 @@
 .dderivatives {
   font-size: 24px;
   padding-left: 42px;
+}
+
+.connectedBtn {
+  span {
+    border: 1px solid #e5e5e5;
+    background: #fff;
+    padding: 5px 10px;
+    border-radius: 10px;
+    position: relative;
+  }
+
+  span.second {
+    right: -3px;
+    z-index: 2;
+  }
+
+  span.first {
+    right: -6px;
+    z-index: 3;
+  }
 }
