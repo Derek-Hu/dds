@@ -4,8 +4,9 @@ import { toEthers } from '../util/ethers';
 import { BigNumber } from 'ethers';
 import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { curUserAccount } from './account';
-import { EMPTY, from, zip } from 'rxjs';
-import {withLoading } from './utils';
+import { EMPTY, from, Observable, of, zip } from 'rxjs';
+import { withLoading } from './utils';
+import { defaultPoolData } from './mock/unlogin-default';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   return new Promise((resolve) => {
@@ -16,7 +17,7 @@ const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
 };
 
 export const getCollaborativeLiquidityProvided = async (): Promise<ICoinValue[]> => {
-  return returnVal(liquidityProvided); 
+  return returnVal(liquidityProvided);
 };
 
 export const getCollaborativeArp = async (): Promise<number> => {
@@ -28,7 +29,6 @@ export const getPoolBalance = async (type: 'public' | 'private'): Promise<ICoinI
   return from(curUserAccount())
     .pipe(
       switchMap((account: string | null) => {
-        // 有效登陆状态下返回个人余额
         if (account === null && type === 'public') {
           return contractAccessor.pubPoolBalanceWhole();
         } else if (account !== null) {
@@ -38,10 +38,14 @@ export const getPoolBalance = async (type: 'public' | 'private'): Promise<ICoinI
             return contractAccessor.priPoolBalanceOf(account);
           }
         } else {
-          return EMPTY;
+          return of(null);
         }
       }),
-      map((balances) => {
+      map((balances: Map<IUSDCoins, BigNumber> | null) => {
+        if (balances === null) {
+          return defaultPoolData;
+        }
+
         return Array.from(balances.keys()).map((coin: IUSDCoins) => {
           return {
             coin,
@@ -61,19 +65,22 @@ export const getPoolWithDrawDeadline = async (type: 'public' | 'private'): Promi
 
 /** Done */
 export const getCollaborativeShareInPool = async (): Promise<IPoolShareInPool[]> => {
-  return from(curUserAccount())
-    .pipe(
-      filter((account) => account !== null),
-      map((account) => account as string),
-      switchMap((account: string) => {
-        return zip(contractAccessor.pubPoolBalanceOf(account), contractAccessor.pubPoolBalanceWhole());
-      }),
+  const getShareInPool = (account: string): Observable<IPoolShareInPool[]> => {
+    return zip(contractAccessor.pubPoolBalanceOf(account), contractAccessor.pubPoolBalanceWhole()).pipe(
       map((rs: Map<IUSDCoins, BigNumber>[]) => {
         return Array.from(rs[0].keys()).map((coin) => {
           const amount = Number(toEthers(rs[0].get(coin) as BigNumber, 4));
           const total = Number(toEthers(rs[1].get(coin) as BigNumber, 4));
           return { coin, amount, total };
         });
+      })
+    );
+  };
+
+  return from(curUserAccount())
+    .pipe(
+      switchMap((account: string | null) => {
+        return account === null ? of([]) : getShareInPool(account);
       }),
       take(1)
     )
@@ -82,19 +89,22 @@ export const getCollaborativeShareInPool = async (): Promise<IPoolShareInPool[]>
 
 /** Done */
 export const getPrivateSharePool = async (): Promise<ICoinItem[]> => {
-  return from(curUserAccount())
-    .pipe(
-      filter((account) => account !== null),
-      map((account) => account as string),
-      switchMap((account) => {
-        return zip(contractAccessor.priPoolBalanceOf(account), contractAccessor.priPoolBalanceWhole());
-      }),
+  const getSharePool = (account: string): Observable<ICoinItem[]> => {
+    return zip(contractAccessor.priPoolBalanceOf(account), contractAccessor.priPoolBalanceWhole()).pipe(
       map((rs: Map<IUSDCoins, BigNumber>[]) => {
         return Array.from(rs[0].keys()).map((coin) => {
           const amount = Number(toEthers(rs[0].get(coin) as BigNumber, 4));
           const total = Number(toEthers(rs[1].get(coin) as BigNumber, 4));
           return { coin, amount, total };
         });
+      })
+    );
+  };
+
+  return from(curUserAccount())
+    .pipe(
+      switchMap((account: string | null) => {
+        return account === null ? of(defaultPoolData) : getSharePool(account);
       }),
       take(1)
     )
@@ -153,12 +163,22 @@ export const doCollaborativeDeposit = async ({
   return await withLoading(contractAccessor.provideToPubPool(coin, amount).pipe(take(1)).toPromise());
 };
 
-export const doPoolWithdraw = async ({amount, reAmount, coin, type }: { reAmount?: number; coin: any; amount: any, type: 'public' | 'private' }): Promise<boolean> => {
-  if(type==='public'){
-    return doCollaborativeWithdraw({coin, reAmount: reAmount!});
+export const doPoolWithdraw = async ({
+  amount,
+  reAmount,
+  coin,
+  type,
+}: {
+  reAmount?: number;
+  coin: any;
+  amount: any;
+  type: 'public' | 'private';
+}): Promise<boolean> => {
+  if (type === 'public') {
+    return doCollaborativeWithdraw({ coin, reAmount: reAmount! });
   }
-  return doPrivateWithdraw({coin, amount});
-}
+  return doPrivateWithdraw({ coin, amount });
+};
 /**
  * 公池取出
  * @param coin - IUSDCoins

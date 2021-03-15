@@ -24,10 +24,12 @@ import {
   Lp1DAIContractAddress,
   Lp2DAIContractAddress,
   MiningRewardContractAddress,
+  DefaultNetwork,
 } from '../constant';
 import { walletManager } from '../wallet/wallet-manager';
 import { WalletInterface } from './wallet-interface';
 import { toBigNumber, toEthers } from '../util/ethers';
+import { Signer } from 'crypto';
 
 declare const window: Window & { ethereum: any };
 
@@ -672,12 +674,70 @@ class MetamaskContractAccessor extends BaseTradeContractAccessor {
   }
 }
 
+// 默认访问路径，只能读取
+class DefaultContractAccessor extends BaseTradeContractAccessor {
+  public readonly transferable = false;
+
+  protected getMiningRewardContract(): ethers.Contract {
+    return new ethers.Contract(MiningRewardContractAddress, RewardsABI, this.getProvider());
+  }
+
+  protected getPrivatePoolContractMap(): Map<IUSDCoins, ethers.Contract> {
+    const rsMap = new Map<IUSDCoins, ethers.Contract>();
+    const signer = this.getProvider();
+
+    const daiCon = new ethers.Contract(Lp2DAIContractAddress, Pl2ABI, signer);
+    rsMap.set('DAI', daiCon);
+
+    return rsMap;
+  }
+
+  protected getProvider(): ethers.providers.BaseProvider {
+    return ethers.getDefaultProvider(DefaultNetwork);
+  }
+
+  protected getPubPoolContractMap(): Map<IUSDCoins, ethers.Contract> {
+    const rsMap = new Map<IUSDCoins, ethers.Contract>();
+    const signer = this.getProvider();
+
+    const daiCon = new ethers.Contract(Lp1DAIContractAddress, Pl1ABI, signer);
+    rsMap.set('DAI', daiCon);
+
+    return rsMap;
+  }
+
+  protected getSigner(): ethers.Signer | undefined {
+    return undefined;
+  }
+
+  protected getTradeContractMap(): Map<IUSDCoins, ethers.Contract> {
+    const rsMap = new Map<IUSDCoins, ethers.Contract>();
+    const signer = this.getProvider();
+
+    const daiContract = new ethers.Contract(TradeDAIContractAddress, ABI, signer);
+    rsMap.set('DAI', daiContract);
+
+    if (TradeUSDTContractAddress) {
+      const usdtContract = new ethers.Contract(TradeUSDTContractAddress, ABI, signer);
+      rsMap.set('USDT', usdtContract);
+    }
+
+    if (TradeUSDCContractAddress) {
+      const usdcContract = new ethers.Contract(TradeUSDCContractAddress, ABI, signer);
+      rsMap.set('USDC', usdcContract);
+    }
+
+    return rsMap;
+  }
+}
+
 /**
  * 合约访问工具
  */
 export class ContractAccessor implements ContractProxy {
   //
   private readonly metamaskAccessor = new MetamaskContractAccessor();
+  private readonly defaultAccessor = new DefaultContractAccessor();
 
   private readonly curAccessor: BehaviorSubject<BaseTradeContractAccessor | null> = new BehaviorSubject<BaseTradeContractAccessor | null>(
     null
@@ -687,6 +747,17 @@ export class ContractAccessor implements ContractProxy {
     return this.curAccessor.pipe(
       filter((a: BaseTradeContractAccessor | null) => a !== null),
       map((a) => a as BaseTradeContractAccessor),
+      take(1)
+    );
+  }
+
+  public get anyAccessor(): Observable<BaseTradeContractAccessor> {
+    return this.curAccessor.pipe(
+      map(
+        (a: BaseTradeContractAccessor | null): BaseTradeContractAccessor => {
+          return a === null ? this.defaultAccessor : a;
+        }
+      ),
       take(1)
     );
   }
@@ -833,7 +904,7 @@ export class ContractAccessor implements ContractProxy {
   }
 
   public pubPoolBalanceWhole(): Observable<Map<IUSDCoins, BigNumber>> {
-    return this.accessor.pipe(
+    return this.anyAccessor.pipe(
       switchMap((accessor) => {
         return accessor.pubPoolBalanceWhole();
       })
