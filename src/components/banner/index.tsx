@@ -7,9 +7,8 @@ export default () => {
     <div className={styles.root}>
       <div className={styles.content}>
         <h2>
-          The world's first <br />
-          Decentralized Non-Risk <br />
-          Perpetual Exchange
+          The First Decentralized Risk-free <br />
+          Perpetual Contract
         </h2>
         <Link to="/trade">
           <Button className={styles.spot}>Spot Trading</Button>

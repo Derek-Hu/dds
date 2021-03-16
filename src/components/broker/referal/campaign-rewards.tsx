@@ -21,7 +21,7 @@ const CommissionColumns = ColumnConvert<IBrokerCampaignRecord, {}>({
     time: 'Time',
     pair: 'Friend Address',
     amount: 'Amount',
-    price: 'Settlements Fee',
+    price: 'Settlement Fee',
     reward: 'Commission',
   },
   render(value, key, record) {

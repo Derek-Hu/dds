@@ -30,10 +30,12 @@ export default class BecomeSpark extends Component<any, IState> {
       <div className={mainStyles.becomeContainer}>
         <Hidden when={loading}>
           <div className={styles.root}>
-            <h3>Become DDerivatives's Spark</h3>
-            <p className={styles.descOne}>Spread DeFi Spark To The Old World Make Your Influence Into Affluence</p>
+            <h3>Become a Shield Spark</h3>
+            <p className={styles.descOne}>
+              Spread DeFi Spark across the globe Unlock your influence and turn it into bonus
+            </p>
             <div className={styles.percentage}>{data?.commission}%</div>
-            <p className={styles.descTwo}>Settlements Fee Commission</p>
+            <p className={styles.descTwo}>Settlement Fee Commission</p>
             <Row className={styles.tabSpark}>
               <Col xs={24} sm={12} md={12} lg={12} className={styles.col}>
                 <span className={styles.ads}>20+</span>

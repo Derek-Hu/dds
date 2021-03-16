@@ -44,21 +44,31 @@ export default class BecomeSpark extends Component<any, IState> {
             </span>
           );
         case 'action':
-          return <span className={styles.tradeBtn} onClick={() => this.gotoTrade({
-            fromCoin: record.fromCoin, toCoin: record.toCoin
-          })}>Trade</span>;
+          return (
+            <span
+              className={styles.tradeBtn}
+              onClick={() =>
+                this.gotoTrade({
+                  fromCoin: record.fromCoin,
+                  toCoin: record.toCoin,
+                })
+              }
+            >
+              Trade
+            </span>
+          );
         default:
           return value;
       }
     },
-  })  
+  });
 
-  gotoTrade = ({fromCoin, toCoin}: {fromCoin: string; toCoin: string}) => {
+  gotoTrade = ({ fromCoin, toCoin }: { fromCoin: string; toCoin: string }) => {
     this.props.history.push({
       pathname: '/trade',
       search: `?from=${fromCoin}&to=${toCoin}`,
     });
-  }
+  };
   async componentDidMount() {
     this.setState({ loading: true });
     const nonRisksInfo = await getNonRisks().catch(() => null);
@@ -80,12 +90,12 @@ export default class BecomeSpark extends Component<any, IState> {
                 <div className={styles.head}>
                   <Row>
                     <Col xs={24} sm={24} md={24} lg={12} className={styles.col}>
-                      <h2>Non-Risk Perpetual</h2>
+                      <h2>Risk-free Perpetual Contract</h2>
                     </Col>
                     {isMobile ? null : isNumberLike(total) ? (
                       <Col xs={24} sm={24} md={24} lg={12} className={[styles.col, styles.summary].join(' ')}>
                         <span>
-                          24h trading volumn: <span className={styles.total}>{format(total)}</span> USD
+                          24h Volume: <span className={styles.total}>{format(total)}</span> USD
                         </span>
                       </Col>
                     ) : null}

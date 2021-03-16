@@ -12,7 +12,7 @@ const { SubMenu } = Menu;
 const rightMenus = {
   Trade: '/trade',
   Pool: '/pool',
-  DDS: {
+  SLD: {
     Mining: '/mining',
     Swap: '/swap-burn',
   },
@@ -29,7 +29,7 @@ const rightMenus = {
     'DDerivatives DAO': '/dao',
     Vote: '/vote',
   },
-  Audit: '/home',
+  Audits: '/home',
   'Bug Bounty': '/home',
   Liquidator: '/home',
   Blog: '/home',
@@ -127,7 +127,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                       <SubMenu
                         title={
                           <span className="submenu-title-wrapper">
-                            DDS&nbsp;&nbsp;
+                            SLD&nbsp;&nbsp;
                             <Icon type="down" />
                           </span>
                         }
@@ -176,17 +176,17 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                     <SubMenu
                       title={
                         <span className="submenu-title-wrapper">
-                          DDS&nbsp;&nbsp;
+                          SLD&nbsp;&nbsp;
                           <Icon type="down" />
                         </span>
                       }
                     >
                       <div className="submenu-dialog">
                         <div className="top">
-                          <p className="title">Token Economy</p>
+                          <p className="title">Token Economics</p>
                           <p>
-                            DDS.As the Govermance token of DDeruvatives, it's the coin that fuels the entire
-                            DDerivatives EcosyStem.
+                            SLD is a utility token for community governance and fuels further Sield ecosystem
+                            development.
                           </p>
                           <Link to="/" className="link" style={{ color: '#1346FF' }}>
                             Learn more

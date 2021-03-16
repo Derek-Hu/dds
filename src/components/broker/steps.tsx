@@ -30,7 +30,7 @@ export default () => {
         const gap = (rect.width - 2 * rect.bar - rect.center) / 2;
         return (
           <div className={[styles.steps, isMobile ? styles.mobile : ''].join(' ')}>
-            <h4>Simple Steps</h4>
+            <h4>Only 3 Steps</h4>
             <Row>
               <Col xs={24} sm={24} md={8} lg={8}>
                 <Icon type="form" />
@@ -44,8 +44,8 @@ export default () => {
               </Col>
               <Col xs={24} sm={24} md={8} lg={8}>
                 <Icon type="fund" />
-                <p>3. Receive Your DDS Bonus</p>
-                <div>Instantly get your bonus as DDS</div>
+                <p>3. Receive Your Commission</p>
+                <div>Instantly get your commission and claim anytime</div>
               </Col>
             </Row>
             {/* <div>

@@ -41,7 +41,7 @@ export const getCommission = async (): Promise<CoinValueInfo> => {
 };
 
 /**
- * get My Referral Commission Records
+ * get My Referral Commission History
  */
 export const getCommissionRecords = async (): Promise<[]> => {
   return Promise.resolve([]);

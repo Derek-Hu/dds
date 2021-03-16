@@ -21,7 +21,7 @@ const CommissionColumns = ColumnConvert<IBrokerCommissionRecord, {}>({
     time: 'Time',
     pair: 'Friend Address',
     amount: 'Amount',
-    price: 'Settlements Fee',
+    price: 'Settlement Fee',
     reward: 'Commission',
   },
   render(value, key, record) {
@@ -96,13 +96,13 @@ export default class CommissionPool extends Component<any, IState> {
       <div>
         <CardInfo theme="inner" title="Commission" items={data}>
           {/* <Button type="link" onClick={this.visible.show}>
-            Commission Record
+            Commission History
           </Button> */}
         </CardInfo>
 
         <ModalRender
           visible={visible}
-          title="Commission Record"
+          title="Commission History"
           className={styles.modal}
           height={420}
           onCancel={this.visible.hide}

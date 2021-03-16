@@ -20,7 +20,7 @@ import Auth, { Public } from '../builtin/auth';
 const { TabPane } = Tabs;
 
 const TabName = {
-  Collaborative: 'Collaborative',
+  Collaborative: 'Public',
   Private: 'Private',
 };
 
@@ -76,7 +76,7 @@ export default class PoolArea extends Component<{ address?: string }, any> {
 
   showDepositModal = () => {
     const { amount } = this.state;
-    if(!isNotZeroLike(amount)){
+    if (!isNotZeroLike(amount)) {
       return;
     }
     this.setState({
@@ -147,19 +147,11 @@ export default class PoolArea extends Component<{ address?: string }, any> {
                             </Select>
                           </Col>
                           <Col xs={24} sm={24} md={16} lg={18}>
-                            <Input
-                              value={amount}
-                              onChange={this.onAmountChange}
-                              placeholder="amount for providing to the pool"
-                            />
+                            <Input value={amount} onChange={this.onAmountChange} placeholder="Enter amount" />
                           </Col>
                         </Row>
-                        <Button
-                          type="primary"
-                          className={styles.btn}
-                          onClick={this.showDepositModal}
-                        >
-                          Deposit
+                        <Button type="primary" className={styles.btn} onClick={this.showDepositModal}>
+                          DEPOSIT
                         </Button>
                       </div>
                     </Auth>
@@ -222,7 +214,7 @@ export default class PoolArea extends Component<{ address?: string }, any> {
                 footer={null}
               >
                 <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
-                  <Descriptions.Item label="Deposit Amount" span={24}>
+                  <Descriptions.Item label="Amount" span={24}>
                     {amount} {selectedCoin}
                   </Descriptions.Item>
                 </Descriptions>

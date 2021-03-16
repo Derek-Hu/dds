@@ -78,13 +78,13 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
     column: {
       time: 'Time',
       type: 'Type',
-      price: 'Order Price',
+      price: 'Strike Price',
       amount: 'Amount',
       cost: 'Funding Cost',
-      fee: 'Settlements Fee ($)',
+      fee: 'Settlement Fee ($)',
       pl: 'P&L',
       status: 'Status',
-      exercise: 'Operation',
+      exercise: 'Action',
     },
     render: (value, key, record) => {
       switch (key) {
@@ -174,14 +174,14 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
               onCancel={this.orderModalVisible.hide}
               height={320}
               footer={null}
-              title="Close Order"
+              title="Close Position"
               className={modalStyles.commonModal}
             >
               <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
                 <Descriptions.Item label="Type" span={24}>
                   {toCamelCase(type)}
                 </Descriptions.Item>
-                <Descriptions.Item label="Open Price" span={24}>
+                <Descriptions.Item label="Strike Price" span={24}>
                   {price}
                 </Descriptions.Item>
                 <Descriptions.Item label="Amount" span={24}>
@@ -201,7 +201,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                   <Button onClick={this.confirmClose} type="primary">
-                    Close Order
+                    Close Position
                   </Button>
                 </Col>
               </Row>

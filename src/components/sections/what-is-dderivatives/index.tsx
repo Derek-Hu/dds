@@ -20,11 +20,11 @@ export default () => {
               <Col xs={24} sm={24} md={24} lg={14} className={styles.message}>
                 <h3>What is DDerivatives</h3>
                 <p className={styles.advantage}>
-                  A High-availability Decentralized Protocol For Trading Perpetual With No Position Loss On Ethereum.
+                  A decentralized exchange for trading perpetual without position loss.
                 </p>
                 <p className={styles.desc}>
-                  Centralized exchanges offer strong liquidity and products, but at the expense of user control
-                  .Decentralized exchanges give control to users, but compromise on usability.
+                  Shield devotes to developing a trustless, censorship-resistant and accessible protocol based on a
+                  fully non-cooperative game—the next generation of global derivative infrastructure.
                 </p>
               </Col>
               {isMobile ? adsImage : null}

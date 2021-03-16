@@ -27,7 +27,7 @@ const columns = [
     },
   },
   {
-    title: 'Settlements Fee',
+    title: 'Settlement Fee',
     dataIndex: 'fee',
     key: 'fee',
     render: (time: string) => {
@@ -40,7 +40,7 @@ const columns = [
     key: 'status',
   },
   {
-    title: 'Open Price',
+    title: 'Strike Price',
     dataIndex: 'operate',
     key: 'operate',
     render: (time: string) => {

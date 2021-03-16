@@ -15,7 +15,7 @@
 * 行情图切换时间区间
 * Funding Balance(DAI)
     未登录时，Deposit/Withdraw点击不可用，按钮Open改为Connect Wallet
-    已登录 Settlements Fee : DAI计算
+    已登录 Settlement Fee : DAI计算
 * Orders数据对接、分页
 * Orders Close订单
 
@@ -27,7 +27,7 @@
         * Your Share In The Pool 数据对接
         * Liquidity Balance 数据对接、分页
         * Liquidity Balance Withdraw对接
-        * Liquidity Balance Record 对接
+        * Liquidity Balance History 对接
 
     * 未登录
         * Liquidity Provided数据对接
@@ -38,7 +38,7 @@
         * Available Liquidity 数据对接
         * Liquidity Balance 数据对接
         * Liquidity Balance Withdraw对接
-        * Liquidity Balance Record 对接、分页
+        * Liquidity Balance History 对接、分页
         * LIQUIDITY LOCKED DETAIL表格数据对接\分页
         * LIQUIDITY LOCKED DETAIL补仓
         * LIQUIDITY LOCKED DETAIL停止接单
@@ -53,12 +53,12 @@
 5. Broker页面
 * Copy referal link提示
 * 从address映射至referal link
-* Become DDerivatives's Spark数据对接
+* Become a Shield Spark数据对接
 * My Referal数据对接
 * My Referal Claim功能
 
 * My Referal Commission数据对接
-* My Referal Commission Record数据对接、分页
+* My Referal Commission History数据对接、分页
 
 * My Referal Campaign Rewards数据对接、分页
 * My Referal Campaign Rewards Record数据对接、分页
@@ -70,7 +70,7 @@
 
 ------------------
 d. Trade按钮跳转到Trade页面相应交易对
-e. Why Choose DDerivatives文案
+e. Why Trade with Shield文案
 f. What is DDerivatives文案
 Security Borderless Privacy增加标题
 We are Community Drived背景色白色
@@ -95,13 +95,13 @@ Install MetaMask 跳转官网
 Deposit / Withdraw未登录点击时自动弹出连接钱包, 出现Loading后轮询
 
 Orders 自动下拉刷新数据
-Liquidity Balance Record自动下拉刷新数据
+Liquidity Balance History自动下拉刷新数据
 
 -------------------------------
 Support 菜单交互
 
 下单：
-    Settlements Fee 固定值 千分之一
+    Settlement Fee 固定值 千分之一
     Max = (Balance - Locked) / Price
 
 
@@ -110,7 +110,7 @@ MINING页面
     Available Liquidity 比例 = Available Liquidity Value / Liquidity Balance
 
 Net P&L
-    Liquidity Balance - Liquidity Balance Record 存取累计差额
+    Liquidity Balance - Liquidity Balance History 存取累计差额
 
 
 Liquidity Balance： 文案更新
@@ -127,7 +127,7 @@ Open余额不足，提示
 
 图表增加刷新功能
 LIQUIDITY LOCKED DETAIL
-    Liquidity Locked Settlements Fee单位一致
+    Liquidity Locked Settlement Fee单位一致
     Reward(DDS)为整数
 
 Your Share In The Pool 中第一个值 等于 Liquidity Balance中的值

@@ -51,7 +51,7 @@ const links: { [key: string]: ILink[] } = {
   // ...(isStage? null : { Ecosystem }),
   Security: [
     {
-      name: 'Audit',
+      name: 'Audits',
       link: '',
     },
     {

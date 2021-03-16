@@ -92,7 +92,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
                     <SwapBar leftAmount={format(data?.usd)} rightAmount={format(data?.dds)}></SwapBar>
                   </div>
                   <h3 className={styles.msg}>Current Swap Price</h3>
-                  <p className={styles.calcute}>1 DDS = {format(data?.rate)} USD</p>
+                  <p className={styles.calcute}>1 SLD = {format(data?.rate)} USD</p>
                   <Auth>
                     <div className={styles.swapContainer}>
                       <Form className="login-form">
@@ -103,11 +103,11 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
                                 value={amount}
                                 className={styles.ddsInput}
                                 onChange={this.onAmountChange}
-                                placeholder="How many DDS do you want to swap and burn?"
+                                placeholder="Amount"
                               />
                             </Col>
                             <Col xs={4} sm={4} md={4} lg={4}>
-                              <span className={styles.unit}>DDS</span>
+                              <span className={styles.unit}>SLD</span>
                             </Col>
                           </Row>
                         </Form.Item>
@@ -161,10 +161,10 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
                   >
                     <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
                       <Descriptions.Item label="Swap Ratio" span={24}>
-                        1DDS : {format(data?.rate)} DAI
+                        1SLD : {format(data?.rate)} DAI
                       </Descriptions.Item>
                       <Descriptions.Item label="Swap Amount" span={24}>
-                        {amount} DDS
+                        {amount} SLD
                       </Descriptions.Item>
                       <Descriptions.Item label="Receive" span={24}>
                         {transferText} {selectedCoin}

@@ -49,7 +49,7 @@ export default class Balance extends Component<{
         balanceInfo,
         maxNumber,
       });
-    } catch (e){
+    } catch (e) {
       console.error(e);
     }
   };
@@ -175,10 +175,10 @@ export default class Balance extends Component<{
             <Row className={styles.radioBtn}>
               <Radio.Group value={tradeType} onChange={this.changeType}>
                 <Radio.Button value="long" className={styles.red}>
-                  Long
+                  LONG
                 </Radio.Button>
                 <Radio.Button value="short" className={styles.green}>
-                  Short
+                  SHORT
                 </Radio.Button>
               </Radio.Group>
             </Row>
@@ -206,17 +206,17 @@ export default class Balance extends Component<{
               </Col>
             </Row>
             <p className={styles.settlement}>
-              Settlements Fee : {fee} {to}
+              Settlement Fee : {fee} {to}
             </p>
             {/* <Progress strokeColor="#1346FF" showInfo={false} percent={30} strokeWidth={20} /> */}
             <Button
               className={tradeType === 'short' ? 'buttonGreen' : 'buttonRed'}
               type="primary"
               onClick={() => {
-                if(!isNotZeroLike(openAmount)){
+                if (!isNotZeroLike(openAmount)) {
                   return;
                 }
-                this.orderConfirmVisible.show()
+                this.orderConfirmVisible.show();
               }}
             >
               Open

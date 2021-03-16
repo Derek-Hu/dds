@@ -1,4 +1,3 @@
-
 ```js
 Funding Balance 下单
 // 入参：
@@ -31,7 +30,7 @@ export interface IRecord {
   amount: number;
 }
 
-// Orders: 分页支持 
+// Orders: 分页支持
 // 入参：page, pageSize
 export interface IRecord {
   id: string;
@@ -49,7 +48,7 @@ export interface IRecord {
   status: IStatus;
 }
 
-// Liquidity Pool, 
+// Liquidity Pool,
 // 入参 coin: DAI/USDC/USDT
 // 出参
 export interface IPoolInfo{
@@ -63,7 +62,7 @@ export interface IPoolInfo{
     }
 }
 
-// Trade Page Info, 
+// Trade Page Info,
 // 入参 coin: DAI/USDC/USDT
 // 出参 Array<IInfo>
 export interface IInfo{
@@ -150,9 +149,9 @@ export interface IOutput{
 }
 
 
-// LIQUIDITY POOL COLLABORATIVE - Liquidity Balance Record
+// LIQUIDITY POOL COLLABORATIVE - Liquidity Balance History
 // 入参 page, pageSize, coin
-// 出参 Array<IOutput> 
+// 出参 Array<IOutput>
 export interface IOutput{
     time: 'DAI' | 'USDT' | 'USDC'
     type: 'widthdraw' | 'deposit'
@@ -273,7 +272,7 @@ export interface IOutput{
 }
 
 // SWAP & BURN
-// 出参 
+// 出参
 export interface IOutput{
     usd: number;
     dds: number;
@@ -281,7 +280,7 @@ export interface IOutput{
 }
 
 // SWAP & BURN 兑换
-// 出参 
+// 出参
 export interface IOutput{
     dds: number;
     coin: 'DAI' | 'USDT' | 'USDC'
@@ -308,7 +307,7 @@ export interface IOutput{
 
 // BROKER - MY REFERRAL Claim
 export interface IOutput{
-   
+
 }
 
 // BROKER - MY REFERRAL Commission
@@ -318,7 +317,7 @@ export interface IOutput{
     amount: number;
 }
 
-// BROKER - MY REFERRAL Commission Record
+// BROKER - MY REFERRAL Commission History
 // Array<IOutput>
 export interface IOutput{
     coin: 'DAI' | 'USDT' | 'USDC'
@@ -354,6 +353,5 @@ export interface IOutput{
 
 ```
 
-Claim操作确认
-Pool页面reDai确认
-
+Claim 操作确认
+Pool 页面 reDai 确认

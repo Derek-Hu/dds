@@ -9,31 +9,31 @@ import Icon6 from '~/assets/imgs/icon6.png';
 export const datasourceOne = [
   {
     icon: <img src={Icon1} alt="" width="66px" />,
-    name: 'No risk of position lossrity',
-    description: '100% compensation in the position loss to resist the risk caused by delayed price',
+    name: '0 position loss',
+    description: '100% cover from position loss due to latency price feed',
   },
   {
     icon: <img src={Icon2} alt="" width="66px" />,
-    name: 'Non-delivery term',
+    name: 'No expiration date',
     description: 'Flexible funding rate without fix delivery date',
   },
   {
     icon: <img src={Icon3} alt="" width="66px" />,
-    name: 'Double combined liquidity pool',
-    description: 'strong liquidity and low multi-token risk exposure',
+    name: 'Dual Liquidity Pools',
+    description: 'Strong liquidity and low LP mining risk',
   },
 ];
 
 export const datasourceTwo = [
   {
     icon: <img src={Icon4} alt="" width="66px" />,
-    name: 'Security',
+    name: 'Secure',
     description: 'Non-custodial and transparent transactions',
   },
   {
     icon: <img src={Icon5} alt="" width="66px" />,
-    name: 'Borderless',
-    description: 'True globalization and permissionless',
+    name: 'Trustless',
+    description: 'Verified on-chain settlement and fully-decentralized',
   },
   {
     icon: <img src={Icon6} alt="" width="66px" />,

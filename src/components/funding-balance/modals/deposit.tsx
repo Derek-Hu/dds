@@ -5,7 +5,7 @@ import SiteContext from '../../../layouts/SiteContext';
 import { Component } from 'react';
 import { format, isNotZeroLike } from '../../../util/math';
 
-const title = 'Funding Deposit';
+const title = 'Funding Fee Deposit';
 
 interface IProps {
   visible: boolean;
@@ -42,7 +42,7 @@ export default class Balance extends Component<IProps, IState> {
               {/* <h4>{title}</h4> */}
               <Row gutter={[16, 16]}>
                 <Col xs={24} sm={24} md={24} lg={24}>
-                  <Input value={depositAmount} placeholder="Deposit amount" onChange={this.onAmountChange} />
+                  <Input value={depositAmount} placeholder="Amount" onChange={this.onAmountChange} />
                 </Col>
               </Row>
               {/* <Row gutter={[16, 16]} className={styles.utilMax} type="flex" justify="space-between">
@@ -53,13 +53,17 @@ export default class Balance extends Component<IProps, IState> {
                 323.34 ETH
               </Col>
             </Row> */}
-              <Row className={styles.actionBtns} gutter={[16, 16]} >
+              <Row className={styles.actionBtns} gutter={[16, 16]}>
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
                   <Button onClick={onCancel}>Cancel</Button>
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
-                  <Button disabled={!isNotZeroLike(depositAmount)} onClick={() => onConfirm(depositAmount)} type="primary">
-                    Deposit
+                  <Button
+                    disabled={!isNotZeroLike(depositAmount)}
+                    onClick={() => onConfirm(depositAmount)}
+                    type="primary"
+                  >
+                    DEPOSIT
                   </Button>
                 </Col>
               </Row>

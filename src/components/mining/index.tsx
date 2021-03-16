@@ -28,7 +28,7 @@ const { TabPane } = Tabs;
 
 const TabName = {
   Liquidity: 'liquidity',
-  Utilization: 'liquidity locked',
+  Utilization: 'active liquidity',
   Liquiditor: 'liquiditor',
 };
 
@@ -47,8 +47,8 @@ const columns = ColumnConvert<IReward, {}>({
     time: 'Time',
     pair: 'Coin Pair',
     amount: 'Amount',
-    price: 'Order Price',
-    reward: 'Reward(DDS)',
+    price: 'Strike Price',
+    reward: 'Reward(SLD)',
   },
   render(value, key, record) {
     switch (key) {
@@ -163,7 +163,7 @@ export default class Mining extends Component {
                 onCancel={this.closeClaimModal}
                 footer={null}
                 height={320}
-                title="Claim Rewards"
+                title="Claim SLD"
                 className={commonStyles.commonModal}
               >
                 <Row type="flex" justify="space-between" align="middle">
@@ -171,7 +171,7 @@ export default class Mining extends Component {
                     <Input placeholder="Amount you want to claim" />
                   </Col>
                   <Col xs={4} sm={4} md={4} lg={4} style={{ textAlign: 'center' }}>
-                    <span>DDS</span>
+                    <span>SLD</span>
                   </Col>
                 </Row>
                 <p className={currStyles.tips}>
@@ -252,7 +252,7 @@ export default class Mining extends Component {
                         <Button type="primary" className={styles.lock} onClick={() => this.showLockModal(true)}>
                           Unlock reTokens
                         </Button>
-                        <p>Unlock reToken to be able to withdraw your reToken from the liquidity mining</p>
+                        <p>Unlock reToken to be able to withdraw your reToken from the liquidity</p>
                       </Pool>
                     </Col> */}
                       <Col xs={24} sm={24} md={12} lg={12}>
