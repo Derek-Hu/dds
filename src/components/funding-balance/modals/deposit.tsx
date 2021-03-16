@@ -53,7 +53,7 @@ export default class Balance extends Component<IProps, IState> {
                 323.34 ETH
               </Col>
             </Row> */}
-              <Row className={styles.actionBtns} gutter={[16, 16]} type="flex">
+              <Row className={styles.actionBtns} gutter={[16, 16]} >
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
                   <Button onClick={onCancel}>Cancel</Button>
                 </Col>

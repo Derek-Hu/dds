@@ -75,6 +75,10 @@ export default class PoolArea extends Component<{ address?: string }, any> {
   };
 
   showDepositModal = () => {
+    const { amount } = this.state;
+    if(!isNotZeroLike(amount)){
+      return;
+    }
     this.setState({
       depositModalVisible: true,
     });
@@ -152,7 +156,6 @@ export default class PoolArea extends Component<{ address?: string }, any> {
                         </Row>
                         <Button
                           type="primary"
-                          disabled={!isNotZeroLike(amount)}
                           className={styles.btn}
                           onClick={this.showDepositModal}
                         >

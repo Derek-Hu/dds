@@ -1,6 +1,7 @@
 import Mask from '../components/mask/index';
 
 export const withLoading = (promiseInstance: Promise<boolean>) => {
+  Mask.showLoading();
   return promiseInstance
     .then((rs: boolean) => {
       if (rs) {

@@ -30,7 +30,7 @@ export default class CoinProgress extends Component<IProps, IState> {
 
     const data = await service();
     this.setState({
-      data: data.map(({ amount, total, coin }) => ({
+      data: data ? data.map(({ amount, total, coin }) => ({
         label: coin,
         percentage: percentage(amount, total),
         val: (
@@ -38,7 +38,7 @@ export default class CoinProgress extends Component<IProps, IState> {
             {amount} / {total}
           </span>
         ),
-      })),
+      })): []
     });
     this.setState({ loading: false });
   }

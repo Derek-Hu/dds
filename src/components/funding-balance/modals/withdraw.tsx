@@ -59,18 +59,18 @@ export default class Balance extends Component<IProps, IState> {
             className={styles.commonModal}
           >
             <Row gutter={[16, 16]} type="flex" justify="space-between" align="middle">
-              <Col xs={24} sm={24} md={6} lg={6}>
+              {/* <Col xs={24} sm={24} md={6} lg={6}>
                 <Select defaultValue={coin} disabled={true} onChange={this.onCoinChange} style={{ width: '100%', height: 50 }}>
                   {CoinSelectOption}
                 </Select>
+              </Col> */}
+              <Col span={24}>
+                <Input type="number" value={amount} onChange={this.onAmountChange} placeholder="Withdraw amount" />
               </Col>
               <Col xs={24} sm={24} md={18} lg={18}>
                 <span className={styles.maxWithdraw} style={{ marginLeft: 0 }}>
                   Max Withdraw Balance: <span>{max}</span> {coin}
                 </span>
-              </Col>
-              <Col span={24}>
-                <Input type="number" value={amount} onChange={this.onAmountChange} placeholder="Withdraw amount" />
               </Col>
             </Row>
 

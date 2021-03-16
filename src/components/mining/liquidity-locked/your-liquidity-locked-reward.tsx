@@ -110,11 +110,11 @@ export default class LiquiditorReward extends Component<any, IState> {
             <Button type="primary" className={[styles.btn, styles.cliamBtn].join(' ')} onClick={this.cofirmClaim}>
               Claim
             </Button>
-            <div>
+            {/* <div>
               <Button type="link" onClick={this.visible.show} className={styles.recordLink}>
                 Rewards Balance Record
               </Button>
-            </div>
+            </div> */}
           </div>
         </Auth>
 

@@ -15,6 +15,12 @@ const { Option } = Select;
 
 const echarts = window.echarts;
 
+const Rule = {
+  day: 'HH:mm',
+  week: 'MM-DD',
+  month: 'MM/DD',
+}
+
 const Durations = {
   day: '24 Hours',
   week: '1W',
@@ -66,7 +72,7 @@ export default class MainLayout extends Component {
       this.chartInstance.setOption(option);
     }
     const { xData, yData } = data.reduce((all, { timestamp, value })=> {
-      all.xData.push(dayjs(timestamp).format('MM/DD'));
+      all.xData.push(dayjs(timestamp).format(Rule[duration]));
       all.yData.push(value);
       return all;
     }, { xData: [], yData: []})

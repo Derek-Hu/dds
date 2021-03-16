@@ -1,11 +1,17 @@
-export const seryName = 'klineData';
+export const seryName = 'Price';
 
 export default {
+  grid: {
+    left: 10,
+    right: 10,
+  },
   tooltip: {
     trigger: 'axis',
     position: function (pt: any) {
       return [pt[0], '10%'];
     },
+    // confine: true,
+    transitionDuration: 0
   },
   // title: {
   //   left: "center",
@@ -39,6 +45,11 @@ export default {
       sampling: 'average',
       itemStyle: {
         color: '#ffacac',
+      },
+      lineStyle:{
+        width: 1,
+        opacity: 0.8,
+        color: '#F55858'
       },
       areaStyle: {
         color: {

@@ -172,7 +172,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
                     </Descriptions>
                     <Row className={commonStyles.actionBtns} gutter={[16, 16]} type="flex">
                       <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                        <Button>Cancel</Button>
+                        <Button onClick={this.closeSwapModal}>Cancel</Button>
                       </Col>
                       <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                         <Button onClick={this.conformSwap} type="primary">

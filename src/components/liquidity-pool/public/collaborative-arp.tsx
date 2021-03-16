@@ -3,7 +3,7 @@ import { Tabs, Button, Row, Col, Select, Input, Alert, Descriptions } from 'antd
 import styles from '../style.module.less';
 import SiteContext from '../../../layouts/SiteContext';
 import { Component } from 'react';
-import { format, isNotZeroLike } from '../../../util/math';
+import { format, isNotZeroLike, isNumberLike } from '../../../util/math';
 import { getCollaborativeArp } from '../../../services/pool.service';
 import ModalRender from '../../modal-render/index';
 import commonStyles from '../../funding-balance/modals/style.module.less';
@@ -35,10 +35,16 @@ export default class LiquidityProvided extends Component<IProps, IState> {
 
   setModalVisible = (key: keyof TModalKeys) => {
     return {
-      show: () =>
+      show: () =>{
+        const { amount } = this.state;
+        if(!isNotZeroLike(amount)){
+          return;
+        }
         this.setState({
           [key]: true,
-        }),
+        })
+      },
+
       hide: () =>
         this.setState({
           [key]: false,
@@ -79,8 +85,8 @@ export default class LiquidityProvided extends Component<IProps, IState> {
   };
 
   confirmDeposit = async () => {
-    this.modalVisible.hide();
     const { amount, selectedCoin } = this.state;
+    this.modalVisible.hide();
     await doCollaborativeDeposit({ amount: amount!, coin: selectedCoin });
   };
 
@@ -104,7 +110,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
             <Hidden when={loading}>
               <div>
                 <h3>ARP</h3>
-                <p className={styles.coins}>{data}%</p>
+                <p className={styles.coins}>{isNumberLike(data)? `${data}%` : 'N/A'}</p>
                 <Auth>
                   <div className={styles.actionArea}>
                     <Row gutter={[isMobile ? 0 : 12, isMobile ? 15 : 0]}>
@@ -133,7 +139,6 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                     ) : null}
                     <Button
                       type="primary"
-                      disabled={!isNotZeroLike(amount)}
                       className={styles.btn}
                       onClick={this.modalVisible.show}
                     >
@@ -158,7 +163,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                       {reAmount} re{selectedCoin}
                     </Descriptions.Item>
                   </Descriptions>
-                  <p>说明：将冻结14天</p>
+                  <p>Tips: 14 Days Locked Required</p>
                   <Row className={commonStyles.actionBtns} gutter={[16, 16]} type="flex">
                     <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
                       <Button onClick={this.modalVisible.hide}>Cancel</Button>
