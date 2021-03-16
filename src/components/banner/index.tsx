@@ -14,7 +14,7 @@ export default () => {
         <Link to="/trade">
           <Button className={styles.spot}>Spot Trading</Button>
         </Link>
-        <a href="http://www.baidu.com" rel="noreferrer" target="_blank">
+        <a href="https://docsend.com/view/tik7bk6c6vv6nqwv" rel="noreferrer" target="_blank">
           <Button className={styles.read} type="link">
             Read the docs
           </Button>

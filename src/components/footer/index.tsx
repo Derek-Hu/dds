@@ -1,6 +1,7 @@
 import { Row, Col, message } from 'antd';
 import styles from './style.module.less';
 import links from './links';
+import Logo from '~/assets/imgs/logo-white.png';
 
 export default () => {
   return (
@@ -8,7 +9,7 @@ export default () => {
       <div className={styles.content}>
         <Row type="flex" justify="space-between">
           <Col xs={24} sm={24} md={24} lg={8} className={styles.left}>
-            <h2>DDerivatives</h2>
+            <img src={Logo} alt="" className={styles.logo} />
             <p>Infrastructure for future derivatives</p>
           </Col>
           <Col xs={24} sm={24} md={24} lg={16} className={styles.right}>
