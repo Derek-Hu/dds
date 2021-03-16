@@ -219,14 +219,20 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                   </Menu>
                 </Col>
                 <Col className={styles.connectWpr}>
-                  <ConnectWallet>
-                    <Button className={styles.connectBtn}>Connect Wallet</Button>
-                    {/* <div className={styles.connectedBtn}>
-                      <span className={styles.first}>98 DDS</span>
-                      <span className={styles.second}>2.009USDT</span>
-                      <span>0x8317...c496</span>
-                    </div> */}
-                  </ConnectWallet>
+                  {window.location.hash === '#/home' ? (
+                    <Button className={styles.connectBtn}>
+                      <Link to="/trade">Trade</Link>
+                    </Button>
+                  ) : (
+                    <ConnectWallet>
+                      <Button className={styles.connectBtn}>Connect Wallet</Button>
+                      {/* <div className={styles.accountInfo}>
+                        <span>98 SLD</span>
+                        <span>2.009DAI</span>
+                        <span>0x8317...c496</span>
+                      </div> */}
+                    </ConnectWallet>
+                  )}
                 </Col>
               </Row>
             </div>

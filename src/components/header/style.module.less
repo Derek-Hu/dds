@@ -94,22 +94,28 @@
   padding-left: 42px;
 }
 
-.connectedBtn {
+.accountInfo {
   span {
-    border: 1px solid #e5e5e5;
+    border: 1px solid #1346ff;
+    border-right: none;
     background: #fff;
+    color: #1346ff;
+    font-size: 14px;
     padding: 5px 10px;
-    border-radius: 10px;
-    position: relative;
   }
 
-  span.second {
-    right: -3px;
-    z-index: 2;
+  span:first-child {
+    border-radius: 5px 0 0 5px;
   }
 
-  span.first {
-    right: -6px;
-    z-index: 3;
+  span:last-child {
+    border-radius: 0 5px 5px 0;
+    border-right: 1px solid #1346ff;
+    cursor: pointer;
+
+    &:hover {
+      background: #1346ff;
+      color: #fff;
+    }
   }
 }
