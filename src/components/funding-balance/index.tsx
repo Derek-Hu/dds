@@ -119,6 +119,7 @@ export default class Balance extends Component<{
     const { coins } = this.props;
     const { to } = coins;
     const { tradeType, openAmount } = this.state;
+    this.orderConfirmVisible.hide();
     const success = await openOrder(to, tradeType, openAmount!);
   };
 
@@ -211,8 +212,12 @@ export default class Balance extends Component<{
             <Button
               className={tradeType === 'short' ? 'buttonGreen' : 'buttonRed'}
               type="primary"
-              disabled={!isNotZeroLike(openAmount)}
-              onClick={this.orderConfirmVisible.show}
+              onClick={() => {
+                if(!isNotZeroLike(openAmount)){
+                  return;
+                }
+                this.orderConfirmVisible.show()
+              }}
             >
               Open
             </Button>
