@@ -188,9 +188,9 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                             SLD is a utility token for community governance and fuels further Sield ecosystem
                             development.
                           </p>
-                          <Link to="/" className="link" style={{ color: '#1346FF' }}>
+                          {/* <Link to="/" className="link" style={{ color: '#1346FF' }}>
                             Learn more
-                          </Link>
+                          </Link> */}
                         </div>
                         <div className="bottom">
                           <Link to="/mining" className="link">

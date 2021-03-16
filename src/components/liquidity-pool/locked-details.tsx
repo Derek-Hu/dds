@@ -26,14 +26,14 @@ const columns = [
       return numeral(time).format('0,0');
     },
   },
-  {
-    title: 'Settlement Fee',
-    dataIndex: 'fee',
-    key: 'fee',
-    render: (time: string) => {
-      return numeral(time).format('0,0');
-    },
-  },
+  // {
+  //   title: 'Settlement Fee',
+  //   dataIndex: 'fee',
+  //   key: 'fee',
+  //   render: (time: string) => {
+  //     return numeral(time).format('0,0');
+  //   },
+  // },
   {
     title: 'Status',
     dataIndex: 'status',
@@ -43,8 +43,15 @@ const columns = [
     title: 'Strike Price',
     dataIndex: 'operate',
     key: 'operate',
-    render: (time: string) => {
-      return <Button type="primary">增加补仓</Button>;
+    // render: (time: string) => {
+    //   return <Button type="primary">增加补仓</Button>;
+    // },
+  },
+  {
+    title: 'Action',
+    key: 'action',
+    render: () => {
+      return <Button type="link">ADD MARGIN</Button>;
     },
   },
 ];
