@@ -14,7 +14,24 @@
     .ant-table-thead th,
     .ant-table-thead td {
       border: 0;
-      text-align: center;
+      background-color: #f9fafc !important;
+      text-align: left;
+    }
+    .ant-table-thead th:last-child,
+    .ant-table-body td:last-child {
+      text-align: right;
+    }
+    .ant-table-tbody tr:hover td {
+      background-color: #f6f7f9 !important;
+    }
+    .ant-table-thead .ant-table-column-title {
+      font-size: 14px;
+      color: #808080;
+      font-weight: normal;
+    }
+
+    .ant-btn-link {
+      padding: 0;
     }
   }
   h4 {
@@ -24,30 +41,5 @@
     font-size: 24px;
     font-weight: 800;
     color: #333333;
-  }
-  table,
-  th {
-    text-align: center;
-  }
-
-  th {
-    color: #666666;
-    line-height: 17px;
-  }
-
-  td {
-    color: #333333;
-    line-height: 17px;
-  }
-  td:nth-child(1) {
-    font-weight: bold;
-    color: #1346ff;
-  }
-
-  th:nth-child(1),
-  td:nth-child(1),
-  td:nth-child(2),
-  th:nth-child(2) {
-    text-align: left;
   }
 }
