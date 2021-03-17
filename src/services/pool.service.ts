@@ -3,7 +3,7 @@ import { contractAccessor } from '../wallet/chain-access';
 import { toEthers } from '../util/ethers';
 import { BigNumber } from 'ethers';
 import { filter, map, switchMap, take, tap } from 'rxjs/operators';
-import { curUserAccount } from './account';
+import { curUserAccount, loginUserAccount } from './account';
 import { EMPTY, from, Observable, of, zip } from 'rxjs';
 import { withLoading } from './utils';
 import { defaultPoolData } from './mock/unlogin-default';
@@ -26,7 +26,7 @@ export const getCollaborativeArp = async (): Promise<number> => {
 
 /** Done */
 export const getPoolBalance = async (type: 'public' | 'private'): Promise<ICoinItem[]> => {
-  return from(curUserAccount())
+  return from(loginUserAccount())
     .pipe(
       switchMap((account: string | null) => {
         if (account === null && type === 'public') {
@@ -53,8 +53,7 @@ export const getPoolBalance = async (type: 'public' | 'private'): Promise<ICoinI
           };
         });
       }),
-      take(1),
-      tap((rs) => console.log('b', rs))
+      take(1)
     )
     .toPromise();
 };
@@ -77,10 +76,10 @@ export const getCollaborativeShareInPool = async (): Promise<IPoolShareInPool[]>
     );
   };
 
-  return from(curUserAccount())
+  return from(loginUserAccount())
     .pipe(
       switchMap((account: string | null) => {
-        return account === null ? of([]) : getShareInPool(account);
+        return account === null ? of(defaultPoolData) : getShareInPool(account);
       }),
       take(1)
     )

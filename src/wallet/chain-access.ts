@@ -3,9 +3,11 @@ import {
   CoinBalance,
   CoinShare,
   ContractProxy,
+  LiquidatorABI,
   Pl1ABI,
   Pl2ABI,
   RewardsABI,
+  SwapBurnABI,
   UserAccountInfo,
 } from '../wallet/contract-interface';
 import { BehaviorSubject, from, Observable, of, interval, EMPTY, zip, merge } from 'rxjs';
@@ -20,16 +22,17 @@ import {
   TradeUSDCContractAddress,
   ERC20DAIAddress,
   ETH_WEIGHT,
-  CoinWeight,
   Lp1DAIContractAddress,
   Lp2DAIContractAddress,
   MiningRewardContractAddress,
   DefaultNetwork,
+  LiquidatorContractAddress,
+  SwapBurnContractAddress,
 } from '../constant';
 import { walletManager } from '../wallet/wallet-manager';
 import { WalletInterface } from './wallet-interface';
 import { toBigNumber, toEthers } from '../util/ethers';
-import { Signer } from 'crypto';
+import { isMetaMaskInstalled } from './metamask';
 
 declare const window: Window & { ethereum: any };
 
@@ -336,6 +339,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       }),
       map((rs) => {
         return rs.mintOtoken;
+      }),
+      catchError((err) => {
+        console.warn('error', err);
+        return of(BigNumber.from(0));
       })
     );
   }
@@ -383,9 +390,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         const bigAmount: BigNumber = toBigNumber(reCoinAmount, 18);
         return contract.withdraw(bigAmount);
       }),
-      map((rs) => {
-        return true;
+      switchMap((rs: any) => {
+        return from(rs.wait());
       }),
+      mapTo(true),
       catchError((err) => {
         return of(false);
       })
@@ -439,6 +447,8 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         rs.set('DAI', balances[0]);
         rs.set('USDT', balances[1]);
         rs.set('USDC', balances[2]);
+
+        console.log(' rs', rs);
         return rs;
       })
     );
@@ -503,7 +513,6 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         return contract.withdraw(bigAmount);
       }),
       switchMap((rs: any) => {
-        console.log('withdraw rs', rs);
         return from(rs.wait());
       }),
       mapTo(true),
@@ -584,6 +593,31 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
+  public getActiveLiquidityRewards(address: string): Observable<BigNumber> {
+    return from(this.getMiningRewardContract().functions.queryRewardsForLP2(address)).pipe(
+      map((rs: BigNumber) => {
+        return rs;
+      }),
+      catchError((err) => {
+        console.warn('error', err);
+        return of(BigNumber.from(0));
+      })
+    );
+  }
+
+  public claimRewardsForLP2(): Observable<boolean> {
+    return from(this.getMiningRewardContract().functions.claimRewardsForLP2()).pipe(
+      switchMap((rs) => {
+        return from(rs.wait());
+      }),
+      mapTo(true),
+      catchError((err) => {
+        console.warn('error', err);
+        return of(false);
+      })
+    );
+  }
+
   //
   protected getContract(coin: IUSDCoins): Observable<ethers.Contract> {
     return of(this.contractMap.get(coin)).pipe(filter(Boolean)) as Observable<ethers.Contract>;
@@ -607,6 +641,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
 
   protected abstract getMiningRewardContract(): ethers.Contract;
 
+  protected abstract getSwapBurnContract(): ethers.Contract;
+
+  protected abstract getLiquidatorContract(): ethers.Contract;
+
   protected abstract getPrivatePoolContractMap(): Map<IUSDCoins, ethers.Contract>;
 
   protected abstract getProvider(): ethers.providers.BaseProvider;
@@ -624,6 +662,14 @@ class MetamaskContractAccessor extends BaseTradeContractAccessor {
     const signer = this.getProvider().getSigner();
 
     return new ethers.Contract(MiningRewardContractAddress, RewardsABI, signer);
+  }
+
+  protected getLiquidatorContract(): ethers.Contract {
+    return new ethers.Contract(LiquidatorContractAddress, LiquidatorABI, this.getSigner());
+  }
+
+  protected getSwapBurnContract(): ethers.Contract {
+    return new ethers.Contract(SwapBurnContractAddress, SwapBurnABI, this.getSigner());
   }
 
   protected getPrivatePoolContractMap(): Map<IUSDCoins, ethers.Contract> {
@@ -682,6 +728,14 @@ class DefaultContractAccessor extends BaseTradeContractAccessor {
     return new ethers.Contract(MiningRewardContractAddress, RewardsABI, this.getProvider());
   }
 
+  protected getSwapBurnContract(): ethers.Contract {
+    return new ethers.Contract(SwapBurnContractAddress, SwapBurnABI, this.getProvider());
+  }
+
+  protected getLiquidatorContract(): ethers.Contract {
+    return new ethers.Contract(LiquidatorContractAddress, LiquidatorABI, this.getProvider());
+  }
+
   protected getPrivatePoolContractMap(): Map<IUSDCoins, ethers.Contract> {
     const rsMap = new Map<IUSDCoins, ethers.Contract>();
     const signer = this.getProvider();
@@ -736,8 +790,33 @@ class DefaultContractAccessor extends BaseTradeContractAccessor {
  */
 export class ContractAccessor implements ContractProxy {
   //
-  private readonly metamaskAccessor = new MetamaskContractAccessor();
+  private readonly metamaskAccessor: MetamaskContractAccessor | null;
   private readonly defaultAccessor = new DefaultContractAccessor();
+
+  constructor() {
+    if (isMetaMaskInstalled()) {
+      this.metamaskAccessor = new MetamaskContractAccessor();
+    } else {
+      this.metamaskAccessor = null;
+    }
+
+    const sub = walletManager
+      .watchWalletType()
+      .pipe(
+        tap((wallet: Wallet | null) => {
+          switch (wallet) {
+            case Wallet.Metamask: {
+              this.changeAccessor(this.metamaskAccessor);
+              break;
+            }
+            default: {
+              this.changeAccessor(null);
+            }
+          }
+        })
+      )
+      .subscribe();
+  }
 
   private readonly curAccessor: BehaviorSubject<BaseTradeContractAccessor | null> = new BehaviorSubject<BaseTradeContractAccessor | null>(
     null
@@ -760,25 +839,6 @@ export class ContractAccessor implements ContractProxy {
       ),
       take(1)
     );
-  }
-
-  constructor() {
-    const sub = walletManager
-      .watchWalletType()
-      .pipe(
-        tap((wallet: Wallet | null) => {
-          switch (wallet) {
-            case Wallet.Metamask: {
-              this.changeAccessor(this.metamaskAccessor);
-              break;
-            }
-            default: {
-              this.changeAccessor(null);
-            }
-          }
-        })
-      )
-      .subscribe();
   }
 
   public watchContractAccessor(): Observable<BaseTradeContractAccessor> {
@@ -904,7 +964,7 @@ export class ContractAccessor implements ContractProxy {
   }
 
   public pubPoolBalanceWhole(): Observable<Map<IUSDCoins, BigNumber>> {
-    return this.anyAccessor.pipe(
+    return this.accessor.pipe(
       switchMap((accessor) => {
         return accessor.pubPoolBalanceWhole();
       })
@@ -967,6 +1027,22 @@ export class ContractAccessor implements ContractProxy {
     return this.accessor.pipe(
       switchMap((accessor) => {
         return accessor.getLiquidityMiningShare(address);
+      })
+    );
+  }
+
+  public getActiveLiquidityRewards(address: string): Observable<BigNumber> {
+    return this.accessor.pipe(
+      switchMap((accessor) => {
+        return accessor.getActiveLiquidityRewards(address);
+      })
+    );
+  }
+
+  public claimRewardsForLP2(): Observable<boolean> {
+    return this.accessor.pipe(
+      switchMap((accessor) => {
+        return accessor.claimRewardsForLP2();
       })
     );
   }

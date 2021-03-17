@@ -16,6 +16,7 @@ const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   });
 };
 
+//
 export const getLiquidityMiningReward = (
   type: 'public' | 'private'
 ): Promise<{
@@ -61,7 +62,8 @@ export const claimLiquidity = async () => {
 
 export const claimLiquidityLocked = async () => {
   Mask.showLoading();
-  const isSuccess = await returnVal(true);
+
+  const isSuccess = await contractAccessor.claimRewardsForLP2().toPromise();
   if (isSuccess) {
     Mask.showSuccess();
   } else {
@@ -71,7 +73,17 @@ export const claimLiquidityLocked = async () => {
 };
 
 export const getLiquidityLockedReward = (type: 'public' | 'private'): Promise<number> => {
-  return returnVal(Math.random() * 100000);
+  return from(loginUserAccount())
+    .pipe(
+      switchMap((account) => {
+        return contractAccessor.getActiveLiquidityRewards(account);
+      }),
+      map((re: BigNumber) => {
+        return Number(toEthers(re, 4));
+      }),
+      take(1)
+    )
+    .toPromise();
 };
 
 export const getLiquiditorBalanceRecord = (): Promise<ILiquiditorBalanceRecord[]> => {
