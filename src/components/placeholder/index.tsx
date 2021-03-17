@@ -1,7 +1,13 @@
 import './style.less';
 
-export default ({ width = '100%', height= '20px'}: any) => {
-    return <div className="animated-background" style={{width: width, height}}></div>
+interface IProps{
+  width?: string;
+  height?: string;
+  loading: boolean;
+  children: any;
+}
+export default ({ width = '100%', height= '20px', loading, children }: IProps) => {
+    return loading ? <div className="animated-background" style={{width: width, height}}></div>: children;
 }
 
 export const sample = () => {

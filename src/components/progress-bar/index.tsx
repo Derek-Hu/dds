@@ -1,6 +1,7 @@
 import { Progress, Row, Col } from 'antd';
 import styles from './style.module.less';
 import SiteContext from '../../layouts/SiteContext';
+import Placeholder from '../placeholder/index';
 
 export interface IBarData {
   title?: string;
@@ -8,8 +9,10 @@ export interface IBarData {
   desc?: string;
   value?: any;
   unit?: string;
+  loading: boolean;
 }
-export default ({ percentage, value, desc, title, unit }: IBarData) => {
+export default (props: IBarData) => {
+  const { percentage, value, loading, desc, title, unit } = props || {};
   return (
     <SiteContext.Consumer>
       {({ isMobile }) => (
@@ -18,13 +21,22 @@ export default ({ percentage, value, desc, title, unit }: IBarData) => {
             <Col span={12} className={styles.left}>
               <span className={styles.today}>{title}</span>
               <br />
-              <span className={styles.percentage}>{percentage}%</span>
+              <Placeholder loading={loading}>
+                <span className={styles.percentage}>{percentage}%</span>
+              </Placeholder>
             </Col>
             <Col span={12} className={styles.right}>
-              <span className={styles.amount}>{desc}</span>
+              <span className={styles.amount}>
+                {desc}
+              </span>
               <br />
-              <span className={styles.dds}>{value}</span>&nbsp;
-              <span className={styles.unit}>{unit}</span>
+              <span className={styles.dds}>
+                <Placeholder loading={loading}>{value}</Placeholder>
+              </span>
+              &nbsp;
+              <span className={styles.unit}>
+                {unit}
+              </span>
             </Col>
           </Row>
           <Progress

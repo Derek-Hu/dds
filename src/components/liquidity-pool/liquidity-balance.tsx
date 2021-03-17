@@ -230,7 +230,7 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
         {({ isMobile }) => (
           <Hidden when={loading}>
             <div>
-              <CardInfo title="Liquidity Balance" theme="inner" items={data}>
+              <CardInfo loading={loading} title="Liquidity Balance" theme="inner" items={data}>
                 <Hidden when={deadlineLoading}>
                   <Button
                     type="primary"

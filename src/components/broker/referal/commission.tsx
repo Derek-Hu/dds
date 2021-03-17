@@ -94,7 +94,7 @@ export default class CommissionPool extends Component<any, IState> {
     const { data, loading, visible, tableData } = this.state;
     return loading ? null : (
       <div>
-        <CardInfo theme="inner" title="Commission" items={data}>
+        <CardInfo loading={false} theme="inner" title="Commission" items={data}>
           {/* <Button type="link" onClick={this.visible.show}>
             Commission Record
           </Button> */}

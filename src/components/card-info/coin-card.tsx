@@ -41,7 +41,7 @@ export default class CoinCard extends Component<IProps, IState> {
     return (
       <Hidden when={loading}>
         <div>
-          <CardInfo theme={theme} title={title} items={data}>
+          <CardInfo loading={false} theme={theme} title={title} items={data}>
             {children}
           </CardInfo>
         </div>

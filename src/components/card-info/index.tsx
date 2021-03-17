@@ -7,6 +7,7 @@ interface ICardInfo {
     label: string;
     value: any;
   }>;
+  loading: boolean;
   children?: any;
   theme: 'outer' | 'inner';
 }
@@ -20,7 +21,7 @@ export default ({ title, theme, children, items }: ICardInfo) => {
           {items
             ? items.map(({ label, value }) => (
                 <Descriptions.Item label={label} span={24}>
-                  {format(value)}
+                  {value}
                 </Descriptions.Item>
               ))
             : null}

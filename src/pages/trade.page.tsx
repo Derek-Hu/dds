@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import { Row, Col } from 'antd';
 import TradeBonus from '../components/trade-bonus/index';
-import TradeInfo from '../components/card-info/index';
 import TradePool from '../components/trade-pool/index';
 import styles from './style.module.less';
 import KLine from '../components/k-line/index';
@@ -16,6 +15,7 @@ import {
 } from '../services/trade.service';
 import Auth from '../components/builtin/auth';
 import { SupporttedUSD, SupporttedCoins } from '../constant/index';
+import TradeInfo from '../components/trade-info/index';
 // import qs from 'query-string';
 import parse from '../util/url';
 
@@ -78,7 +78,7 @@ export default class TradePage extends Component {
                       <TradePool coin={coin} />
                     </Col>
                     <Col xs={24} sm={24} md={12} lg={12}>
-                      {tradeInfos ? <TradeInfo items={tradeInfos} theme="outer" title="Info" /> : null}
+                        <TradeInfo from={from} coin={coin} />
                     </Col>
                   </Row>
                 </div>

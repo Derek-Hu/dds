@@ -94,7 +94,7 @@ export default class CampaignRewards extends Component<any, IState> {
     const { data, loading, visible, tableData } = this.state;
     return loading ? null : (
       <div>
-        <CardInfo theme="inner" title="Campaign Rewards" items={data}>
+        <CardInfo loading={false} theme="inner" title="Campaign Rewards" items={data}>
           <Button type="link" onClick={this.visible.show}>
             Rewards Record
           </Button>
