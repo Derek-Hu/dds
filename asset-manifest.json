@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/dds/static/css/main.cf88e6e3.chunk.css",
-    "main.js": "/dds/static/js/main.98569561.chunk.js",
-    "main.js.map": "/dds/static/js/main.98569561.chunk.js.map",
-    "runtime-main.js": "/dds/static/js/runtime-main.0f588031.js",
-    "runtime-main.js.map": "/dds/static/js/runtime-main.0f588031.js.map",
-    "static/css/2.72d7b6b2.chunk.css": "/dds/static/css/2.72d7b6b2.chunk.css",
-    "static/js/2.5d7aa016.chunk.js": "/dds/static/js/2.5d7aa016.chunk.js",
-    "static/js/2.5d7aa016.chunk.js.map": "/dds/static/js/2.5d7aa016.chunk.js.map",
+    "main.css": "/dds/static/css/main.762d04ad.chunk.css",
+    "main.js": "/dds/static/js/main.8cff9ec2.chunk.js",
+    "main.js.map": "/dds/static/js/main.8cff9ec2.chunk.js.map",
+    "runtime-main.js": "/dds/static/js/runtime-main.2b37526b.js",
+    "runtime-main.js.map": "/dds/static/js/runtime-main.2b37526b.js.map",
+    "static/css/2.fce72600.chunk.css": "/dds/static/css/2.fce72600.chunk.css",
+    "static/js/2.0c466f83.chunk.js": "/dds/static/js/2.0c466f83.chunk.js",
+    "static/js/2.0c466f83.chunk.js.map": "/dds/static/js/2.0c466f83.chunk.js.map",
     "index.html": "/dds/index.html",
-    "static/css/2.72d7b6b2.chunk.css.map": "/dds/static/css/2.72d7b6b2.chunk.css.map",
-    "static/css/main.cf88e6e3.chunk.css.map": "/dds/static/css/main.cf88e6e3.chunk.css.map",
-    "static/js/2.5d7aa016.chunk.js.LICENSE.txt": "/dds/static/js/2.5d7aa016.chunk.js.LICENSE.txt",
+    "static/css/2.fce72600.chunk.css.map": "/dds/static/css/2.fce72600.chunk.css.map",
+    "static/css/main.762d04ad.chunk.css.map": "/dds/static/css/main.762d04ad.chunk.css.map",
+    "static/js/2.0c466f83.chunk.js.LICENSE.txt": "/dds/static/js/2.0c466f83.chunk.js.LICENSE.txt",
     "static/media/adsImage.1c18ab39.png": "/dds/static/media/adsImage.1c18ab39.png",
     "static/media/style.module.less": "/dds/static/media/banner.9952ca1c.png",
     "static/media/index.less": "/dds/static/media/gilroy-bold-4.a64a9abe.otf",
@@ -22,10 +22,10 @@
     "static/media/logo.6ac02099.png": "/dds/static/media/logo.6ac02099.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.0f588031.js",
-    "static/css/2.72d7b6b2.chunk.css",
-    "static/js/2.5d7aa016.chunk.js",
-    "static/css/main.cf88e6e3.chunk.css",
-    "static/js/main.98569561.chunk.js"
+    "static/js/runtime-main.2b37526b.js",
+    "static/css/2.fce72600.chunk.css",
+    "static/js/2.0c466f83.chunk.js",
+    "static/css/main.762d04ad.chunk.css",
+    "static/js/main.8cff9ec2.chunk.js"
   ]
 }
