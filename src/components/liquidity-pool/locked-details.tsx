@@ -44,7 +44,7 @@ const columns = [
     dataIndex: 'operate',
     key: 'operate',
     render: (time: string) => {
-      return <Button type="primary">增加补仓</Button>;
+      return <Button type="primary">Add Margin</Button>;
     },
   },
 ];

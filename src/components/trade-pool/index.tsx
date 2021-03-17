@@ -4,7 +4,7 @@ import styles from './style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import { getTradeLiquidityPoolInfo } from '../../services/trade.service';
 import { dividedPecent } from '../../util/math';
-
+import Placeholder from '../placeholder/index';
 interface IState {
   poolInfo?: ITradePoolInfo;
 }
@@ -56,16 +56,15 @@ export default class TradePool extends Component<{ coin: IUSDCoins }, IState> {
     return (
       <SiteContext.Consumer>
         {() => {
-          return poolInfo ? (
-            <div className={styles.root}>
+          return <div className={styles.root}>
               <h2>Liquidity Pool</h2>
+              <Placeholder />
               <div className={styles.barContainer}>
                 {publicBar ? <ProgressBar {...publicBar} /> : null}
                 <div style={{ padding: '40px' }}></div>
                 {privateBar ? <ProgressBar {...privateBar} /> : null}
               </div>
             </div>
-          ) : null;
         }}
       </SiteContext.Consumer>
     );
