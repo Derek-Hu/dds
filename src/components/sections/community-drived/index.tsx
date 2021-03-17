@@ -7,7 +7,7 @@ import Datasource from './says';
 export default () => {
   return (
     <div className={styles.root}>
-      <SectionTitle title="Shield is community-oriented and governed by DAO.">
+      <SectionTitle title="Community-oriented and governed by DAO">
         Our community are the builders of decentralized finance across the globe.
       </SectionTitle>
       <Carousel autoplay>

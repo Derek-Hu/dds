@@ -32,7 +32,7 @@ export default class BecomeSpark extends Component<any, IState> {
           <div className={styles.root}>
             <h3>Become a Shield Spark</h3>
             <p className={styles.descOne}>
-              Spread DeFi Spark across the globe Unlock your influence and turn it into bonus
+              Spread DeFi Spark across the globe<br/>Unlock your influence and turn it into commission
             </p>
             <div className={styles.percentage}>{data?.commission}%</div>
             <p className={styles.descTwo}>Settlement Fee Commission</p>
@@ -51,7 +51,7 @@ export default class BecomeSpark extends Component<any, IState> {
               </Col>
               <Col xs={24} sm={12} md={12} lg={12} className={styles.col}>
                 <span className={styles.ads}>{format(data?.bonus)}</span>
-                <span>Bonus(USD)</span>
+                <span>Commission(USD)</span>
               </Col>
             </Row>
           </div>

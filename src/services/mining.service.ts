@@ -1,6 +1,6 @@
 import Mask from '../components/mask';
 import { contractAccessor } from '../wallet/chain-access';
-import { curUserAccount, loginUserAccount } from './account';
+import { curUserAccount } from './account';
 import { from, Observable, of, zip } from 'rxjs';
 import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { BigNumber } from 'ethers';

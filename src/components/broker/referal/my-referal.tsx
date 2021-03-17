@@ -57,7 +57,7 @@ export default class Broker extends Component<any, IState> {
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
             <span className={styles.ads}>{format(bonus)}</span>
-            <span>Bonus(USD)</span>
+            <span>Commission(USD)</span>
           </Col>
         </Row>
         <div style={{ marginTop: '48px', paddingBottom: '40px' }}>

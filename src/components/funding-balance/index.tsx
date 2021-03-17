@@ -219,7 +219,7 @@ export default class Balance extends Component<{
                 this.orderConfirmVisible.show();
               }}
             >
-              Open
+              OPEN
             </Button>
 
             <DespositModal onCancel={this.depositVisible.hide} onConfirm={this.deposit} visible={depositVisible} />
