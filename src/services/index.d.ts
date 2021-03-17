@@ -27,7 +27,7 @@ declare interface ICoinAmount {
 }
 
 declare type IFromCoins = 'ETH' | 'BTC';
-
+declare type IDDS = 'DDS';
 declare type IUSDCoins = 'DAI' | 'USDT' | 'USDC';
 declare type IReUSDCoins = 'reDAI' | 'reUSDT' | 'reUSDC';
 declare type IExchangePair = 'ETHDAI' | 'EHTUSDT' | 'ETHUSDC' | 'BTCDAI' | 'BTCUSDT' | 'BTCUSDC';

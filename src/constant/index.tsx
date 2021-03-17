@@ -49,6 +49,11 @@ export const LiquidatorContractAddress = '0x9C37F57B687C4149a50B758683AB2104d337
 export const SwapBurnContractAddress = '0x5c0dd03F2fc51aC61FE9c14bbA50341aF95fD00a';
 
 export const ERC20DAIAddress = '0x113587939c8967e61aa2360613951b23ab2af49a';
+export const ERC20USDTAddress = '0x97862b9ac658d800710a43286e076eac5e01a228';
+export const ERC20USDCAddress = '0xc8c0278b371316fb3629a7c2c4e003cc296b5925';
+
+export const SystemFundingAccount = '0xbfce8288fF225188EEC741aBfaac6BC9163d7a2B';
+
 // 当没有连接metamask钱包的时候，网页默认从哪个网络获取数据
 export const DefaultNetwork: Network = Network.kovan;
 // 查询数据更新频率
