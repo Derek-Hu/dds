@@ -43,7 +43,7 @@ export default ({ leftAmount, rightAmount }: { leftAmount?: number | string; rig
             <div className={styles.rightBar}>
               <div className={styles.bar} style={{ height: height + 'px' }}>
                 <div className={styles.percentBar} style={{ height: right.percentage + '%' }}></div>
-                <p>DDS Circulating Supply ×{right.percentage}%</p>
+                <p>SLD Circulating Supply ×{right.percentage}%</p>
                 <span className={styles.rightPecentage}>{right.percentage}%</span>
               </div>
               <div className={styles.amount}>{rightAmount} USD</div>

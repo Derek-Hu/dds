@@ -40,17 +40,17 @@ export default class LiquidityMiningReward extends Component<any, IState> {
     return (
       <Hidden when={loading}>
         <Auth>
-          <h3>Your Liquidity Mining Reward</h3>
+          <h3>Your Liquidity Reward</h3>
         </Auth>
         <Public>
-          <h3>Liquidity Mining Reward Today</h3>
+          <h3>Liquidity Reward Today</h3>
         </Public>
-        <p className={styles.coins}>{format(amount)} DDS</p>
+        <p className={styles.coins}>{format(amount)} SLD</p>
         <Auth>
           <p className={styles.dynamic}>
             <span>Current reward factor </span>
             <br />
-            {refactor} <span>DDS/Block</span>
+            {refactor} <span>SLD/Block</span>
           </p>
           {/* <Button type="primary" className={styles.btn} onClick={this.cofirmClaim}>
             Claim

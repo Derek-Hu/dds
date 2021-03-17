@@ -7,7 +7,7 @@ import SiteContext from '../../../layouts/SiteContext';
 import { Component } from 'react';
 import { format, isNotZeroLike } from '../../../util/math';
 
-const title = 'Funding Withdraw';
+const title = 'Funding Fee Withdraw';
 interface IProps {
   visible: boolean;
   onCancel: () => any;
@@ -65,7 +65,7 @@ export default class Balance extends Component<IProps, IState> {
                 </Select>
               </Col> */}
               <Col span={24}>
-                <Input type="number" value={amount} onChange={this.onAmountChange} placeholder="Withdraw amount" />
+                <Input type="number" value={amount} onChange={this.onAmountChange} placeholder="Amount" />
               </Col>
               <Col xs={24} sm={24} md={18} lg={18}>
                 <span className={styles.maxWithdraw} style={{ marginLeft: 0 }}>
@@ -80,7 +80,7 @@ export default class Balance extends Component<IProps, IState> {
               </Col>
               <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                 <Button type="primary" disabled={!isNotZeroLike(amount)} onClick={() => onConfirm(amount!, coin)}>
-                  Withdraw
+                  WITHDRAW
                 </Button>
               </Col>
             </Row>

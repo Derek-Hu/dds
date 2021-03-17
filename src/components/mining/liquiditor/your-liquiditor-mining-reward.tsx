@@ -39,11 +39,11 @@ export default class LiquiditorReward extends Component<any, IState> {
           <p>Win the liquiditor Campaign or get compensated when fund is empty</p>
           <Row>
             <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
-              <span className={styles.ads}>{campaign} DDS</span>
+              <span className={styles.ads}>{campaign} SLD</span>
               <span>Campaign Rewards</span>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
-              <span className={styles.ads}>{compensate} DDS</span>
+              <span className={styles.ads}>{compensate} SLD</span>
               <span>Compensate Rewards</span>
             </Col>
           </Row>

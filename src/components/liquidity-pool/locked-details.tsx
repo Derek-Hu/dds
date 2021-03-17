@@ -26,25 +26,32 @@ const columns = [
       return numeral(time).format('0,0');
     },
   },
-  {
-    title: 'Settlements Fee',
-    dataIndex: 'fee',
-    key: 'fee',
-    render: (time: string) => {
-      return numeral(time).format('0,0');
-    },
-  },
+  // {
+  //   title: 'Settlement Fee',
+  //   dataIndex: 'fee',
+  //   key: 'fee',
+  //   render: (time: string) => {
+  //     return numeral(time).format('0,0');
+  //   },
+  // },
   {
     title: 'Status',
     dataIndex: 'status',
     key: 'status',
   },
   {
-    title: 'Open Price',
+    title: 'Strike Price',
     dataIndex: 'operate',
     key: 'operate',
-    render: (time: string) => {
-      return <Button type="primary">Add Margin</Button>;
+    // render: (time: string) => {
+    //   return <Button type="primary">增加补仓</Button>;
+    // },
+  },
+  {
+    title: 'Action',
+    key: 'action',
+    render: () => {
+      return <Button type="link">ADD MARGIN</Button>;
     },
   },
 ];

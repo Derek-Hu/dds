@@ -7,8 +7,8 @@ import Datasource from './says';
 export default () => {
   return (
     <div className={styles.root}>
-      <SectionTitle title="We are Community Drived">
-        Our community members come from all over the world and share the dream of decentralized finance.
+      <SectionTitle title="Shield is community-oriented and governed by DAO.">
+        Our community are the builders of decentralized finance across the globe.
       </SectionTitle>
       <Carousel autoplay>
         {Datasource.map(({ name, avatar, description }) => (

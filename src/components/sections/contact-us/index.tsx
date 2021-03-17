@@ -6,8 +6,8 @@ import links from './links';
 
 export default () => (
   <div className={styles.root}>
-    <SectionTitle title="Contact DDerivatives" noMarginBottom>
-      Welcome anyone who wants to promote the evolution and growth of DDeerivatives to join our community.
+    <SectionTitle title="Contact us" noMarginBottom>
+      Join the community to build the future derivatives.
     </SectionTitle>
     <Row type="flex" justify="center">
       {links.map(({ icon, url }, index) => (

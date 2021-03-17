@@ -9,7 +9,7 @@ export const curPrice: number = 1500.0;
 const infos = {
   'Ticker Root': 20,
   'Expiry Date': 'Funding Rate',
-  'Settlements Fee Rate': 'Funding Rate',
+  'Settlement Fee Rate': 'Funding Rate',
   'Forced Liquidation Rate': 'Funding Rate',
   Type: 'Funding Rate',
   Exercise: 'Funding Rate',

@@ -35,14 +35,14 @@ export default class LiquidityProvided extends Component<IProps, IState> {
 
   setModalVisible = (key: keyof TModalKeys) => {
     return {
-      show: () =>{
+      show: () => {
         const { amount } = this.state;
-        if(!isNotZeroLike(amount)){
+        if (!isNotZeroLike(amount)) {
           return;
         }
         this.setState({
           [key]: true,
-        })
+        });
       },
 
       hide: () =>
@@ -108,9 +108,9 @@ export default class LiquidityProvided extends Component<IProps, IState> {
         {({ isMobile }) => (
           <div>
             <Hidden when={loading}>
-              <div>
+              <div style={{ paddingTop: '10px' }}>
                 <h3>ARP</h3>
-                <p className={styles.coins}>{isNumberLike(data)? `${data}%` : 'N/A'}</p>
+                <p className={styles.coins}>{isNumberLike(data) ? `${data}%` : 'N/A'}</p>
                 <Auth>
                   <div className={styles.actionArea}>
                     <Row gutter={[isMobile ? 0 : 12, isMobile ? 15 : 0]}>
@@ -125,24 +125,16 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                         </Select>
                       </Col>
                       <Col xs={24} sm={24} md={16} lg={18}>
-                        <Input
-                          value={amount}
-                          onChange={this.onAmountChange}
-                          placeholder="amount for providing to the pool"
-                        />
+                        <Input value={amount} onChange={this.onAmountChange} placeholder="Enter amount" />
                       </Col>
                     </Row>
                     {isNotZeroLike(amount) ? (
                       <p className={styles.cal}>
-                        You Will Receive: <span>{format(reAmount)}</span> re{selectedCoin}
+                        Commission Available: <span>{format(reAmount)}</span> re{selectedCoin}
                       </p>
                     ) : null}
-                    <Button
-                      type="primary"
-                      className={styles.btn}
-                      onClick={this.modalVisible.show}
-                    >
-                      Deposit
+                    <Button type="primary" className={styles.btn} onClick={this.modalVisible.show}>
+                      DEPOSIT
                     </Button>
                   </div>
                 </Auth>
@@ -156,7 +148,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                   footer={null}
                 >
                   <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
-                    <Descriptions.Item label="Deposit Amount" span={24}>
+                    <Descriptions.Item label="Amount" span={24}>
                       {amount} {selectedCoin}
                     </Descriptions.Item>
                     <Descriptions.Item label="Receive" span={24}>

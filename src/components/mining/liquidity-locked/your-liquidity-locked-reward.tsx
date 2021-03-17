@@ -1,7 +1,11 @@
 import { Component } from 'react';
 import { Button, Table } from 'antd';
 import styles from '../style.module.less';
-import { getLiquidityLockedReward, getLiquiditorBalanceRecord, claimLiquidityLocked } from '../../../services/mining.service';
+import {
+  getLiquidityLockedReward,
+  getLiquiditorBalanceRecord,
+  claimLiquidityLocked,
+} from '../../../services/mining.service';
 import { Hidden } from '../../builtin/hidden';
 import SiteContext from '../../../layouts/SiteContext';
 import Auth, { Public } from '../../builtin/auth';
@@ -23,7 +27,7 @@ const CommissionColumns = ColumnConvert<ILiquiditorBalanceRecord, {}>({
     time: 'Time',
     pair: 'Friend Address',
     amount: 'Amount',
-    price: 'Settlements Fee',
+    price: 'Settlement Fee',
     reward: 'Commission',
   },
   render(value, key, record) {
@@ -80,7 +84,7 @@ export default class LiquiditorReward extends Component<any, IState> {
   cofirmClaim = async () => {
     await claimLiquidityLocked();
   };
-  
+
   setModalVisible = (key: 'visible') => {
     return {
       show: () =>
@@ -100,8 +104,8 @@ export default class LiquiditorReward extends Component<any, IState> {
     const { data, loading, visible, tableData } = this.state;
     return (
       <Hidden when={loading}>
-        <h3>{this.context.account?.address ? 'Your Liquidity Locked Rewards' : 'Liquidity Locked Rewards Today'}</h3>
-        <p className={styles.coins}>{format(data)} DDS</p>
+        <h3>{this.context.account?.address ? 'Your Active Liquidity Rewards' : 'Active Liquidity Rewards Today'}</h3>
+        <p className={styles.coins}>{format(data)} SLD</p>
         <Auth>
           <p className={styles.dynamic}>
             <span>Only reward for liquidity locked in private pool</span>
@@ -112,7 +116,7 @@ export default class LiquiditorReward extends Component<any, IState> {
             </Button>
             {/* <div>
               <Button type="link" onClick={this.visible.show} className={styles.recordLink}>
-                Rewards Balance Record
+                Rewards Balance History
               </Button>
             </div> */}
           </div>
@@ -120,7 +124,7 @@ export default class LiquiditorReward extends Component<any, IState> {
 
         <ModalRender
           visible={visible}
-          title="Rewards Balance Record"
+          title="Rewards Balance History"
           className={styles.modal}
           height={420}
           onCancel={this.visible.hide}

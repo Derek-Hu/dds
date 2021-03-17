@@ -8,9 +8,7 @@ export default () => {
   return (
     <div className={styles.root}>
       <div className={styles.content}>
-        <SectionTitle title="Why Choose DDerivatives">
-          Reasons why you should choose DDerivatives for crypto trading and hedging
-        </SectionTitle>
+        <SectionTitle title="Why Trade with Shield">Redefine Decentralized Derivatives Trading on Shield.</SectionTitle>
         <Row className={styles.adsOne}>
           {datasourceOne.map(({ icon, name, description }, index) => (
             <Col xs={24} sm={24} md={24} lg={8} key={index}>

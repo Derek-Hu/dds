@@ -9,7 +9,12 @@ import { SupportedCoins } from '../../constant/index';
 import ModalRender from '../modal-render/index';
 import SiteContext from '../../layouts/SiteContext';
 import CardInfo from '../card-info/index';
-import { getPoolBalance, doPoolWithdraw, getPoolWithDrawDeadline, getCollaborativeWithdrawRe } from '../../services/pool.service';
+import {
+  getPoolBalance,
+  doPoolWithdraw,
+  getPoolWithDrawDeadline,
+  getCollaborativeWithdrawRe,
+} from '../../services/pool.service';
 import { isNumberLike, isNotZeroLike, format } from '../../util/math';
 import Hidden from '../builtin/hidden';
 
@@ -115,7 +120,7 @@ interface IState {
   deadline: string;
   deadlineLoading: boolean;
   amount: any;
-  reAmount?:number;
+  reAmount?: number;
 }
 
 type TModalKeys = Pick<IState, 'withDrawVisible' | 'recordVisible'>;
@@ -142,20 +147,20 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
   };
 
   calculateRe = async (newVal: { amount?: number | string; selectCoin?: IUSDCoins }) => {
-  
     const { amount, selectCoin } = this.state;
     const param = {
-      amount, selectCoin,
+      amount,
+      selectCoin,
       ...newVal,
-    }
+    };
     // @ts-ignore
-    try{
+    try {
       const reAmount = await getCollaborativeWithdrawRe({ amount, coin: param.selectCoin });
       this.setState({
         reAmount,
       });
-    }catch(e){
-      console.log(e)
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -220,10 +225,10 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
     this.withDrawVisible.hide();
     const { isPrivate } = this.props;
     const { selectCoin, amount, reAmount } = this.state;
-    await doPoolWithdraw({ amount, reAmount, coin: selectCoin, type: isPrivate? 'private' : 'public' })
-  }
+    await doPoolWithdraw({ amount, reAmount, coin: selectCoin, type: isPrivate ? 'private' : 'public' });
+  };
   render() {
-    const { data, selectCoin, deadline,loading, deadlineLoading, coins, amount, reAmount } = this.state;
+    const { data, selectCoin, deadline, loading, deadlineLoading, coins, amount, reAmount } = this.state;
     const { isPrivate } = this.props;
     return (
       <SiteContext.Consumer>
@@ -241,13 +246,13 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
                     {deadline ? `Withdraw until ${deadline}` : 'Withdraw'}
                   </Button>
                   {/* <Button type="link" onClick={this.recordVisible.show} className={styles.link}>
-                    Liquidity Balance Record
+                    Liquidity Balance History
                   </Button> */}
                 </Hidden>
               </CardInfo>
               <ModalRender
                 visible={this.state.recordVisible}
-                title="Liquidity Balance Record"
+                title="Liquidity Balance History"
                 className={commonStyles.commonModal}
                 onCancel={this.recordVisible.hide}
                 height={500}
@@ -297,8 +302,16 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
                   </Col>
                   <Col span={24}>
                     <div className={[styles.repay, isMobile ? styles.mobile : ''].join(' ')}>
-                      <Input type="number" value={amount} onChange={this.onAmountChange} placeholder="Withdraw amount" max={coins[selectCoin]} />
-                      {isPrivate ? null : <p>{ isNumberLike(reAmount) ? `${format(reAmount)} reDAI you need to pay` : null }</p>}
+                      <Input
+                        type="number"
+                        value={amount}
+                        onChange={this.onAmountChange}
+                        placeholder="Amount"
+                        max={coins[selectCoin]}
+                      />
+                      {isPrivate ? null : (
+                        <p>{isNumberLike(reAmount) ? `${format(reAmount)} reDAI you need to pay` : null}</p>
+                      )}
                     </div>
                   </Col>
                 </Row>
@@ -307,7 +320,13 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
                     <Button onClick={this.withDrawVisible.hide}>Cancel</Button>
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={12}>
-                    <Button type="primary" disabled={isPrivate ? !isNotZeroLike(amount) : !isNotZeroLike(reAmount)} onClick={this.doWithdraw}>Withdraw</Button>
+                    <Button
+                      type="primary"
+                      disabled={isPrivate ? !isNotZeroLike(amount) : !isNotZeroLike(reAmount)}
+                      onClick={this.doWithdraw}
+                    >
+                      WITHDRAW
+                    </Button>
                   </Col>
                 </Row>
               </ModalRender>

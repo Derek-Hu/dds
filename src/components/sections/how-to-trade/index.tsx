@@ -1,13 +1,13 @@
-import styles from "./style.module.less";
-import SectionTitle from "../section-title/index";
-import { Icon } from "antd";
+import styles from './style.module.less';
+import SectionTitle from '../section-title/index';
+import { Icon } from 'antd';
 
 export default () => {
   return (
     <div className={styles.root}>
-      <SectionTitle title="How to trade Non-Risk Perpetual" />
+      <SectionTitle title="How to Trade Risk-free Perpetual" />
       <p className={styles.try}>
-        Try this demo{" "}
+        Try this demo{' '}
         <span>
           <Icon type="arrow-down" />
         </span>
