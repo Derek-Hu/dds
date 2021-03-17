@@ -108,7 +108,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
         {({ isMobile }) => (
           <div>
             <Hidden when={loading}>
-              <div>
+              <div style={{ paddingTop: '10px' }}>
                 <h3>ARP</h3>
                 <p className={styles.coins}>{isNumberLike(data) ? `${data}%` : 'N/A'}</p>
                 <Auth>
