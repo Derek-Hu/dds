@@ -13,7 +13,7 @@ export default class HomePage extends Component {
       <div style={{ background: '#fff' }}>
         <Banner></Banner>
         <WhatIs></WhatIs>
-        <NonRisk></NonRisk>
+        {/* <NonRisk></NonRisk> */}
         {/* <HowTrade></HowTrade> */}
         <WhyDderivatives />
         <CommunityDrived />

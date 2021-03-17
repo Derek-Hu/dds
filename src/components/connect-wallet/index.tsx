@@ -51,6 +51,9 @@ export default class ConnectWallet extends Component<any, any> {
     });
   };
 
+  disconnectWallet = () => {
+    this.context.updateAccount(null);
+  }
   connectWallet = () => {
     if (this.context.account) {
       return;
@@ -126,8 +129,8 @@ export default class ConnectWallet extends Component<any, any> {
                 ) : null}
                 <Col span={24}>
                   {account ? (
-                    <Button type="primary" disabled={true}>
-                      Connected
+                    <Button type="primary" onClick={() => this.disconnectWallet()}>
+                      Disconnected Wallet
                     </Button>
                   ) : (
                     <Button type="primary" onClick={() => this.connectWallet()}>
