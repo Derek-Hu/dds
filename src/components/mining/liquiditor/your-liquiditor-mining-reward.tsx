@@ -20,7 +20,7 @@ export default class LiquiditorReward extends Component<any, IState> {
 
   async componentDidMount() {
     this.setState({ loading: true });
-    const data = await getLiquiditorReward(this.context.account?.address ? 'private' : 'public');
+    const data = await getLiquiditorReward(this.context.account ? 'private' : 'public');
     this.setState({
       data,
     });
@@ -35,7 +35,7 @@ export default class LiquiditorReward extends Component<any, IState> {
     return (
       <Hidden when={loading}>
         <div className={styles.liquiditorWpr}>
-          <h3>{this.context.account?.address ? 'Your Liquiditor Mining Rewards' : 'Liquiditor Mining Rewards'}</h3>
+          <h3>{this.context.account ? 'Your Liquiditor Mining Rewards' : 'Liquiditor Mining Rewards'}</h3>
           <p>Win the liquiditor Campaign or get compensated when fund is empty</p>
           <Row>
             <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>

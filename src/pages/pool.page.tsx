@@ -39,7 +39,7 @@ export default class PoolPage extends Component {
         {({ account }) => {
           return (
             <div>
-              <LiquidityPool address={account?.address} />
+              <LiquidityPool address={account} />
               <Modal
                 width={450}
                 visible={visible && !!account}

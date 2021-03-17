@@ -34,7 +34,7 @@ export default class Broker extends Component<any, any> {
   };
 
   render() {
-    const referalCode = account2ReferalCode(this.context.account.address);
+    const referalCode = account2ReferalCode(this.context.account);
     return (
       <div className={styles.root}>
         <h2>Broker</h2>

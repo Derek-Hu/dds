@@ -23,7 +23,7 @@ export default class LiquidityMiningReward extends Component<any, IState> {
 
   async componentDidMount() {
     this.setState({ loading: true });
-    const data = await getLiquidityMiningReward(this.context.account?.address ? 'private' : 'public');
+    const data = await getLiquidityMiningReward(this.context.account ? 'private' : 'public');
     this.setState({
       data,
     });
@@ -50,7 +50,7 @@ export default class LiquidityMiningReward extends Component<any, IState> {
           <p className={styles.dynamic}>
             <span>Current reward factor </span>
             <br />
-            {refactor} <span>SLD/Block</span>
+            {32} <span>SLD/Block</span>
           </p>
           {/* <Button type="primary" className={styles.btn} onClick={this.cofirmClaim}>
             Claim

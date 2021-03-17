@@ -9,10 +9,9 @@ export default class SwapBurnPage extends Component {
     return (
       <SiteContext.Consumer>
         {({ isMobile, account }) => {
-          const { coins, address } = account || {};
           return (
             <div>
-              <SwapBurn isLogin={!!address} />
+              <SwapBurn isLogin={!!account} />
             </div>
           );
         }}

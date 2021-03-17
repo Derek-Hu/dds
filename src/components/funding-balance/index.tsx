@@ -137,7 +137,7 @@ export default class Balance extends Component<{
     const { from, to } = coins;
 
     const price = curPrice;
-    const address = this.context.account?.address;
+    const address = this.context.account;
 
     const fee = getFee(openAmount, price);
     const locked = openAmount! + fee;

@@ -7,7 +7,8 @@ export interface IAccount {
 export interface SiteContextProps {
   isMobile: boolean;
   direction: string;
-  account?: IAccount;
+  account?: string;
+  updateAccount?: (address: string) => any;
 }
 
 const SiteContext = React.createContext<SiteContextProps>({

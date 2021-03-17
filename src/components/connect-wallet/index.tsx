@@ -15,9 +15,8 @@ const { Option } = Select;
 export default class ConnectWallet extends Component<any, any> {
   state = {
     visible: false,
-    isConnected: false,
     walletType: Wallet.Metamask,
-    account: undefined,
+    account: null,
   };
 
   private accSub: Subscription | null = null;
@@ -34,7 +33,7 @@ export default class ConnectWallet extends Component<any, any> {
     this.setState(
       {
         walletType,
-        isConnected: false,
+        account: null,
       },
       () => this.watchWalletAccount()
     );
@@ -53,7 +52,7 @@ export default class ConnectWallet extends Component<any, any> {
   };
 
   connectWallet = () => {
-    if (this.state.isConnected) {
+    if (this.context.account) {
       return;
     }
 
@@ -65,6 +64,8 @@ export default class ConnectWallet extends Component<any, any> {
       this.accSub.unsubscribe();
     }
   }
+
+  static contextType = SiteContext;
 
   watchWalletAccount() {
     this.unWatchWalletAccount();
@@ -81,19 +82,20 @@ export default class ConnectWallet extends Component<any, any> {
         })
       )
       .subscribe((account: string | null) => {
-        this.setState({
-          isConnected: account !== null,
-          account,
-        });
+        this.context.updateAccount(account);
+        // this.setState({
+        //   isConnected: account !== null,
+        //   account,
+        // });
       });
   }
 
   render() {
-    const { visible, isConnected, walletType } = this.state;
+    const { visible, walletType } = this.state;
     const { children } = this.props;
     return (
       <SiteContext.Consumer>
-        {({ isMobile }) => (
+        {({ isMobile, account }) => (
           <div className={styles.root}>
             <span onClick={this.showModal}>{children}</span>
             <ModalRender
@@ -111,19 +113,19 @@ export default class ConnectWallet extends Component<any, any> {
                     <Button onClick={() => this.switchWallet(name)}>{name}</Button>
                   </Col>
                 ))}
-                {isConnected ? (
+                {account ? (
                   <Col span={24}>
                     <Select
-                      defaultValue={this.state.account}
-                      value={this.state.account}
+                      defaultValue={account}
+                      value={account}
                       style={{ width: '100%', height: 50 }}
                     >
-                      <Option value={this.state.account}>{this.state.account}</Option>
+                      <Option value={account}>{account}</Option>
                     </Select>
                   </Col>
                 ) : null}
                 <Col span={24}>
-                  {isConnected ? (
+                  {account ? (
                     <Button type="primary" disabled={true}>
                       Connected
                     </Button>
