@@ -3,26 +3,26 @@
 .tableList {
   max-width: 900px;
   margin: 0 auto;
-  text-align: center;
   font-size: 14px;
   .more {
     margin: 32px auto 0;
     display: block;
   }
   :global {
+    .ant-table-wrapper {
+      background: #fff;
+    }
     .ant-table-tbody td,
-    .ant-table-thead th,
-    .ant-table-thead td {
+    .ant-table-thead th {
       border: 0;
-      background-color: #f9fafc !important;
       text-align: left;
+    }
+    .ant-table-thead th {
+      border-bottom: 1px solid #e5e5e5;
     }
     .ant-table-thead th:last-child,
     .ant-table-body td:last-child {
       text-align: right;
-    }
-    .ant-table-tbody tr:hover td {
-      background-color: #f6f7f9 !important;
     }
     .ant-table-thead .ant-table-column-title {
       font-size: 14px;
@@ -35,11 +35,11 @@
     }
   }
   h4 {
-    text-transform: uppercase;
-    margin-bottom: 32px;
-    margin-top: 40px;
-    font-size: 24px;
-    font-weight: 800;
-    color: #333333;
+    font-size: 32px;
+    font-family: Gilroy-Bold, Gilroy;
+    font-weight: bold;
+    color: #383838;
+    line-height: 40px;
+    margin-bottom: 30px;
   }
 }
