@@ -7,11 +7,15 @@ export default {
   },
   tooltip: {
     trigger: 'axis',
-    position: function (pt: any) {
-      return [pt[0], '10%'];
-    },
+    // position: function (pt: any) {
+    //   return [pt[0], '10%'];
+    // },
     // confine: true,
-    transitionDuration: 0
+    // transitionDuration: 0,
+    axisPointer: {
+      type: 'cross',
+    },
+    showContent: false,
   },
   // title: {
   //   left: "center",
@@ -46,10 +50,10 @@ export default {
       itemStyle: {
         color: '#ffacac',
       },
-      lineStyle:{
+      lineStyle: {
         width: 1,
         opacity: 0.8,
-        color: '#F55858'
+        color: '#F55858',
       },
       areaStyle: {
         color: {

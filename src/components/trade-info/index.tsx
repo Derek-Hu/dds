@@ -50,7 +50,7 @@ export default class TradeInfo extends Component<{ from: string; coin: IUSDCoins
       },
       type: {
         label: 'Type',
-        value: 'Risk Perpetual',
+        value: 'Risk-free Perpetual',
       },
       exercise: {
         label: 'Exercise',

@@ -130,7 +130,7 @@ export default class PoolArea extends Component<{ address?: string }, any> {
                       <Visible when={selectedTab === TabName.Private}>
                         <Alert
                           className={styles.poolMsg}
-                          message="Private pool is extremely risky. If you are not a hedging expert, please stay away!!!"
+                          message="Note: private pool is targeting professional investor and market maker, please be aware of risk before you proceed."
                           type="warning"
                         />
                       </Visible>

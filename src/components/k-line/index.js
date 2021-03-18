@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import styles from './style.module.less';
 import option, { seryName } from './option';
 // import MockData from './mock';
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 import { Select, Row, Col, Button } from 'antd';
 import SiteContext from '../../layouts/SiteContext';
 import { getPriceGraphData } from '../../services/trade.service';
@@ -19,7 +19,7 @@ const Rule = {
   day: 'HH:mm',
   week: 'MM-DD',
   month: 'MM/DD',
-}
+};
 
 const Durations = {
   day: '24 Hours',
@@ -71,14 +71,29 @@ export default class MainLayout extends Component {
       this.chartInstance = echarts.init(container);
       this.chartInstance.setOption(option);
     }
-    const { xData, yData } = data.reduce((all, { timestamp, value })=> {
-      all.xData.push(dayjs(timestamp).format(Rule[duration]));
-      all.yData.push(value);
-      return all;
-    }, { xData: [], yData: []})
+    const { xData, yData } = data.reduce(
+      (all, { timestamp, value }) => {
+        all.xData.push(dayjs(timestamp).format(Rule[duration]));
+        all.yData.push(value);
+        return all;
+      },
+      { xData: [], yData: [] }
+    );
+
     this.chartInstance.setOption({
       xAxis: {
+        type: 'category',
         data: xData,
+        axisLabel: {
+          interval: Math.floor(xData.length / 4),
+          showMaxLabel: true,
+        },
+        axisLine: {
+          show: false,
+        },
+        axisTick: {
+          show: false,
+        },
       },
       series: [
         {
