@@ -7,6 +7,9 @@ export enum Wallet {
   WalletConnect = 'Wallet Connect',
 }
 
+export const ddsBasePath = `${window.location.origin}/dds/dds.html#`;
+export const homeBasePath = `${window.location.origin}/dds/index.html#`;
+
 export enum Network {
   homestead = 'homestead',
   morden = 'morden',

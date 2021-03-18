@@ -24,9 +24,9 @@ const menu = (
   <Menu mode="horizontal">
       {
           Object.keys(rightMenus).map(linkName => <Menu.Item key={linkName}>
-          <Link to={(rightMenus[linkName])} >
+          <a href={(rightMenus[linkName])} >
             {linkName}
-          </Link>
+          </a>
         </Menu.Item>)
       }
   </Menu>

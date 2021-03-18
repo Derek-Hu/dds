@@ -3,7 +3,6 @@ import { IRouter } from "./render";
 import Layout from '../layouts/index';
 
 import BorkerPage from '../pages/broker.page';
-import HomePage from '../pages/home.page';
 import MiningPage from '../pages/mining.page';
 import PoolPage from '../pages/pool.page';
 import SwapBurnPage from '../pages/swap-burn.page';
@@ -15,7 +14,6 @@ const routers: IRouter[] = [
     path: "/",
     component: Layout,
     routes: [
-      { path: "/home", component: HomePage },
       { path: "/mining", component: MiningPage },
       { path: "/broker", component: BorkerPage },
       { path: "/pool", component: PoolPage },

@@ -1,6 +1,6 @@
 import { Button } from 'antd';
 import styles from './style.module.less';
-import { Link } from 'react-router-dom';
+import { ddsBasePath } from '../../constant';
 
 export default () => {
   return (
@@ -10,9 +10,9 @@ export default () => {
           The First Decentralized Risk-free <br />
           Perpetual Contract
         </h2>
-        <Link to="/trade">
+        <a href={`${ddsBasePath}/trade`}>
           <Button className={styles.spot}>Start Trading</Button>
-        </Link>
+        </a>
         <a href="https://docsend.com/view/tik7bk6c6vv6nqwv" rel="noreferrer" target="_blank">
           <Button className={styles.read} type="link">
             Read the docs

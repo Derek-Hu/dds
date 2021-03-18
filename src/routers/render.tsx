@@ -8,7 +8,7 @@ export interface IRouter {
   title?: string;
 }
 
-const renderItems = (items?: IRouter[]) => {
+const renderItems = (items: IRouter[], defaultPath: string) => {
   return (
     <Switch>
         {items ? items.map(({ routes, path, component: Component }) => {
@@ -19,7 +19,7 @@ const renderItems = (items?: IRouter[]) => {
                 key={path}
                 path={path}
                 render={(routeProps: any) => (
-                  <Component {...routeProps}>{renderItems(routes)}</Component>
+                  <Component {...routeProps}>{renderItems(routes!, defaultPath)}</Component>
                 )}
               ></Route>
             );
@@ -28,17 +28,17 @@ const renderItems = (items?: IRouter[]) => {
         }): null}
         <Route render={() => <Redirect
             to={{
-              pathname: "/home"
+              pathname: defaultPath
             }}
           />} />
     </Switch>
   );
 };
 
-export default (settings: IRouter[]) => {
+export default (settings: IRouter[], defaultPath: string) => {
   return (
     <Router>
-      <div>{renderItems(settings)}</div>
+      <div>{renderItems(settings, defaultPath)}</div>
     </Router>
   );
 };

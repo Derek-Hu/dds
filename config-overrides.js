@@ -9,6 +9,14 @@ const InterpolateHtmlPlugin = require("react-dev-utils/InterpolateHtmlPlugin");
 
 const isProduction = process.env.NODE_ENV === "production";
 
+const multipleEntry = require('react-app-rewire-multiple-entry')([
+  {
+    entry: 'src/entry/dds.js',
+    template: 'public/dds.html',
+    outPath: '/dds.html'
+  }
+]);
+
 const {
   override,
   useEslintRc,
@@ -29,6 +37,7 @@ module.exports = {
     addDecoratorsLegacy(),
     addTslintLoader(),
     // enableEslintTypescript(),
+    multipleEntry.addMultiEntry,
     fixBabelImports("import", {
       libraryName: "antd",
       libraryDirectory: "es",

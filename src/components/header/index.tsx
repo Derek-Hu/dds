@@ -1,12 +1,12 @@
 import { Component } from 'react';
 import { Menu, Icon, Row, Col, Button, Drawer } from 'antd';
 import styles from './style.module.less';
-import { NavLink as Link, Link as LLink, Redirect } from 'react-router-dom';
+import { NavLink as Link, Link as LLink } from 'react-router-dom';
 import SiteContext from '../../layouts/SiteContext';
 import ConnectWallet from '../connect-wallet/index';
 import Logo from '~/assets/imgs/logo.png';
 import LogoWhite from '~/assets/imgs/logo-white.png';
-
+import { homeBasePath, ddsBasePath } from '../../constant/index';
 const { SubMenu } = Menu;
 
 const rightMenus = {
@@ -115,14 +115,10 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                   <Col span={22} style={{ textAlign: 'right' }}>
                     <Menu onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal">
                       <Menu.Item key="trade">
-                        <Link to="/trade" activeClassName="ant-menu-item-selected">
-                          Trade
-                        </Link>
+                        <a href={`${ddsBasePath}/trade`}>Trade</a>
                       </Menu.Item>
                       <Menu.Item key="pool">
-                        <Link to="/pool" activeClassName="ant-menu-item-selected">
-                          Pool
-                        </Link>
+                        <a href={`${ddsBasePath}/pool`}>Pool</a>
                       </Menu.Item>
                       <SubMenu
                         title={
@@ -133,20 +129,14 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                         }
                       >
                         <Menu.Item key="setting:1">
-                          <Link to="/mining" activeClassName="ant-menu-item-selected">
-                            Mining
-                          </Link>
+                          <a href={`${ddsBasePath}/mining`}>Mining</a>
                         </Menu.Item>
                         <Menu.Item key="setting:2">
-                          <Link to="/swap-burn" activeClassName="ant-menu-item-selected">
-                            Swap & Burn
-                          </Link>
+                          <a href={`${ddsBasePath}/swap-burn`}>Swap & Burn</a>
                         </Menu.Item>
                       </SubMenu>
                       <Menu.Item key="broker">
-                        <Link to="/broker" activeClassName="ant-menu-item-selected">
-                          Broker
-                        </Link>
+                        <a href={`${ddsBasePath}/broker`}>Broker</a>
                       </Menu.Item>
                     </Menu>
                   </Col>
@@ -159,19 +149,15 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                 <Col span={16}>
                   <Menu onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal">
                     <Menu.Item key="logo" className={styles.dderivatives}>
-                      <Link to="/home" activeClassName="ant-menu-item-selected">
+                      <a href={`${homeBasePath}/home`}>
                         <img src={window.location.hash === '#/home' ? LogoWhite : Logo} alt="" width="120px" />
-                      </Link>
+                      </a>
                     </Menu.Item>
                     <Menu.Item key="trade">
-                      <Link to="/trade" activeClassName="ant-menu-item-selected">
-                        Trade
-                      </Link>
+                      <a href={`${ddsBasePath}/trade`}>Trade</a>
                     </Menu.Item>
                     <Menu.Item key="pool">
-                      <Link to="/pool" activeClassName="ant-menu-item-selected">
-                        Pool
-                      </Link>
+                      <a href={`${ddsBasePath}/pool`}>Pool</a>
                     </Menu.Item>
                     <SubMenu
                       title={
@@ -193,19 +179,17 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                           </Link> */}
                         </div>
                         <div className="bottom">
-                          <Link to="/mining" className="link">
+                          <a href={`${ddsBasePath}/mining`} className="link">
                             Mining
-                          </Link>
-                          <Link to="/swap-burn" className="link">
+                          </a>
+                          <a href={`${ddsBasePath}/swap-burn`} className="link">
                             Swap & Burn
-                          </Link>
+                          </a>
                         </div>
                       </div>
                     </SubMenu>
                     <Menu.Item key="broker">
-                      <Link to="/broker" activeClassName="ant-menu-item-selected">
-                        Broker
-                      </Link>
+                      <a href={`${ddsBasePath}/broker`}>Broker</a>
                     </Menu.Item>
                     {/* <Menu.Item key="analytics">
                       <Link to="/analytics" activeClassName="ant-menu-item-selected">
@@ -221,7 +205,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                 <Col className={styles.connectWpr}>
                   {window.location.hash === '#/home' ? (
                     <Button className={styles.connectBtn}>
-                      <Link to="/trade">Trade</Link>
+                      <a href={`${ddsBasePath}/trade`}>Trade</a>
                     </Button>
                   ) : (
                     <ConnectWallet>
