@@ -72,7 +72,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
     const { selectedCoin, amount } = this.state;
     await conformSwap({
       coin: selectedCoin,
-      amount,
+      amount: Number(amount),
     });
   };
 

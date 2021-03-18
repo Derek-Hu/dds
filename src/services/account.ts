@@ -2,6 +2,7 @@ import { walletManager } from '../wallet/wallet-manager';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
 import { Observable, of } from 'rxjs';
+import { log } from 'util';
 
 /**
  * 用户是否已经连接账户地址
@@ -22,15 +23,16 @@ export const isUserConnected = async (): Promise<boolean> => {
 };
 
 export const curUserAccount = async (): Promise<string | null> => {
-  return walletManager
-    .watchWalletInstance()
-    .pipe(
-      switchMap((wallet: WalletInterface | null) => {
-        return wallet === null ? of(null) : wallet.watchAccount();
-      }),
-      take(1)
-    )
-    .toPromise();
+  // return walletManager
+  //   .watchWalletInstance()
+  //   .pipe(
+  //     switchMap((wallet: WalletInterface | null) => {
+  //       return wallet === null ? of(null) : wallet.watchAccount();
+  //     }),
+  //     take(1)
+  //   )
+  //   .toPromise();
+  return loginUserAccount();
 };
 
 export const loginUserAccount = async (): Promise<string> => {
