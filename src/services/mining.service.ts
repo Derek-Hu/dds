@@ -5,6 +5,7 @@ import { from, Observable, of, zip } from 'rxjs';
 import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { BigNumber } from 'ethers';
 import { toEthers } from '../util/ethers';
+import { loginUserAccount } from './account';
 import { CoinBalance, CoinShare } from '../wallet/contract-interface';
 import { defaultPoolData, defaultReTokenData } from './mock/unlogin-default';
 
