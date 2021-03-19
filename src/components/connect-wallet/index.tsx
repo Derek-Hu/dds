@@ -9,14 +9,14 @@ import { SupportedWallets, Wallet } from '../../constant/index';
 import { walletManager } from '../../wallet/wallet-manager';
 import { filter, switchMap } from 'rxjs/operators';
 import { WalletInterface } from '../../wallet/wallet-interface';
+import MetaMaskOnboarding from '@metamask/onboarding';
 
 const { Option } = Select;
+const { isMetaMaskInstalled } = MetaMaskOnboarding;
 
-const WalletHome = {
-  [Wallet.Metamask]: 'https://metamask.io/',
-  [Wallet.WalletConnect]: 'https://walletconnect.org/',
-}
-export default class ConnectWallet extends Component<{ noEnv?: boolean }, any> {
+const hasMetaMaskEnv = isMetaMaskInstalled();
+
+export default class ConnectWallet extends Component<any, any> {
   state = {
     visible: false,
     walletType: Wallet.Metamask,
@@ -26,21 +26,21 @@ export default class ConnectWallet extends Component<{ noEnv?: boolean }, any> {
   private accSub: Subscription | null = null;
 
   componentDidMount = () => {
-    if (this.props.noEnv) {
+    if (!hasMetaMaskEnv) {
       return;
     }
     this.watchWalletAccount();
   };
 
   componentWillUnmount() {
-    if (this.props.noEnv) {
+    if (!hasMetaMaskEnv) {
       return;
     }
     this.unWatchWalletAccount();
   }
 
   switchWallet = (walletType: Wallet) => {
-    if (this.props.noEnv) {
+    if (!hasMetaMaskEnv) {
       return;
     }
 
@@ -109,51 +109,64 @@ export default class ConnectWallet extends Component<{ noEnv?: boolean }, any> {
 
   render() {
     const { visible, walletType } = this.state;
-    const { children, noEnv } = this.props;
+    const { children } = this.props;
     return (
       <SiteContext.Consumer>
         {({ isMobile, account }) => (
           <div className={styles.root}>
             <span onClick={this.showModal}>{children}</span>
             <ModalRender
-              visible={noEnv || visible}
+              visible={!hasMetaMaskEnv || !account || visible}
               title="Connect Wallet"
               className={commonStyles.commonModal}
               onCancel={this.closeDepositModal}
               height={300}
               width={500}
-              closable={!noEnv}
-              maskClosable={!noEnv}
+              closable={!account}
+              maskClosable={!account}
               footer={null}
             >
               <Row gutter={[16, 24]} type="flex" className={styles.coinList}>
-                {SupportedWallets.map((name) => (
-                  <Col key={name} span={24} className={!noEnv && walletType === name ? styles.active : ''}>
-                    <a href={WalletHome[name]}>
-                      <Button onClick={() => this.switchWallet(name)}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            marginRight: '1em',
-                          }}
-                        >
-                          {name === Wallet.Metamask ? 'Install' : ''}
-                        </span>
-                        {name}{' '}
-                        <span
-                          style={{
-                            fontSize: '12px',
-                            color: 'red',
-                            display: 'inline-block',
-                            marginLeft: '15px',
-                          }}
-                        >
-                          {name !== Wallet.Metamask ? 'Coming Soon' : ''}
-                        </span>
-                      </Button>
+                <Col span={24} 
+                // className={styles.active}
+                >
+                  {hasMetaMaskEnv ? (
+                    <Button onClick={() => this.switchWallet(Wallet.Metamask)}>
+                      MetaMask
+                      <span
+                        style={{
+                          fontSize: '12px',
+                          color: 'green',
+                          display: 'inline-block',
+                          marginLeft: '15px',
+                        }}
+                      >
+                        Connected
+                      </span>
+                    </Button>
+                  ) : (
+                    <a href={'https://metamask.io/'}>
+                      <Button>Install MetaMask</Button>
                     </a>
-                  </Col>
-                ))}
+                  )}
+                </Col>
+                <Col span={24}>
+                  <a href={'https://walletconnect.org/'}>
+                    <Button onClick={() => this.switchWallet(Wallet.Metamask)}>
+                      Wallet Connect
+                      <span
+                        style={{
+                          fontSize: '12px',
+                          color: '#999',
+                          display: 'inline-block',
+                          marginLeft: '15px',
+                        }}
+                      >
+                        Coming Soon
+                      </span>
+                    </Button>
+                  </a>
+                </Col>
                 {account ? (
                   <Col span={24}>
                     <Select defaultValue={account} value={account} style={{ width: '100%', height: 50 }}>
@@ -161,19 +174,13 @@ export default class ConnectWallet extends Component<{ noEnv?: boolean }, any> {
                     </Select>
                   </Col>
                 ) : null}
-                {noEnv ? null : (
+                {hasMetaMaskEnv && !account ? (
                   <Col span={24}>
-                    {account ? (
-                      <Button type="primary" onClick={() => this.disconnectWallet()}>
-                        Disconnected Wallet
-                      </Button>
-                    ) : (
-                      <Button type="primary" onClick={() => this.connectWallet()}>
-                        Connect Wallet
-                      </Button>
-                    )}
+                    <Button type="primary" onClick={() => this.connectWallet()}>
+                      Connect Wallet
+                    </Button>
                   </Col>
-                )}
+                ) : null}
               </Row>
             </ModalRender>
           </div>

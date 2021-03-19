@@ -8,15 +8,12 @@ import ConnectWallet from '../components/connect-wallet/index';
 export default class TradeLayout extends Component {
 
   state = {
-    // @ts-ignore
-    connectVisible: !window.ethereum
   }
   componentDidMount(){
   }
 
   render() {
     const { children } = this.props;
-    const { connectVisible } = this.state;
     return <SiteContext.Consumer>
     {({ isMobile }) => (
       <div style={isMobile ? {paddingBottom: '50px'}: {}}>
@@ -26,7 +23,7 @@ export default class TradeLayout extends Component {
         }
         { isMobile ? <ToolBar /> : null}
 
-        <ConnectWallet noEnv={connectVisible}></ConnectWallet>
+        <ConnectWallet></ConnectWallet>
       </div>
     )}
     </SiteContext.Consumer>
