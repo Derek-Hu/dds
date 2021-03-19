@@ -81,6 +81,11 @@ export default class MainLayout extends Component {
     );
 
     this.chartInstance.setOption({
+      grid: {
+        left: '3%',
+        right: '3%',
+        // containLabel: true
+      },
       xAxis: {
         type: 'category',
         data: xData,
