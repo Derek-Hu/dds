@@ -50,7 +50,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
           updateAccount: this.updateAccount,
           isMobile,
           direction: 'ltr',
-          account,
+          account
         }}
       >
         <div className={isMobile ? 'mobile' : ''}>

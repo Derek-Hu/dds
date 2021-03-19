@@ -129,21 +129,14 @@ export default class ConnectWallet extends Component<any, any> {
               <Row gutter={[16, 24]} type="flex" className={styles.coinList}>
                 <Col
                   span={24}
-                  // className={styles.active}
+                  className={account ? styles.active : ''}
                 >
                   {hasMetaMaskEnv ? (
                     <Button onClick={() => this.switchWallet(Wallet.Metamask)}>
                       MetaMask
                       {
-                       account ? <span
-                          style={{
-                            fontSize: '12px',
-                            color: 'green',
-                            display: 'inline-block',
-                            marginLeft: '15px',
-                          }}
-                        >
-                          Connected
+                       account ? <span>
+                          &nbsp;&nbsp;(Connected)
                         </span> : null
                       }
                     </Button>
@@ -159,13 +152,10 @@ export default class ConnectWallet extends Component<any, any> {
                       Wallet Connect
                       <span
                         style={{
-                          fontSize: '12px',
-                          color: '#999',
-                          display: 'inline-block',
-                          marginLeft: '15px',
+                          color: '#d9d9d9',
                         }}
                       >
-                        Coming Soon
+                        &nbsp;&nbsp;(Coming Soon)
                       </span>
                     </Button>
                   </a>
