@@ -122,8 +122,8 @@ export default class ConnectWallet extends Component<any, any> {
               onCancel={this.closeDepositModal}
               height={300}
               width={500}
-              closable={false}
-              maskClosable={false}
+              closable={account}
+              maskClosable={account}
               footer={null}
             >
               <Row gutter={[16, 24]} type="flex" className={styles.coinList}>
