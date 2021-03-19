@@ -7,7 +7,7 @@ interface IProps{
   children: any;
 }
 export default ({ width = '100%', height= '20px', loading, children }: IProps) => {
-    return loading ? <div className="animated-background" style={{width: width, height}}></div>: children;
+    return loading ? <div className="animated-background" style={{width: width, height}}></div>: <div>{children}</div>;
 }
 
 export const sample = () => {

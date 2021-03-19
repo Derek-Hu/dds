@@ -7,6 +7,7 @@ import ColumnConvert from '../../column-convert/index';
 import dayjs from 'dayjs';
 import styles from '../style.module.less';
 import numeral from 'numeral';
+import { SupporttedUSD } from '../../../constant/index';
 
 interface IState {
   data: Array<{ label: string; value: any }>;
@@ -92,9 +93,23 @@ export default class CommissionPool extends Component<any, IState> {
 
   render() {
     const { data, loading, visible, tableData } = this.state;
-    return loading ? null : (
+
+    const dataInfo = (data || []).reduce((total, item) => {
+      // @ts-ignore
+      total[item.label] = item.value;
+      return total;
+    }, {});
+
+    // @ts-ignore
+    const coins = Object.keys(SupporttedUSD).map((coin) => ({
+      label: coin,
+      // @ts-ignore
+      value: dataInfo[coin],
+    }));
+
+    return (
       <div>
-        <CardInfo loading={false} theme="inner" title="Commission" items={data}>
+        <CardInfo loading={loading} theme="inner" title="Commission" items={coins}>
           {/* <Button type="link" onClick={this.visible.show}>
             Commission History
           </Button> */}

@@ -5,6 +5,7 @@ import { formatInt, format, isNotZeroLike } from '../../../util/math';
 import { getMyReferalInfo, claimReferalInfo } from '../../../services/broker.service';
 import { Hidden, Visible } from '../../builtin/hidden';
 import Mask from '../../mask/index';
+import Placeholder from '../../placeholder/index';
 
 interface IState {
   loading: boolean;
@@ -40,7 +41,7 @@ export default class Broker extends Component<any, IState> {
     const { loading, referalInfo } = this.state;
     const { level, ranking, referals, bonus } = referalInfo || {};
     return (
-      <Hidden when={loading}>
+      <div>
         <h3>Summary</h3>
         <Row className="padding-bottom-60">
           {/* <Col xs={24} sm={24} md={8} lg={8} className={styles.col}>
@@ -52,27 +53,28 @@ export default class Broker extends Component<any, IState> {
             <span>Ranking</span>
           </Col> */}
           <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
-            <span className={styles.ads}>{formatInt(referals)}</span>
+            <span className={styles.ads}>
+              <Placeholder width={'50%'} loading={loading}>{formatInt(referals)}</Placeholder>
+            </span>
             <span>Referrals</span>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
-            <span className={styles.ads}>{format(bonus)}</span>
+            <span className={styles.ads}>
+              <Placeholder width={'50%'} loading={loading}>{formatInt(bonus)}</Placeholder>
+            </span>
             <span>Commission(USD)</span>
           </Col>
         </Row>
         <div style={{ marginTop: '48px', paddingBottom: '40px' }}>
           <div>
-            {isNotZeroLike(bonus) ? <Button
-              onClick={this.onClaim}
-              style={{ width: '120px', margin: '20px' }}
-              type="primary"
-            >
-              Claim
-            </Button> : null }
-            
+            {isNotZeroLike(bonus) ? (
+              <Button onClick={this.onClaim} style={{ width: '120px', margin: '20px' }} type="primary">
+                Claim
+              </Button>
+            ) : null}
           </div>
         </div>
-      </Hidden>
+      </div>
     );
   }
 }
