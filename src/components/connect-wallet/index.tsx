@@ -15,7 +15,7 @@ const { Option } = Select;
 const { isMetaMaskInstalled } = MetaMaskOnboarding;
 
 const hasMetaMaskEnv = isMetaMaskInstalled();
-
+// const hasMetaMaskEnv = true;
 export default class ConnectWallet extends Component<any, any> {
   state = {
     visible: false,
@@ -122,27 +122,30 @@ export default class ConnectWallet extends Component<any, any> {
               onCancel={this.closeDepositModal}
               height={300}
               width={500}
-              closable={!account}
-              maskClosable={!account}
+              closable={false}
+              maskClosable={false}
               footer={null}
             >
               <Row gutter={[16, 24]} type="flex" className={styles.coinList}>
-                <Col span={24} 
-                // className={styles.active}
+                <Col
+                  span={24}
+                  // className={styles.active}
                 >
                   {hasMetaMaskEnv ? (
                     <Button onClick={() => this.switchWallet(Wallet.Metamask)}>
                       MetaMask
-                      <span
-                        style={{
-                          fontSize: '12px',
-                          color: 'green',
-                          display: 'inline-block',
-                          marginLeft: '15px',
-                        }}
-                      >
-                        Connected
-                      </span>
+                      {
+                       account ? <span
+                          style={{
+                            fontSize: '12px',
+                            color: 'green',
+                            display: 'inline-block',
+                            marginLeft: '15px',
+                          }}
+                        >
+                          Connected
+                        </span> : null
+                      }
                     </Button>
                   ) : (
                     <a href={'https://metamask.io/'}>
