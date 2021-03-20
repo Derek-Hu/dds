@@ -5,10 +5,10 @@ import Placeholder from '../placeholder/index';
 
 interface ICardInfo {
   title: string;
-  items?: Array<{
+  items: Array<{
     label: string;
     value: any;
-  }>;
+  }> | { [key: string]: any};
   loading: boolean;
   children?: any;
   theme: 'outer' | 'inner';
@@ -20,13 +20,17 @@ export default ({ title, theme, loading, children, items }: ICardInfo) => {
       <div className={styles.card}>
         {theme === 'inner' ? <h2>{title}</h2> : null}
         <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
-          {items
+          {Array.isArray(items)
             ? items.map(({ label, value }) => (
                 <Descriptions.Item label={label} span={24}>
                   <Placeholder loading={loading}>{value}</Placeholder>
                 </Descriptions.Item>
               ))
-            : null}
+            : items ? Object.keys(items).map(key => (
+              <Descriptions.Item label={key} span={24}>
+                <Placeholder loading={loading}>{items[key]}</Placeholder>
+              </Descriptions.Item>
+            )): null}
         </Descriptions>
         {children}
       </div>

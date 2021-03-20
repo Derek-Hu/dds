@@ -17,6 +17,7 @@ import {
 } from '../../services/pool.service';
 import { isNumberLike, isNotZeroLike, format } from '../../util/math';
 import Hidden from '../builtin/hidden';
+import Placeholder from '../placeholder/index';
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -185,17 +186,18 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
     const type = isPrivate ? 'private' : 'public';
     this.setState({ loading: true });
     try {
-      const data = await getPoolBalance(type);
+      const coins = await getPoolBalance(type);
       this.setState({
-        data: data.map(({ amount, coin }) => ({
-          label: coin,
-          value: format(amount),
-        })),
-        coins: data.reduce((all, { amount, coin }) => {
-          // @ts-ignore
-          all[coin] = amount;
-          return all;
-        }, {}),
+        coins,
+        // data: data.map(({ amount, coin }) => ({
+        //   label: coin,
+        //   value: format(amount),
+        // })),
+        // coins: data.reduce((all, { amount, coin }) => {
+        //   // @ts-ignore
+        //   all[coin] = amount;
+        //   return all;
+        // }, {}),
       });
     } catch (e) {}
 
@@ -233,10 +235,9 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => (
-          <Hidden when={loading}>
             <div>
-              <CardInfo loading={loading} title="Liquidity Balance" theme="inner" items={data}>
-                <Hidden when={deadlineLoading}>
+              <CardInfo loading={loading} title="Liquidity Balance" theme="inner" items={coins}>
+                <Placeholder loading={deadlineLoading}>
                   <Button
                     type="primary"
                     disabled={!!deadline}
@@ -248,7 +249,7 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
                   {/* <Button type="link" onClick={this.recordVisible.show} className={styles.link}>
                     Liquidity Balance History
                   </Button> */}
-                </Hidden>
+                </Placeholder>
               </CardInfo>
               <ModalRender
                 visible={this.state.recordVisible}
@@ -331,7 +332,6 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
                 </Row>
               </ModalRender>
             </div>
-          </Hidden>
         )}
       </SiteContext.Consumer>
     );

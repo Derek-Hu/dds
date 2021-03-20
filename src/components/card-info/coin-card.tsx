@@ -39,13 +39,11 @@ export default class CoinCard extends Component<IProps, IState> {
     const { data, loading } = this.state;
     const { children, theme, title } = this.props;
     return (
-      <Hidden when={loading}>
         <div>
-          <CardInfo loading={false} theme={theme} title={title} items={data}>
+          <CardInfo loading={loading} theme={theme} title={title} items={data}>
             {children}
           </CardInfo>
         </div>
-      </Hidden>
     );
   }
 }

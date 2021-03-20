@@ -16,6 +16,12 @@ export const defaultPoolData: ICoinItem[] = [
   },
 ];
 
+export const defaultCoinDatas: { [key in IUSDCoins]: number} = {
+  DAI: 0,
+  USDT: 0,
+  USDC: 0,
+}
+
 export const defaultReTokenData: ICoinValue[] = [
   {
     coin: 'reDAI',

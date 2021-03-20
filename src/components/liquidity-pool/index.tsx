@@ -171,13 +171,13 @@ export default class PoolArea extends Component<{ address?: string }, any> {
                         </Col>
                       </Row>
                     </Auth>
-                    <Public>
+                    {/* <Public>
                       <Row gutter={isMobile ? 0 : 12}>
                         <Col xs={24} sm={24} md={24} lg={24}>
                           <LiquidityProvided />
                         </Col>
                       </Row>
-                    </Public>
+                    </Public> */}
                   </div>
                 </Visible>
                 <Visible when={selectedTab === TabName.Private}>
@@ -195,13 +195,13 @@ export default class PoolArea extends Component<{ address?: string }, any> {
                         <LockedDetails data={lockedData} />
                       </div>
                     </Auth>
-                    <Public>
+                    {/* <Public>
                       <Row>
                         <Col xs={24} sm={24} md={24} lg={24}>
                           <AvailablePoolUnlogin />
                         </Col>
                       </Row>
-                    </Public>
+                    </Public> */}
                   </div>
                 </Visible>
               </div>
