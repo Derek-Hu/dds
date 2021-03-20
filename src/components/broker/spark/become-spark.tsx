@@ -6,13 +6,13 @@ import { formatInt, format } from '../../../util/math';
 import { getSparkData } from '../../../services/broker.service';
 import Placeholder from '../../placeholder/index';
  
-interface IState {
-  loading: boolean;
-  data?: IBrokerSpark;
+interface IState { loading: boolean;
+        data?:        IBrokerSpark;
 }
-export default class BecomeSpark extends Component<any, IState> {
+const a =     20;
+export default class     BecomeSpark extends Component<any, IState> {
   state: IState = {
-    loading: false,
+    loading:     false,
   };
 
   async componentDidMount() {
