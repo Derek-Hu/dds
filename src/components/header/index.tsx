@@ -7,7 +7,7 @@ import ConnectWallet from '../connect-wallet/index';
 import Logo from '~/assets/imgs/logo.png';
 import LogoWhite from '~/assets/imgs/logo-white.png';
 import { homeBasePath, ddsBasePath } from '../../constant/index';
-import { format, isNumberLike } from '../../util/math';
+import { formatInt, isNumberLike } from '../../util/math';
 
 const { SubMenu } = Menu;
 
@@ -147,7 +147,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
           ) : (
             <div className={[styles.root, darkMode ? '' : styles.light].join(' ')}>
               <Row type="flex" justify="space-between" align="middle">
-                <Col span={16}>
+                <Col span={12}>
                   <Menu onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal">
                     <Menu.Item key="logo" className={styles.dderivatives}>
                       <a href={`${homeBasePath}/home`}>
@@ -203,7 +203,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                     </Menu.Item> */}
                   </Menu>
                 </Col>
-                <Col className={styles.connectWpr}>
+                <Col span={12} className={styles.connectWpr}>
                   {window.location.hash === '#/home' ? (
                     <Button className={styles.connectBtn}>
                       <a href={`${ddsBasePath}/trade`}>Trade</a>
@@ -219,7 +219,8 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                           {account.USDBalance
                             ? Object.keys(account.USDBalance).map(coin => (
                                 <span>
-                                  {isNumberLike(account.USDBalance[coin]) ? format(account.USDBalance[coin]) : 0}&nbsp;
+                                  {isNumberLike(account.USDBalance[coin]) ? formatInt(account.USDBalance[coin]) : 0}
+                                  &nbsp;
                                   {coin}
                                 </span>
                               ))
