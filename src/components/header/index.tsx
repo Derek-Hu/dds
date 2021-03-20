@@ -88,7 +88,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
     const { drawerOpen } = this.state;
     return (
       <SiteContext.Consumer>
-        {({ isMobile }) =>
+        {({ isMobile, account }) =>
           isMobile ? (
             darkMode ? (
               <div className={styles.homeHeader}>
@@ -208,12 +208,15 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                     </Button>
                   ) : (
                     <ConnectWallet>
-                      <Button className={styles.connectBtn}>Connect Wallet</Button>
-                      {/* <div className={styles.accountInfo}>
-                        <span>98 SLD</span>
-                        <span>2.009DAI</span>
-                        <span>0x8317...c496</span>
-                      </div> */}
+                      {account ? (
+                        <div className={styles.accountInfo}>
+                          <span>98 SLD</span>
+                          <span>2.009DAI</span>
+                          <span>0x8317...c496</span>
+                        </div>
+                      ) : (
+                        <Button className={styles.connectBtn}>Connect Wallet</Button>
+                      )}
                     </ConnectWallet>
                   )}
                 </Col>
