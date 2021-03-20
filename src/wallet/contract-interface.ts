@@ -4407,7 +4407,18 @@ export interface ContractProxy {
 
   getReTokenBalance(address: string): Observable<CoinBalance[]>;
 
+  getPubPoolWithdrawDate(address: string): Observable<{ coin: IUSDCoins; time: number }[]>;
+
   //
+
+  getLockedLiquidityList(
+    address: string,
+    page: number,
+    pageSize: number,
+    devTest: boolean
+  ): Observable<PrivateLockLiquidity[]>;
+
+  addMarginAmount(orderId: string, coin: IUSDCoins, amount: number): Observable<boolean>;
 
   provideToPrivatePool(coin: IUSDCoins, coinAmount: number): Observable<boolean>;
 
@@ -4458,4 +4469,15 @@ export interface CoinShare {
 export interface CoinBalance {
   coin: IUSDCoins | IReUSDCoins | IDDS;
   balance: BigNumber;
+}
+
+export interface PrivateLockLiquidity {
+  orderId: number;
+  usdToken: IUSDCoins;
+  makerAddr: string;
+  marginAmount: BigNumber;
+  marginFee: BigNumber;
+  takerId: BigNumber;
+  status: IOrderStatus;
+  locked: boolean;
 }

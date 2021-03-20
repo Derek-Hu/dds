@@ -7,13 +7,14 @@ import {
   LiquidatorABI,
   Pl1ABI,
   Pl2ABI,
+  PrivateLockLiquidity,
   RewardsABI,
   SwapBurnABI,
   UserAccountInfo,
 } from '../wallet/contract-interface';
-import { BehaviorSubject, from, Observable, of, interval, EMPTY, zip, merge } from 'rxjs';
+import { BehaviorSubject, from, Observable, of, interval, EMPTY, zip, merge, combineLatest } from 'rxjs';
 import * as ethers from 'ethers';
-import { catchError, filter, map, mapTo, startWith, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, concatMap, filter, map, mapTo, reduce, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { BigNumber } from '@ethersproject/bignumber';
 import {
   TradeDAIContractAddress,
@@ -38,6 +39,7 @@ import { walletManager } from '../wallet/wallet-manager';
 import { WalletInterface } from './wallet-interface';
 import { toBigNumber, toEthers, tokenBigNumber } from '../util/ethers';
 import { isMetaMaskInstalled } from './metamask';
+import { getPageListRange } from '../util/page';
 
 declare const window: Window & { ethereum: any };
 
@@ -443,7 +445,6 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         rs.set('USDT', balances[1]);
         rs.set('USDC', balances[2]);
 
-        console.log(' rs', rs);
         return rs;
       })
     );
@@ -473,7 +474,100 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
+  public getPubPoolWithdrawDate(address: string): Observable<{ coin: IUSDCoins; time: number }[]> {
+    const addition = 14 * 24 * 3600; // 14 days
+
+    const dai$ = this.getPubPoolContract('DAI').pipe(
+      switchMap((contract) => {
+        return from(contract.functions.lastProvideTm(address));
+      }),
+      map((rs: BigNumber[]) => {
+        return { coin: 'DAI' as IUSDCoins, time: rs[0].toNumber() + addition };
+      })
+    );
+    const usdt$ = of({ coin: 'USDT' as IUSDCoins, time: 0 });
+    const usdc$ = of({ coin: 'USDC' as IUSDCoins, time: 0 });
+
+    return zip(dai$, usdt$, usdc$);
+  }
+
   //
+
+  public getLockedLiquidityList(
+    address: string,
+    page: number,
+    pageSize: number,
+    devTest: boolean = false
+  ): Observable<PrivateLockLiquidity[]> {
+    return this.getPriPoolContract('DAI').pipe(
+      switchMap((contract) => {
+        return from(contract.functions.getlockedLiquidityLen()).pipe(
+          map((rs) => {
+            return rs.lpLen;
+          }),
+          switchMap((len: BigNumber) => {
+            const getOneOrder = (index: number): Observable<any> => {
+              return from(contract.functions.lockedLiquidity(BigNumber.from(index))).pipe(
+                map((rs: PrivateLockLiquidity) => {
+                  rs.orderId = index;
+                  rs.usdToken = 'DAI';
+                  rs.status = rs.locked ? 'ACTIVE' : 'CLOSED';
+                  return rs;
+                })
+              );
+            };
+
+            if (devTest) {
+              // TODO 使用address过滤，得到当前用户的交易单
+              const total = len.toNumber();
+              const range = getPageListRange(total, page, pageSize);
+              const obs: Observable<any>[] = [];
+              for (let i = 0; i < range.count; i++) {
+                obs.push(getOneOrder(i + range.from));
+              }
+
+              return merge(...obs).pipe(
+                reduce((acc: any[], one: any) => {
+                  acc.push(one);
+                  return acc;
+                }, [])
+              );
+            } else {
+              return from(new Array(len.toNumber()).fill(0).map((one, index: number) => index)).pipe(
+                concatMap((index: number) => {
+                  return getOneOrder(index);
+                }),
+                filter((one: PrivateLockLiquidity) => {
+                  return one.makerAddr === address;
+                }),
+                take(pageSize), // TODO 当前的查询方式几乎不能支持分页，默认第一页
+                reduce((acc: PrivateLockLiquidity[], one: PrivateLockLiquidity) => {
+                  acc.push(one);
+                  return acc;
+                }, [])
+              );
+            }
+          })
+        );
+      })
+    );
+  }
+
+  public addMarginAmount(orderId: string, coin: IUSDCoins, amount: number): Observable<boolean> {
+    return this.getPriPoolContract(coin).pipe(
+      switchMap((contract: ethers.Contract) => {
+        const bigAmount = tokenBigNumber(amount, coin);
+        return contract.functions.addMarginAmount(orderId, bigAmount);
+      }),
+      switchMap((rs) => {
+        return from(rs.wait());
+      }),
+      mapTo(true),
+      catchError((err) => {
+        return of(false);
+      })
+    );
+  }
 
   public provideToPrivatePool(coin: IUSDCoins, coinAmount: number): Observable<boolean> {
     return this.getPriPoolContract(coin).pipe(
@@ -523,7 +617,6 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         return contract.functions.lpAccount(address);
       }),
       map((rs: BigNumber[]) => {
-        console.log('private balance rs is', rs);
         return rs[0];
       })
     );
@@ -1102,7 +1195,36 @@ export class ContractAccessor implements ContractProxy {
     );
   }
 
+  public getPubPoolWithdrawDate(address: string): Observable<{ coin: IUSDCoins; time: number }[]> {
+    return this.accessor.pipe(
+      switchMap((accessor) => {
+        return accessor.getPubPoolWithdrawDate(address);
+      })
+    );
+  }
+
   //
+
+  public getLockedLiquidityList(
+    address: string,
+    page: number,
+    pageSize: number,
+    devTest: boolean = false
+  ): Observable<PrivateLockLiquidity[]> {
+    return this.accessor.pipe(
+      switchMap((accessor) => {
+        return accessor.getLockedLiquidityList(address, page, pageSize, devTest);
+      })
+    );
+  }
+
+  public addMarginAmount(orderId: string, coin: IUSDCoins, amount: number): Observable<boolean> {
+    return this.accessor.pipe(
+      switchMap((accessor) => {
+        return accessor.addMarginAmount(orderId, coin, amount);
+      })
+    );
+  }
 
   public provideToPrivatePool(coin: IUSDCoins, coinAmount: number): Observable<boolean> {
     return this.accessor.pipe(
