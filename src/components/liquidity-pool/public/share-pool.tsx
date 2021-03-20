@@ -13,7 +13,7 @@ interface IState {
 export default class PoolArea extends Component<{ address?: string }, IState> {
   state: IState = {
     data: {
-      ...DefaultProgressDatas
+      ...DefaultProgressDatas,
     },
     loading: false,
   };

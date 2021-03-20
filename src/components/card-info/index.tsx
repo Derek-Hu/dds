@@ -5,10 +5,12 @@ import Placeholder from '../placeholder/index';
 
 interface ICardInfo {
   title: string;
-  items: Array<{
-    label: string;
-    value: any;
-  }> | { [key: string]: any};
+  items:
+    | Array<{
+        label: string;
+        value: any;
+      }>
+    | { [key: string]: any };
   loading: boolean;
   children?: any;
   theme: 'outer' | 'inner';
@@ -26,11 +28,13 @@ export default ({ title, theme, loading, children, items }: ICardInfo) => {
                   <Placeholder loading={loading}>{value}</Placeholder>
                 </Descriptions.Item>
               ))
-            : items ? Object.keys(items).map(key => (
-              <Descriptions.Item label={key} span={24}>
-                <Placeholder loading={loading}>{items[key]}</Placeholder>
-              </Descriptions.Item>
-            )): null}
+            : items
+            ? Object.keys(items).map((key) => (
+                <Descriptions.Item label={key} span={24}>
+                  <Placeholder loading={loading}>{items[key]}</Placeholder>
+                </Descriptions.Item>
+              ))
+            : null}
         </Descriptions>
         {children}
       </div>

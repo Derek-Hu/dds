@@ -54,13 +54,17 @@ export default class Broker extends Component<any, IState> {
           </Col> */}
           <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
             <span className={styles.ads}>
-              <Placeholder width={'50%'} loading={loading}>{formatInt(referals)}</Placeholder>
+              <Placeholder width={'50%'} loading={loading}>
+                {formatInt(referals)}
+              </Placeholder>
             </span>
             <span>Referrals</span>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
             <span className={styles.ads}>
-              <Placeholder width={'50%'} loading={loading}>{formatInt(bonus)}</Placeholder>
+              <Placeholder width={'50%'} loading={loading}>
+                {formatInt(bonus)}
+              </Placeholder>
             </span>
             <span>Commission(USD)</span>
           </Col>

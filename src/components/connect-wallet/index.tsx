@@ -14,7 +14,7 @@ import MetaMaskOnboarding from '@metamask/onboarding';
 const { Option } = Select;
 const { isMetaMaskInstalled } = MetaMaskOnboarding;
 
-const hasMetaMaskEnv = process.env.NODE_ENV==='development' ? true : isMetaMaskInstalled();
+const hasMetaMaskEnv = process.env.NODE_ENV === 'development' ? true : isMetaMaskInstalled();
 export default class ConnectWallet extends Component<any, any> {
   state = {
     visible: false,
@@ -126,18 +126,11 @@ export default class ConnectWallet extends Component<any, any> {
               footer={null}
             >
               <Row gutter={[16, 24]} type="flex" className={styles.coinList}>
-                <Col
-                  span={24}
-                  className={styles.active}
-                >
+                <Col span={24} className={styles.active}>
                   {hasMetaMaskEnv ? (
                     <Button onClick={() => this.switchWallet(Wallet.Metamask)}>
                       MetaMask
-                      {
-                       account ? <span>
-                          &nbsp;&nbsp;(Connected)
-                        </span> : null
-                      }
+                      {account ? <span>&nbsp;&nbsp;(Connected)</span> : null}
                     </Button>
                   ) : (
                     <a href={'https://metamask.io/'}>

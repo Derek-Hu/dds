@@ -47,7 +47,9 @@ export default class LiquidityMiningReward extends Component<any, IState> {
           <h3>Liquidity Reward Today</h3>
         </Public>
         <p className={styles.coins}>
-          <Placeholder loading={loading} width={'10em'}>{format(amount)} SLD</Placeholder>
+          <Placeholder loading={loading} width={'10em'}>
+            {format(amount)} SLD
+          </Placeholder>
         </p>
         <p className={styles.dynamic}>
           <span>Current reward factor </span>

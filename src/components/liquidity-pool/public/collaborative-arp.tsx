@@ -113,7 +113,9 @@ export default class LiquidityProvided extends Component<IProps, IState> {
             <div style={{ paddingTop: '10px' }}>
               <h3>ARP</h3>
               <p className={styles.coins}>
-                <Placeholder loading={loading} width={'5em'}>{isNumberLike(data) ? `${data}%` : 'N/A'}</Placeholder>
+                <Placeholder loading={loading} width={'5em'}>
+                  {isNumberLike(data) ? `${data}%` : 'N/A'}
+                </Placeholder>
               </p>
               <Auth>
                 <div className={styles.actionArea}>

@@ -4,10 +4,12 @@ import { Hidden } from '../builtin/hidden';
 import { SupportedCoins, DefaultCoinDatas } from '../../constant/index';
 
 interface IState {
-  data: Array<{
-    label: string;
-    value: any;
-  }> | { [key: string]: any};
+  data:
+    | Array<{
+        label: string;
+        value: any;
+      }>
+    | { [key: string]: any };
   loading: boolean;
 }
 
@@ -43,11 +45,11 @@ export default class CoinCard extends Component<IProps, IState> {
     const { data, loading } = this.state;
     const { children, theme, title } = this.props;
     return (
-        <div>
-          <CardInfo loading={loading} theme={theme} title={title} items={data}>
-            {children}
-          </CardInfo>
-        </div>
+      <div>
+        <CardInfo loading={loading} theme={theme} title={title} items={data}>
+          {children}
+        </CardInfo>
+      </div>
     );
   }
 }

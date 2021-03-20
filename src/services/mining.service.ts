@@ -103,10 +103,28 @@ export const getLiquiditorBalanceRecord = (): Promise<ILiquiditorBalanceRecord[]
 };
 
 export const getLiquiditorReward = (type: 'public' | 'private'): Promise<{ campaign: number; compensate: number }> => {
-  return returnVal({
-    campaign: Math.random() * 100000,
-    compensate: Math.random() * 100000,
-  });
+  return from(loginUserAccount())
+    .pipe(
+      switchMap((account: string) => {
+        return contractAccessor.getLiquiditorRewards(account);
+      }),
+      map((balances: CoinBalance[]) => {
+        const ddsReward: CoinBalance[] = balances.filter((one) => one.coin === 'DDS');
+        if (ddsReward.length > 0) {
+          return Number(toEthers(ddsReward[0].balance, 4, ddsReward[0].coin));
+        } else {
+          return 0;
+        }
+      }),
+      map((compensate: number) => {
+        return {
+          campaign: 0,
+          compensate: compensate,
+        };
+      }),
+      take(1)
+    )
+    .toPromise();
 };
 
 export const getLiquidityReTokenBalance = (): Promise<ICoinValue[]> => {

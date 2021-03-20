@@ -36,9 +36,9 @@ export default class Layout extends Component<RouteComponentProps, IState> {
 
   updateAccount = (account: string) => {
     this.setState({
-      account
-    })
-  }
+      account,
+    });
+  };
   render() {
     const { children, location } = this.props;
     const { isMobile, account } = this.state;
@@ -50,7 +50,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
           updateAccount: this.updateAccount,
           isMobile,
           direction: 'ltr',
-          account: process.env.NODE_ENV==='development' ? '0x3232': account
+          account: process.env.NODE_ENV === 'development' ? '0x3232' : account,
         }}
       >
         <div className={isMobile ? 'mobile' : ''}>

@@ -235,103 +235,98 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => (
-            <div>
-              <CardInfo loading={loading} title="Liquidity Balance" theme="inner" items={coins}>
-                <Placeholder loading={deadlineLoading}>
-                  <Button
-                    type="primary"
-                    disabled={!!deadline}
-                    onClick={this.withDrawVisible.show}
-                    className={styles.btn}
-                  >
-                    {deadline ? `Withdraw until ${deadline}` : 'Withdraw'}
-                  </Button>
-                  {/* <Button type="link" onClick={this.recordVisible.show} className={styles.link}>
+          <div>
+            <CardInfo loading={loading} title="Liquidity Balance" theme="inner" items={coins}>
+              <Placeholder loading={deadlineLoading}>
+                <Button type="primary" disabled={!!deadline} onClick={this.withDrawVisible.show} className={styles.btn}>
+                  {deadline ? `Withdraw until ${deadline}` : 'Withdraw'}
+                </Button>
+                {/* <Button type="link" onClick={this.recordVisible.show} className={styles.link}>
                     Liquidity Balance History
                   </Button> */}
-                </Placeholder>
-              </CardInfo>
-              <ModalRender
-                visible={this.state.recordVisible}
-                title="Liquidity Balance History"
-                className={commonStyles.commonModal}
-                onCancel={this.recordVisible.hide}
-                height={500}
-                width={600}
-                footer={null}
-              >
-                <Tabs defaultActiveKey="DAI" className={styles.innerTab}>
-                  {SupportedCoins.map((coin) => (
-                    <TabPane tab={coin} key={coin}>
-                      <Table
-                        rowKey="coin"
-                        scroll={{ y: 200, x: 600 }}
-                        columns={columns}
-                        pagination={false}
-                        dataSource={data}
-                      />
-                    </TabPane>
-                  ))}
-                </Tabs>
-              </ModalRender>
+              </Placeholder>
+            </CardInfo>
+            <ModalRender
+              visible={this.state.recordVisible}
+              title="Liquidity Balance History"
+              className={commonStyles.commonModal}
+              onCancel={this.recordVisible.hide}
+              height={500}
+              width={600}
+              footer={null}
+            >
+              <Tabs defaultActiveKey="DAI" className={styles.innerTab}>
+                {SupportedCoins.map((coin) => (
+                  <TabPane tab={coin} key={coin}>
+                    <Table
+                      rowKey="coin"
+                      scroll={{ y: 200, x: 600 }}
+                      columns={columns}
+                      pagination={false}
+                      dataSource={data}
+                    />
+                  </TabPane>
+                ))}
+              </Tabs>
+            </ModalRender>
 
-              <ModalRender
-                visible={this.state.withDrawVisible}
-                title="Liquidity Withdraw"
-                className={commonStyles.commonModal}
-                okText={'Claim'}
-                height={420}
-                onCancel={this.withDrawVisible.hide}
-                footer={null}
-              >
-                <Row gutter={[16, 16]} type="flex" justify="space-between" align="middle">
-                  <Col xs={24} sm={24} md={6} lg={6}>
-                    <Select
-                      defaultValue={selectCoin}
-                      onChange={this.onSelectChange}
-                      style={{ width: '100%', height: 50 }}
-                    >
-                      {SupportedCoins.map((coin) => (
-                        <Option value={coin}>{coin}</Option>
-                      ))}
-                    </Select>
-                  </Col>
-                  <Col xs={24} sm={24} md={18} lg={18}>
-                    <span className={[styles.maxWithdraw, isMobile ? styles.mobile : ''].join(' ')}>
-                      Max Withdraw Balance: <span>{format(coins[selectCoin])}</span> {selectCoin}
-                    </span>
-                  </Col>
-                  <Col span={24}>
-                    <div className={[styles.repay, isMobile ? styles.mobile : ''].join(' ')}>
-                      <Input
-                        type="number"
-                        value={amount}
-                        onChange={this.onAmountChange}
-                        placeholder="Amount"
-                        max={coins[selectCoin]}
-                      />
-                      {isPrivate ? null : (
-                        <p>{isNumberLike(reAmount) ? `${format(reAmount)} reDAI you need to pay` : null}</p>
-                      )}
-                    </div>
-                  </Col>
-                </Row>
-                <Row className={commonStyles.actionBtns} gutter={[16, 16]}>
-                  <Col xs={24} sm={24} md={12} lg={12}>
-                    <Button onClick={this.withDrawVisible.hide}>Cancel</Button>
-                  </Col>
-                  <Col xs={24} sm={24} md={12} lg={12}>
-                    <Button
-                      type="primary"
-                      disabled={isPrivate ? !isNotZeroLike(amount) : !isNotZeroLike(reAmount)}
-                      onClick={this.doWithdraw}
-                    >
-                      WITHDRAW
-                    </Button>
-                  </Col>
-                </Row>
-              </ModalRender>
-            </div>
+            <ModalRender
+              visible={this.state.withDrawVisible}
+              title="Liquidity Withdraw"
+              className={commonStyles.commonModal}
+              okText={'Claim'}
+              height={420}
+              onCancel={this.withDrawVisible.hide}
+              footer={null}
+            >
+              <Row gutter={[16, 16]} type="flex" justify="space-between" align="middle">
+                <Col xs={24} sm={24} md={6} lg={6}>
+                  <Select
+                    defaultValue={selectCoin}
+                    onChange={this.onSelectChange}
+                    style={{ width: '100%', height: 50 }}
+                  >
+                    {SupportedCoins.map((coin) => (
+                      <Option value={coin}>{coin}</Option>
+                    ))}
+                  </Select>
+                </Col>
+                <Col xs={24} sm={24} md={18} lg={18}>
+                  <span className={[styles.maxWithdraw, isMobile ? styles.mobile : ''].join(' ')}>
+                    Max Withdraw Balance: <span>{format(coins[selectCoin])}</span> {selectCoin}
+                  </span>
+                </Col>
+                <Col span={24}>
+                  <div className={[styles.repay, isMobile ? styles.mobile : ''].join(' ')}>
+                    <Input
+                      type="number"
+                      value={amount}
+                      onChange={this.onAmountChange}
+                      placeholder="Amount"
+                      max={coins[selectCoin]}
+                    />
+                    {isPrivate ? null : (
+                      <p>{isNumberLike(reAmount) ? `${format(reAmount)} reDAI you need to pay` : null}</p>
+                    )}
+                  </div>
+                </Col>
+              </Row>
+              <Row className={commonStyles.actionBtns} gutter={[16, 16]}>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <Button onClick={this.withDrawVisible.hide}>Cancel</Button>
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <Button
+                    type="primary"
+                    disabled={isPrivate ? !isNotZeroLike(amount) : !isNotZeroLike(reAmount)}
+                    onClick={this.doWithdraw}
+                  >
+                    WITHDRAW
+                  </Button>
+                </Col>
+              </Row>
+            </ModalRender>
+          </div>
         )}
       </SiteContext.Consumer>
     );

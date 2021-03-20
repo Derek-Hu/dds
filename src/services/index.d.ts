@@ -262,3 +262,8 @@ declare interface ICoinProgressObj {
     val?: any;
   };
 }
+
+declare interface UserAccountInfo {
+  address: string;
+  USDBalance: { coin: IUSDCoins; amount: number }[];
+}
