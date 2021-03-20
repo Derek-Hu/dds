@@ -13,7 +13,7 @@ import {
   SwapBurnABI,
   UserAccountInfo,
 } from '../wallet/contract-interface';
-import { BehaviorSubject, from, Observable, of, interval, EMPTY, zip, merge, combineLatest } from 'rxjs';
+import { BehaviorSubject, from, Observable, of, interval, EMPTY, zip, merge, combineLatest, NEVER } from 'rxjs';
 import * as ethers from 'ethers';
 import { catchError, concatMap, filter, map, mapTo, reduce, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { BigNumber } from '@ethersproject/bignumber';
@@ -73,13 +73,22 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       })
     );
 
-    return zip(dds$, dai$);
+    return zip(dds$, dai$).pipe(
+      catchError(err => {
+        console.warn('error', err);
+        return NEVER;
+      })
+    );
   }
 
   public getPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber> {
     return this.getContract(coin).pipe(
       switchMap((contract: ethers.Contract) => contract.functions.getPriceByETHDAI()),
-      map((num: BigNumber[]) => num[0])
+      map((num: BigNumber[]) => num[0]),
+      catchError(e => {
+        console.warn('error', e);
+        return NEVER;
+      })
     );
   }
 

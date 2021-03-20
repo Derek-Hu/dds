@@ -50,17 +50,17 @@ export default class Layout extends Component<RouteComponentProps, IState> {
           updateAccount: this.updateAccount,
           isMobile,
           direction: 'ltr',
-          account:
-            process.env.NODE_ENV === 'development'
-              ? {
-                  address: '0x839423432432',
-                  USDBalance: {
-                    USDT: 234232432,
-                    USDC: 43243232,
-                    DAI: 23890230432,
-                  },
-                }
-              : account,
+          account,
+          // process.env.NODE_ENV === 'development'
+          //   ? {
+          //       address: '0x839423432432',
+          //       USDBalance: {
+          //         USDT: 234232432,
+          //         USDC: 43243232,
+          //         DAI: 23890230432,
+          //       },
+          //     }
+          //   : account,
         }}
       >
         <div className={isMobile ? 'mobile' : ''}>
