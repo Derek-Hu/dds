@@ -36,9 +36,23 @@ export default class PoolArea extends Component<{ address?: string }, IState> {
 
   render() {
     const { data, loading } = this.state;
-    return loading ? null : (
+
+    const dataInfo = (data || []).reduce((total, item) => {
+      // @ts-ignore
+      total[item.label] = item.value;
+      return total;
+    }, {});
+
+    // @ts-ignore
+    const coins = Object.keys(SupporttedUSD).map((coin) => ({
+      label: coin,
+      // @ts-ignore
+      value: dataInfo[coin],
+    }));
+    
+    return (
       <div>
-        <PoolProgress totalMode={true} title="Your Share in the Pool" coins={data} />
+        <PoolProgress loading={loading} totalMode={true} title="Your Share in the Pool" coins={data} />
       </div>
     );
   }

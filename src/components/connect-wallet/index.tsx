@@ -14,8 +14,8 @@ import MetaMaskOnboarding from '@metamask/onboarding';
 const { Option } = Select;
 const { isMetaMaskInstalled } = MetaMaskOnboarding;
 
-const hasMetaMaskEnv = isMetaMaskInstalled();
-// const hasMetaMaskEnv = true;
+// const hasMetaMaskEnv = isMetaMaskInstalled();
+const hasMetaMaskEnv = true;
 export default class ConnectWallet extends Component<any, any> {
   state = {
     visible: false,

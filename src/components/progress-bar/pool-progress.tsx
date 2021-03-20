@@ -8,6 +8,7 @@ export interface IMiningShare {
   coins: Array<IIndicatorProgress>;
   totalMode: boolean;
   children?: any;
+  loading: boolean;
 }
 
 export default (props: IMiningShare) => {

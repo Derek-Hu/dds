@@ -49,7 +49,7 @@ export default class CoinProgress extends Component<IProps, IState> {
     return (
       <Hidden when={loading}>
         <div>
-          <PoolProgress totalMode={totalMode} desc={desc} title={title} coins={data}>
+          <PoolProgress loading={false} totalMode={totalMode} desc={desc} title={title} coins={data}>
             {children}
           </PoolProgress>
         </div>

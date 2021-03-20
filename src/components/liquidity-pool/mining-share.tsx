@@ -15,10 +15,11 @@ const data: IMiningShare = {
         percentage: 55,
         val: 63
     }],
-    totalMode: false
+    totalMode: false,
+    loading: false
 }
 export default () => {
     return <div>
-        <PoolProgress {...data}/>
+        <PoolProgress {...data} />
     </div>
 }
