@@ -1,5 +1,6 @@
 import {
   ABI,
+  BrokerABI,
   CoinBalance,
   CoinShare,
   ContractProxy,
@@ -34,6 +35,7 @@ import {
   ERC20USDCAddress,
   SystemFundingAccount,
   ERC20DDSAddress,
+  BrokerContractAddress,
 } from '../constant';
 import { walletManager } from '../wallet/wallet-manager';
 import { WalletInterface } from './wallet-interface';
@@ -814,7 +816,37 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
-  // public getBrokerInfo(): Observable<{ refer: BigNumber; claim: CoinBalance[] }> {}
+  public getBrokerInfo(address: string): Observable<{ refer: BigNumber; claim: CoinBalance[] }> {
+    return from(this.getBrokerContract().functions.getBrokerInfo(address)).pipe(
+      map((rs: BigNumber[]) => {
+        const dai: BigNumber = rs[0];
+        const usdt: BigNumber = rs[1];
+        const usdc: BigNumber = rs[2];
+        const count: BigNumber = rs[3];
+
+        return {
+          refer: count,
+          claim: [
+            { coin: 'DAI', balance: dai },
+            { coin: 'USDT', balance: usdt },
+            { coin: 'USDC', balance: usdc },
+          ],
+        };
+      })
+    );
+  }
+
+  public getBrokerAllCommission(address: string): Observable<CoinBalance[]> {
+    return from(this.getBrokerContract().functions.getBrokerAwardsInfo(address)).pipe(
+      map((rs: BigNumber[]) => {
+        return [
+          { coin: 'DAI', balance: rs[0] },
+          { coin: 'USDT', balance: rs[1] },
+          { coin: 'USDC', balance: rs[2] },
+        ];
+      })
+    );
+  }
 
   //
   protected getContract(coin: IUSDCoins): Observable<ethers.Contract> {
@@ -855,7 +887,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
 
   protected abstract getLiquidatorContract(): ethers.Contract;
 
-  // protected abstract getBrokerContract(): ethers.Contract;
+  protected abstract getBrokerContract(): ethers.Contract;
 
   protected abstract getPrivatePoolContractMap(): Map<IUSDCoins, ethers.Contract>;
 
@@ -878,6 +910,10 @@ class MetamaskContractAccessor extends BaseTradeContractAccessor {
 
   protected getLiquidatorContract(): ethers.Contract {
     return new ethers.Contract(LiquidatorContractAddress, LiquidatorABI, this.getSigner());
+  }
+
+  protected getBrokerContract(): ethers.Contract {
+    return new ethers.Contract(BrokerContractAddress, BrokerABI, this.getSigner());
   }
 
   protected getSwapBurnContract(): ethers.Contract {
@@ -946,6 +982,10 @@ class DefaultContractAccessor extends BaseTradeContractAccessor {
 
   protected getLiquidatorContract(): ethers.Contract {
     return new ethers.Contract(LiquidatorContractAddress, LiquidatorABI, this.getProvider());
+  }
+
+  protected getBrokerContract(): ethers.Contract {
+    return new ethers.Contract(BrokerContractAddress, BrokerABI, this.getProvider());
   }
 
   protected getPrivatePoolContractMap(): Map<IUSDCoins, ethers.Contract> {
@@ -1324,6 +1364,22 @@ export class ContractAccessor implements ContractProxy {
     return this.accessor.pipe(
       switchMap(accessor => {
         return accessor.doSwap(coin, ddsAmount);
+      })
+    );
+  }
+
+  public getBrokerInfo(address: string): Observable<{ refer: BigNumber; claim: CoinBalance[] }> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.getBrokerInfo(address);
+      })
+    );
+  }
+
+  public getBrokerAllCommission(address: string): Observable<CoinBalance[]> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.getBrokerAllCommission(address);
       })
     );
   }

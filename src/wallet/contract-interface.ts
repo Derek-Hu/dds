@@ -4798,7 +4798,9 @@ export interface ContractProxy {
 
   doSwap(coin: IUSDCoins, ddsAmount: number): Observable<boolean>;
 
-  // getBrokerInfo(): Observable<{ refer: BigNumber; claim: CoinBalance[] }>;
+  getBrokerInfo(address: string): Observable<{ refer: BigNumber; claim: CoinBalance[] }>;
+
+  getBrokerAllCommission(address: string): Observable<CoinBalance[]>;
 }
 
 export interface UserAccountInfo {
