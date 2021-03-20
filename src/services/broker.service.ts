@@ -14,11 +14,11 @@ const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   });
 };
 
-export const account2ReferalCode = (address: string) => {
-  if (!address) {
+export const account2ReferalCode = (account: UserAccountInfo) => {
+  if (!account || !account.address) {
     return '';
   }
-  return CryptoJS.AES.encrypt(address.replace(/^0x/i, ''), '0x').toString();
+  return CryptoJS.AES.encrypt(account.address.replace(/^0x/i, ''), '0x').toString();
 };
 export const getSparkData = async (): Promise<IBrokerSpark> => {
   return returnVal({

@@ -174,8 +174,12 @@ export default class ConnectWallet extends Component<any, any> {
                 </Col>
                 {account ? (
                   <Col span={24}>
-                    <Select defaultValue={account} value={account} style={{ width: '100%', height: 50 }}>
-                      <Option value={account}>{account}</Option>
+                    <Select
+                      defaultValue={account.address}
+                      value={account.address}
+                      style={{ width: '100%', height: 50 }}
+                    >
+                      <Option value={account.address}>{account.address}</Option>
                     </Select>
                   </Col>
                 ) : null}

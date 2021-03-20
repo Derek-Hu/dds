@@ -7,6 +7,8 @@ import ConnectWallet from '../connect-wallet/index';
 import Logo from '~/assets/imgs/logo.png';
 import LogoWhite from '~/assets/imgs/logo-white.png';
 import { homeBasePath, ddsBasePath } from '../../constant/index';
+import { format, isNumberLike } from '../../util/math';
+
 const { SubMenu } = Menu;
 
 const rightMenus = {
@@ -210,9 +212,14 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                     <ConnectWallet>
                       {account ? (
                         <div className={styles.accountInfo}>
-                          <span>98 SLD</span>
-                          <span>2.009DAI</span>
-                          <span>0x8317...c496</span>
+                          {account.USDBalance
+                            ? account.USDBalance.map(({ coin, amount }) => (
+                                <span>
+                                  {isNumberLike(amount) ? format(amount) : 0}&nbsp;{coin}
+                                </span>
+                              ))
+                            : null}
+                          <span>{account.address}</span>
                         </div>
                       ) : (
                         <Button className={styles.connectBtn}>Connect Wallet</Button>
