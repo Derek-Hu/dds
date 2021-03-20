@@ -10,7 +10,6 @@ interface IState {
   loading: boolean;
   data?: IBrokerSpark;
 }
-const a = 20;
 export default class BecomeSpark extends Component<any, IState> {
   state: IState = {
     loading: false,
