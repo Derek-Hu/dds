@@ -2,16 +2,17 @@ import { Component } from 'react';
 import { Tabs, Row, Col, Input, Button } from 'antd';
 import styles from './style.module.less';
 import Step from './steps';
-import { CustomTabKey } from '../../constant/index';
+import { CustomTabKey, ddsBasePath } from '../../constant/index';
 import BecomeSpark from './spark/become-spark';
 import MyReferal from './referal/my-referal';
 import { Visible } from '../builtin/hidden';
 import Auth, { Public } from '../builtin/auth';
-import CampaignRewards from './referal/campaign-rewards';
-import CampaignRewardsPool from './referal/campaign-rewards-pool';
+// import CampaignRewards from './referal/campaign-rewards';
+// import CampaignRewardsPool from './referal/campaign-rewards-pool';
 import Commission from './referal/commission';
 import SiteContext from '../../layouts/SiteContext';
 import { account2ReferalCode } from '../../services/broker.service';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const { TabPane } = Tabs;
 
@@ -35,15 +36,22 @@ export default class Broker extends Component<any, any> {
 
   render() {
     const referalCode = account2ReferalCode(this.context.account);
+    const url = referalCode ? `${ddsBasePath}/referal?code=${referalCode}` : '';
     return (
       <div className={styles.root}>
         <h2>Broker</h2>
         <Auth>
           <div className={styles.referalInfo}>
-            <Input value={`http://www.dds.com/home/${referalCode}`} disabled={true} className={styles.input} />
-            <Button type="primary" className={styles.btn}>
-              Copy referral link
-            </Button>
+            <Input value={url} disabled={true} className={styles.input} />
+            {
+              referalCode ? <CopyToClipboard text={url} onCopy={() => this.setState({ copied: true })}>
+              <Button type="primary" className={styles.btn}>
+                Copy referral link
+              </Button>
+            </CopyToClipboard> : <Button type="primary" className={styles.btn}>
+                Copy referral link
+              </Button>
+            }
             {/* <div className={styles.qrcode}>
                   <Icon type="qrcode" style={{ fontSize: 32 }} />
                 </div> */}

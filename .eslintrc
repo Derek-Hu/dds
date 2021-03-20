@@ -1,15 +1,24 @@
 {
-  "extends": "react-app",
-  "parserOptions": {
+  "extends": [
+      "react-app",
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:prettier/recommended"
+  ],
+  "parserOptions": {        //指定ESLint可以解析JSX语法
     "ecmaFeatures": {
       "legacyDecorators": true
-    }
+    },
+    "sourceType": "module"
   },
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
   "globals": {
     "d3": true,
     "webvowl": true
   },
   "rules": {
+    "prettier/prettier": 1,
     "no-unused-expressions": 1,
     "jsx-a11y/anchor-is-valid": 0,
     "array-callback-return": 0,

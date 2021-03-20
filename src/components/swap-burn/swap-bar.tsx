@@ -1,6 +1,7 @@
 import styles from './swap-bar.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import Placeholder from '../placeholder/index';
+import { formatInt } from '../../util/math';
 
 const datas = {
   left: { percentage: 100 },
@@ -43,7 +44,7 @@ export default ({
                 <span>{left.percentage}%</span>
               </div>
               <div className={styles.amount}>
-                <Placeholder loading={loading}>{leftAmount} USD</Placeholder>
+                <Placeholder loading={loading}>{formatInt(leftAmount)} USD</Placeholder>
               </div>
             </div>
             <div className={styles.shadow} style={{ width: width + 'px', height: height + 'px' }}>
@@ -58,7 +59,7 @@ export default ({
                 <span className={styles.rightPecentage}>{right.percentage}%</span>
               </div>
               <div className={styles.amount}>
-                <Placeholder loading={loading}>{rightAmount} USD</Placeholder>
+                <Placeholder loading={loading}>{formatInt(rightAmount)} USD</Placeholder>
               </div>
             </div>
           </div>

@@ -8,10 +8,10 @@ export const format = (value: any) => {
 };
 
 export const formatInt = (value: any) => {
-  if (typeof value !== 'number') {
-    return value;
+  if(isNumberLike(value)){
+    return numeral(value).format('0,0');
   }
-  return numeral(value).format('0,0');
+  return '';
 };
 
 export const percentage = (fenzi: any, fenmu: any) => {
@@ -32,17 +32,8 @@ export const dividedPecent = (fenzi: any, fenmu: any) => {
 }
 
 
-export const isNumberLike = (value: string | number | null | undefined) => {
-    if(value===null || value ===undefined){
-      return false;
-    }
-    if (typeof value === 'number'){
-      return true;
-    }
-    if(String(parseFloat(value))===value){
-      return true;
-    }
-    return false;
+export const isNumberLike = (value: any) => {
+    return String(Number(value)) === String(value);
   }
 
 export const isNotZeroLike = (value: any) => {

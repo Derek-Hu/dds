@@ -94,7 +94,8 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
           isMobile ? (
             darkMode ? (
               <div className={styles.homeHeader}>
-                <Row>
+                Shield
+                {/* <Row>
                   <Col span={12}>Shield</Col>
                   <Col span={12} style={{ textAlign: 'right' }}>
                     <Icon type="menu" onClick={this.openDrawer} />
@@ -104,7 +105,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                       {this.renderRightMenus(rightMenus)}
                     </Menu>
                   </Drawer>
-                </Row>
+                </Row> */}
               </div>
             ) : (
               <div className={[styles.root, darkMode ? '' : styles.light, styles.mobileLight].join(' ')}>
