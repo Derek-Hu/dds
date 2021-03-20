@@ -3,7 +3,6 @@ import PoolProgress from '../progress-bar/pool-progress';
 import { Hidden } from '../builtin/hidden';
 import { IIndicatorProgress } from '../progress-bar/with-indicator';
 import { percentage } from '../../util/math';
-import Placeholder from '../placeholder/index';
 import { SupporttedUSD, DefaultProgressDatas } from '../../constant/index';
 
 interface IState {
