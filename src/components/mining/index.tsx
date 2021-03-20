@@ -233,6 +233,9 @@ export default class Mining extends Component {
                   <div className={styles.panels}>
                     <Row gutter={24}>
                       <Col xs={24} sm={24} md={12} lg={12}>
+                        <YourMiningShare />
+                      </Col>
+                      <Col xs={24} sm={24} md={12} lg={12}>
                         <ReTokenBalance />
                         {/* <Pool {...ReTokenBalance} smallSize={true}> */}
                         {/* <Button type="primary" className={styles.lock} onClick={() => this.showLockModal(false)}>
@@ -249,9 +252,6 @@ export default class Mining extends Component {
                         <p>Unlock reToken to be able to withdraw your reToken from the liquidity</p>
                       </Pool>
                     </Col> */}
-                      <Col xs={24} sm={24} md={12} lg={12}>
-                        <YourMiningShare />
-                      </Col>
                     </Row>
                   </div>
                 </Auth>

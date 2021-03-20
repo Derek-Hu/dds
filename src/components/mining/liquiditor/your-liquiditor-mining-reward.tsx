@@ -51,7 +51,9 @@ export default class LiquiditorReward extends Component<any, IState> {
         </Row>
         <Auth>
           <p className={styles.wantoBe}>Want to become a liquiditor?</p>
-          <Button type="primary">Read Liquiditor Docs</Button>
+          <Button type="primary" style={{ width: '40%', fontSize: '18px' }}>
+            READ DOCS
+          </Button>
         </Auth>
       </div>
     );

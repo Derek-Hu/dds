@@ -65,8 +65,8 @@ export default class Broker extends Component<any, IState> {
         <div style={{ marginTop: '48px', paddingBottom: '40px' }}>
           <div>
             {isNotZeroLike(bonus) ? (
-              <Button onClick={this.onClaim} style={{ width: '120px', margin: '20px' }} type="primary">
-                Claim
+              <Button onClick={this.onClaim} style={{ width: '50%', margin: '20px' }} type="primary">
+                CLAIM
               </Button>
             ) : null}
           </div>

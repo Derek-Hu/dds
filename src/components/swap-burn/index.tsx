@@ -111,14 +111,11 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
                                 placeholder="Amount"
                               />
                             </Col>
-                            <Col xs={4} sm={4} md={4} lg={4}>
-                              <span className={styles.unit}>SLD</span>
-                            </Col>
                           </Row>
                         </Form.Item>
                         <Form.Item>
                           <Row>
-                            <Col span={20}>
+                            <Col span={24}>
                               <Row gutter={12}>
                                 <Col xs={3} sm={3} md={3} lg={3}>
                                   <span className={styles.swap}>
@@ -136,20 +133,23 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
                                   </Select>
                                 </Col>
                                 <Col xs={11} sm={11} md={13} lg={13}>
-                                  <Input value={transferText} readOnly={true} placeholder="" />
+                                  <Input value={transferText} readOnly={true} placeholder="" suffix="DAI" />
                                 </Col>
                               </Row>
                             </Col>
+<<<<<<< HEAD
                             <Col span={4}>
                               <span className={styles.targetUnit}>{selectedCoin}</span>
                             </Col>
+=======
+>>>>>>> update style
                           </Row>
                         </Form.Item>
                         <Form.Item className={styles.lastRow}>
                           <Row>
-                            <Col xs={20} sm={20} md={20} lg={20}>
+                            <Col xs={24} sm={24} md={24} lg={24}>
                               <Button type="primary" onClick={this.showSwapModal}>
-                                Swap
+                                SWAP
                               </Button>
                             </Col>
                           </Row>
@@ -178,11 +178,11 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
                     </Descriptions>
                     <Row className={commonStyles.actionBtns} gutter={[16, 16]} type="flex">
                       <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                        <Button onClick={this.closeSwapModal}>Cancel</Button>
+                        <Button onClick={this.closeSwapModal}>CANCEL</Button>
                       </Col>
                       <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                         <Button onClick={this.conformSwap} type="primary">
-                          Comfirm
+                          CONFIRM
                         </Button>
                       </Col>
                     </Row>

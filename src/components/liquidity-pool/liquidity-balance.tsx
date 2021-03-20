@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Tabs, Button, Table, Row, Select, Col } from 'antd';
+import { Tabs, Button, Table, Row, Select, Col, Tag } from 'antd';
 import styles from './balance.module.less';
 import commonStyles from '../funding-balance/modals/style.module.less';
 import ColumnConvert from '../column-convert/index';
@@ -244,6 +244,14 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
     this.withDrawVisible.hide();
     await doPoolWithdraw({ amount, reAmount, coin: selectCoin, type: isPrivate ? 'private' : 'public' });
   };
+
+  onMaxOpenClick = () => {
+    const { coins, selectCoin } = this.state;
+    this.setState({
+      amount: coins[selectCoin],
+    });
+  };
+
   render() {
     const { data, selectCoin, deadline, loading, deadlineLoading, coins, amount, reAmount } = this.state;
     const { isPrivate } = this.props;
@@ -313,7 +321,10 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
                   </Col>
                   <Col xs={24} sm={24} md={18} lg={18}>
                     <span className={[styles.maxWithdraw, isMobile ? styles.mobile : ''].join(' ')}>
-                      Max Withdraw Balance: <span>{format(coins[selectCoin])}</span> {selectCoin}
+                      <Tag onClick={this.onMaxOpenClick} color="#1346FF">
+                        Max
+                      </Tag>
+                     <span>{format(coins[selectCoin])}</span> {selectCoin}
                     </span>
                   </Col>
                   <Col span={24}>
