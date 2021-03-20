@@ -1,5 +1,6 @@
 import styles from './swap-bar.module.less';
 import SiteContext from '../../layouts/SiteContext';
+import Placeholder from '../placeholder/index';
 
 const datas = {
   left: { percentage: 100 },
@@ -15,7 +16,15 @@ const mobileRect = {
   height: 215,
 };
 
-export default ({ leftAmount, rightAmount }: { leftAmount?: number | string; rightAmount?: number | string }) => {
+export default ({
+  leftAmount,
+  loading,
+  rightAmount,
+}: {
+  leftAmount?: number | string;
+  loading: boolean;
+  rightAmount?: number | string;
+}) => {
   const { left, right } = datas;
   return (
     <SiteContext.Consumer>
@@ -33,7 +42,9 @@ export default ({ leftAmount, rightAmount }: { leftAmount?: number | string; rig
                 <p>DDerivatives Net Income</p>
                 <span>{left.percentage}%</span>
               </div>
-              <div className={styles.amount}>{leftAmount} USD</div>
+              <div className={styles.amount}>
+                <Placeholder loading={loading}>{leftAmount} USD</Placeholder>
+              </div>
             </div>
             <div className={styles.shadow} style={{ width: width + 'px', height: height + 'px' }}>
               <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height={height} width={width}>
@@ -46,7 +57,9 @@ export default ({ leftAmount, rightAmount }: { leftAmount?: number | string; rig
                 <p>SLD Circulating Supply ×{right.percentage}%</p>
                 <span className={styles.rightPecentage}>{right.percentage}%</span>
               </div>
-              <div className={styles.amount}>{rightAmount} USD</div>
+              <div className={styles.amount}>
+                <Placeholder loading={loading}>{rightAmount} USD</Placeholder>
+              </div>
             </div>
           </div>
         );

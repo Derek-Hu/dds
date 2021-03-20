@@ -47,6 +47,7 @@ export default class CampaignRewardsPool extends Component<any, IState> {
     return loading ? null : (
       <div>
         <PoolProgress
+          loading={false}
           totalMode={true}
           title="Campaign Rewards Pool"
           coins={data}

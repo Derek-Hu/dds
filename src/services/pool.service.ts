@@ -6,7 +6,7 @@ import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { curUserAccount, loginUserAccount } from './account';
 import { EMPTY, from, Observable, of, zip } from 'rxjs';
 import { withLoading } from './utils';
-import { defaultPoolData } from './mock/unlogin-default';
+import { defaultPoolData, defaultCoinDatas } from './mock/unlogin-default';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   return new Promise((resolve) => {
@@ -25,7 +25,7 @@ export const getCollaborativeArp = async (): Promise<number> => {
 };
 
 /** Done */
-export const getPoolBalance = async (type: 'public' | 'private'): Promise<ICoinItem[]> => {
+export const getPoolBalance = async (type: 'public' | 'private'): Promise<{ [key in IUSDCoins]: number }> => {
   return from(loginUserAccount())
     .pipe(
       switchMap((account: string | null) => {
@@ -43,15 +43,16 @@ export const getPoolBalance = async (type: 'public' | 'private'): Promise<ICoinI
       }),
       map((balances: Map<IUSDCoins, BigNumber> | null) => {
         if (balances === null) {
-          return defaultPoolData;
+          return defaultCoinDatas;
         }
 
-        return Array.from(balances.keys()).map((coin: IUSDCoins) => {
-          return {
-            coin,
-            amount: Number(toEthers(balances.get(coin) as BigNumber, 4)),
-          };
-        });
+        return Array.from(balances.keys()).reduce(
+          (total, coin: IUSDCoins) => {
+            total[coin] = Number(toEthers(balances.get(coin) as BigNumber, 4));
+            return total;
+          },
+          { ...defaultCoinDatas }
+        );
       }),
       take(1)
     )

@@ -13,6 +13,7 @@ import { format } from '../../../util/math';
 import ModalRender from '../../modal-render/index';
 import ColumnConvert from '../../column-convert/index';
 import dayjs from 'dayjs';
+import Placeholder from '../../placeholder/index';
 
 interface IState {
   loading: boolean;
@@ -103,20 +104,26 @@ export default class LiquiditorReward extends Component<any, IState> {
   render() {
     const { data, loading, visible, tableData } = this.state;
     return (
-      <Hidden when={loading}>
+      <div>
         <h3>{this.context.account ? 'Your Active Liquidity Rewards' : 'Active Liquidity Rewards Today'}</h3>
-        <p className={styles.coins}>{format(data)} SLD</p>
+        <p className={styles.coins}>
+          <Placeholder loading={loading} width={'10em'}>
+            {format(data)} SLD
+          </Placeholder>
+        </p>
         <Auth>
           <p className={styles.dynamic}>
             <span>Only reward for liquidity locked in private pool</span>
           </p>
           <div>
-            <Button type="primary" className={[styles.btn, styles.cliamBtn].join(' ')} onClick={this.cofirmClaim}>
-              Claim
-            </Button>
+            <Placeholder loading={loading} width={'10em'}>
+              <Button type="primary" className={[styles.btn, styles.cliamBtn].join(' ')} onClick={this.cofirmClaim}>
+                Claim
+              </Button>
+            </Placeholder>
             {/* <div>
               <Button type="link" onClick={this.visible.show} className={styles.recordLink}>
-                Rewards Balance History
+              Rewards Balance History
               </Button>
             </div> */}
           </div>
@@ -132,7 +139,7 @@ export default class LiquiditorReward extends Component<any, IState> {
         >
           <Table scroll={{ y: 300, x: 500 }} columns={CommissionColumns} pagination={false} dataSource={tableData} />
         </ModalRender>
-      </Hidden>
+      </div>
     );
   }
 }

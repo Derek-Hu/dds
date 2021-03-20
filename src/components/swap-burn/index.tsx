@@ -11,6 +11,7 @@ import { Visible, Hidden } from '../builtin/hidden';
 import Auth, { Public } from '../builtin/auth';
 import { getSwapPrice, conformSwap } from '../../services/swap-burn.service';
 import { format, isNotZeroLike } from '../../util/math';
+import Placeholder from '../placeholder/index';
 
 interface IState {
   loading: boolean;
@@ -84,15 +85,19 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
       <SiteContext.Consumer>
         {({ isMobile }) => {
           return (
-            <Hidden when={loading}>
-              <div className={styles.root}>
-                <h1>Swap & burn</h1>
-                <div className={styles.card}>
-                  <div className={styles.imgBar}>
-                    <SwapBar leftAmount={format(data?.usd)} rightAmount={format(data?.dds)}></SwapBar>
-                  </div>
-                  <h3 className={styles.msg}>Current Swap Price</h3>
-                  <p className={styles.calcute}>1 SLD = {format(data?.rate)} USD</p>
+            <div className={styles.root}>
+              <h1>Swap & burn</h1>
+              <div className={styles.card}>
+                <div className={styles.imgBar}>
+                  <SwapBar loading={loading} leftAmount={format(data?.usd)} rightAmount={format(data?.dds)}></SwapBar>
+                </div>
+                <h3 className={styles.msg}>Current Swap Price</h3>
+                <p className={styles.calcute}>
+                  <Placeholder width={'10em'} loading={loading}>
+                    1 SLD = {format(data?.rate)} USD
+                  </Placeholder>
+                </p>
+                <Hidden when={loading}>
                   <Auth>
                     <div className={styles.swapContainer}>
                       <Form className="login-form">
@@ -181,9 +186,9 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
                       </Col>
                     </Row>
                   </ModalRender>
-                </div>
+                </Hidden>
               </div>
-            </Hidden>
+            </div>
           );
         }}
       </SiteContext.Consumer>

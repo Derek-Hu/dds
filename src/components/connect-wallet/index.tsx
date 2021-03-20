@@ -14,8 +14,7 @@ import MetaMaskOnboarding from '@metamask/onboarding';
 const { Option } = Select;
 const { isMetaMaskInstalled } = MetaMaskOnboarding;
 
-const hasMetaMaskEnv = isMetaMaskInstalled();
-// const hasMetaMaskEnv = true;
+const hasMetaMaskEnv = process.env.NODE_ENV === 'development' ? true : isMetaMaskInstalled();
 export default class ConnectWallet extends Component<any, any> {
   state = {
     visible: false,
@@ -127,25 +126,11 @@ export default class ConnectWallet extends Component<any, any> {
               footer={null}
             >
               <Row gutter={[16, 24]} type="flex" className={styles.coinList}>
-                <Col
-                  span={24}
-                  // className={styles.active}
-                >
+                <Col span={24} className={styles.active}>
                   {hasMetaMaskEnv ? (
                     <Button onClick={() => this.switchWallet(Wallet.Metamask)}>
                       MetaMask
-                      {
-                       account ? <span
-                          style={{
-                            fontSize: '12px',
-                            color: 'green',
-                            display: 'inline-block',
-                            marginLeft: '15px',
-                          }}
-                        >
-                          Connected
-                        </span> : null
-                      }
+                      {account ? <span>&nbsp;&nbsp;(Connected)</span> : null}
                     </Button>
                   ) : (
                     <a href={'https://metamask.io/'}>
@@ -155,17 +140,14 @@ export default class ConnectWallet extends Component<any, any> {
                 </Col>
                 <Col span={24}>
                   <a href={'https://walletconnect.org/'}>
-                    <Button onClick={() => this.switchWallet(Wallet.Metamask)}>
+                    <Button>
                       Wallet Connect
                       <span
                         style={{
-                          fontSize: '12px',
-                          color: '#999',
-                          display: 'inline-block',
-                          marginLeft: '15px',
+                          color: '#d9d9d9',
                         }}
                       >
-                        Coming Soon
+                        &nbsp;&nbsp;(Coming Soon)
                       </span>
                     </Button>
                   </a>

@@ -1,9 +1,15 @@
 import { Component } from 'react';
 import CardInfo from '../card-info/index';
 import { Hidden } from '../builtin/hidden';
+import { SupportedCoins, DefaultCoinDatas } from '../../constant/index';
 
 interface IState {
-  data: Array<{ label: string; value: any }>;
+  data:
+    | Array<{
+        label: string;
+        value: any;
+      }>
+    | { [key: string]: any };
   loading: boolean;
 }
 
@@ -16,7 +22,7 @@ interface IProps {
 
 export default class CoinCard extends Component<IProps, IState> {
   state: IState = {
-    data: [],
+    data: { ...DefaultCoinDatas },
     loading: false,
   };
 
@@ -39,13 +45,11 @@ export default class CoinCard extends Component<IProps, IState> {
     const { data, loading } = this.state;
     const { children, theme, title } = this.props;
     return (
-      <Hidden when={loading}>
-        <div>
-          <CardInfo loading={false} theme={theme} title={title} items={data}>
-            {children}
-          </CardInfo>
-        </div>
-      </Hidden>
+      <div>
+        <CardInfo loading={loading} theme={theme} title={title} items={data}>
+          {children}
+        </CardInfo>
+      </div>
     );
   }
 }

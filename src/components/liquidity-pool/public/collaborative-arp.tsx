@@ -10,6 +10,7 @@ import commonStyles from '../../funding-balance/modals/style.module.less';
 import { getCollaborativeDepositRe, doCollaborativeDeposit } from '../../../services/pool.service';
 import Auth from '../../builtin/auth';
 import { Hidden } from '../../builtin/hidden';
+import Placeholder from '../../placeholder/index';
 
 interface IState {
   data: number | '';
@@ -57,7 +58,8 @@ export default class LiquidityProvided extends Component<IProps, IState> {
   async componentDidMount() {
     this.setState({ loading: true });
     try {
-      const data = await getCollaborativeArp();
+      // const data = await getCollaborativeArp();
+      const data = '';
       this.setState({
         data,
       });
@@ -107,68 +109,72 @@ export default class LiquidityProvided extends Component<IProps, IState> {
       <SiteContext.Consumer>
         {({ isMobile }) => (
           <div>
-            <Hidden when={loading}>
-              <div style={{ paddingTop: '10px' }}>
-                <h3>ARP</h3>
-                <p className={styles.coins}>{isNumberLike(data) ? `${data}%` : 'N/A'}</p>
-                <Auth>
-                  <div className={styles.actionArea}>
-                    <Row gutter={[isMobile ? 0 : 12, isMobile ? 15 : 0]}>
-                      <Col xs={24} sm={24} md={8} lg={6}>
-                        <Select
-                          value={selectedCoin}
-                          style={{ width: '100%', height: 50 }}
-                          className={styles.coinDropdown}
-                          onChange={this.onSelectChange}
-                        >
-                          {CoinSelectOption}
-                        </Select>
-                      </Col>
-                      <Col xs={24} sm={24} md={16} lg={18}>
-                        <Input value={amount} onChange={this.onAmountChange} placeholder="Enter amount" />
-                      </Col>
-                    </Row>
-                    {isNotZeroLike(amount) ? (
-                      <p className={styles.cal}>
-                        Commission Available: <span>{format(reAmount)}</span> re{selectedCoin}
-                      </p>
-                    ) : null}
-                    <Button type="primary" className={styles.btn} onClick={this.modalVisible.show}>
-                      DEPOSIT
-                    </Button>
-                  </div>
-                </Auth>
-
-                <ModalRender
-                  visible={modalVisible}
-                  title="Comfirm Deposit"
-                  className={commonStyles.commonModal}
-                  onCancel={this.modalVisible.hide}
-                  height={300}
-                  footer={null}
-                >
-                  <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
-                    <Descriptions.Item label="Amount" span={24}>
-                      {amount} {selectedCoin}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Receive" span={24}>
-                      {reAmount} re{selectedCoin}
-                    </Descriptions.Item>
-                  </Descriptions>
-                  <p>Tips: 14 Days Locked Required</p>
-                  <Row className={commonStyles.actionBtns} gutter={[16, 16]} type="flex">
-                    <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                      <Button onClick={this.modalVisible.hide}>Cancel</Button>
+            {/* <Hidden when={loading}> */}
+            <div style={{ paddingTop: '10px' }}>
+              <h3>ARP</h3>
+              <p className={styles.coins}>
+                <Placeholder loading={loading} width={'5em'}>
+                  {isNumberLike(data) ? `${data}%` : 'N/A'}
+                </Placeholder>
+              </p>
+              <Auth>
+                <div className={styles.actionArea}>
+                  <Row gutter={[isMobile ? 0 : 12, isMobile ? 15 : 0]}>
+                    <Col xs={24} sm={24} md={8} lg={6}>
+                      <Select
+                        value={selectedCoin}
+                        style={{ width: '100%', height: 50 }}
+                        className={styles.coinDropdown}
+                        onChange={this.onSelectChange}
+                      >
+                        {CoinSelectOption}
+                      </Select>
                     </Col>
-                    <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
-                      <Button onClick={this.confirmDeposit} type="primary">
-                        Comfirm
-                      </Button>
+                    <Col xs={24} sm={24} md={16} lg={18}>
+                      <Input value={amount} onChange={this.onAmountChange} placeholder="Enter amount" />
                     </Col>
                   </Row>
-                </ModalRender>
-              </div>
-            </Hidden>
+                  {isNotZeroLike(amount) ? (
+                    <p className={styles.cal}>
+                      Commission Available: <span>{format(reAmount)}</span> re{selectedCoin}
+                    </p>
+                  ) : null}
+                  <Button type="primary" className={styles.btn} onClick={this.modalVisible.show}>
+                    DEPOSIT
+                  </Button>
+                </div>
+              </Auth>
+
+              <ModalRender
+                visible={modalVisible}
+                title="Comfirm Deposit"
+                className={commonStyles.commonModal}
+                onCancel={this.modalVisible.hide}
+                height={300}
+                footer={null}
+              >
+                <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
+                  <Descriptions.Item label="Amount" span={24}>
+                    {amount} {selectedCoin}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Receive" span={24}>
+                    {reAmount} re{selectedCoin}
+                  </Descriptions.Item>
+                </Descriptions>
+                <p>Tips: 14 Days Locked Required</p>
+                <Row className={commonStyles.actionBtns} gutter={[16, 16]} type="flex">
+                  <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
+                    <Button onClick={this.modalVisible.hide}>Cancel</Button>
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
+                    <Button onClick={this.confirmDeposit} type="primary">
+                      Comfirm
+                    </Button>
+                  </Col>
+                </Row>
+              </ModalRender>
+            </div>
+            {/* </Hidden> */}
           </div>
         )}
       </SiteContext.Consumer>

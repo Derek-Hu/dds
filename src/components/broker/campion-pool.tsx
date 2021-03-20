@@ -42,6 +42,7 @@ const data: IMiningShare = {
       val: <span>37863</span>,
     },
   ],
+  loading: false,
   totalMode: true,
 };
 

@@ -256,6 +256,13 @@ declare interface INonRecords {
   data: INonRiskPerpetual[];
 }
 
+declare interface ICoinProgressObj {
+  [label: string]: {
+    percentage?: any;
+    val?: any;
+  };
+}
+
 declare interface UserAccountInfo {
   address: string;
   USDBalance: { coin: IUSDCoins; amount: number }[];

@@ -6,6 +6,7 @@ import { Hidden } from '../../builtin/hidden';
 import SiteContext from '../../../layouts/SiteContext';
 import Auth, { Public } from '../../builtin/auth';
 import { format } from '../../../util/math';
+import Placeholder from '../../placeholder/index';
 
 interface IState {
   loading: boolean;
@@ -38,25 +39,29 @@ export default class LiquidityMiningReward extends Component<any, IState> {
     const { data, loading } = this.state;
     const { refactor, amount } = data || {};
     return (
-      <Hidden when={loading}>
+      <div>
         <Auth>
           <h3>Your Liquidity Reward</h3>
         </Auth>
         <Public>
           <h3>Liquidity Reward Today</h3>
         </Public>
-        <p className={styles.coins}>{format(amount)} SLD</p>
+        <p className={styles.coins}>
+          <Placeholder loading={loading} width={'10em'}>
+            {format(amount)} SLD
+          </Placeholder>
+        </p>
+        <p className={styles.dynamic}>
+          <span>Current reward factor </span>
+          <br />
+          {32} <span>SLD/Block</span>
+        </p>
         <Auth>
-          <p className={styles.dynamic}>
-            <span>Current reward factor </span>
-            <br />
-            {32} <span>SLD/Block</span>
-          </p>
           {/* <Button type="primary" className={styles.btn} onClick={this.cofirmClaim}>
             Claim
           </Button> */}
         </Auth>
-      </Hidden>
+      </div>
     );
   }
 }
