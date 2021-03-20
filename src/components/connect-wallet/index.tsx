@@ -118,7 +118,18 @@ export default class ConnectWallet extends Component<any, any> {
         })
       )
       .subscribe((account: UserAccountInfo | null) => {
-        this.context.updateAccount(account);
+        const tranformed: IAccount = {
+          address: account ? account.address : '',
+          USDBalance:
+            account && account.USDBalance
+              ? account.USDBalance.reduce((total, { coin, amount }) => {
+                  // @ts-ignore
+                  total[coin] = amount;
+                  return total;
+                }, {})
+              : {},
+        };
+        this.context.updateAccount(tranformed);
         // this.setState({
         //   isConnected: account !== null,
         //   account,

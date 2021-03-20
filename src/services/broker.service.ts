@@ -14,7 +14,7 @@ const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   });
 };
 
-export const account2ReferalCode = (account: UserAccountInfo) => {
+export const account2ReferalCode = (account: IAccount) => {
   if (!account || !account.address) {
     return '';
   }

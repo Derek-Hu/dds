@@ -268,6 +268,7 @@ declare interface UserAccountInfo {
   USDBalance: { coin: IUSDCoins; amount: number }[];
 }
 
+declare type IAccount = (Omit<UserAccountInfo, 'USDBalance'> & { USDBalance: { [coin: string]: number } }) | null;
 // 私池订单信息
 declare interface PrivatePoolOrder {
   orderId: string;
