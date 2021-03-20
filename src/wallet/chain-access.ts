@@ -814,6 +814,8 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
+  public getBrokerInfo(): Observable<{ refer: BigNumber; claim: CoinBalance[] }> {}
+
   //
   protected getContract(coin: IUSDCoins): Observable<ethers.Contract> {
     return of(this.contractMap.get(coin)).pipe(filter(Boolean)) as Observable<ethers.Contract>;
@@ -852,6 +854,8 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   protected abstract getSwapBurnContract(): ethers.Contract;
 
   protected abstract getLiquidatorContract(): ethers.Contract;
+
+  // protected abstract getBrokerContract(): ethers.Contract;
 
   protected abstract getPrivatePoolContractMap(): Map<IUSDCoins, ethers.Contract>;
 
