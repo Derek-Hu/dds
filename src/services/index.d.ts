@@ -255,3 +255,8 @@ declare interface INonRecords {
   total: number;
   data: INonRiskPerpetual[];
 }
+
+declare interface UserAccountInfo {
+  address: string;
+  USDBalance: { coin: IUSDCoins; amount: number }[];
+}

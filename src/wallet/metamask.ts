@@ -3,6 +3,7 @@ import { BehaviorSubject, from, Observable } from 'rxjs';
 import { Wallet } from '../constant';
 import { WalletInterface } from '../wallet/wallet-interface';
 import { filter, map } from 'rxjs/operators';
+import { CoinBalance } from './contract-interface';
 
 declare const window: Window & { ethereum: any };
 

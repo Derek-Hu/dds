@@ -4798,6 +4798,10 @@ export const ERC20 = [
  * 合约接口
  */
 export interface ContractProxy {
+  getUserSelfWalletBalance(address: string): Observable<CoinBalance[]>;
+
+  //
+
   getPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber>;
 
   watchPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber>;
@@ -4861,6 +4865,8 @@ export interface ContractProxy {
   claimRewardsForLP2(): Observable<boolean>;
 
   getSystemFundingBalance(): Observable<CoinBalance[]>;
+
+  getLiquiditorRewards(address: string): Observable<CoinBalance[]>;
 
   //
 

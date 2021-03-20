@@ -51,6 +51,7 @@ export const MiningRewardContractAddress = '0x536671b1687b996d3a6F72Cf975CE5Ae1F
 export const LiquidatorContractAddress = '0x9C37F57B687C4149a50B758683AB2104d337bb54';
 export const SwapBurnContractAddress = '0x5c0dd03F2fc51aC61FE9c14bbA50341aF95fD00a';
 
+export const ERC20DDSAddress = '0x904bC1433bD601ceB887b0890B9a9536B43A9e80';
 export const ERC20DAIAddress = '0x113587939c8967e61aa2360613951b23ab2af49a';
 export const ERC20USDTAddress = '0x97862b9ac658d800710a43286e076eac5e01a228';
 export const ERC20USDCAddress = '0xc8c0278b371316fb3629a7c2c4e003cc296b5925';

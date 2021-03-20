@@ -176,7 +176,6 @@ export const getPriceGraphData = (
   coins: { from: IFromCoins; to: IUSDCoins },
   duration: IGraphDuration
 ): Promise<IPriceGraph> => {
-  console.log('c d', coins, duration);
   const days = duration === 'day' ? 1 : duration === 'week' ? 7 : 30;
 
   const rs = new AsyncSubject<IPriceGraph>();
@@ -185,10 +184,13 @@ export const getPriceGraphData = (
     .end((err, res) => {
       if (!err) {
         const obj = JSON.parse(res.text);
-        const data = obj.prices.map((el: number[]) => ({ timestamp: el[0], value: el[1] }));
-
+        const data: { timestamp: number; value: number }[] = obj.prices.map((el: number[]) => ({
+          timestamp: el[0],
+          value: el[1],
+        }));
+        const last: number = data[data.length - 1].value;
         const dataRs = {
-          price: 100.2,
+          price: last,
           percentage: -14.2,
           range: 23,
           data: data,
