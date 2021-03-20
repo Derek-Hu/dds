@@ -137,12 +137,6 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
                                 </Col>
                               </Row>
                             </Col>
-<<<<<<< HEAD
-                            <Col span={4}>
-                              <span className={styles.targetUnit}>{selectedCoin}</span>
-                            </Col>
-=======
->>>>>>> update style
                           </Row>
                         </Form.Item>
                         <Form.Item className={styles.lastRow}>
