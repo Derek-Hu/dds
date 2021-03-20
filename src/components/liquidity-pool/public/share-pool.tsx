@@ -3,6 +3,7 @@ import PoolProgress from '../../progress-bar/pool-progress';
 import { getCollaborativeShareInPool } from '../../../services/pool.service';
 import { dividedPecent, format } from '../../../util/math';
 import { IIndicatorProgress } from '../../progress-bar/with-indicator';
+import { SupporttedUSD } from '../../../constant/index';
 
 interface IState {
   data: IIndicatorProgress[];
@@ -52,7 +53,7 @@ export default class PoolArea extends Component<{ address?: string }, IState> {
     
     return (
       <div>
-        <PoolProgress loading={loading} totalMode={true} title="Your Share in the Pool" coins={data} />
+        <PoolProgress loading={loading} totalMode={true} title="Your Share in the Pool" coins={coins} />
       </div>
     );
   }

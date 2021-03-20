@@ -12,7 +12,7 @@ export interface IMiningShare {
 }
 
 export default (props: IMiningShare) => {
-  const { title, desc, coins, totalMode, children } = props;
+  const { title, desc, coins, loading, totalMode, children } = props;
 
   return (
     <SiteContext.Consumer>
@@ -21,7 +21,7 @@ export default (props: IMiningShare) => {
           <h2>{title}</h2>
           <p>{desc}</p>
           {coins.map((coin) => (
-            <WithIndicator totalMode={totalMode} data={coin} />
+            <WithIndicator loading={loading} totalMode={totalMode} data={coin} />
           ))}
           {children}
         </div>
