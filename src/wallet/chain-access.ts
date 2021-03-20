@@ -73,7 +73,9 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       })
     );
 
-    return zip(dds$, dai$);
+    const usdt$: Observable<CoinBalance> = of({ coin: 'USDT', balance: BigNumber.from(0) });
+    const usdc$: Observable<CoinBalance> = of({ coin: 'USDC', balance: BigNumber.from(0) });
+    return zip(dds$, dai$, usdt$, usdc$);
   }
 
   public getPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber> {
