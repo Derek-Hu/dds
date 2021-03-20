@@ -212,3 +212,5 @@ export const doPrivateDeposit = async ({ coin, amount }: { coin: IUSDCoins; amou
 export const doPrivateWithdraw = async ({ coin, amount }: { coin: IUSDCoins; amount: number }): Promise<boolean> => {
   return withLoading(contractAccessor.withdrawFromPrivatePool(coin, amount).pipe(take(1)).toPromise());
 };
+
+export const getPrivateOrders = async () => {};
