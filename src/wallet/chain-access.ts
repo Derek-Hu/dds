@@ -848,6 +848,19 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
+  public doBrokerClaim(): Observable<boolean> {
+    return from(this.getBrokerContract().functions.claimRewardsForBroker()).pipe(
+      switchMap(rs => {
+        return from(rs.wait());
+      }),
+      mapTo(true),
+      catchError(err => {
+        console.warn('error', err);
+        return of(false);
+      })
+    );
+  }
+
   //
   protected getContract(coin: IUSDCoins): Observable<ethers.Contract> {
     return of(this.contractMap.get(coin)).pipe(filter(Boolean)) as Observable<ethers.Contract>;
@@ -1380,6 +1393,14 @@ export class ContractAccessor implements ContractProxy {
     return this.accessor.pipe(
       switchMap(accessor => {
         return accessor.getBrokerAllCommission(address);
+      })
+    );
+  }
+
+  public doBrokerClaim(): Observable<boolean> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.doBrokerClaim();
       })
     );
   }

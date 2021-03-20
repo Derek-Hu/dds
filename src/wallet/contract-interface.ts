@@ -4801,6 +4801,8 @@ export interface ContractProxy {
   getBrokerInfo(address: string): Observable<{ refer: BigNumber; claim: CoinBalance[] }>;
 
   getBrokerAllCommission(address: string): Observable<CoinBalance[]>;
+
+  doBrokerClaim(): Observable<boolean>;
 }
 
 export interface UserAccountInfo {
