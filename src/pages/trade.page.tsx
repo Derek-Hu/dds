@@ -60,9 +60,9 @@ export default class TradePage extends Component {
         {({ isMobile }) => {
           return (
             <div className={[styles.tradeInfoPool, isMobile ? styles.mobile : ''].join(' ')}>
-              <Row className={styles.chartBalance} gutter={isMobile ? 0 : 24}>
+              <Row className={styles.chartBalance}>
                 <Col xs={24} sm={24} md={12} lg={16} className={styles.charWpr}>
-                  <KLine from={from} to={coin}/>
+                  <KLine from={from} to={coin} />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={8}>
                   <FundingBalance curPrice={curPrice} coins={{ from, to: coin }} />
@@ -78,7 +78,7 @@ export default class TradePage extends Component {
                       <TradePool coin={coin} />
                     </Col>
                     <Col xs={24} sm={24} md={12} lg={12}>
-                        <TradeInfo from={from} coin={coin} />
+                      <TradeInfo from={from} coin={coin} />
                     </Col>
                   </Row>
                 </div>

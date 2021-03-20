@@ -82,9 +82,8 @@ export default class MainLayout extends Component {
 
     this.chartInstance.setOption({
       grid: {
-        left: '3%',
-        right: '3%',
-        // containLabel: true
+        left: '20px',
+        right: '20px',
       },
       xAxis: {
         type: 'category',
@@ -92,12 +91,6 @@ export default class MainLayout extends Component {
         axisLabel: {
           interval: Math.floor(xData.length / 4),
           showMaxLabel: true,
-        },
-        axisLine: {
-          show: false,
-        },
-        axisTick: {
-          show: false,
         },
       },
       series: [

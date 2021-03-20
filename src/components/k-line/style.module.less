@@ -1,25 +1,31 @@
 .root {
-  &.mobile{
-    background-color: #F9FAFC;
-    .currPrice, .headArea{
+  &.mobile {
+    background-color: #f9fafc;
+    .currPrice,
+    .headArea {
       padding-left: 16px;
-      :global{
-        .ant-select-selection-selected-value{
+      :global {
+        .ant-select-selection-selected-value {
           font-size: 18px;
         }
       }
     }
-    .range{
+    .range {
       text-align: left;
+      padding-right: 10px;
     }
-    :global{
-      .ant-select-selection{
+    :global {
+      .ant-select-selection {
         background-color: transparent;
       }
     }
   }
-  .currPrice, .headArea{
-    padding-left: 50px;
+  .headArea {
+    padding-left: 20px;
+    padding-top: 13px;
+  }
+  .currPrice {
+    padding-left: 20px;
   }
   .currVal {
     font-size: 36px;
@@ -37,24 +43,24 @@
   }
   .range {
     text-align: right;
+    padding-right: 6px;
     button {
       font-size: 14px;
       font-weight: 500;
       color: #333333;
 
-      &.current{
-          color: #1346FF;
+      &.current {
+        color: #1346ff;
       }
     }
-
   }
 
-  :global{
-    .ant-select-selection{
+  :global {
+    .ant-select-selection {
       border-color: transparent;
       box-shadow: none;
       &:focus,
-      &:active{
+      &:active {
         border-color: transparent;
         box-shadow: none;
       }

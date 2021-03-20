@@ -65,7 +65,7 @@ export default class TradePool extends Component<{ coin: IUSDCoins }, IState> {
               <h2>Liquidity Pool</h2>
               <div className={styles.barContainer}>
                 <ProgressBar {...publicBar} loading={loading} />
-                <div style={{ padding: '40px' }}></div>
+                <div style={{ padding: '28px' }}></div>
                 <ProgressBar {...privateBar} loading={loading} />
               </div>
             </div>

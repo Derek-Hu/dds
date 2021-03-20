@@ -16,8 +16,6 @@
 
   & > h2 {
     font-size: 32px;
-    font-family: Gilroy-Bold, Gilroy;
-    font-weight: bold;
     color: #383838;
     line-height: 40px;
     margin-bottom: 30px;
@@ -25,7 +23,7 @@
 
   .tableWpr {
     background: #ffffff;
-    border-radius: 4px;
+    border-radius: 40px;
   }
 
   button {
@@ -57,7 +55,14 @@
     .ant-table-tbody td,
     .ant-table-thead th,
     .ant-table-thead td {
-      border-color: #f5f5f5;
+      border-color: #f9f9f9;
+    }
+    .ant-table-body {
+      border-radius: 8px 8px 0 0;
+    }
+    .ant-table-placeholder {
+      border-bottom: none;
+      border-radius: 0 0 8px 8px;
     }
   }
 }
