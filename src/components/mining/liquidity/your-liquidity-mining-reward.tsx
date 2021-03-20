@@ -1,8 +1,6 @@
 import { Component } from 'react';
-import { Button, Col } from 'antd';
 import styles from '../style.module.less';
-import { getLiquidityMiningReward, claimLiquidity } from '../../../services/mining.service';
-import { Hidden } from '../../builtin/hidden';
+import { getLiquidityMiningReward } from '../../../services/mining.service';
 import SiteContext from '../../../layouts/SiteContext';
 import Auth, { Public } from '../../builtin/auth';
 import { format } from '../../../util/math';
@@ -31,13 +29,9 @@ export default class LiquidityMiningReward extends Component<any, IState> {
     this.setState({ loading: false });
   }
 
-  cofirmClaim = async () => {
-    await claimLiquidity();
-  };
-
   render() {
     const { data, loading } = this.state;
-    const { refactor, amount } = data || {};
+    const { amount } = data || {};
     return (
       <div>
         <Auth>
@@ -56,11 +50,6 @@ export default class LiquidityMiningReward extends Component<any, IState> {
           <br />
           {32} <span>SLD/Block</span>
         </p>
-        <Auth>
-          {/* <Button type="primary" className={styles.btn} onClick={this.cofirmClaim}>
-            Claim
-          </Button> */}
-        </Auth>
       </div>
     );
   }

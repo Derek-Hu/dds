@@ -1,5 +1,5 @@
 import { CustomTabKey, CoinSelectOption } from '../../../constant/index';
-import { Tabs, Button, Row, Col, Select, Input, Alert, Descriptions } from 'antd';
+import { Tabs, Button, Row, Col, Select, Alert, Descriptions } from 'antd';
 import styles from '../style.module.less';
 import SiteContext from '../../../layouts/SiteContext';
 import { Component } from 'react';
@@ -11,6 +11,7 @@ import { getCollaborativeDepositRe, doCollaborativeDeposit } from '../../../serv
 import Auth from '../../builtin/auth';
 import { Hidden } from '../../builtin/hidden';
 import Placeholder from '../../placeholder/index';
+import InputNumber from '../../input/index';
 
 interface IState {
   data: number | '';
@@ -31,7 +32,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
     modalVisible: false,
     selectedCoin: 'DAI',
     amount: undefined,
-    reAmount: undefined,
+    reAmount: 0,
   };
 
   setModalVisible = (key: keyof TModalKeys) => {
@@ -58,8 +59,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
   async componentDidMount() {
     this.setState({ loading: true });
     try {
-      // const data = await getCollaborativeArp();
-      const data = '';
+      const data = await getCollaborativeArp();
       this.setState({
         data,
       });
@@ -69,21 +69,18 @@ export default class LiquidityProvided extends Component<IProps, IState> {
   }
 
   onSelectChange = (selectedCoin: any) => {
-    const { amount } = this.state;
     this.setState({
       selectedCoin,
     });
     // @ts-ignore
-    this.calculateRe({ amount, coin: selectedCoin });
+    this.calculateRe({ coin: selectedCoin });
   };
 
-  onAmountChange = (e: any) => {
-    const { selectedCoin } = this.state;
-    const val = e.target.value;
+  onAmountChange = (amount: number) => {
     this.setState({
-      amount: val,
+      amount,
     });
-    this.calculateRe({ coin: selectedCoin, amount: val });
+    this.calculateRe({ amount });
   };
 
   confirmDeposit = async () => {
@@ -92,17 +89,26 @@ export default class LiquidityProvided extends Component<IProps, IState> {
     await doCollaborativeDeposit({ amount: amount!, coin: selectedCoin });
   };
 
-  calculateRe = async ({ amount, coin }: { amount: number | string; coin: IUSDCoins }) => {
-    if (amount === '' || amount === null || amount === undefined) {
-      return 0;
+  calculateRe = async (newVal: { amount?: number | string; coin?: IUSDCoins }) => {
+    const { selectedCoin, amount } = this.state;
+    console.log('...amount');
+    const params = {
+      amount, coin: selectedCoin, ...newVal
     }
 
+    if (!isNotZeroLike(params.amount)) {
+      this.setState({
+        reAmount: 0,
+      });
+      return;
+    }
     // @ts-ignore
-    const reAmount = await getCollaborativeDepositRe({ amount, coin });
+    const reAmount = await getCollaborativeDepositRe(params);
     this.setState({
-      reAmount,
+      reAmount: isNotZeroLike(reAmount)? reAmount: 0,
     });
-  };
+  } 
+  
   render() {
     const { data, modalVisible, loading, amount, selectedCoin, reAmount } = this.state;
     return (
@@ -113,9 +119,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
             <div style={{ paddingTop: '10px' }}>
               <h3>ARP</h3>
               <p className={styles.coins}>
-                <Placeholder loading={loading} width={'5em'}>
-                  {isNumberLike(data) ? `${data}%` : 'N/A'}
-                </Placeholder>
+                <Placeholder loading={false} width={'5em'}>{isNumberLike(data) ? `${data}%` : 'N/A'}</Placeholder>
               </p>
               <Auth>
                 <div className={styles.actionArea}>
@@ -131,14 +135,14 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                       </Select>
                     </Col>
                     <Col xs={24} sm={24} md={16} lg={18}>
-                      <Input value={amount} onChange={this.onAmountChange} placeholder="Enter amount" />
+                      <InputNumber onChange={this.onAmountChange} placeholder="Enter amount" />
                     </Col>
                   </Row>
-                  {isNotZeroLike(amount) ? (
+                  {/* {isNotZeroLike(amount) ? ( */}
                     <p className={styles.cal}>
-                      Commission Available: <span>{format(reAmount)}</span> re{selectedCoin}
+                      You Will Receive: <span>{format(reAmount)}</span> re{selectedCoin}
                     </p>
-                  ) : null}
+                  {/* ) : null} */}
                   <Button type="primary" className={styles.btn} onClick={this.modalVisible.show}>
                     DEPOSIT
                   </Button>

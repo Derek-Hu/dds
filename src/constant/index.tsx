@@ -105,3 +105,4 @@ export const CoinBTCExchange = new Map<IUSDCoins, IExchangePair>([
 
 export type ISupporttedUSD = keyof typeof SupporttedUSD;
 export type ICoins = keyof typeof SupporttedCoins;
+

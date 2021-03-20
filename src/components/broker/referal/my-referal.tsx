@@ -1,9 +1,8 @@
 import { Component } from 'react';
 import { Row, Col, Button } from 'antd';
 import styles from '../style.module.less';
-import { formatInt, format, isNotZeroLike } from '../../../util/math';
+import { formatInt, isNotZeroLike } from '../../../util/math';
 import { getMyReferalInfo, claimReferalInfo } from '../../../services/broker.service';
-import { Hidden, Visible } from '../../builtin/hidden';
 import Mask from '../../mask/index';
 import Placeholder from '../../placeholder/index';
 
@@ -28,13 +27,7 @@ export default class Broker extends Component<any, IState> {
   }
 
   onClaim = async () => {
-    Mask.showLoading();
-    const isSuccess = await claimReferalInfo();
-    if (isSuccess) {
-      Mask.showSuccess();
-      return;
-    }
-    Mask.showFail();
+    await claimReferalInfo();
   };
 
   render() {

@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Tabs, Button, Modal, Table, Row, Select, Input, Col } from 'antd';
+import { Tabs, Button, Table, Row, Select, Col } from 'antd';
 import styles from './balance.module.less';
 import commonStyles from '../funding-balance/modals/style.module.less';
 import ColumnConvert from '../column-convert/index';
@@ -16,8 +16,8 @@ import {
   getCollaborativeWithdrawRe,
 } from '../../services/pool.service';
 import { isNumberLike, isNotZeroLike, format } from '../../util/math';
-import Hidden from '../builtin/hidden';
 import Placeholder from '../placeholder/index';
+import InputNumber from '../input/index';
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -136,19 +136,31 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
     coins: { ...DefaultCoinDatas },
     deadline: '',
     amount: '',
-    deadlineLoading: true,
+    deadlineLoading: false,
   };
 
-  onAmountChange = (e: any) => {
-    const val = e.target.value;
+  onAmountChange = (amount: number) => {
     this.setState({
-      amount: val,
+      amount,
     });
-    this.calculateRe({ amount: val });
+    this.calculateRe({ amount });
   };
 
   calculateRe = async (newVal: { amount?: number | string; selectCoin?: IUSDCoins }) => {
+    console.log('...doCalculate');
+
+    if(this.props.isPrivate){
+      return;
+    }
     const { amount, selectCoin } = this.state;
+
+    if(!isNotZeroLike(amount)){
+      this.setState({
+        reAmount: 0,
+      });
+      return;
+    }
+
     const param = {
       amount,
       selectCoin,
@@ -156,14 +168,14 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
     };
     // @ts-ignore
     try {
-      const reAmount = await getCollaborativeWithdrawRe({ amount, coin: param.selectCoin });
+      const reAmount = await getCollaborativeWithdrawRe({ amount: param.amount, coin: param.selectCoin });
       this.setState({
-        reAmount,
+        reAmount: Number(format(reAmount)),
       });
     } catch (e) {
       console.log(e);
     }
-  };
+  }
 
   setModalVisible = (key: keyof TModalKeys) => {
     return {
@@ -189,32 +201,26 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
       const coins = await getPoolBalance(type);
       this.setState({
         coins,
-        // data: data.map(({ amount, coin }) => ({
-        //   label: coin,
-        //   value: format(amount),
-        // })),
-        // coins: data.reduce((all, { amount, coin }) => {
-        //   // @ts-ignore
-        //   all[coin] = amount;
-        //   return all;
-        // }, {}),
       });
     } catch (e) {}
 
-    this.setState({ loading: false, deadlineLoading: true });
+    this.setState({ loading: false });
 
-    const timestamp = await getPoolWithDrawDeadline(type);
-
-    if (new Date().getTime() < timestamp) {
-      this.setState({
-        deadline: dayjs(new Date(timestamp)).set('second', 0).add(1, 'minute').format('YYYY-MM-DD HH:mm'),
-        deadlineLoading: false,
-      });
-    } else {
-      this.setState({
-        deadline: '',
-        deadlineLoading: false,
-      });
+    if(!isPrivate){
+      this.setState({ deadlineLoading: true });
+      const timestamp = await getPoolWithDrawDeadline(type);
+  
+      if (new Date().getTime() < timestamp) {
+        this.setState({
+          deadline: dayjs(new Date(timestamp)).set('second', 0).add(1, 'minute').format('YYYY-MM-DD HH:mm'),
+          deadlineLoading: false,
+        });
+      } else {
+        this.setState({
+          deadline: '',
+          deadlineLoading: false,
+        });
+      }
     }
   }
 
@@ -224,9 +230,18 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
   };
 
   doWithdraw = async () => {
-    this.withDrawVisible.hide();
     const { isPrivate } = this.props;
     const { selectCoin, amount, reAmount } = this.state;
+    
+    if(isPrivate && !isNotZeroLike(amount)){
+      return;
+    }
+    
+    if(!isPrivate && !isNotZeroLike(reAmount)){
+      return;
+    }
+
+    this.withDrawVisible.hide();
     await doPoolWithdraw({ amount, reAmount, coin: selectCoin, type: isPrivate ? 'private' : 'public' });
   };
   render() {
@@ -235,98 +250,101 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => (
-          <div>
-            <CardInfo loading={loading} title="Liquidity Balance" theme="inner" items={coins}>
-              <Placeholder loading={deadlineLoading}>
-                <Button type="primary" disabled={!!deadline} onClick={this.withDrawVisible.show} className={styles.btn}>
-                  {deadline ? `Withdraw until ${deadline}` : 'Withdraw'}
-                </Button>
-                {/* <Button type="link" onClick={this.recordVisible.show} className={styles.link}>
-                    Liquidity Balance History
-                  </Button> */}
-              </Placeholder>
-            </CardInfo>
-            <ModalRender
-              visible={this.state.recordVisible}
-              title="Liquidity Balance History"
-              className={commonStyles.commonModal}
-              onCancel={this.recordVisible.hide}
-              height={500}
-              width={600}
-              footer={null}
-            >
-              <Tabs defaultActiveKey="DAI" className={styles.innerTab}>
-                {SupportedCoins.map((coin) => (
-                  <TabPane tab={coin} key={coin}>
-                    <Table
-                      rowKey="coin"
-                      scroll={{ y: 200, x: 600 }}
-                      columns={columns}
-                      pagination={false}
-                      dataSource={data}
-                    />
-                  </TabPane>
-                ))}
-              </Tabs>
-            </ModalRender>
-
-            <ModalRender
-              visible={this.state.withDrawVisible}
-              title="Liquidity Withdraw"
-              className={commonStyles.commonModal}
-              okText={'Claim'}
-              height={420}
-              onCancel={this.withDrawVisible.hide}
-              footer={null}
-            >
-              <Row gutter={[16, 16]} type="flex" justify="space-between" align="middle">
-                <Col xs={24} sm={24} md={6} lg={6}>
-                  <Select
-                    defaultValue={selectCoin}
-                    onChange={this.onSelectChange}
-                    style={{ width: '100%', height: 50 }}
-                  >
-                    {SupportedCoins.map((coin) => (
-                      <Option value={coin}>{coin}</Option>
-                    ))}
-                  </Select>
-                </Col>
-                <Col xs={24} sm={24} md={18} lg={18}>
-                  <span className={[styles.maxWithdraw, isMobile ? styles.mobile : ''].join(' ')}>
-                    Max Withdraw Balance: <span>{format(coins[selectCoin])}</span> {selectCoin}
-                  </span>
-                </Col>
-                <Col span={24}>
-                  <div className={[styles.repay, isMobile ? styles.mobile : ''].join(' ')}>
-                    <Input
-                      type="number"
-                      value={amount}
-                      onChange={this.onAmountChange}
-                      placeholder="Amount"
-                      max={coins[selectCoin]}
-                    />
-                    {isPrivate ? null : (
-                      <p>{isNumberLike(reAmount) ? `${format(reAmount)} reDAI you need to pay` : null}</p>
-                    )}
-                  </div>
-                </Col>
-              </Row>
-              <Row className={commonStyles.actionBtns} gutter={[16, 16]}>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <Button onClick={this.withDrawVisible.hide}>Cancel</Button>
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={12}>
+            <div>
+              <CardInfo loading={loading} title="Liquidity Balance" theme="inner" items={coins}>
+                <Placeholder loading={deadlineLoading}>
                   <Button
                     type="primary"
-                    disabled={isPrivate ? !isNotZeroLike(amount) : !isNotZeroLike(reAmount)}
-                    onClick={this.doWithdraw}
+                    disabled={!!deadline}
+                    onClick={this.withDrawVisible.show}
+                    className={styles.btn}
                   >
-                    WITHDRAW
+                    {deadline ? `Withdraw until ${deadline}` : 'Withdraw'}
                   </Button>
-                </Col>
-              </Row>
-            </ModalRender>
-          </div>
+                  {/* <Button type="link" onClick={this.recordVisible.show} className={styles.link}>
+                    Liquidity Balance History
+                  </Button> */}
+                </Placeholder>
+              </CardInfo>
+              <ModalRender
+                visible={this.state.recordVisible}
+                title="Liquidity Balance History"
+                className={commonStyles.commonModal}
+                onCancel={this.recordVisible.hide}
+                height={500}
+                width={600}
+                footer={null}
+              >
+                <Tabs defaultActiveKey="DAI" className={styles.innerTab}>
+                  {SupportedCoins.map((coin) => (
+                    <TabPane tab={coin} key={coin}>
+                      <Table
+                        rowKey="coin"
+                        scroll={{ y: 200, x: 600 }}
+                        columns={columns}
+                        pagination={false}
+                        dataSource={data}
+                      />
+                    </TabPane>
+                  ))}
+                </Tabs>
+              </ModalRender>
+
+              <ModalRender
+                visible={this.state.withDrawVisible}
+                title="Liquidity Withdraw"
+                className={commonStyles.commonModal}
+                okText={'Claim'}
+                height={420}
+                onCancel={this.withDrawVisible.hide}
+                footer={null}
+              >
+                <Row gutter={[16, 16]} type="flex" justify="space-between" align="middle">
+                  <Col xs={24} sm={24} md={6} lg={6}>
+                    <Select
+                      value={selectCoin}
+                      onChange={this.onSelectChange}
+                      style={{ width: '100%', height: 50 }}
+                    >
+                      {SupportedCoins.map((coin) => (
+                        <Option value={coin}>{coin}</Option>
+                      ))}
+                    </Select>
+                  </Col>
+                  <Col xs={24} sm={24} md={18} lg={18}>
+                    <span className={[styles.maxWithdraw, isMobile ? styles.mobile : ''].join(' ')}>
+                      Max Withdraw Balance: <span>{format(coins[selectCoin])}</span> {selectCoin}
+                    </span>
+                  </Col>
+                  <Col span={24}>
+                    <div className={[styles.repay, isMobile ? styles.mobile : ''].join(' ')}>
+                      <InputNumber
+                        onChange={this.onAmountChange}
+                        placeholder="Amount"
+                        max={coins[selectCoin]}
+                      />
+                      {isPrivate ? null : <>
+                        <p>{isNumberLike(reAmount) ? `${reAmount} re${selectCoin} -> ${amount} ${selectCoin}` : null}</p>
+                        <p>reToken will be automatically burnt. Stable coin will send to your address.</p>
+                      </>}
+                    </div>
+                  </Col>
+                </Row>
+                <Row className={commonStyles.actionBtns} gutter={[16, 16]}>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <Button onClick={this.withDrawVisible.hide}>Cancel</Button>
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <Button
+                      type="primary"
+                      onClick={this.doWithdraw}
+                    >
+                      WITHDRAW
+                    </Button>
+                  </Col>
+                </Row>
+              </ModalRender>
+            </div>
         )}
       </SiteContext.Consumer>
     );

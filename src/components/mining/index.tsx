@@ -4,16 +4,12 @@ import styles from './style.module.less';
 import commonStyles from '../funding-balance/modals/style.module.less';
 import numeral from 'numeral';
 import dayjs from 'dayjs';
-import ProgressBar, { IBarData } from '../progress-bar/index';
 import { CustomTabKey, SupportedCoins } from '../../constant/index';
 import Pool, { IPool } from '../liquidity-pool/pool';
-import PoolProgress, { IMiningShare } from '../progress-bar/pool-progress';
 import ColumnConvert from '../column-convert/index';
 import ModalRender from '../modal-render/index';
 import currStyles from '../trade-bonus/modals/style.module.less';
 import SiteContext from '../../layouts/SiteContext';
-import LockedDetails, { ILockedData } from '../liquidity-pool/locked-details';
-import CardInfo from '../card-info/index';
 import Liquidity from './liquidity/your-liquidity-mining-reward';
 import LiquidityLocked from './liquidity-locked/your-liquidity-locked-reward';
 import Liquiditor from './liquiditor/your-liquiditor-mining-reward';
@@ -262,9 +258,9 @@ export default class Mining extends Component {
                   </div>
                 </Auth>
               </Visible>
-              <Visible when={selectedTab === TabName.Liquiditor}>
+              {/* <Visible when={selectedTab === TabName.Liquiditor}>
                 <SystemFundBalance />
-              </Visible>
+              </Visible> */}
             </div>
           </div>
         )}

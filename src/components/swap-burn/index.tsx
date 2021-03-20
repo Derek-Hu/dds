@@ -1,24 +1,24 @@
 import { Component } from 'react';
 import SwapBar from './swap-bar';
 import styles from './style.module.less';
-import { Button, Select, Form, Icon, Input, Row, Col, Descriptions, message } from 'antd';
-import numeral from 'numeral';
+import { Button, Select, Form, Icon, Input, Row, Col, Descriptions } from 'antd';
 import ModalRender from '../modal-render/index';
 import commonStyles from '../funding-balance/modals/style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import { CoinSelectOption } from '../../constant/index';
-import { Visible, Hidden } from '../builtin/hidden';
-import Auth, { Public } from '../builtin/auth';
+import { Hidden } from '../builtin/hidden';
+import Auth from '../builtin/auth';
 import { getSwapPrice, conformSwap } from '../../services/swap-burn.service';
 import { format, isNotZeroLike } from '../../util/math';
 import Placeholder from '../placeholder/index';
+import InputNumber from '../input/index';
 
 interface IState {
   loading: boolean;
   data?: ISwapBurn;
   swapModalVisible: boolean;
   selectedCoin: IUSDCoins;
-  amount?: string;
+  amount?: number;
 }
 
 export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
@@ -46,9 +46,9 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
     });
   };
 
-  onAmountChange = (e: any) => {
+  onAmountChange = (amount: number) => {
     this.setState({
-      amount: e.target.value,
+      amount,
     });
   };
 
@@ -104,8 +104,8 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
                         <Form.Item>
                           <Row>
                             <Col xs={20} sm={20} md={20} lg={20}>
-                              <Input
-                                value={amount}
+                              <InputNumber
+                                delay={false}
                                 className={styles.ddsInput}
                                 onChange={this.onAmountChange}
                                 placeholder="Amount"
@@ -127,8 +127,9 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
                                 </Col>
                                 <Col xs={10} sm={10} md={8} lg={8}>
                                   <Select
-                                    defaultValue={selectedCoin}
+                                    value={selectedCoin}
                                     className={styles.coinDropdown}
+                                    onChange={this.onCoinChange}
                                     style={{ width: '100%', height: 50 }}
                                   >
                                     {CoinSelectOption}
@@ -140,7 +141,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
                               </Row>
                             </Col>
                             <Col span={4}>
-                              <span className={styles.targetUnit}>DAI</span>
+                              <span className={styles.targetUnit}>{selectedCoin}</span>
                             </Col>
                           </Row>
                         </Form.Item>
@@ -166,7 +167,7 @@ export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
                   >
                     <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
                       <Descriptions.Item label="Swap Ratio" span={24}>
-                        1SLD : {format(data?.rate)} DAI
+                        1SLD : {format(data?.rate)} USD
                       </Descriptions.Item>
                       <Descriptions.Item label="Swap Amount" span={24}>
                         {amount} SLD

@@ -66,7 +66,7 @@ export default class LiquiditorReward extends Component<any, IState> {
     });
     this.setState({ loading: false });
 
-    this.tableLoad();
+    // this.tableLoad();
   }
 
   tableLoad = async (page: number = 1) => {

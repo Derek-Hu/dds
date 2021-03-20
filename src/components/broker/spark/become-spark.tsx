@@ -52,9 +52,7 @@ export default class BecomeSpark extends Component<any, IState> {
             </Col>
             <Col xs={24} sm={12} md={12} lg={12} className={styles.col}>
               <span className={styles.ads}>
-                <Placeholder width={'50%'} loading={loading}>
-                  {format(data?.referals)}
-                </Placeholder>
+                <Placeholder width={'50%'} loading={loading}>{formatInt(data?.referals)}</Placeholder>
               </span>
               <span>Referals</span>
             </Col>
