@@ -5,7 +5,7 @@ import mainStyles from '../style.module.less';
 import { formatInt, format } from '../../../util/math';
 import { getSparkData } from '../../../services/broker.service';
 import Placeholder from '../../placeholder/index';
-
+ 
 interface IState {
   loading: boolean;
   data?: IBrokerSpark;
