@@ -83,7 +83,3 @@ export const userAccountInfo = async (): Promise<UserAccountInfo> => {
     )
     .toPromise();
 };
-
-userAccountInfo().then((rs) => {
-  console.log('user rs', rs);
-});
