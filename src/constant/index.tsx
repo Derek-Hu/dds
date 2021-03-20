@@ -56,7 +56,7 @@ export const SupportedWallets = [Wallet.Metamask, Wallet.WalletConnect];
 
 export const CustomTabKey = 'dds-tabs';
 
-export const CoinSelectOption = SupportedCoins.map((coin) => <Option value={coin}>{coin}</Option>);
+export const CoinSelectOption = SupportedCoins.map(coin => <Option value={coin}>{coin}</Option>);
 // 合约地址
 export const TradeDAIContractAddress = '0x0ec108b60051Ec5d424e45F38299c50c339311bf';
 export const TradeUSDTContractAddress: string = '';
@@ -70,6 +70,7 @@ export const Lp2USDCContractAddress = '';
 export const MiningRewardContractAddress = '0x536671b1687b996d3a6F72Cf975CE5Ae1F63a4Ad';
 export const LiquidatorContractAddress = '0x9C37F57B687C4149a50B758683AB2104d337bb54';
 export const SwapBurnContractAddress = '0x5c0dd03F2fc51aC61FE9c14bbA50341aF95fD00a';
+export const BrokerContractAddress = '0x49a98BBb058b666886F661dDeE6B431C5Df9d9Fd';
 
 export const ERC20DDSAddress = '0x904bC1433bD601ceB887b0890B9a9536B43A9e80';
 export const ERC20DAIAddress = '0x113587939c8967e61aa2360613951b23ab2af49a';
@@ -105,4 +106,3 @@ export const CoinBTCExchange = new Map<IUSDCoins, IExchangePair>([
 
 export type ISupporttedUSD = keyof typeof SupporttedUSD;
 export type ICoins = keyof typeof SupporttedCoins;
-

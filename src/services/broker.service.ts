@@ -1,7 +1,13 @@
 import CryptoJS from 'crypto-js';
+import { loginUserAccount } from './account';
+import { from } from 'rxjs';
+import { map, switchMap, take } from 'rxjs/operators';
+import { contractAccessor } from '../wallet/chain-access';
+import { toEthers } from '../util/ethers';
+import { CoinBalance } from '../wallet/contract-interface';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     setTimeout(() => {
       resolve(val);
     }, Math.random() * 2000);
@@ -9,7 +15,7 @@ const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
 };
 
 export const account2ReferalCode = (address: string) => {
-  if(!address){
+  if (!address) {
     return '';
   }
   return CryptoJS.AES.encrypt(address.replace(/^0x/i, ''), '0x').toString();
@@ -23,17 +29,30 @@ export const getSparkData = async (): Promise<IBrokerSpark> => {
 };
 
 export const getMyReferalInfo = async (): Promise<IBrokerReferal> => {
-  return returnVal({
-    bonus: 329,
-    level: 'A',
-    ranking: 39,
-    referals: 389203,
-  });
+  return from(loginUserAccount())
+    .pipe(
+      switchMap(account => {
+        return contractAccessor.getBrokerInfo(account);
+      }),
+      map(rs => {
+        const total = rs.claim
+          .map(one => Number(toEthers(one.balance, 4, one.coin)))
+          .reduce((acc, cur) => acc + cur, 0);
+        const refer = rs.refer.toNumber();
+
+        return {
+          bonus: total,
+          referals: refer,
+          level: 'A',
+          ranking: 39,
+        };
+      }),
+      take(1)
+    )
+    .toPromise();
 };
 
 export const claimReferalInfo = async (): Promise<boolean> => {
-
-
   return returnVal({
     bonus: 329,
     level: 'A',
@@ -46,15 +65,15 @@ export const getBrokerCampaignRewardData = async (): Promise<ICoinValue[]> => {
   return returnVal([
     {
       coin: 'DAI',
-      value: Math.random() * 10000000,
+      value: 2 * 10000000,
     },
     {
       coin: 'USDC',
-      value: Math.random() * 10000000,
+      value: 3 * 10000000,
     },
     {
       coin: 'USDT',
-      value: Math.random() * 10000000,
+      value: 4 * 10000000,
     },
   ]);
 };
@@ -98,20 +117,17 @@ export const getBrokerCampaignRewardsPool = async (): Promise<IBrokerCampaignRec
 };
 
 export const getBrokerCommissionData = async (): Promise<ICoinValue[]> => {
-  return returnVal([
-    {
-      coin: 'DAI',
-      value: Math.random() * 10000000,
-    },
-    {
-      coin: 'USDC',
-      value: Math.random() * 10000000,
-    },
-    {
-      coin: 'USDT',
-      value: Math.random() * 10000000,
-    },
-  ]);
+  return from(loginUserAccount())
+    .pipe(
+      switchMap(account => {
+        return contractAccessor.getBrokerAllCommission(account);
+      }),
+      map((rs: CoinBalance[]) => {
+        return rs.map(one => ({ coin: one.coin, value: Number(toEthers(one.balance, 4, one.coin)) } as ICoinValue));
+      }),
+      take(1)
+    )
+    .toPromise();
 };
 
 export const getBrokerCommissionRecords = async (): Promise<IBrokerCommissionRecord[]> => {

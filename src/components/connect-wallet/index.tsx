@@ -7,9 +7,12 @@ import commonStyles from '../funding-balance/modals/style.module.less';
 import { of, Subscription } from 'rxjs';
 import { SupportedWallets, Wallet } from '../../constant/index';
 import { walletManager } from '../../wallet/wallet-manager';
-import { filter, switchMap } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { WalletInterface } from '../../wallet/wallet-interface';
 import MetaMaskOnboarding from '@metamask/onboarding';
+import { contractAccessor } from '../../wallet/chain-access';
+import { CoinBalance } from '../../wallet/contract-interface';
+import { toEthers } from '../../util/ethers';
 
 const { Option } = Select;
 const { isMetaMaskInstalled } = MetaMaskOnboarding;
@@ -95,9 +98,26 @@ export default class ConnectWallet extends Component<any, any> {
           } else {
             return of(null);
           }
+        }),
+        switchMap((account: string | null) => {
+          if (account) {
+            return contractAccessor.getUserSelfWalletBalance(account).pipe(
+              map((balances: CoinBalance[]) => {
+                return {
+                  address: account,
+                  USDBalance: balances.map(one => ({
+                    coin: one.coin,
+                    amount: Number(toEthers(one.balance, 4, one.coin)),
+                  })),
+                } as UserAccountInfo;
+              })
+            );
+          } else {
+            return of(null);
+          }
         })
       )
-      .subscribe((account: string | null) => {
+      .subscribe((account: UserAccountInfo | null) => {
         this.context.updateAccount(account);
         // this.setState({
         //   isConnected: account !== null,
