@@ -1213,8 +1213,3 @@ export class ContractAccessor implements ContractProxy {
 }
 
 export const contractAccessor = new ContractAccessor();
-
-contractAccessor.getSystemFundingBalance().subscribe();
-
-const names = Pl1ABI.filter((one) => one.type === 'function').map((one) => one.name);
-console.log('names', names);
