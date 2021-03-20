@@ -79,9 +79,6 @@ export default class LiquiditorReward extends Component<any, IState> {
     this.setState({ tableLoading: false });
   };
 
-  showWithDraw = () => {};
-  showClaimModal = () => {};
-
   cofirmClaim = async () => {
     await claimLiquidityLocked();
   };

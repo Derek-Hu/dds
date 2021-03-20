@@ -28,8 +28,6 @@ export default class LiquiditorReward extends Component<any, IState> {
     this.setState({ loading: false });
   }
 
-  showClaimModal = () => {};
-
   render() {
     const { data, loading } = this.state;
     const { campaign, compensate } = data || {};

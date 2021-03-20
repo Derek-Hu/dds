@@ -10,7 +10,7 @@ export function toEthers(
   coin: IDDS | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'
 ): string {
   let numStr = num.toString();
-  let wei: number = getTokenWei(coin);
+  const wei: number = getTokenWei(coin);
 
   if (numStr.length < wei) {
     numStr = _.padStart(numStr, wei, '0');

@@ -76,8 +76,6 @@ const data: IReward[] = [
   },
 ];
 export default class Mining extends Component {
-  componentDidMount() {}
-
   state = {
     visible: false,
     isLogin: true,

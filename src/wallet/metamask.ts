@@ -36,7 +36,7 @@ export class MetamaskWallet implements WalletInterface {
   }
 
   public wasConnected(): Observable<boolean> {
-    return this.curSelectedAccount.pipe(map((account) => account !== null));
+    return this.curSelectedAccount.pipe(map(account => account !== null));
   }
 
   public getAccount(): string | null {
@@ -44,7 +44,7 @@ export class MetamaskWallet implements WalletInterface {
   }
 
   public watchAccount(): Observable<string | null> {
-    return this.curSelectedAccount.pipe(filter((account) => account !== null));
+    return this.curSelectedAccount.pipe(filter(account => account !== null));
   }
 
   // --------------------------------------------------------------------------
@@ -81,16 +81,13 @@ export class MetamaskWallet implements WalletInterface {
         method,
       });
 
-      from(reqAccounts).subscribe(
-        (accounts: string[]) => {
-          // 如果没有连接，返回空数组
-          this.updateAccount(accounts);
-          if (accounts && accounts.length > 0) {
-            this.watchAccountChange();
-          }
-        },
-        (error) => {}
-      );
+      from(reqAccounts).subscribe((accounts: string[]) => {
+        // 如果没有连接，返回空数组
+        this.updateAccount(accounts);
+        if (accounts && accounts.length > 0) {
+          this.watchAccountChange();
+        }
+      });
     }
   }
 

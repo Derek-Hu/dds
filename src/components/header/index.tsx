@@ -38,8 +38,6 @@ const rightMenus = {
 };
 
 export default class Header extends Component<{ darkMode?: boolean }, any> {
-  componentDidMount() {}
-
   state = {
     current: 'mail',
     drawerOpen: false,
@@ -70,7 +68,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
     });
   };
   renderRightMenus = (config: any) => {
-    return Object.keys(config).map((linkName) => {
+    return Object.keys(config).map(linkName => {
       const url = config[linkName];
       const isUrl = typeof url === 'string';
       return isUrl ? (

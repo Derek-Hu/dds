@@ -1,10 +1,10 @@
 // @ts-ignore
-export function debounce(fn: (...any: any) => any, delay:number = 150) {
+export function debounce(fn: (...any: any) => any, delay: number = 150) {
   // @ts-ignore
-  var timer = null;
+  let timer = null;
   return function (...args: any) {
     // @ts-ignore
-    var context = this;
+    const context = this;
     // @ts-ignore
     clearTimeout(timer);
     timer = setTimeout(function () {

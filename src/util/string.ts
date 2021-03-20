@@ -16,7 +16,7 @@ export const getQueryStringParameters = (url?: string) => {
     query = window.location.search.substring(1);
   }
   return (/^[?#]/.test(query) ? query.slice(1) : query).split('&').reduce((params: any, param) => {
-    let [key, value] = param.split('=');
+    const [key, value] = param.split('=');
     params[key] = value ? decodeURIComponent(value.replace(/\+/g, ' ')) : '';
     return params;
   }, {});

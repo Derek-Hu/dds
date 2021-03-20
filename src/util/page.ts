@@ -1,5 +1,5 @@
 export function getPageListRange(totalCount: number, page: number, pageSize: number): { from: number; count: number } {
-  let from = (page - 1) * pageSize;
+  const from = (page - 1) * pageSize;
   if (from >= totalCount) {
     return { from: totalCount, count: 0 };
   }

@@ -9,12 +9,12 @@ export default class PoolPage extends Component<any, any> {
     try {
       const code = this.props.location.search.replace(/^\?code=/, '');
       // Decrypt
-      var bytes = CryptoJS.AES.decrypt(code, '0x');
-      var referalCode = '0x'+ bytes.toString(CryptoJS.enc.Utf8);
+      const bytes = CryptoJS.AES.decrypt(code, '0x');
+      const referalCode = '0x' + bytes.toString(CryptoJS.enc.Utf8);
       localStorage.setItem('referalCode', referalCode);
     } catch {}
 
-    this.props.history.replace({ pathname: '/trade'});
+    this.props.history.replace({ pathname: '/trade' });
   }
 
   render() {

@@ -27,7 +27,7 @@ const Durations = {
   month: '1M',
 };
 
-const sig = (value) => {
+const sig = value => {
   if (isNumberLike(value)) {
     const val = parseFloat(value);
     return val > 0 ? '+' : val < 0 ? '-' : '';
@@ -51,7 +51,7 @@ export default class MainLayout extends Component {
     if (this.timer) {
       clearTimeout(this.timer);
     }
-    const graphData = await getPriceGraphData({ from, to }, duration).catch(() => {});
+    const graphData = await getPriceGraphData({ from, to }, duration).catch(() => ({}));
 
     this.timer = setTimeout(() => {
       this.loadGraph(from, to, duration);
@@ -119,7 +119,7 @@ export default class MainLayout extends Component {
     this.loadGraph(from, to, duration);
   }
 
-  changeDuration = (key) => {
+  changeDuration = key => {
     const { from, to } = this.state;
     this.setState({
       duration: key,
@@ -169,7 +169,7 @@ export default class MainLayout extends Component {
                   </p> */}
                 </Col>
                 <Col className={styles.range} xs={24} sm={24} md={12} lg={12}>
-                  {Object.keys(Durations).map((key) => (
+                  {Object.keys(Durations).map(key => (
                     <Button
                       key={key}
                       onClick={() => this.changeDuration(key)}
