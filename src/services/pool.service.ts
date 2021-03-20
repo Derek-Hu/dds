@@ -1,12 +1,14 @@
 import { liquidityProvided } from './mock/pool.mock';
 import { contractAccessor } from '../wallet/chain-access';
-import { toEthers } from '../util/ethers';
+import { toEthers, tokenBigNumber } from '../util/ethers';
 import { BigNumber } from 'ethers';
-import { filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { filter, map, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { curUserAccount, loginUserAccount } from './account';
 import { EMPTY, from, Observable, of, zip } from 'rxjs';
 import { withLoading } from './utils';
 import { defaultPoolData, defaultCoinDatas } from './mock/unlogin-default';
+import { PrivateLockLiquidity } from '../wallet/contract-interface';
+import { log } from 'util';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   return new Promise((resolve) => {
@@ -213,4 +215,62 @@ export const doPrivateWithdraw = async ({ coin, amount }: { coin: IUSDCoins; amo
   return withLoading(contractAccessor.withdrawFromPrivatePool(coin, amount).pipe(take(1)).toPromise());
 };
 
-export const getPrivateOrders = async () => {};
+/**
+ * 获取私池订单列表
+ * devTest - 获取测试数据，正常用户可能没有数据
+ */
+export const getPrivateOrders = async (
+  page: number,
+  pageSize: number,
+  devTest: boolean = false
+): Promise<PrivatePoolOrder[]> => {
+  return from(loginUserAccount())
+    .pipe(
+      switchMap((account) => {
+        return contractAccessor.getLockedLiquidityList(account, page, pageSize, devTest);
+      }),
+      map((rs: PrivateLockLiquidity[]) => {
+        return rs.map((one: PrivateLockLiquidity) => {
+          return {
+            orderId: one.orderId.toString(),
+            amount: 0,
+            lockedAmount: Number(toEthers(one.marginAmount, 4, one.usdToken)),
+            time: 0,
+            coin: one.usdToken,
+            status: one.status,
+            openPrice: 0,
+          } as PrivatePoolOrder;
+        });
+      }),
+      take(1)
+    )
+    .toPromise();
+};
+
+/**
+ * 向私池订单补仓
+ */
+export const addPrivateOrderMargin = async (order: PrivatePoolOrder, amount: number): Promise<boolean> => {
+  return from(loginUserAccount())
+    .pipe(
+      switchMap((account: string) => {
+        return contractAccessor.addMarginAmount(order.orderId, order.coin, amount);
+      }),
+      take(1)
+    )
+    .toPromise();
+};
+
+/**
+ * 返回公池中提取锁定的解锁时间戳
+ */
+export const getPubPoolWithdrawDeadline = async (): Promise<{ coin: IUSDCoins; time: number }[]> => {
+  return from(loginUserAccount())
+    .pipe(
+      switchMap((account: string) => {
+        return contractAccessor.getPubPoolWithdrawDate(account);
+      }),
+      take(1)
+    )
+    .toPromise();
+};

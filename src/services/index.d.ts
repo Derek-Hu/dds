@@ -267,3 +267,14 @@ declare interface UserAccountInfo {
   address: string;
   USDBalance: { coin: IUSDCoins; amount: number }[];
 }
+
+// 私池订单信息
+declare interface PrivatePoolOrder {
+  orderId: string;
+  time: number;
+  amount: number;
+  lockedAmount: number;
+  status: IOrderStatus;
+  openPrice: number;
+  coin: IUSDCoins;
+}

@@ -4133,6 +4133,356 @@ export const SwapBurnABI = [
     type: 'function',
   },
 ];
+export const BrokerABI = [
+  {
+    inputs: [],
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+  },
+  {
+    inputs: [],
+    name: 'DAIErc',
+    outputs: [
+      {
+        internalType: 'contract IERC20',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'USDCErc',
+    outputs: [
+      {
+        internalType: 'contract IERC20',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'USDTErc',
+    outputs: [
+      {
+        internalType: 'contract IERC20',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'inviter',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'invitee',
+        type: 'address',
+      },
+    ],
+    name: 'addInviteRelation',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'inviter',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'invitee',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'tokenType',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'addInviteRelationAndCalc',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    name: 'brokerIfExistFlag',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'brokersRewards',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'brokersClaimedRewards',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'brokersClaimRewards',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'broker',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'tokenType',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'calcBrokerAmountWithoutRating',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'claimRewardsForBroker',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'broker',
+        type: 'address',
+      },
+    ],
+    name: 'getBrokerAwardsInfo',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'broker',
+        type: 'address',
+      },
+    ],
+    name: 'getBrokerInfo',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'invitee',
+        type: 'address',
+      },
+    ],
+    name: 'getInviteByInvitee',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'inviter',
+        type: 'address',
+      },
+    ],
+    name: 'getInviteesByInviter',
+    outputs: [
+      {
+        internalType: 'address[]',
+        name: 'addresses',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'inviteTakers',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    name: 'takerIfExistFlag',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    name: 'takerInviters',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+];
 
 export const ERC20 = [
   {
@@ -4407,7 +4757,18 @@ export interface ContractProxy {
 
   getReTokenBalance(address: string): Observable<CoinBalance[]>;
 
+  getPubPoolWithdrawDate(address: string): Observable<{ coin: IUSDCoins; time: number }[]>;
+
   //
+
+  getLockedLiquidityList(
+    address: string,
+    page: number,
+    pageSize: number,
+    devTest: boolean
+  ): Observable<PrivateLockLiquidity[]>;
+
+  addMarginAmount(orderId: string, coin: IUSDCoins, amount: number): Observable<boolean>;
 
   provideToPrivatePool(coin: IUSDCoins, coinAmount: number): Observable<boolean>;
 
@@ -4436,6 +4797,8 @@ export interface ContractProxy {
   getSwapBurnInfo(): Observable<CoinBalance[]>;
 
   doSwap(coin: IUSDCoins, ddsAmount: number): Observable<boolean>;
+
+  // getBrokerInfo(): Observable<{ refer: BigNumber; claim: CoinBalance[] }>;
 }
 
 export interface UserAccountInfo {
@@ -4458,4 +4821,15 @@ export interface CoinShare {
 export interface CoinBalance {
   coin: IUSDCoins | IReUSDCoins | IDDS;
   balance: BigNumber;
+}
+
+export interface PrivateLockLiquidity {
+  orderId: number;
+  usdToken: IUSDCoins;
+  makerAddr: string;
+  marginAmount: BigNumber;
+  marginFee: BigNumber;
+  takerId: BigNumber;
+  status: IOrderStatus;
+  locked: boolean;
 }
