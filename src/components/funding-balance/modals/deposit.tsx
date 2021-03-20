@@ -42,7 +42,7 @@ export default class Balance extends Component<IProps, IState> {
               {/* <h4>{title}</h4> */}
               <Row gutter={[16, 16]}>
                 <Col xs={24} sm={24} md={24} lg={24}>
-                  <Input value={depositAmount} placeholder="Amount" onChange={this.onAmountChange} />
+                  <Input value={depositAmount} placeholder="Amount" onChange={this.onAmountChange} suffix="DAI" />
                 </Col>
               </Row>
               {/* <Row gutter={[16, 16]} className={styles.utilMax} type="flex" justify="space-between">
@@ -55,7 +55,7 @@ export default class Balance extends Component<IProps, IState> {
             </Row> */}
               <Row className={styles.actionBtns} gutter={[16, 16]}>
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                  <Button onClick={onCancel}>Cancel</Button>
+                  <Button onClick={onCancel}>CANCEL</Button>
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                   <Button

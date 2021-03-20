@@ -1,4 +1,4 @@
-import { Tabs, Button, Row, Col, Select, Input } from 'antd';
+import { Tabs, Button, Row, Col, Select, Input, Tag } from 'antd';
 import { CustomTabKey, SupportedCoins } from '../../../constant/index';
 import styles from './style.module.less';
 import ModalRender from '../../modal-render/index';
@@ -65,18 +65,21 @@ export default class Balance extends Component<IProps, IState> {
                 </Select>
               </Col> */}
               <Col span={24}>
-                <Input type="number" value={amount} onChange={this.onAmountChange} placeholder="Amount" />
+                <Input value={amount} onChange={this.onAmountChange} placeholder="Amount" suffix="DAI" />
               </Col>
               <Col xs={24} sm={24} md={18} lg={18}>
                 <span className={styles.maxWithdraw} style={{ marginLeft: 0 }}>
-                  Max Withdraw Balance: <span>{max}</span> {coin}
+                  <Tag onClick={this.onMaxOpenClick} color="#1346FF">
+                    Max
+                  </Tag>
+                  <span>{max}</span> {coin}
                 </span>
               </Col>
             </Row>
 
             <Row gutter={[16, 16]} className={styles.actionBtns} style={{ paddingTop: '8px' }} type="flex">
               <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                <Button onClick={onCancel}>Cancel</Button>
+                <Button onClick={onCancel}>CANCEL</Button>
               </Col>
               <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                 <Button type="primary" disabled={!isNotZeroLike(amount)} onClick={() => onConfirm(amount!, coin)}>

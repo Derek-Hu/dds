@@ -86,6 +86,11 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
       status: 'Status',
       exercise: 'Action',
     },
+    attributes: {
+      fee: {
+        width: '180px',
+      },
+    },
     render: (value, key, record) => {
       switch (key) {
         case 'time':

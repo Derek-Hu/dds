@@ -7,53 +7,44 @@ export default {
   },
   tooltip: {
     trigger: 'axis',
-    // position: function (pt: any) {
-    //   return [pt[0], '10%'];
-    // },
-    // confine: true,
-    // transitionDuration: 0,
     axisPointer: {
       type: 'cross',
     },
     showContent: false,
   },
-  // title: {
-  //   left: "center",
-  //   text: "大数据量面积图",
-  // },
   xAxis: {
     type: 'category',
     boundaryGap: false,
     data: [],
+    axisLine: {
+      show: false,
+    },
+    axisTick: {
+      show: false,
+    },
   },
   yAxis: {
     type: 'value',
     show: false,
     boundaryGap: [0, '5%'],
-    // boundaryGap: false,
   },
-  // dataZoom: [
-  //   {
-  //     type: "inside",
-  //     start: 0,
-  //     end: 10,
-  //     minSpan: 0.1,
-  //   },
-  // ],
   series: [
     {
       name: seryName,
       type: 'line',
       smooth: true,
-      symbol: 'none',
       sampling: 'average',
+      symbol: 'circle',
+      symbolSize: 10,
+      showSymbol: false,
       itemStyle: {
-        color: '#ffacac',
+        color: '#1346FF',
+        borderColor: '#fff',
       },
       lineStyle: {
         width: 1,
         opacity: 0.8,
-        color: '#F55858',
+        color: '#1346ff',
       },
       areaStyle: {
         color: {
@@ -65,11 +56,11 @@ export default {
           colorStops: [
             {
               offset: 0,
-              color: 'rgba(255, 102, 102,0.15)', // 0% 处的颜色
+              color: 'rgba(19,70,255,0.15)', // 0% 处的颜色
             },
             {
               offset: 1,
-              color: 'rgba(255, 102, 102, 0)', // 100% 处的颜色
+              color: 'rgba(19,70,255, 0)', // 100% 处的颜色
             },
           ],
         },
