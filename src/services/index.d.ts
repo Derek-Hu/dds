@@ -255,3 +255,10 @@ declare interface INonRecords {
   total: number;
   data: INonRiskPerpetual[];
 }
+
+declare interface ICoinProgressObj {
+  [label: string]: {
+    percentage?: any;
+    val?: any;
+  };
+}

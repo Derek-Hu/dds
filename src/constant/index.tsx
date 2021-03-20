@@ -19,6 +19,26 @@ export enum Network {
   goerli = 'goerli',
 }
 
+export const DefaultCoinDatas = {
+  DAI: 0,
+  USDT: 0,
+  USDC: 0,
+}
+
+export const DefaultProgressDatas = {
+  DAI: {
+    percentage: 0,
+    val: null
+  },
+  USDT: {
+    percentage: 0,
+    val: null
+  },
+  USDC: {
+    percentage: 0,
+    val: null
+  },
+}
 export const SupporttedUSD = {
   DAI: 'DAI',
   USDC: 'USDC',

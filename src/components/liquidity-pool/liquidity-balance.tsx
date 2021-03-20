@@ -5,7 +5,7 @@ import commonStyles from '../funding-balance/modals/style.module.less';
 import ColumnConvert from '../column-convert/index';
 import dayjs from 'dayjs';
 import numeral from 'numeral';
-import { SupportedCoins } from '../../constant/index';
+import { SupportedCoins, DefaultCoinDatas } from '../../constant/index';
 import ModalRender from '../modal-render/index';
 import SiteContext from '../../layouts/SiteContext';
 import CardInfo from '../card-info/index';
@@ -133,7 +133,7 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
     data: [],
     loading: false,
     selectCoin: 'DAI',
-    coins: {},
+    coins: { ...DefaultCoinDatas },
     deadline: '',
     amount: '',
     deadlineLoading: true,

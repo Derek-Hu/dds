@@ -5,7 +5,7 @@ import SiteContext from '../../layouts/SiteContext';
 export interface IMiningShare {
   title: string;
   desc?: any;
-  coins: Array<IIndicatorProgress>;
+  coins: Array<IIndicatorProgress> | ICoinProgressObj;
   totalMode: boolean;
   children?: any;
   loading: boolean;
@@ -20,9 +20,13 @@ export default (props: IMiningShare) => {
         <div className={[styles.root, isMobile ? styles.mobile : ''].join(' ')}>
           <h2>{title}</h2>
           <p>{desc}</p>
-          {coins.map((coin) => (
-            <WithIndicator loading={loading} totalMode={totalMode} data={coin} />
-          ))}
+          {Array.isArray(coins)
+            ? coins.map((coin) => <WithIndicator loading={loading} totalMode={totalMode} data={coin} />)
+            : coins
+            ? Object.keys(coins).map((label) => (
+                <WithIndicator loading={loading} totalMode={totalMode} data={{ label, ...coins[label] }} />
+              ))
+            : null}
           {children}
         </div>
       )}
