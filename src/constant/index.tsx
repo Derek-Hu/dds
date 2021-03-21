@@ -19,6 +19,11 @@ export enum Network {
   goerli = 'goerli',
 }
 
+export enum NetworkId {
+  kaovan = '42',
+  homestead = '1',
+}
+
 export const DefaultCoinDatas = {
   DAI: 0,
   USDT: 0,
@@ -58,19 +63,19 @@ export const CustomTabKey = 'dds-tabs';
 
 export const CoinSelectOption = SupportedCoins.map(coin => <Option value={coin}>{coin}</Option>);
 // 合约地址
-export const TradeDAIContractAddress = '0x0ec108b60051Ec5d424e45F38299c50c339311bf';
+export const TradeDAIContractAddress = '0x09B20920c4f7d53ED6A5DC69c15776B193C8126e';
 export const TradeUSDTContractAddress: string = '';
 export const TradeUSDCContractAddress: string = '';
-export const Lp1DAIContractAddress = '0x4701492EF93Bef185B0225cEb782EcBA7eE72D65';
+export const Lp1DAIContractAddress = '0xfA463AC1D51CB2bC8B6fE7952456830FD1320301';
 export const Lp1USDTContractAddress = '';
 export const Lp1USDCContractAddress = '';
-export const Lp2DAIContractAddress = '0x3C880894814cB0F4f1AD39989e129f27Acd53D1C';
+export const Lp2DAIContractAddress = '0xd9b87Aff19DF6DE79b77E071DC0831b36FB458c8';
 export const Lp2USDTContractAddress = '';
 export const Lp2USDCContractAddress = '';
-export const MiningRewardContractAddress = '0x536671b1687b996d3a6F72Cf975CE5Ae1F63a4Ad';
-export const LiquidatorContractAddress = '0x9C37F57B687C4149a50B758683AB2104d337bb54';
-export const SwapBurnContractAddress = '0x5c0dd03F2fc51aC61FE9c14bbA50341aF95fD00a';
-export const BrokerContractAddress = '0x49a98BBb058b666886F661dDeE6B431C5Df9d9Fd';
+export const MiningRewardContractAddress = '0xa8aA9a758fFE006Fa8D604dc59D43447064c77f1';
+export const LiquidatorContractAddress = '0xbB4FFe3F43E32D76eB8F469FE13362c625df59e0';
+export const SwapBurnContractAddress = '0xCc7193CF946D4a8D3eeAfBE7572D4b243422BDCa'; // buy back
+export const BrokerContractAddress = '0x28209d91c291c351B7DA2bfA313bc1Cb7aC0F97D';
 
 export const ERC20DDSAddress = '0x904bC1433bD601ceB887b0890B9a9536B43A9e80';
 export const ERC20DAIAddress = '0x113587939c8967e61aa2360613951b23ab2af49a';

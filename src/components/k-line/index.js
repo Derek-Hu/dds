@@ -103,7 +103,7 @@ export default class MainLayout extends Component {
       ],
     });
 
-    this.chartInstance.getZr().on('mousemove', (params) => {
+    this.chartInstance.getZr().on('mousemove', params => {
       const pointInPixel = [params.offsetX, params.offsetY];
       if (this.chartInstance.containPixel('series', pointInPixel)) {
         let xIndex = this.chartInstance.convertFromPixel({ seriesIndex: 0 }, [params.offsetX, params.offsetY])[0];
