@@ -1,9 +1,8 @@
 import MetaMaskOnboarding from '@metamask/onboarding';
-import { BehaviorSubject, from, Observable } from 'rxjs';
+import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { Wallet } from '../constant';
 import { WalletInterface } from '../wallet/wallet-interface';
-import { filter, map } from 'rxjs/operators';
-import { CoinBalance } from './contract-interface';
+import { filter, map, take } from 'rxjs/operators';
 
 declare const window: Window & { ethereum: any };
 
@@ -15,6 +14,7 @@ export const { isMetaMaskInstalled } = MetaMaskOnboarding;
 export class MetamaskWallet implements WalletInterface {
   public readonly walletType: Wallet = Wallet.Metamask;
   private curSelectedAccount: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+  private curNetwork: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   constructor() {
     // 初始化时自动尝试连接
@@ -41,6 +41,26 @@ export class MetamaskWallet implements WalletInterface {
 
   public getAccount(): string | null {
     return this.curSelectedAccount.getValue();
+  }
+
+  public watchNetwork(): Observable<string> {
+    return this.curNetwork.pipe(filter(net => net !== ''));
+  }
+
+  public getNetwork(): string {
+    return this.curNetwork.getValue();
+  }
+
+  public tryInitConnect(): Observable<boolean> {
+    if (isMetaMaskInstalled()) {
+      return this.doRequest(true).pipe(
+        map((rs: string[]) => {
+          return rs.length > 0;
+        })
+      );
+    } else {
+      return of(false);
+    }
   }
 
   public watchAccount(): Observable<string | null> {
@@ -74,30 +94,66 @@ export class MetamaskWallet implements WalletInterface {
     }
   }
 
-  private syncAccount(init: boolean = false) {
-    if (isMetaMaskInstalled()) {
-      const method = init ? 'eth_requestAccounts' : 'eth_accounts';
-      const reqAccounts: Promise<string[]> = window.ethereum.request({
-        method,
-      });
+  private updateNetwork(network: string) {
+    this.curNetwork.next(network);
+  }
 
-      from(reqAccounts).subscribe((accounts: string[]) => {
-        // 如果没有连接，返回空数组
-        this.updateAccount(accounts);
-        if (accounts && accounts.length > 0) {
+  private syncAccount(init: boolean = false): void {
+    if (isMetaMaskInstalled()) {
+      this.doRequest(init).subscribe((rsAccounts: string[]) => {
+        this.updateAccount(rsAccounts);
+        if (rsAccounts && rsAccounts.length > 0) {
           this.watchAccountChange();
         }
       });
+
+      this.doRequestNetwork().subscribe(network => {
+        this.updateNetwork(network);
+        this.watchNetworkChange();
+      });
     }
+  }
+
+  private doRequest(init: boolean): Observable<string[]> {
+    const method = init ? 'eth_requestAccounts' : 'eth_accounts';
+    const reqAccounts: Promise<string[]> = window.ethereum.request({
+      method,
+    });
+    return from(reqAccounts).pipe(take(1));
+  }
+
+  private doRequestNetwork(): Observable<string> {
+    const req: Promise<string> = window.ethereum.request({ method: 'net_version' });
+    return from(req).pipe(take(1));
   }
 
   private accountChangeCallback = (accounts: string[]) => {
     this.updateAccount(accounts);
   };
 
+  private networkChangeCallback = (network: string) => {
+    this.updateNetwork(network);
+  };
+
+  private chainChangeCallback = (chainId: string) => {
+    console.log('chain id', chainId);
+  };
+
   private watchAccountChange() {
     if (isMetaMaskInstalled()) {
       window.ethereum.on('accountsChanged', this.accountChangeCallback);
+    }
+  }
+
+  private watchChainChange() {
+    if (isMetaMaskInstalled()) {
+      window.ethereum.on('chainChanged', this.chainChangeCallback);
+    }
+  }
+
+  private watchNetworkChange() {
+    if (isMetaMaskInstalled()) {
+      window.ethereum.on('networkChanged', this.networkChangeCallback);
     }
   }
 }

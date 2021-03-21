@@ -23,56 +23,14 @@ export const ABI = [
     inputs: [
       {
         indexed: true,
-        internalType: 'address',
-        name: 'sender',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'string',
-        name: 'exchangeType',
-        type: 'string',
-      },
-      {
-        indexed: false,
         internalType: 'uint256',
-        name: 'openNum',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'exchgFee',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'openFee',
+        name: 'orderId',
         type: 'uint256',
       },
       {
         indexed: false,
         internalType: 'uint256',
         name: 'currentPrice',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'closePrice',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'contractType',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'status',
         type: 'uint256',
       },
     ],
@@ -109,32 +67,8 @@ export const ABI = [
     inputs: [
       {
         indexed: true,
-        internalType: 'address',
-        name: 'sender',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'string',
-        name: 'exchangeType',
-        type: 'string',
-      },
-      {
-        indexed: false,
         internalType: 'uint256',
-        name: 'openNum',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'exchgFee',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'openFee',
+        name: 'orderID',
         type: 'uint256',
       },
       {
@@ -143,16 +77,23 @@ export const ABI = [
         name: 'currentPrice',
         type: 'uint256',
       },
+    ],
+    name: 'DDSMigrationContract',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: 'uint256',
-        name: 'contractType',
+        name: 'orderId',
         type: 'uint256',
       },
       {
         indexed: false,
         internalType: 'uint256',
-        name: 'status',
+        name: 'currentPrice',
         type: 'uint256',
       },
     ],
@@ -202,6 +143,32 @@ export const ABI = [
     ],
     name: 'OwnershipTransferred',
     type: 'event',
+  },
+  {
+    inputs: [],
+    name: 'DDSBrokerAddr',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'DDSLiquidorAddr',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
   },
   {
     inputs: [
@@ -323,6 +290,11 @@ export const ABI = [
         internalType: 'enum IDDSCommon.ContractType',
         name: 'contractType',
         type: 'uint8',
+      },
+      {
+        internalType: 'address',
+        name: 'inviter',
+        type: 'address',
       },
     ],
     name: 'creatContract',
@@ -450,6 +422,44 @@ export const ABI = [
     inputs: [
       {
         internalType: 'uint256',
+        name: 'exchangeType',
+        type: 'uint256',
+      },
+    ],
+    name: 'getExchageName',
+    outputs: [
+      {
+        internalType: 'string',
+        name: 'strExchgName',
+        type: 'string',
+      },
+    ],
+    stateMutability: 'pure',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: 'exchangeName',
+        type: 'string',
+      },
+    ],
+    name: 'getExchangeType',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'pure',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
         name: 'orderID',
         type: 'uint256',
       },
@@ -474,6 +484,25 @@ export const ABI = [
     inputs: [
       {
         internalType: 'uint256',
+        name: 'orderID',
+        type: 'uint256',
+      },
+    ],
+    name: 'getLastMigrationTime',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
         name: 'amount',
         type: 'uint256',
       },
@@ -481,11 +510,6 @@ export const ABI = [
         internalType: 'uint256',
         name: 'currentPrice',
         type: 'uint256',
-      },
-      {
-        internalType: 'string',
-        name: 'exchangeType',
-        type: 'string',
       },
       {
         internalType: 'uint256',
@@ -617,11 +641,11 @@ export const ABI = [
     outputs: [
       {
         internalType: 'string',
-        name: 'exchangeType',
+        name: 'exType',
         type: 'string',
       },
       {
-        internalType: 'address payable',
+        internalType: 'address',
         name: 'holder',
         type: 'address',
       },
@@ -726,38 +750,6 @@ export const ABI = [
   {
     inputs: [
       {
-        internalType: 'address',
-        name: 'addr',
-        type: 'address',
-      },
-    ],
-    name: 'getUserOrderID',
-    outputs: [
-      {
-        internalType: 'uint256[]',
-        name: 'orderIDs',
-        type: 'uint256[]',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'getUserOrderIDs',
-    outputs: [
-      {
-        internalType: 'uint256[]',
-        name: 'orderIDs',
-        type: 'uint256[]',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
         internalType: 'uint256',
         name: 'orderID',
         type: 'uint256',
@@ -771,6 +763,75 @@ export const ABI = [
     name: 'migrationContract',
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'orders',
+    outputs: [
+      {
+        internalType: 'address payable',
+        name: 'holder',
+        type: 'address',
+      },
+      {
+        internalType: 'enum IDDSCommon.ContractType',
+        name: 'contractType',
+        type: 'uint8',
+      },
+      {
+        internalType: 'enum IDDSContract.State',
+        name: 'state',
+        type: 'uint8',
+      },
+      {
+        internalType: 'string',
+        name: 'exchangeType',
+        type: 'string',
+      },
+      {
+        internalType: 'uint256',
+        name: 'number',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'exFee',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'lockFee',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'newLockFee',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'openPrice',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'startTime',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'closePrice',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -875,11 +936,24 @@ export const ABI = [
     type: 'function',
   },
   {
+    inputs: [],
+    name: 'riskFundAddr',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [
       {
-        internalType: 'string',
+        internalType: 'uint8',
         name: 'exchageType',
-        type: 'string',
+        type: 'uint8',
       },
       {
         internalType: 'address',
@@ -4729,7 +4803,7 @@ export interface ContractProxy {
 
   withdrawToken(count: number, coin: IUSDCoins): Observable<boolean>;
 
-  createContract(coin: IUSDCoins, orderType: ITradeType, amount: number): Observable<boolean>;
+  createContract(coin: IUSDCoins, orderType: ITradeType, amount: number, inviter: string): Observable<boolean>;
 
   closeContract(orderId: ITradeRecord, curPrice: number): Observable<boolean>;
 
