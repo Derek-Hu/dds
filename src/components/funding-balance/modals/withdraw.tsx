@@ -6,6 +6,7 @@ import { CoinSelectOption } from '../../../constant/index';
 import SiteContext from '../../../layouts/SiteContext';
 import { Component } from 'react';
 import { format, isNotZeroLike } from '../../../util/math';
+import InputNumber from '../../input/index';
 
 const title = 'Funding Fee Withdraw';
 interface IProps {
@@ -24,9 +25,9 @@ export default class Balance extends Component<IProps, IState> {
     selectedCoin: this.props.coin,
   };
 
-  onAmountChange = (e: any) => {
+  onAmountChange = (amount: number) => {
     this.setState({
-      amount: e.target.value,
+      amount,
     });
   };
 
@@ -65,15 +66,15 @@ export default class Balance extends Component<IProps, IState> {
                 </Select>
               </Col> */}
               <Col span={24}>
-                <Input value={amount} onChange={this.onAmountChange} placeholder="Amount" suffix="DAI" />
-              </Col>
-              <Col xs={24} sm={24} md={18} lg={18}>
-                <span className={styles.maxWithdraw} style={{ marginLeft: 0 }}>
-                  <Tag onClick={this.onMaxOpenClick} color="#1346FF">
-                    Max
-                  </Tag>
-                  <span>{max}</span> {coin}
-                </span>
+                <InputNumber
+                  className={styles.orderInput}
+                  onChange={this.onAmountChange}
+                  placeholder={`Max ${max}`}
+                  max={max}
+                  showTag={true}
+                  // tagClassName={styles.utilMax}
+                  suffix={coin}
+                />
               </Col>
             </Row>
 
@@ -82,7 +83,15 @@ export default class Balance extends Component<IProps, IState> {
                 <Button onClick={onCancel}>CANCEL</Button>
               </Col>
               <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
-                <Button type="primary" disabled={!isNotZeroLike(amount)} onClick={() => onConfirm(amount!, coin)}>
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    if (!isNotZeroLike(amount)) {
+                      return;
+                    }
+                    onConfirm(amount!, coin);
+                  }}
+                >
                   WITHDRAW
                 </Button>
               </Col>

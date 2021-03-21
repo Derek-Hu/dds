@@ -57,9 +57,9 @@ export default class Layout extends Component<RouteComponentProps, IState> {
               ? {
                   address: '0x839423432432',
                   USDBalance: {
-                    USDT: 234232432,
-                    USDC: 43243232,
-                    DAI: 23890230432,
+                    USDT: 234232432.32432,
+                    USDC: 43243232.32432,
+                    DAI: 23890230432.3213,
                   },
                 }
               : account,

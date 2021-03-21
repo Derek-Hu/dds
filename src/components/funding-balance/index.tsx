@@ -8,6 +8,7 @@ import SiteContext from '../../layouts/SiteContext';
 import { getCurPrice, getFundingBalanceInfo, deposit, withdraw, openOrder } from '../../services/trade.service';
 import { getMaxFromCoin, getFee, getLocked } from './calculate';
 import { format, isNotZeroLike } from '../../util/math';
+import InputNumber from '../input/index';
 
 interface IState {
   depositVisible: boolean;
@@ -17,6 +18,7 @@ interface IState {
   balanceInfo?: IBalanceInfo;
   openAmount: number | undefined;
   maxNumber?: number;
+  initalVal: number | null;
 }
 
 type TModalKeys = Pick<IState, 'withdrawVisible' | 'depositVisible' | 'orderConfirmVisible'>;
@@ -31,6 +33,7 @@ export default class Balance extends Component<{
     orderConfirmVisible: false,
     openAmount: undefined,
     tradeType: 'long',
+    initalVal: null,
   };
 
   static contextType = SiteContext;
@@ -43,8 +46,16 @@ export default class Balance extends Component<{
     const { coins, curPrice } = this.props;
     const { to } = coins;
     try {
-      const balanceInfo = await getFundingBalanceInfo(to);
-      const maxNumber = getMaxFromCoin(balanceInfo, curPrice);
+      const balanceInfo =
+        process.env.NODE_ENV === 'development'
+          ? {
+              balance: 9922332423.4322,
+              locked: 32432.0912,
+              available: 9922332423.4322 - 32432.0912,
+            }
+          : await getFundingBalanceInfo(to);
+
+      const maxNumber = getMaxFromCoin(balanceInfo, process.env.NODE_ENV === 'development' ? 100 : curPrice);
       this.setState({
         balanceInfo,
         maxNumber,
@@ -102,16 +113,9 @@ export default class Balance extends Component<{
     });
   };
 
-  onOpenAmountChange = (e: any) => {
+  onOpenAmountChange = (openAmount: number) => {
     this.setState({
-      openAmount: e.target.value,
-    });
-  };
-
-  onMaxOpenClick = () => {
-    const { maxNumber } = this.state;
-    this.setState({
-      openAmount: maxNumber,
+      openAmount,
     });
   };
 
@@ -132,11 +136,12 @@ export default class Balance extends Component<{
       balanceInfo,
       openAmount,
       maxNumber,
+      initalVal,
     } = this.state;
     const { coins, curPrice } = this.props;
     const { from, to } = coins;
 
-    const price = curPrice;
+    const price = process.env.NODE_ENV === 'development' ? 100 : curPrice;
     const address = this.context.address;
 
     const fee = getFee(openAmount, price);
@@ -151,14 +156,14 @@ export default class Balance extends Component<{
     };
     return (
       <SiteContext.Consumer>
-        {() => (
+        {({ account }) => (
           <div className={styles.root}>
             <h2>
               Funding Balance<span>({to})</span>
             </h2>
-            <p className={styles.balanceVal}>{balanceInfo?.balance}</p>
+            <p className={styles.balanceVal}>{format(balanceInfo?.balance)}</p>
             <div className={styles.dayChange}>
-              {balanceInfo?.locked} &nbsp;<span>Locked</span>
+              {format(balanceInfo?.locked)} &nbsp;<span>Locked</span>
             </div>
             <Row className={styles.actionLink} type="flex" justify="space-between">
               <Col>
@@ -183,27 +188,18 @@ export default class Balance extends Component<{
               </Radio.Group>
             </Row>
             <p className={styles.price}>
-              Current Price: {curPrice} {to}
+              Current Price: {format(price)} {to}
             </p>
             <p className={styles.amountTip}>Amount</p>
-            <Input
+            <InputNumber
               className={styles.orderInput}
-              value={openAmount}
               onChange={this.onOpenAmountChange}
-              placeholder="0.00"
+              placeholder={`Max ${maxNumber}`}
+              max={maxNumber}
+              showTag={true}
+              tagClassName={styles.utilMax}
               suffix={'ETH'}
             />
-
-            <Row className={styles.utilMax} type="flex" justify="space-between">
-              <Col span={12}>
-                <Tag onClick={this.onMaxOpenClick} color="#1346FF">
-                  Max
-                </Tag>
-              </Col>
-              <Col span={12} style={{ textAlign: 'right' }}>
-                {maxNumber} {from}
-              </Col>
-            </Row>
             <p className={styles.settlement}>
               Settlement Fee : {fee} {to}
             </p>
@@ -221,12 +217,18 @@ export default class Balance extends Component<{
               OPEN
             </Button>
 
-            <DespositModal onCancel={this.depositVisible.hide} onConfirm={this.deposit} visible={depositVisible} />
+            <DespositModal
+              coin={to}
+              max={account && account.USDBalance ? account?.USDBalance[to] : undefined}
+              onCancel={this.depositVisible.hide}
+              onConfirm={this.deposit}
+              visible={depositVisible}
+            />
             <WithdrawModal
               coin={to}
               onCancel={this.withdrawVisible.hide}
               onConfirm={this.withdraw}
-              max={maxNumber}
+              max={balanceInfo?.available}
               visible={withdrawVisible}
             />
             <OrderConfirm

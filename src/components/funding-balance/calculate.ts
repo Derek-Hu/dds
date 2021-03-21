@@ -4,11 +4,11 @@ export const getMaxFromCoin = (balanceInfo?: IBalanceInfo, price?: number) => {
   if (!balanceInfo) {
     return;
   }
-  const { balance, locked } = balanceInfo;
+  const { available } = balanceInfo;
 
-  if (isNumberLike(balance) && isNumberLike(locked) && isNumberLike(price)) {
+  if (isNumberLike(available) && isNumberLike(price)) {
     // @ts-ignore
-    return parseFloat(balance) - parseFloat(locked) / parseFloat(price);
+    return available / price;
   }
 };
 
