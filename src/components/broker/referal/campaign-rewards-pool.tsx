@@ -27,15 +27,17 @@ export default class CampaignRewardsPool extends Component<any, IState> {
 
     const { data, nextDistribution } = await getBrokerCampaignPool();
     this.setState({
-      data: data.map(({ amount, total, coin }) => ({
-        label: coin,
-        percentage: dividedPecent(amount, total),
-        val: (
-          <span>
-            {amount}/{total}
-          </span>
-        ),
-      })),
+      data: data
+        ? data.map(({ amount, total, coin }) => ({
+            label: coin,
+            percentage: dividedPecent(amount, total),
+            val: (
+              <span>
+                {amount}/{total}
+              </span>
+            ),
+          }))
+        : [],
       nextDistribution,
     });
     this.setState({ loading: false });

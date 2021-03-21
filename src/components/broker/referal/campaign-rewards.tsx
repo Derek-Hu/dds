@@ -70,10 +70,12 @@ export default class CampaignRewards extends Component<any, IState> {
 
     const data = await getBrokerCampaignRewardData();
     this.setState({
-      data: data.map(({ value, coin }) => ({
-        label: coin,
-        value,
-      })),
+      data: data
+        ? data.map(({ value, coin }) => ({
+            label: coin,
+            value,
+          }))
+        : [],
     });
     this.setState({ loading: false });
 

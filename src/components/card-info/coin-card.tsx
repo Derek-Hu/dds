@@ -33,10 +33,12 @@ export default class CoinCard extends Component<IProps, IState> {
 
     const data = await service();
     this.setState({
-      data: data.map(({ value, coin }) => ({
-        label: coin,
-        value,
-      })),
+      data: data
+        ? data.map(({ value, coin }) => ({
+            label: coin,
+            value,
+          }))
+        : [],
     });
     this.setState({ loading: false });
   }

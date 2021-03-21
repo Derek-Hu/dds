@@ -187,13 +187,13 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
                   {toCamelCase(type)}
                 </Descriptions.Item>
                 <Descriptions.Item label="Strike Price" span={24}>
-                  {price}
+                  {format(price)}
                 </Descriptions.Item>
                 <Descriptions.Item label="Amount" span={24}>
-                  {amount}
+                  {format(amount)}
                 </Descriptions.Item>
                 <Descriptions.Item label="Close Price" span={24}>
-                  {curPrice}
+                  {format(curPrice)}
                   {coin}
                 </Descriptions.Item>
                 <Descriptions.Item label="P&L" span={24}>

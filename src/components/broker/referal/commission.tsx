@@ -71,10 +71,12 @@ export default class CommissionPool extends Component<any, IState> {
 
     const data = await getBrokerCommissionData();
     this.setState({
-      data: data.map(({ value, coin }) => ({
-        label: coin,
-        value,
-      })),
+      data: data
+        ? data.map(({ value, coin }) => ({
+            label: coin,
+            value,
+          }))
+        : [],
     });
     this.setState({ loading: false });
 
