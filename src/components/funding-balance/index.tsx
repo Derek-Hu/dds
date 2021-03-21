@@ -9,6 +9,7 @@ import { getCurPrice, getFundingBalanceInfo, deposit, withdraw, openOrder } from
 import { getMaxFromCoin, getFee, getLocked } from './calculate';
 import { format, isNotZeroLike } from '../../util/math';
 import InputNumber from '../input/index';
+import Placeholder from '../placeholder/index';
 
 interface IState {
   depositVisible: boolean;
@@ -19,6 +20,7 @@ interface IState {
   openAmount: number | undefined;
   maxNumber?: number;
   initalVal: number | null;
+  loading: boolean;
 }
 
 type TModalKeys = Pick<IState, 'withdrawVisible' | 'depositVisible' | 'orderConfirmVisible'>;
@@ -34,6 +36,7 @@ export default class Balance extends Component<{
     openAmount: undefined,
     tradeType: 'long',
     initalVal: null,
+    loading: false,
   };
 
   static contextType = SiteContext;
@@ -46,6 +49,7 @@ export default class Balance extends Component<{
     const { coins, curPrice } = this.props;
     const { to } = coins;
     try {
+      this.setState({ loading: true });
       const balanceInfo =
         process.env.NODE_ENV === 'development'
           ? {
@@ -59,6 +63,7 @@ export default class Balance extends Component<{
       this.setState({
         balanceInfo,
         maxNumber,
+        loading: false,
       });
     } catch (e) {
       console.error(e);
@@ -134,6 +139,7 @@ export default class Balance extends Component<{
       orderConfirmVisible,
       tradeType,
       balanceInfo,
+      loading,
       openAmount,
       maxNumber,
       initalVal,
@@ -161,9 +167,13 @@ export default class Balance extends Component<{
             <h2>
               Funding Balance<span>({to})</span>
             </h2>
-            <p className={styles.balanceVal}>{format(balanceInfo?.balance)}</p>
+            <p className={styles.balanceVal}>
+              <Placeholder loading={loading}>{format(balanceInfo?.balance)}</Placeholder>
+            </p>
             <div className={styles.dayChange}>
-              {format(balanceInfo?.locked)} &nbsp;<span>Locked</span>
+              <Placeholder loading={loading}>
+                {format(balanceInfo?.locked)}&nbsp;<span>Locked</span>
+              </Placeholder>
             </div>
             <Row className={styles.actionLink} type="flex" justify="space-between">
               <Col>
@@ -188,13 +198,15 @@ export default class Balance extends Component<{
               </Radio.Group>
             </Row>
             <p className={styles.price}>
-              Current Price: {format(price)} {to}
+              <Placeholder loading={loading}>
+                Current Price: {format(price)} {to}
+              </Placeholder>
             </p>
             <p className={styles.amountTip}>Amount</p>
             <InputNumber
               className={styles.orderInput}
               onChange={this.onOpenAmountChange}
-              placeholder={`Max ${maxNumber}`}
+              placeholder={maxNumber ? `Max ${maxNumber}` : '0.00'}
               max={maxNumber}
               showTag={true}
               tagClassName={styles.utilMax}

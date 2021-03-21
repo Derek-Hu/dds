@@ -48,7 +48,7 @@ export default class Balance extends Component<IProps, IState> {
                   <InputNumber
                     className={styles.orderInput}
                     onChange={this.onAmountChange}
-                    placeholder={`Max ${max}`}
+                    placeholder={max ? `Max ${max}` : '0.00'}
                     max={max}
                     showTag={true}
                     // tagClassName={styles.utilMax}

@@ -2,6 +2,7 @@ import { Component } from 'react';
 import { Input, Row, Col, Tag } from 'antd';
 import { debounce } from '../../util/debounce';
 import { isNumberLike } from '../../util/math';
+import styles from './style.module.less';
 
 interface IState {
   amount: string;
@@ -66,7 +67,12 @@ export default class InputNumberComp extends Component<
           placeholder={placeholder}
         />
         {showTag ? (
-          <Row className={tagClassName} type="flex" justify="space-between">
+          <Row
+            className={[tagClassName, styles.maxTagContainer].join(' ')}
+            type="flex"
+            align="middle"
+            justify="space-between"
+          >
             <Col span={12}>
               <Tag onClick={this.onMaxOpenClick} color="#1346FF">
                 Max
