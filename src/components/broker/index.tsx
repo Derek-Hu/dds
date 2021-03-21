@@ -65,6 +65,11 @@ export default class Broker extends Component<any, any> {
               </TabPane>
               <TabPane tab={<span className={styles.uppercase}>My referral</span>} key={tabName.referal}>
                 <MyReferal />
+                <Row>
+                  <Col xs={24} sm={24} md={24} lg={24}>
+                    <Commission />
+                  </Col>
+                </Row>
               </TabPane>
             </Tabs>
           </div>
@@ -75,21 +80,21 @@ export default class Broker extends Component<any, any> {
         <Visible when={this.state.selectedTab === tabName.spark}>
           <Step />
         </Visible>
-        <Visible when={this.state.selectedTab === tabName.referal}>
+        {/* <Visible when={this.state.selectedTab === tabName.referal}>
           <Row gutter={20} style={{ marginTop: '20px' }}>
             <Col xs={24} sm={24} md={24} lg={24}>
               <Commission />
             </Col>
-            {/* <Col xs={24} sm={24} md={12} lg={12}>
+            <Col xs={24} sm={24} md={12} lg={12}>
               <CampaignRewards />
-            </Col> */}
+            </Col>
           </Row>
-          {/* <Row style={{ marginTop: '24px' }}>
+          <Row style={{ marginTop: '24px' }}>
             <Col xs={24} sm={24} md={24} lg={24}>
               <CampaignRewardsPool />
             </Col>
-          </Row> */}
-        </Visible>
+          </Row>
+        </Visible> */}
       </div>
     );
   }

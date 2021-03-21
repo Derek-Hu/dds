@@ -59,7 +59,7 @@ export default class Broker extends Component<any, IState> {
                 {format(bonus)}
               </Placeholder>
             </span>
-            <span>Commission(USD)</span>
+            <span>Commission Balance(USD)</span>
           </Col>
         </Row>
         <div style={{ marginTop: '48px', paddingBottom: '40px' }}>

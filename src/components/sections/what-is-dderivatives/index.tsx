@@ -18,7 +18,7 @@ export default () => {
             <Row>
               {isMobile ? null : adsImage}
               <Col xs={24} sm={24} md={24} lg={14} className={styles.message}>
-                <h3>What is DDerivatives</h3>
+                <h3>What is Shield</h3>
                 <p className={styles.advantage}>
                   A decentralized exchange for trading perpetual without position loss.
                 </p>

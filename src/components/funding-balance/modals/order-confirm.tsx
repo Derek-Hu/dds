@@ -37,7 +37,7 @@ export default ({ data: { price, type, amount, locked, fee, coins }, visible, on
             <Descriptions.Item label="Type" span={24}>
               {type}
             </Descriptions.Item>
-            <Descriptions.Item label="Strike Price" span={24}>
+            <Descriptions.Item label="Open Price" span={24}>
               {price} {to}
             </Descriptions.Item>
             <Descriptions.Item label="Amount" span={24}>

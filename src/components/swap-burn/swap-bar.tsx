@@ -39,7 +39,7 @@ export default ({
             <div className={styles.leftBar}>
               <div className={styles.bar} style={{ height: height + 'px' }}>
                 <div className={styles.percentBar} style={{ height: 100 - left.percentage + '%' }}></div>
-                <p>DDerivatives Net Income</p>
+                <p>Shield Net Income</p>
                 <span>{left.percentage}%</span>
               </div>
               <div className={styles.amount}>

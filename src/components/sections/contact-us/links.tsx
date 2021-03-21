@@ -10,7 +10,7 @@ export default [
   },
   {
     icon: <Icon type="medium" style={{ color: '#333333' }} />,
-    url: 'https://medium.com/@shielddaoofficial',
+    url: 'https://shield-dao.medium.com/',
   },
   {
     icon: <img src={TelegramIcon} alt="" className={styles.icon} />,
@@ -18,6 +18,6 @@ export default [
   },
   {
     icon: <img src={DiscordIcon} alt="" className={styles.icon} />,
-    url: 'https://discord.com/invite/NAbGTHYgMg',
+    url: 'https://discord.gg/YJ9MHs6YdJ',
   },
 ];

@@ -63,8 +63,8 @@ export default class PoolPage extends Component {
                 ]}
               >
                 <p>
-                  DDerivatives have been audited by Peckshield Your funds are at risk. You can lose up to 100% of the
-                  amount that you will provide to the liquidity pools contracts. NEVER provide funds that you can't
+                  Shield have been audited by Slowmint/Peckshield. Your funds still might be at risk. You can lose up to
+                  100% of the amount that you will provide to the liquidity pools. NEVER provide funds that you can't
                   afford to lose.
                 </p>
               </Modal>

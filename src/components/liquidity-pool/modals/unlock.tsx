@@ -1,11 +1,11 @@
-import { Tabs, Button, Row, Col, Select, Input } from "antd";
-import { CustomTabKey, SupportedCoins } from "../../../constant/index";
-import styles from "./style.module.less";
-import ModalRender from "../../modal-render/index";
+import { Tabs, Button, Row, Col, Select, Input } from 'antd';
+import { CustomTabKey, SupportedCoins } from '../../../constant/index';
+import styles from './style.module.less';
+import ModalRender from '../../modal-render/index';
 
 const { Option } = Select;
 
-const title = "Unlock reTokens";
+const title = 'Unlock reTokens';
 
 export default (props: any) => {
   const { visible, onCancel } = props;
@@ -14,14 +14,14 @@ export default (props: any) => {
       <Row>
         <Col>
           <Select defaultValue="DAI" style={{ width: 120, height: 50 }}>
-            {SupportedCoins.map((coin) => (
+            {SupportedCoins.map(coin => (
               <Option value={coin}>{coin}</Option>
             ))}
           </Select>
         </Col>
         <Col>
           <span className={styles.maxWithdraw}>
-            Maximum  Amount: <span>3278392</span> reDAI
+            Maximum Amount: <span>3278392</span> reDAI
           </span>
         </Col>
       </Row>
@@ -31,13 +31,13 @@ export default (props: any) => {
         </Col>
       </Row>
       <Row>
-          <Col>
-            <Button>Cancel</Button>
-          </Col>
-          <Col>
-            <Button type="primary">Confirm</Button>
-          </Col>
-        </Row>
+        <Col>
+          <Button>CANCEL</Button>
+        </Col>
+        <Col>
+          <Button type="primary">CONFIRM</Button>
+        </Col>
+      </Row>
     </ModalRender>
   );
 };

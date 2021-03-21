@@ -43,7 +43,7 @@ const columns = ColumnConvert<IReward, {}>({
     time: 'Time',
     pair: 'Coin Pair',
     amount: 'Amount',
-    price: 'Strike Price',
+    price: 'Open Price',
     reward: 'Reward(SLD)',
   },
   render(value, key, record) {

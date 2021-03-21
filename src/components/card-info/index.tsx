@@ -26,13 +26,17 @@ export default ({ title, theme, loading, children, items, isNumber }: ICardInfo)
           {Array.isArray(items)
             ? items.map(({ label, value }) => (
                 <Descriptions.Item label={label} span={24}>
-                  <Placeholder loading={loading}>{isNumber ? format(value) : value}</Placeholder>
+                  <Placeholder width={'32%'} loading={loading}>
+                    {isNumber ? format(value) : value}
+                  </Placeholder>
                 </Descriptions.Item>
               ))
             : items
             ? Object.keys(items).map(key => (
                 <Descriptions.Item label={key} span={24}>
-                  <Placeholder loading={loading}>{isNumber ? format(items[key]) : items[key]}</Placeholder>
+                  <Placeholder width={'32%'} loading={loading}>
+                    {isNumber ? format(items[key]) : items[key]}
+                  </Placeholder>
                 </Descriptions.Item>
               ))
             : null}

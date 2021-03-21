@@ -35,7 +35,7 @@ export default class LiquidityMiningReward extends Component<any, IState> {
     return (
       <div>
         <Auth>
-          <h3>Your Liquidity Reward</h3>
+          <h3>Your Liquidity Rewards</h3>
         </Auth>
         <Public>
           <h3>Liquidity Reward Today</h3>

@@ -79,7 +79,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
     column: {
       time: 'Time',
       type: 'Type',
-      price: 'Strike Price',
+      price: 'Open Price',
       amount: 'Amount',
       cost: 'Funding Cost',
       fee: 'Settlement Fee ($)',
@@ -187,7 +187,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
                 <Descriptions.Item label="Type" span={24}>
                   {toCamelCase(type)}
                 </Descriptions.Item>
-                <Descriptions.Item label="Strike Price" span={24}>
+                <Descriptions.Item label="Open Price" span={24}>
                   {format(price)}
                 </Descriptions.Item>
                 <Descriptions.Item label="Amount" span={24}>

@@ -34,7 +34,7 @@ export default class LiquiditorReward extends Component<any, IState> {
     return (
       <div className={styles.liquiditorWpr}>
         <h3>{this.context.address ? 'Your Liquiditor Mining Rewards' : 'Liquiditor Mining Rewards'}</h3>
-        <p>Win the liquiditor Campaign or get compensated when fund is empty</p>
+        <p>Get compensated when insurance fund is empty</p>
         <Row>
           {/* <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
               <span className={styles.ads}>{campaign} SLD</span>

@@ -107,7 +107,7 @@ export default class PoolArea extends Component<any, IState> {
                       <Form className="login-form">
                         <Form.Item>
                           <Row>
-                            <Col xs={20} sm={20} md={20} lg={20}>
+                            <Col xs={24} sm={24} md={24} lg={24}>
                               <InputNumber
                                 delay={false}
                                 className={styles.ddsInput}

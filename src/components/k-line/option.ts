@@ -31,6 +31,7 @@ export default {
     type: 'value',
     show: false,
     boundaryGap: [0, '5%'],
+    min: 1200,
   },
   series: [
     {

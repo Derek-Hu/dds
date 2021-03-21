@@ -3,6 +3,9 @@ import styles from './style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import Bar from './bar';
 import CampaignImg from '../../assets/imgs/campaign.png';
+import BrokerIcon1 from '~/assets/imgs/broker-icon1.png';
+import BrokerIcon2 from '~/assets/imgs/broker-icon2.png';
+import BrokerIcon3 from '~/assets/imgs/broker-icon3.png';
 
 const percentages = {
   center: 30,
@@ -33,17 +36,17 @@ export default () => {
             <h4>Only 3 Steps</h4>
             <Row>
               <Col xs={24} sm={24} md={8} lg={8}>
-                <Icon type="form" />
+                <img src={BrokerIcon1} alt="" width="36px" />
                 <p>1. Invite Friends</p>
-                <div>Invite friends to DDerivatives through the referral link or invitation code</div>
+                <div>Invite friends to Shield through the referral link or invitation code</div>
               </Col>
               <Col xs={24} sm={24} md={8} lg={8}>
-                <Icon type="line-chart" />
+                <img src={BrokerIcon2} alt="" width="36px" />
                 <p>2. Your Friends Open First Order</p>
-                <div>Invite friends to DDerivatives through the referral link or invitation code</div>
+                <div>Invite friends to Shield through the referral link or invitation code</div>
               </Col>
               <Col xs={24} sm={24} md={8} lg={8}>
-                <Icon type="fund" />
+                <img src={BrokerIcon3} alt="" width="36px" />
                 <p>3. Receive Your Commission</p>
                 <div>Instantly get your commission and claim anytime</div>
               </Col>
