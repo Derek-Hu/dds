@@ -1,15 +1,22 @@
 import { Decimal } from 'decimal.js';
+import numeral from 'numeral';
 
 export const format = (value: any) => {
   if (isNumberLike(value)) {
-    return new Decimal(new Decimal(value).toFixed(4)).toFraction(10000);
+    return numeral(new Decimal(value).toFixed(4)).format('0,0.0000');
   }
   return '';
 };
 
+export const multiple = (one: any, two: any) => {
+  if (isNumberLike(one) && isNumberLike(two)) {
+    return new Decimal(Number(one)).times(Number(two)).toNumber();
+  }
+  return NaN;
+};
 export const formatInt = (value: any) => {
   if (isNumberLike(value)) {
-    return new Decimal(value).truncated().toFraction(10000);
+    return numeral(new Decimal(value).truncated()).format('0,0');
   }
   return '';
 };

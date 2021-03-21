@@ -9,7 +9,7 @@ interface IState {
         label: string;
         value: any;
       }>
-    | { [key: string]: any };
+    | { [key: string]: number };
   loading: boolean;
 }
 
@@ -46,7 +46,7 @@ export default class CoinCard extends Component<IProps, IState> {
     const { children, theme, title } = this.props;
     return (
       <div>
-        <CardInfo loading={loading} theme={theme} title={title} items={data}>
+        <CardInfo isNumber={true} loading={loading} theme={theme} title={title} items={data}>
           {children}
         </CardInfo>
       </div>

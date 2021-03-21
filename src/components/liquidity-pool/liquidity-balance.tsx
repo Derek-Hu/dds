@@ -258,7 +258,7 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
       <SiteContext.Consumer>
         {({ isMobile }) => (
           <div>
-            <CardInfo loading={loading} title="Liquidity Balance" theme="inner" items={coins}>
+            <CardInfo isNumber={true} loading={loading} title="Liquidity Balance" theme="inner" items={coins}>
               <Placeholder loading={deadlineLoading}>
                 <Button type="primary" disabled={!!deadline} onClick={this.withDrawVisible.show} className={styles.btn}>
                   {deadline ? `Withdraw until ${deadline}` : 'Withdraw'}

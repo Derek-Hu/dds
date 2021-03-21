@@ -9,7 +9,7 @@ import styles from '../style.module.less';
 import { format } from '../../../util/math';
 
 interface IState {
-  data: Array<{ label: string; value: any }>;
+  data: Array<{ label: string; value: number }>;
   loading: boolean;
   visible: boolean;
   tableLoading: boolean;
@@ -94,7 +94,7 @@ export default class CampaignRewards extends Component<any, IState> {
     const { data, loading, visible, tableData } = this.state;
     return loading ? null : (
       <div>
-        <CardInfo loading={false} theme="inner" title="Campaign Rewards" items={data}>
+        <CardInfo isNumber={true} loading={false} theme="inner" title="Campaign Rewards" items={data}>
           <Button type="link" onClick={this.visible.show}>
             Rewards Record
           </Button>

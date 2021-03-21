@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { Row, Col, Button } from 'antd';
 import styles from '../style.module.less';
-import { formatInt, isNotZeroLike } from '../../../util/math';
+import { formatInt, format, isNotZeroLike } from '../../../util/math';
 import { getMyReferalInfo, claimReferalInfo } from '../../../services/broker.service';
 import Mask from '../../mask/index';
 import Placeholder from '../../placeholder/index';
@@ -56,7 +56,7 @@ export default class Broker extends Component<any, IState> {
           <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
             <span className={styles.ads}>
               <Placeholder width={'50%'} loading={loading}>
-                {formatInt(bonus)}
+                {format(bonus)}
               </Placeholder>
             </span>
             <span>Commission(USD)</span>

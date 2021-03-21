@@ -9,7 +9,7 @@ import { CoinSelectOption } from '../../constant/index';
 import { Hidden } from '../builtin/hidden';
 import Auth from '../builtin/auth';
 import { getSwapPrice, conformSwap } from '../../services/swap-burn.service';
-import { format, isNotZeroLike } from '../../util/math';
+import { format, multiple, formatInt, isNotZeroLike } from '../../util/math';
 import Placeholder from '../placeholder/index';
 import InputNumber from '../input/index';
 
@@ -79,7 +79,7 @@ export default class PoolArea extends Component<any, IState> {
 
   render() {
     const { loading, data, selectedCoin, amount } = this.state;
-    const transfed = Number(amount) * data?.rate!;
+    const transfed = multiple(amount, data?.rate);
     const transferText = isNaN(transfed) ? '' : format(transfed);
     return (
       <SiteContext.Consumer>
@@ -89,7 +89,11 @@ export default class PoolArea extends Component<any, IState> {
               <h1>Swap & burn</h1>
               <div className={styles.card}>
                 <div className={styles.imgBar}>
-                  <SwapBar loading={loading} leftAmount={format(data?.usd)} rightAmount={format(data?.dds)}></SwapBar>
+                  <SwapBar
+                    loading={loading}
+                    leftAmount={formatInt(data?.usd)}
+                    rightAmount={formatInt(data?.dds)}
+                  ></SwapBar>
                 </div>
                 <h3 className={styles.msg}>Current Swap Price</h3>
                 <p className={styles.calcute}>
@@ -164,7 +168,7 @@ export default class PoolArea extends Component<any, IState> {
                         1SLD : {format(data?.rate)} USD
                       </Descriptions.Item>
                       <Descriptions.Item label="Swap Amount" span={24}>
-                        {amount} SLD
+                        {format(amount)} SLD
                       </Descriptions.Item>
                       <Descriptions.Item label="Receive" span={24}>
                         {transferText} {selectedCoin}

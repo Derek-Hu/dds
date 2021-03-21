@@ -6,7 +6,7 @@ import { isNumberLike, isNotZeroLike, format } from '../../util/math';
 
 export interface IIndicatorProgress {
   label: string;
-  percentage?: any;
+  percentage?: number;
   val?: any;
 }
 export default ({ data, totalMode, loading }: { data: IIndicatorProgress; loading: boolean; totalMode: boolean }) => {

@@ -7,10 +7,10 @@ import ColumnConvert from '../../column-convert/index';
 import dayjs from 'dayjs';
 import styles from '../style.module.less';
 import { format } from '../../../util/math';
-import { SupporttedUSD } from '../../../constant/index';
+import { DefaultCoinDatas } from '../../../constant/index';
 
 interface IState {
-  data: Array<{ label: string; value: any }>;
+  data: Array<{ label: string; value: any }> | { [key: string]: number };
   loading: boolean;
   visible: boolean;
   tableLoading: boolean;
@@ -44,7 +44,7 @@ const CommissionColumns = ColumnConvert<IBrokerCommissionRecord, {}>({
 
 export default class CommissionPool extends Component<any, IState> {
   state: IState = {
-    data: [],
+    data: { ...DefaultCoinDatas },
     loading: false,
     visible: false,
     tableLoading: false,
@@ -94,22 +94,22 @@ export default class CommissionPool extends Component<any, IState> {
   render() {
     const { data, loading, visible, tableData } = this.state;
 
-    const dataInfo = (data || []).reduce((total, item) => {
-      // @ts-ignore
-      total[item.label] = item.value;
-      return total;
-    }, {});
+    // const dataInfo = (data || []).reduce((total, item) => {
+    //   // @ts-ignore
+    //   total[item.label] = item.value;
+    //   return total;
+    // }, {});
 
-    // @ts-ignore
-    const coins = Object.keys(SupporttedUSD).map(coin => ({
-      label: coin,
-      // @ts-ignore
-      value: dataInfo[coin],
-    }));
+    // // @ts-ignore
+    // const coins = Object.keys(SupporttedUSD).map(coin => ({
+    //   label: coin,
+    //   // @ts-ignore
+    //   value: dataInfo[coin],
+    // }));
 
     return (
       <div>
-        <CardInfo loading={loading} theme="inner" title="Commission" items={coins}>
+        <CardInfo isNumber={true} loading={loading} theme="inner" title="Commission" items={data}>
           {/* <Button type="link" onClick={this.visible.show}>
             Commission History
           </Button> */}

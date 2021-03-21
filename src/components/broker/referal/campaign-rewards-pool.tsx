@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import styles from '../campion-pool.module.less';
 import PoolProgress, { IMiningShare } from '../../progress-bar/pool-progress';
 import WithIndicator, { IIndicatorProgress } from '../../progress-bar/with-indicator';
-import { percentage } from '../../../util/math';
+import { dividedPecent } from '../../../util/math';
 
 interface IState {
   data: Array<IIndicatorProgress>;
@@ -29,7 +29,7 @@ export default class CampaignRewardsPool extends Component<any, IState> {
     this.setState({
       data: data.map(({ amount, total, coin }) => ({
         label: coin,
-        percentage: percentage(amount, total),
+        percentage: dividedPecent(amount, total),
         val: (
           <span>
             {amount}/{total}

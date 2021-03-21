@@ -258,7 +258,7 @@ declare interface INonRecords {
 
 declare interface ICoinProgressObj {
   [label: string]: {
-    percentage?: any;
+    percentage?: number;
     val?: any;
   };
 }

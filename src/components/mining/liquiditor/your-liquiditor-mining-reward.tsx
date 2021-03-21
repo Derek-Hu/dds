@@ -43,7 +43,7 @@ export default class LiquiditorReward extends Component<any, IState> {
           <Col xs={24} sm={24} md={24} lg={24} className={styles.col}>
             <span className={styles.ads}>
               <Placeholder loading={loading} width={'10em'}>
-                {compensate} SLD
+                {format(compensate)} SLD
               </Placeholder>
             </span>
             <span>Compensate Rewards</span>

@@ -13,9 +13,10 @@ interface ICardInfo {
     | { [key: string]: any };
   loading: boolean;
   children?: any;
+  isNumber: boolean;
   theme: 'outer' | 'inner';
 }
-export default ({ title, theme, loading, children, items }: ICardInfo) => {
+export default ({ title, theme, loading, children, items, isNumber }: ICardInfo) => {
   return (
     <div className={[styles.root, theme === 'outer' ? styles.outer : styles.inner].join(' ')}>
       {theme === 'outer' ? <h2>{title}</h2> : null}
@@ -25,13 +26,13 @@ export default ({ title, theme, loading, children, items }: ICardInfo) => {
           {Array.isArray(items)
             ? items.map(({ label, value }) => (
                 <Descriptions.Item label={label} span={24}>
-                  <Placeholder loading={loading}>{value}</Placeholder>
+                  <Placeholder loading={loading}>{isNumber ? format(value) : value}</Placeholder>
                 </Descriptions.Item>
               ))
             : items
-            ? Object.keys(items).map((key) => (
+            ? Object.keys(items).map(key => (
                 <Descriptions.Item label={key} span={24}>
-                  <Placeholder loading={loading}>{items[key]}</Placeholder>
+                  <Placeholder loading={loading}>{isNumber ? format(items[key]) : items[key]}</Placeholder>
                 </Descriptions.Item>
               ))
             : null}

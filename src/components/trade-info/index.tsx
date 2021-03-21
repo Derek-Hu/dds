@@ -58,7 +58,7 @@ export default class TradeInfo extends Component<{ from: string; coin: IUSDCoins
       },
     };
     // @ts-ignore
-    const items = Object.keys(info).map((key) => info[key]);
-    return <CardInfo loading={false} items={items} theme="outer" title="Info" />;
+    const items = Object.keys(info).map(key => info[key]);
+    return <CardInfo isNumber={false} loading={false} items={items} theme="outer" title="Info" />;
   }
 }
