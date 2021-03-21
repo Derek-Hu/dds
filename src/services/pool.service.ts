@@ -34,7 +34,6 @@ export const getPoolBalance = async (type: 'public' | 'private'): Promise<{ [key
         if (account === null && type === 'public') {
           return contractAccessor.pubPoolBalanceWhole();
         } else if (account !== null) {
-          console.log('type =', type);
           if (type === 'public') {
             return contractAccessor.pubPoolBalanceOf(account);
           } else {

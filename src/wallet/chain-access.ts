@@ -196,9 +196,11 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     return this.getContract(coin).pipe(
       switchMap((contract: ethers.Contract) => {
         const amount: BigNumber = tokenBigNumber(count, coin);
+        console.log('input amount', count, amount.toString());
         return from(contract.fees('ETHDAI', amount));
       }),
       map((rs: any) => {
+        console.log('rs primary', rs);
         return rs;
       })
     );
@@ -1478,5 +1480,3 @@ export class ContractAccessor implements ContractProxy {
 }
 
 export const contractAccessor = new ContractAccessor();
-
-contractAccessor.confirmContract(1, 'DAI').subscribe();
