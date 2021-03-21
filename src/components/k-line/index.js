@@ -103,7 +103,7 @@ export default class MainLayout extends Component {
       ],
     });
 
-    this.chartInstance.getZr().on('mousemove', (params) => {
+    this.chartInstance.getZr().on('mousemove', params => {
       const pointInPixel = [params.offsetX, params.offsetY];
       if (this.chartInstance.containPixel('series', pointInPixel)) {
         let xIndex = this.chartInstance.convertFromPixel({ seriesIndex: 0 }, [params.offsetX, params.offsetY])[0];
@@ -175,9 +175,7 @@ export default class MainLayout extends Component {
               </div>
               <Row type="flex" justify="space-between" align="middle">
                 <Col xs={24} sm={24} md={12} lg={12} className={styles.currPrice}>
-                  <div className={styles.currVal}>
-                    {format(price)} {to}
-                  </div>
+                  <div className={styles.currVal}>{format(price)} USD</div>
                   {/* <p className={styles.change}>
                     {sig(range)}
                     {format(range)} {to}({sig(percentage)}

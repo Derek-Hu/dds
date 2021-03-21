@@ -214,22 +214,22 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                         <span className={styles.icon}></span>Kovan
                       </div>
                       <ConnectWallet>
-                      {account ? (
-                        <div className={styles.accountInfo}>
-                          {account.USDBalance
-                            ? Object.keys(account.USDBalance).map(coin => (
-                                <span>
-                                  {isNumberLike(account.USDBalance[coin]) ? formatInt(account.USDBalance[coin]) : 0}
-                                  &nbsp;
-                                  {coin}
-                                </span>
-                              ))
-                            : null}
-                          <span>{account.address}</span>
-                        </div>
-                      ) : (
-                        <Button className={styles.connectBtn}>Connect Wallet</Button>
-                      )}
+                        {account ? (
+                          <div className={styles.accountInfo}>
+                            {account.USDBalance
+                              ? Object.keys(account.USDBalance).map(coin => (
+                                  <span>
+                                    {isNumberLike(account.USDBalance[coin]) ? formatInt(account.USDBalance[coin]) : 0}
+                                    &nbsp;
+                                    {coin}
+                                  </span>
+                                ))
+                              : null}
+                            <span>{account.address.replace(/^(.{6})(.*)(.{4})/, '$1...$3')}</span>
+                          </div>
+                        ) : (
+                          <Button className={styles.connectBtn}>Connect Wallet</Button>
+                        )}
                       </ConnectWallet>
                     </div>
                   )}
