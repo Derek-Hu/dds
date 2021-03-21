@@ -110,14 +110,16 @@ export default class ConnectWallet extends Component<any, any> {
   render() {
     const { visible, walletType } = this.state;
     const { children } = this.props;
+
     return (
       <SiteContext.Consumer>
         {({ isMobile, address }) => {
+          const shouldShow = !hasMetaMaskEnv || !address || visible;
           return (
             <div className={styles.root}>
               <span onClick={this.showModal}>{children}</span>
               <ModalRender
-                visible={!hasMetaMaskEnv || !address || visible}
+                visible={shouldShow}
                 title="Connect Wallet"
                 className={commonStyles.commonModal}
                 onCancel={this.closeDepositModal}

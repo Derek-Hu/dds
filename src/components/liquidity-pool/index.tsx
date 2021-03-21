@@ -21,41 +21,6 @@ const TabName = {
   Private: 'Private',
 };
 
-const lockedData: ILockedData[] = [
-  {
-    size: 3243,
-    reward: 4322,
-    fee: 100,
-    locked: 4322,
-    time: new Date().getTime(),
-    status: 'Closed',
-  },
-  {
-    size: 3243,
-    reward: 4322,
-    fee: 100,
-    locked: 4322,
-    time: new Date().getTime(),
-    status: 'Closed',
-  },
-  {
-    size: 3243,
-    reward: 4322,
-    fee: 100,
-    locked: 4322,
-    time: new Date().getTime(),
-    status: 'Closed',
-  },
-  {
-    size: 3243,
-    reward: 4322,
-    fee: 100,
-    locked: 4322,
-    time: new Date().getTime(),
-    status: 'Closed',
-  },
-];
-
 export default class PoolArea extends Component<any, any> {
   state = {
     selectedTab: TabName.Collaborative,
@@ -122,7 +87,7 @@ export default class PoolArea extends Component<any, any> {
                             <Balance isPrivate={true} />
                           </Col>
                         </Row>
-                        <LockedDetails data={lockedData} />
+                        <LockedDetails />
                       </div>
                     </Auth>
                     {/* <Public>

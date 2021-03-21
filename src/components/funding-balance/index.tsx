@@ -5,7 +5,7 @@ import WithdrawModal from './modals/withdraw';
 import OrderConfirm from './modals/order-confirm';
 import { Component } from 'react';
 import SiteContext from '../../layouts/SiteContext';
-import { getCurPrice, getFundingBalanceInfo, deposit, withdraw, openOrder } from '../../services/trade.service';
+import { getFundingBalanceInfo, deposit, withdraw, openOrder } from '../../services/trade.service';
 import { getMaxFromCoin, getFee, getLocked } from './calculate';
 import { format, isNotZeroLike } from '../../util/math';
 import InputNumber from '../input/index';

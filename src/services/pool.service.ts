@@ -251,14 +251,16 @@ export const getPrivateOrders = async (
  * 向私池订单补仓
  */
 export const addPrivateOrderMargin = async (order: PrivatePoolOrder, amount: number): Promise<boolean> => {
-  return from(loginUserAccount())
-    .pipe(
-      switchMap((account: string) => {
-        return contractAccessor.addMarginAmount(order.orderId, order.coin, amount);
-      }),
-      take(1)
-    )
-    .toPromise();
+  return withLoading(
+    from(loginUserAccount())
+      .pipe(
+        switchMap((account: string) => {
+          return contractAccessor.addMarginAmount(order.orderId, order.coin, amount);
+        }),
+        take(1)
+      )
+      .toPromise()
+  );
 };
 
 /**

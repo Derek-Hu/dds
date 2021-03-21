@@ -14,6 +14,14 @@ export const multiple = (one: any, two: any) => {
   }
   return NaN;
 };
+
+export const divide = (one: any, two: any) => {
+  if (isNumberLike(one) && isNumberLike(two)) {
+    return new Decimal(Number(one)).div(Number(two)).toNumber();
+  }
+  return NaN;
+};
+
 export const formatInt = (value: any) => {
   if (isNumberLike(value)) {
     return numeral(new Decimal(value).truncated()).format('0,0');
