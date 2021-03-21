@@ -10,6 +10,7 @@ import { getTradeOrders, closeOrder } from '../../services/trade.service';
 import { Form, Row, Col, Select, Descriptions } from 'antd';
 import modalStyles from '../funding-balance/modals/style.module.less';
 import ModalRender from '../modal-render/index';
+import Placeholder from '../placeholder';
 
 const statusColor: { [key in IOrderStatus]: string } = {
   ACTIVE: '#333333',

@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import styles from './locked.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import { isNumberLike, isNotZeroLike, format } from '../../util/math';
+import { Component } from 'react';
 
 const columns = [
   {
@@ -64,25 +65,29 @@ export interface ILockedData {
   time: number;
   status: string;
 }
-export default ({ data }: { data: ILockedData[] }) => {
-  return (
-    <SiteContext.Consumer>
-      {({ isMobile }) => (
-        <div className={styles.tableList}>
-          <h4>Liquidity Locked Detail</h4>
-          <Table
-            rowKey="coin"
-            columns={columns}
-            pagination={false}
-            dataSource={data}
-            scroll={isMobile ? { x: 800 } : undefined}
-          />
-          <Button type="link" className={styles.more}>
-            More&nbsp;
-            <Icon type="down" />
-          </Button>
-        </div>
-      )}
-    </SiteContext.Consumer>
-  );
-};
+
+interface IState {}
+export default class Balance extends Component<{ curPrice?: number; coin: IUSDCoins }, IState> {
+  render() {
+    return (
+      <SiteContext.Consumer>
+        {({ isMobile }) => (
+          <div className={styles.tableList}>
+            <h4>Liquidity Locked Detail</h4>
+            <Table
+              rowKey="coin"
+              columns={columns}
+              pagination={false}
+              dataSource={data}
+              scroll={isMobile ? { x: 800 } : undefined}
+            />
+            <Button type="link" className={styles.more}>
+              More&nbsp;
+              <Icon type="down" />
+            </Button>
+          </div>
+        )}
+      </SiteContext.Consumer>
+    );
+  }
+}

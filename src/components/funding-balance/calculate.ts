@@ -14,7 +14,7 @@ export const getMaxFromCoin = (balanceInfo?: IBalanceInfo, price?: number) => {
 
 export const getFee = (amount: any | undefined, price: any) => {
   if (isNumberLike(amount) && isNumberLike(price)) {
-    return (parseFloat(amount) * parseFloat(price)) / 10000;
+    return (parseFloat(amount) * parseFloat(price)) / 1000;
   }
   return 0;
 };
