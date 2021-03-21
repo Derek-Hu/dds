@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { contractAccessor } from '../wallet/chain-access';
 import { CoinBalance } from '../wallet/contract-interface';
 import { toEthers } from '../util/ethers';
+import { Wallet } from '../constant';
 
 /**
  * 用户是否已经连接账户地址
@@ -22,6 +23,20 @@ export const isUserConnected = async (): Promise<boolean> => {
   );
 
   return address$.toPromise();
+};
+
+/**
+ * 网页初始加载时候测试连接钱包
+ */
+export const initTryConnect = async (): Promise<boolean> => {
+  return walletManager
+    .initTryWallet()
+    .pipe(
+      map((wallet: Wallet[]) => {
+        return wallet.length === 0 ? false : true;
+      })
+    )
+    .toPromise();
 };
 
 export const curUserAccount = async (): Promise<string | null> => {
@@ -47,8 +62,8 @@ export const loginUserAccount = async (): Promise<string> => {
       switchMap((wallet: WalletInterface | null) => {
         return wallet === null ? of(null) : wallet.watchAccount();
       }),
-      filter((acc) => acc !== null),
-      map((acc) => acc as string),
+      filter(acc => acc !== null),
+      map(acc => acc as string),
       take(1)
     )
     .toPromise();
@@ -64,14 +79,14 @@ export const userAccountInfo = async (): Promise<UserAccountInfo> => {
       switchMap((wallet: WalletInterface | null) => {
         return wallet === null ? of(null) : wallet.watchAccount();
       }),
-      filter((acc) => acc !== null),
-      map((acc) => acc as string),
+      filter(acc => acc !== null),
+      map(acc => acc as string),
       switchMap((account: string) => {
         return contractAccessor.getUserSelfWalletBalance(account).pipe(
           map((balances: CoinBalance[]) => {
             return {
               address: account,
-              USDBalance: balances.map((one) => ({
+              USDBalance: balances.map(one => ({
                 coin: one.coin,
                 amount: Number(toEthers(one.balance, 4, one.coin)),
               })),

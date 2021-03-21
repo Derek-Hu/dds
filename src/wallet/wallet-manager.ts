@@ -1,6 +1,6 @@
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, merge, Observable, zip } from 'rxjs';
 import { WalletInterface } from './wallet-interface';
-import { map, tap } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
 import { Wallet } from '../constant';
 import { MetamaskWallet } from './metamask';
 
@@ -40,6 +40,19 @@ export class WalletManager {
     if (wallet === Wallet.Metamask) {
       this.metamask.doConnect();
     }
+  }
+
+  public initTryWallet(): Observable<Wallet[]> {
+    const meta$ = this.metamask.tryInitConnect().pipe(
+      map(connected => (connected ? Wallet.Metamask : null)),
+      take(1)
+    );
+
+    return zip(meta$).pipe(
+      map((wallets: (Wallet | null)[]) => wallets.filter(one => one !== null)),
+      map(wallets => wallets as Wallet[]),
+      take(1)
+    );
   }
 
   // -------------------------------------------------------------------

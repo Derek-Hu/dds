@@ -14,4 +14,10 @@ export interface WalletInterface {
   watchAccount(): Observable<string | null>;
 
   getAccount(): string | null;
+
+  getNetwork(): string | null;
+
+  watchNetwork(): Observable<string | null>;
+
+  tryInitConnect(): Observable<boolean>;
 }

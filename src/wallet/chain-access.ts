@@ -72,8 +72,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         return { coin: 'DAI', balance: rs[0] };
       })
     );
+    const usdt$: Observable<CoinBalance> = of({ coin: 'USDT', balance: BigNumber.from(0) });
+    const usdc$: Observable<CoinBalance> = of({ coin: 'USDC', balance: BigNumber.from(0) });
 
-    return zip(dds$, dai$).pipe(
+    return zip(dds$, dai$, usdt$, usdc$).pipe(
       catchError(err => {
         console.warn('error', err);
         return NEVER;
@@ -189,12 +191,18 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
-  public createContract(coin: IUSDCoins, orderType: ITradeType, amount: number): Observable<boolean> {
+  public createContract(
+    coin: IUSDCoins,
+    orderType: ITradeType,
+    amount: number,
+    inviter: string = ''
+  ): Observable<boolean> {
     return this.getContract(coin).pipe(
       switchMap((contract: ethers.Contract) => {
         const bigAmount = toBigNumber(amount, 18);
         const contractType = orderType === 'long' ? 1 : 2;
-        return contract.functions.creatContract('ETHDAI', bigAmount, contractType);
+        const userInviter = inviter && inviter.length === 42 ? inviter : '0x0000000000000000000000000000000000000000';
+        return contract.functions.creatContract('ETHDAI', bigAmount, contractType, userInviter);
       }),
       switchMap((rs: any) => {
         return rs.wait();
@@ -229,10 +237,14 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   ): Observable<ITradeRecord[]> {
     return this.getContract('DAI').pipe(
       switchMap((contract: ethers.Contract) => {
-        return contract.functions.getUserOrderID(address);
+        return from(contract.functions.getOrdersLen()).pipe(
+          map((len: BigNumber[]) => {
+            return new Array(len[0].toNumber()).fill(0).map((one, index) => BigNumber.from(index));
+          })
+        );
       }),
-      switchMap((ids: BigNumber[][]) => {
-        const orderIds: BigNumber[] = ids[0];
+      switchMap((ids: BigNumber[]) => {
+        const orderIds: BigNumber[] = ids;
         if (orderIds.length === 0) {
           return of([]);
         }
@@ -264,7 +276,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
               const pl: number = Number(toEthers(diffPrice, 0)) * Number(toEthers(order.info.number, 0));
               return {
                 id: order.id.toString(),
-                time: Number(order.info.startTime.toString()),
+                time: Number(order.info.startTime.toString() + '000'),
                 type: order.info.contractType.toString() === '1' ? 'long' : 'short',
                 amount: Number(toEthers(order.info.number, 4)),
                 price: Number(toEthers(order.info.openPrice, 4)),
@@ -413,7 +425,8 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       switchMap(contract => {
         return from(contract.balanceOf(address)).pipe(
           switchMap((reToken: any) => {
-            return contract.getTokenAmountByreToken(reToken);
+            const reTokenNum: number = (reToken as BigNumber).toNumber();
+            return reTokenNum === 0 ? of(BigNumber.from(0)) : from(contract.getTokenAmountByreToken(reToken));
           })
         );
       }),
@@ -443,6 +456,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       }),
       map((rs: any) => {
         return rs.availabe as BigNumber;
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of(BigNumber.from(0));
       })
     );
 
@@ -486,14 +503,14 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   }
 
   public getPubPoolWithdrawDate(address: string): Observable<{ coin: IUSDCoins; time: number }[]> {
-    const addition = 14 * 24 * 3600; // 14 days
+    const addition = 14 * 24 * 3600; // 14 days （秒）
 
     const dai$ = this.getPubPoolContract('DAI').pipe(
       switchMap(contract => {
         return from(contract.functions.lastProvideTm(address));
       }),
       map((rs: BigNumber[]) => {
-        return { coin: 'DAI' as IUSDCoins, time: rs[0].toNumber() + addition };
+        return { coin: 'DAI' as IUSDCoins, time: (rs[0].toNumber() + addition) * 1000 }; // 转毫秒
       })
     );
     const usdt$ = of({ coin: 'USDT' as IUSDCoins, time: 0 });
@@ -503,7 +520,6 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   }
 
   //
-
   public getLockedLiquidityList(
     address: string,
     page: number,
@@ -857,6 +873,19 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
+  public doBrokerClaim(): Observable<boolean> {
+    return from(this.getBrokerContract().functions.claimRewardsForBroker()).pipe(
+      switchMap(rs => {
+        return from(rs.wait());
+      }),
+      mapTo(true),
+      catchError(err => {
+        console.warn('error', err);
+        return of(false);
+      })
+    );
+  }
+
   //
   protected getContract(coin: IUSDCoins): Observable<ethers.Contract> {
     return of(this.contractMap.get(coin)).pipe(filter(Boolean)) as Observable<ethers.Contract>;
@@ -1166,8 +1195,8 @@ export class ContractAccessor implements ContractProxy {
     );
   }
 
-  public createContract(coin: IUSDCoins, orderType: ITradeType, amount: number): Observable<any> {
-    return this.accessor.pipe(switchMap(accessor => accessor.createContract(coin, orderType, amount)));
+  public createContract(coin: IUSDCoins, orderType: ITradeType, amount: number, inviter: string = ''): Observable<any> {
+    return this.accessor.pipe(switchMap(accessor => accessor.createContract(coin, orderType, amount, inviter)));
   }
 
   public closeContract(orderId: ITradeRecord, curPrice: number): Observable<boolean> {
@@ -1228,6 +1257,10 @@ export class ContractAccessor implements ContractProxy {
     return this.accessor.pipe(
       switchMap(accessor => {
         return accessor.pubPoolBalanceOf(address);
+      }),
+      catchError(err => {
+        console.warn('error', address, err);
+        return of(new Map());
       })
     );
   }
@@ -1236,6 +1269,10 @@ export class ContractAccessor implements ContractProxy {
     return this.accessor.pipe(
       switchMap(accessor => {
         return accessor.pubPoolBalanceWhole();
+      }),
+      catchError(err => {
+        console.warn('error ', err);
+        return of(new Map());
       })
     );
   }
@@ -1389,6 +1426,14 @@ export class ContractAccessor implements ContractProxy {
     return this.accessor.pipe(
       switchMap(accessor => {
         return accessor.getBrokerAllCommission(address);
+      })
+    );
+  }
+
+  public doBrokerClaim(): Observable<boolean> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.doBrokerClaim();
       })
     );
   }
