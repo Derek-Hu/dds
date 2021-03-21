@@ -4803,6 +4803,8 @@ export interface ContractProxy {
 
   withdrawToken(count: number, coin: IUSDCoins): Observable<boolean>;
 
+  confirmContract(count: number, coin: IUSDCoins): Observable<ConfirmInfo>;
+
   createContract(coin: IUSDCoins, orderType: ITradeType, amount: number, inviter: string): Observable<boolean>;
 
   closeContract(orderId: ITradeRecord, curPrice: number): Observable<boolean>;
@@ -4910,4 +4912,11 @@ export interface PrivateLockLiquidity {
   takerId: BigNumber;
   status: IOrderStatus;
   locked: boolean;
+}
+
+export interface ConfirmInfo {
+  currentPrice: BigNumber;
+  exchgFee: BigNumber;
+  openFee: BigNumber;
+  total: BigNumber;
 }

@@ -5,7 +5,7 @@ import { filter, map, switchMap, take } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
 import { AsyncSubject, of, zip } from 'rxjs';
 import { contractAccessor } from '../wallet/chain-access';
-import { UserAccountInfo } from '../wallet/contract-interface';
+import { ConfirmInfo, UserAccountInfo } from '../wallet/contract-interface';
 import { BigNumber } from 'ethers';
 import { toEthers } from '../util/ethers';
 import * as request from 'superagent';
@@ -16,7 +16,7 @@ import { withLoading } from './utils';
  */
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     setTimeout(() => {
       resolve(val);
     }, Math.random() * 2000);
@@ -27,15 +27,15 @@ export const getFundingBalanceInfo = async (coin: IUSDCoins): Promise<IBalanceIn
   return walletManager
     .watchWalletInstance()
     .pipe(
-      filter((wallet) => wallet !== null),
+      filter(wallet => wallet !== null),
       switchMap((wallet: WalletInterface | null) => {
         return wallet === null ? of(null) : wallet.watchAccount();
       }),
-      filter((userAddress) => userAddress !== null),
+      filter(userAddress => userAddress !== null),
       switchMap((userAddress: string | null) => {
         return userAddress === null ? of(null) : contractAccessor.watchUserAccount(userAddress, coin);
       }),
-      filter((account) => account !== null),
+      filter(account => account !== null),
       map(
         (accountInfo: UserAccountInfo | null): IBalanceInfo => {
           if (accountInfo === null) {
@@ -98,15 +98,15 @@ export const getTradeOrders = async (page: number, pageSize: number = 5): Promis
   return walletManager
     .watchWalletInstance()
     .pipe(
-      filter((walletIns) => walletIns !== null),
+      filter(walletIns => walletIns !== null),
       switchMap((walletIns: WalletInterface | null) => {
         return (walletIns as WalletInterface)?.watchAccount();
       }),
-      filter((account) => account !== null),
+      filter(account => account !== null),
       take(1),
       switchMap((account: string | null) => {
         return contractAccessor.getPriceByETHDAI('DAI').pipe(
-          switchMap((curPrice) => {
+          switchMap(curPrice => {
             return contractAccessor.getUserOrders(account as string, curPrice, page, pageSize);
           })
         );
@@ -147,7 +147,7 @@ export const getCurPrice = async (coin: IUSDCoins): Promise<number> => {
   return contractAccessor
     .getPriceByETHDAI(coin)
     .pipe(
-      map((num) => Number(toEthers(num, 4))),
+      map(num => Number(toEthers(num, 4))),
       take(1)
     )
     .toPromise();
@@ -200,4 +200,25 @@ export const getPriceGraphData = (
       }
     });
   return rs.toPromise();
+};
+
+/**
+ * 订单确认页面显示数值
+ * @param amount - eth amount
+ * @param coin - DAI
+ */
+export const confirmOrder = async (amount: number, coin: IUSDCoins): Promise<any> => {
+  return contractAccessor
+    .confirmContract(amount, coin)
+    .pipe(
+      map((info: ConfirmInfo) => {
+        return {
+          curPrice: Number(toEthers(info.currentPrice, 4, coin)),
+          settlementFee: Number(toEthers(info.exchgFee, 6, coin)),
+          fundingFeeLocked: Number(toEthers(info.openFee, 6, coin)),
+        };
+      }),
+      take(1)
+    )
+    .toPromise();
 };

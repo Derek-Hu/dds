@@ -3,6 +3,7 @@ import {
   BrokerABI,
   CoinBalance,
   CoinShare,
+  ConfirmInfo,
   ContractProxy,
   ERC20,
   LiquidatorABI,
@@ -188,6 +189,20 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       switchMap((rs: any) => from(rs.wait())),
       mapTo(true),
       catchError(err => of(false))
+    );
+  }
+
+  public confirmContract(count: number, coin: IUSDCoins): Observable<ConfirmInfo> {
+    return this.getContract(coin).pipe(
+      switchMap((contract: ethers.Contract) => {
+        const amount: BigNumber = tokenBigNumber(count, coin);
+        console.log('input amount', count, amount.toString());
+        return from(contract.fees('ETHDAI', amount));
+      }),
+      map((rs: any) => {
+        console.log('rs primary', rs);
+        return rs;
+      })
     );
   }
 
@@ -1191,6 +1206,22 @@ export class ContractAccessor implements ContractProxy {
       }),
       catchError(err => {
         return of(false);
+      })
+    );
+  }
+
+  public confirmContract(count: number, coin: IUSDCoins): Observable<ConfirmInfo> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.confirmContract(count, coin);
+      }),
+      catchError(err => {
+        return of({
+          currentPrice: BigNumber.from(0),
+          exchgFee: BigNumber.from(0),
+          openFee: BigNumber.from(0),
+          total: BigNumber.from(0),
+        });
       })
     );
   }
