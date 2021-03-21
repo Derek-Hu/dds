@@ -60,7 +60,7 @@ export default class LiquiditorReward extends Component<any, IState> {
 
   async componentDidMount() {
     this.setState({ loading: true });
-    const data = await getLiquidityLockedReward(this.context.account ? 'private' : 'public');
+    const data = await getLiquidityLockedReward(this.context.address ? 'private' : 'public');
     this.setState({
       data,
     });
@@ -102,7 +102,7 @@ export default class LiquiditorReward extends Component<any, IState> {
     const { data, loading, visible, tableData } = this.state;
     return (
       <div>
-        <h3>{this.context.account ? 'Your Active Liquidity Reward' : 'Active Liquidity Reward Today'}</h3>
+        <h3>{this.context.address ? 'Your Active Liquidity Reward' : 'Active Liquidity Reward Today'}</h3>
         <p className={styles.coins}>
           <Placeholder loading={loading} width={'10em'}>
             {format(data)} SLD

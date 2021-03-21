@@ -35,7 +35,7 @@ export default class Broker extends Component<any, any> {
   };
 
   render() {
-    const referalCode = account2ReferalCode(this.context.account);
+    const referalCode = account2ReferalCode(this.context.address);
     const url = referalCode ? `${ddsBasePath}/referal?code=${referalCode}` : '';
     return (
       <div className={styles.root}>
@@ -43,15 +43,17 @@ export default class Broker extends Component<any, any> {
         <Auth>
           <div className={styles.referalInfo}>
             <Input value={url} disabled={true} className={styles.input} />
-            {
-              referalCode ? <CopyToClipboard text={url} onCopy={() => this.setState({ copied: true })}>
+            {referalCode ? (
+              <CopyToClipboard text={url} onCopy={() => this.setState({ copied: true })}>
+                <Button type="primary" className={styles.btn}>
+                  Copy referral link
+                </Button>
+              </CopyToClipboard>
+            ) : (
               <Button type="primary" className={styles.btn}>
                 Copy referral link
               </Button>
-            </CopyToClipboard> : <Button type="primary" className={styles.btn}>
-                Copy referral link
-              </Button>
-            }
+            )}
             {/* <div className={styles.qrcode}>
                   <Icon type="qrcode" style={{ fontSize: 32 }} />
                 </div> */}

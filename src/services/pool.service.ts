@@ -8,10 +8,9 @@ import { EMPTY, from, Observable, of, zip } from 'rxjs';
 import { withLoading } from './utils';
 import { defaultPoolData, defaultCoinDatas } from './mock/unlogin-default';
 import { PrivateLockLiquidity } from '../wallet/contract-interface';
-import { log } from 'util';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     setTimeout(() => {
       resolve(val);
     }, Math.random() * 2000);
@@ -70,7 +69,7 @@ export const getCollaborativeShareInPool = async (): Promise<IPoolShareInPool[]>
   const getShareInPool = (account: string): Observable<IPoolShareInPool[]> => {
     return zip(contractAccessor.pubPoolBalanceOf(account), contractAccessor.pubPoolBalanceWhole()).pipe(
       map((rs: Map<IUSDCoins, BigNumber>[]) => {
-        return Array.from(rs[0].keys()).map((coin) => {
+        return Array.from(rs[0].keys()).map(coin => {
           const amount = Number(toEthers(rs[0].get(coin) as BigNumber, 4));
           const total = Number(toEthers(rs[1].get(coin) as BigNumber, 4));
           return { coin, amount, total };
@@ -94,7 +93,7 @@ export const getPrivateSharePool = async (): Promise<ICoinItem[]> => {
   const getSharePool = (account: string): Observable<ICoinItem[]> => {
     return zip(contractAccessor.priPoolBalanceOf(account), contractAccessor.priPoolBalanceWhole()).pipe(
       map((rs: Map<IUSDCoins, BigNumber>[]) => {
-        return Array.from(rs[0].keys()).map((coin) => {
+        return Array.from(rs[0].keys()).map(coin => {
           const amount = Number(toEthers(rs[0].get(coin) as BigNumber, 4));
           const total = Number(toEthers(rs[1].get(coin) as BigNumber, 4));
           return { coin, amount, total };
@@ -226,7 +225,7 @@ export const getPrivateOrders = async (
 ): Promise<PrivatePoolOrder[]> => {
   return from(loginUserAccount())
     .pipe(
-      switchMap((account) => {
+      switchMap(account => {
         return contractAccessor.getLockedLiquidityList(account, page, pageSize, devTest);
       }),
       map((rs: PrivateLockLiquidity[]) => {

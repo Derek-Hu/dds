@@ -22,7 +22,7 @@ export default class LiquidityMiningReward extends Component<any, IState> {
 
   async componentDidMount() {
     this.setState({ loading: true });
-    const data = await getLiquidityMiningReward(this.context.account ? 'private' : 'public');
+    const data = await getLiquidityMiningReward(this.context.address ? 'private' : 'public');
     this.setState({
       data,
     });

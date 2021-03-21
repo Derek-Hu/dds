@@ -21,7 +21,7 @@ interface IState {
   amount?: number;
 }
 
-export default class PoolArea extends Component<{ isLogin: boolean }, IState> {
+export default class PoolArea extends Component<any, IState> {
   state: IState = {
     swapModalVisible: false,
     loading: false,

@@ -9,11 +9,12 @@ const RESPONSIVE_MOBILE = 768;
 interface IState {
   isMobile: boolean;
   account: IAccount | null;
+  address: string;
 }
 export default class Layout extends Component<RouteComponentProps, IState> {
   static contextType = SiteContext;
 
-  state: IState = { isMobile: false, account: null };
+  state: IState = { isMobile: false, address: '', account: null };
 
   componentDidMount() {
     this.updateMobileMode();
@@ -37,11 +38,12 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   updateAccount = (account: IAccount) => {
     this.setState({
       account,
+      address: account && account.address ? account.address : '',
     });
   };
   render() {
     const { children, location } = this.props;
-    const { isMobile, account } = this.state;
+    const { isMobile, account, address } = this.state;
     const LayoutComp = location.pathname === '/home' ? HomeLayout : TradeLayout;
 
     return (
@@ -51,6 +53,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
           isMobile,
           direction: 'ltr',
           account,
+          address,
           // process.env.NODE_ENV === 'development'
           //   ? {
           //       address: '0x839423432432',

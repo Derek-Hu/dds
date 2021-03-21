@@ -36,13 +36,14 @@ export default class PoolPage extends Component {
     const { agreed, visible } = this.state;
     return (
       <SiteContext.Consumer>
-        {({ account }) => {
+        {({ address }) => {
           return (
             <div>
-              <LiquidityPool address={account} />
+              <LiquidityPool />
               <Modal
                 width={450}
-                visible={visible && !!account}
+                // @ts-ignore
+                visible={visible && address}
                 title={
                   <span style={{ color: '#F55858' }}>
                     <Icon type="warning" />

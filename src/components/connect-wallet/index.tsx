@@ -72,7 +72,7 @@ export default class ConnectWallet extends Component<any, any> {
     this.context.updateAccount(null);
   };
   connectWallet = () => {
-    if (this.context.account?.address) {
+    if (this.context.address) {
       return;
     }
 
@@ -104,10 +104,6 @@ export default class ConnectWallet extends Component<any, any> {
       };
       this.closeDepositModal();
       this.context.updateAccount(tranformed);
-      // this.setState({
-      //   isConnected: account !== null,
-      //   account,
-      // });
     });
   }
 
@@ -116,8 +112,7 @@ export default class ConnectWallet extends Component<any, any> {
     const { children } = this.props;
     return (
       <SiteContext.Consumer>
-        {({ isMobile, account }) => {
-          const address = account && account.address;
+        {({ isMobile, address }) => {
           return (
             <div className={styles.root}>
               <span onClick={this.showModal}>{children}</span>
