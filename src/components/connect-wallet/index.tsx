@@ -13,7 +13,7 @@ import MetaMaskOnboarding from '@metamask/onboarding';
 import { contractAccessor } from '../../wallet/chain-access';
 import { CoinBalance } from '../../wallet/contract-interface';
 import { toEthers } from '../../util/ethers';
-import { userAccountInfo } from '../../services/account';
+import { userAccountInfo, initTryConnect } from '../../services/account';
 
 const { Option } = Select;
 const { isMetaMaskInstalled } = MetaMaskOnboarding;
@@ -35,7 +35,7 @@ export default class ConnectWallet extends Component<any, any> {
     this.watchWalletAccount();
   };
 
-  componentWillUnmount() {
+  async componentWillUnmount() {
     if (!hasMetaMaskEnv) {
       return;
     }
@@ -113,8 +113,8 @@ export default class ConnectWallet extends Component<any, any> {
 
     return (
       <SiteContext.Consumer>
-        {({ isMobile, address }) => {
-          const shouldShow = !hasMetaMaskEnv || !address || visible;
+        {({ connected, address }) => {
+          const shouldShow = connected !== null && (!hasMetaMaskEnv || !address || visible);
           return (
             <div className={styles.root}>
               <span onClick={this.showModal}>{children}</span>

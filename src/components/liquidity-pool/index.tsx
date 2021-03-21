@@ -7,7 +7,7 @@ import AvailablePool from './private/available-pool';
 // import AvailablePoolUnlogin from './private/available-pool-unlogin';
 import { CustomTabKey } from '../../constant/index';
 import SiteContext from '../../layouts/SiteContext';
-import LockedDetails, { ILockedData } from '../liquidity-pool/locked-details';
+import LockedDetails from '../liquidity-pool/locked-details';
 // import LiquidityProvided from './public/liquidity-provided';
 import LiquidityARP from './public/collaborative-arp';
 import { Visible } from '../builtin/hidden';

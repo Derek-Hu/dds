@@ -3,6 +3,8 @@ import HomeLayout from '../layouts/home.layout';
 import TradeLayout from '../layouts/trade.layout';
 import { RouteComponentProps } from 'react-router-dom';
 import SiteContext from './SiteContext';
+import { userAccountInfo, initTryConnect } from '../services/account';
+import { clearTimeout } from 'timers';
 
 const RESPONSIVE_MOBILE = 768;
 
@@ -10,18 +12,46 @@ interface IState {
   isMobile: boolean;
   account: IAccount | null;
   address: string;
+  connected: boolean | null;
 }
+// @ts-ignore
+let timer = null;
 export default class Layout extends Component<RouteComponentProps, IState> {
   static contextType = SiteContext;
 
-  state: IState = { isMobile: false, address: '', account: null };
+  state: IState = { connected: null, isMobile: false, address: '', account: null };
 
   componentDidMount() {
+    this.tick();
     this.updateMobileMode();
     window.addEventListener('resize', this.updateMobileMode);
   }
 
+  tick = async () => {
+    const isConnected = await initTryConnect();
+    const { connected } = this.state;
+
+    if (isConnected !== connected) {
+      this.setState({
+        connected,
+      });
+    }
+
+    if (!connected) {
+      this.updateAccount(null);
+    }
+
+    // @ts-ignore
+    timer = setTimeout(() => {
+      this.tick();
+    }, 5000);
+  };
   componentWillUnmount() {
+    // @ts-ignore
+    if (timer) {
+      // @ts-ignore
+      clearTimeout(timer);
+    }
     window.removeEventListener('resize', this.updateMobileMode);
   }
 
@@ -43,7 +73,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   };
   render() {
     const { children, location } = this.props;
-    const { isMobile, account, address } = this.state;
+    const { isMobile, account, address, connected } = this.state;
     const LayoutComp = location.pathname === '/home' ? HomeLayout : TradeLayout;
 
     return (
@@ -51,6 +81,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
         value={{
           updateAccount: this.updateAccount,
           isMobile,
+          connected,
           direction: 'ltr',
           account:
             process.env.NODE_ENV === 'development'
