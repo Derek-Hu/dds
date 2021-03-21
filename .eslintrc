@@ -18,12 +18,19 @@
     "webvowl": true
   },
   "rules": {
-    "prettier/prettier": 1,
+    "no-empty": 1,
+    "no-case-declarations": 1,
+    "prettier/prettier": 0,
     "no-unused-expressions": 1,
     "jsx-a11y/anchor-is-valid": 0,
     "array-callback-return": 0,
     "no-script-url": 0,
+    "@typescript-eslint/no-non-null-asserted-optional-chain": 1,
+    "@typescript-eslint/no-this-alias": 1,
+    "@typescript-eslint/no-empty-interface": 1,
     "import/no-anonymous-default-export": 0,
-    "@typescript-eslint/no-inferrable-types": 1
+    "@typescript-eslint/no-inferrable-types": 1,
+    "@typescript-eslint/ban-ts-comment": 1,
+    "@typescript-eslint/ban-types": 1
   }
 }

@@ -27,7 +27,7 @@ const Durations = {
   month: '1M',
 };
 
-const sig = (value) => {
+const sig = value => {
   if (isNumberLike(value)) {
     const val = parseFloat(value);
     return val > 0 ? '+' : val < 0 ? '-' : '';
@@ -51,7 +51,7 @@ export default class MainLayout extends Component {
     if (this.timer) {
       clearTimeout(this.timer);
     }
-    const graphData = await getPriceGraphData({ from, to }, duration).catch(() => {});
+    const graphData = await getPriceGraphData({ from, to }, duration).catch(() => ({}));
 
     this.timer = setTimeout(() => {
       this.loadGraph(from, to, duration);
@@ -63,6 +63,7 @@ export default class MainLayout extends Component {
     }
     this.setState({
       graphData,
+      price: graphData.price,
     });
 
     if (!this.chartInstance) {
@@ -82,8 +83,8 @@ export default class MainLayout extends Component {
 
     this.chartInstance.setOption({
       grid: {
-        left: '20px',
-        right: '20px',
+        left: '30px',
+        right: '30px',
       },
       xAxis: {
         type: 'category',
@@ -100,6 +101,21 @@ export default class MainLayout extends Component {
           data: yData,
         },
       ],
+    });
+
+    this.chartInstance.getZr().on('mousemove', params => {
+      const pointInPixel = [params.offsetX, params.offsetY];
+      if (this.chartInstance.containPixel('series', pointInPixel)) {
+        let xIndex = this.chartInstance.convertFromPixel({ seriesIndex: 0 }, [params.offsetX, params.offsetY])[0];
+        this.setState({
+          price: yData[xIndex],
+        });
+      }
+    });
+    this.chartInstance.getZr().on('mouseout', () => {
+      this.setState({
+        price: graphData.price,
+      });
     });
   };
   componentWillUnmount() {
@@ -119,7 +135,7 @@ export default class MainLayout extends Component {
     this.loadGraph(from, to, duration);
   }
 
-  changeDuration = (key) => {
+  changeDuration = key => {
     const { from, to } = this.state;
     this.setState({
       duration: key,
@@ -127,8 +143,8 @@ export default class MainLayout extends Component {
     this.loadGraph(from, to, key);
   };
   render() {
-    const { from, to, graphData, duration } = this.state;
-    const { price, percentage, range } = graphData || {};
+    const { from, to, graphData, duration, price } = this.state;
+    const { percentage, range } = graphData || {};
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => {
@@ -169,7 +185,7 @@ export default class MainLayout extends Component {
                   </p> */}
                 </Col>
                 <Col className={styles.range} xs={24} sm={24} md={12} lg={12}>
-                  {Object.keys(Durations).map((key) => (
+                  {Object.keys(Durations).map(key => (
                     <Button
                       key={key}
                       onClick={() => this.changeDuration(key)}

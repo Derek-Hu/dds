@@ -189,7 +189,6 @@ export default class Balance extends Component<{
             <Input
               className={styles.orderInput}
               value={openAmount}
-              type="number"
               onChange={this.onOpenAmountChange}
               placeholder="0.00"
               suffix={'ETH'}

@@ -78,7 +78,7 @@ export default class CommissionPool extends Component<any, IState> {
     });
     this.setState({ loading: false });
 
-    this.tableLoad();
+    // this.tableLoad();
   }
 
   tableLoad = async (page: number = 1) => {
@@ -101,7 +101,7 @@ export default class CommissionPool extends Component<any, IState> {
     }, {});
 
     // @ts-ignore
-    const coins = Object.keys(SupporttedUSD).map((coin) => ({
+    const coins = Object.keys(SupporttedUSD).map(coin => ({
       label: coin,
       // @ts-ignore
       value: dataInfo[coin],

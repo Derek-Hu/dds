@@ -55,7 +55,6 @@
     max-width: 900px;
     margin: 0 auto;
     text-align: center;
-    /* box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.05); */
     border-radius: 8px;
     padding: 0;
     // background: #ffffff;
@@ -75,6 +74,15 @@
       line-height: 59px;
       letter-spacing: 2px;
       margin-bottom: 0;
+    }
+  }
+
+  :global {
+    .ant-tabs {
+      overflow: unset;
+    }
+    .ant-tabs-content {
+      box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.05);
     }
   }
 
@@ -103,9 +111,8 @@
   }
   .btn {
     width: 100%;
-    margin: 64px 0 42px;
+    margin: 28px 0 60px;
     font-size: 18px;
-    font-weight: bold;
     color: #ffffff;
     line-height: 22px;
     letter-spacing: 1px;

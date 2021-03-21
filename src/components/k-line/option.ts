@@ -8,7 +8,11 @@ export default {
   tooltip: {
     trigger: 'axis',
     axisPointer: {
+      animation: false,
       type: 'cross',
+      lineStyle: {
+        color: '#003FE6',
+      },
     },
     showContent: false,
   },
@@ -34,12 +38,11 @@ export default {
       type: 'line',
       smooth: true,
       sampling: 'average',
-      symbol: 'circle',
-      symbolSize: 10,
+      // symbolSize: 10,
       showSymbol: false,
       itemStyle: {
         color: '#1346FF',
-        borderColor: '#fff',
+        borderColor: '#1346FF',
       },
       lineStyle: {
         width: 1,

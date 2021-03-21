@@ -93,8 +93,10 @@ export default class LiquidityProvided extends Component<IProps, IState> {
     const { selectedCoin, amount } = this.state;
     console.log('...amount');
     const params = {
-      amount, coin: selectedCoin, ...newVal
-    }
+      amount,
+      coin: selectedCoin,
+      ...newVal,
+    };
 
     if (!isNotZeroLike(params.amount)) {
       this.setState({
@@ -105,10 +107,10 @@ export default class LiquidityProvided extends Component<IProps, IState> {
     // @ts-ignore
     const reAmount = await getCollaborativeDepositRe(params);
     this.setState({
-      reAmount: isNotZeroLike(reAmount)? reAmount: 0,
+      reAmount: isNotZeroLike(reAmount) ? reAmount : 0,
     });
-  } 
-  
+  };
+
   render() {
     const { data, modalVisible, loading, amount, selectedCoin, reAmount } = this.state;
     return (
@@ -119,7 +121,9 @@ export default class LiquidityProvided extends Component<IProps, IState> {
             <div style={{ paddingTop: '10px' }}>
               <h3>ARP</h3>
               <p className={styles.coins}>
-                <Placeholder loading={false} width={'5em'}>{isNumberLike(data) ? `${data}%` : 'N/A'}</Placeholder>
+                <Placeholder loading={false} width={'5em'}>
+                  {isNumberLike(data) ? `${data}%` : 'N/A'}
+                </Placeholder>
               </p>
               <Auth>
                 <div className={styles.actionArea}>
@@ -139,9 +143,9 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                     </Col>
                   </Row>
                   {/* {isNotZeroLike(amount) ? ( */}
-                    <p className={styles.cal}>
-                      You Will Receive: <span>{format(reAmount)}</span> re{selectedCoin}
-                    </p>
+                  <p className={styles.cal}>
+                    You Will Receive: <span>{format(reAmount)}</span> re{selectedCoin}
+                  </p>
                   {/* ) : null} */}
                   <Button type="primary" className={styles.btn} onClick={this.modalVisible.show}>
                     DEPOSIT
@@ -168,11 +172,11 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                 <p>Tips: 14 Days Locked Required</p>
                 <Row className={commonStyles.actionBtns} gutter={[16, 16]} type="flex">
                   <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                    <Button onClick={this.modalVisible.hide}>Cancel</Button>
+                    <Button onClick={this.modalVisible.hide}>CANCEL</Button>
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                     <Button onClick={this.confirmDeposit} type="primary">
-                      Comfirm
+                      CONFIRM
                     </Button>
                   </Col>
                 </Row>

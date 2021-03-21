@@ -1,5 +1,5 @@
 .homeHeader {
-  background-color: #1346ff;
+  background-color: transparent;
   color: #fff;
   font-size: 24px;
   line-height: 60px;
@@ -61,16 +61,40 @@
 
   .connectWpr {
     text-align: right;
-    margin-right: 12px;
+    padding-right: 12px;
+  }
+
+  .rightContent {
+    display: flex;
+    align-items: center;
   }
   .connectBtn {
     height: 40px;
-    background: rgba(229, 238, 255, 0.14);
     font-size: 16px;
     margin-right: 40px;
     background: rgba(229, 238, 255, 0.14);
     color: #fff;
     border: 1px solid #3b6cff;
+  }
+
+  .network {
+    border-radius: 100px;
+    border: 1px solid #bbc0c5;
+    font-size: 12px;
+    color: #6a737d;
+    text-align: center;
+    padding: 8px 20px;
+    margin-right: 20px;
+
+    .icon {
+      display: inline-block;
+      height: 8px;
+      width: 8px;
+      border-radius: 100%;
+      background: #1346ff;
+      position: relative;
+      right: 6px;
+    }
   }
 
   :global {

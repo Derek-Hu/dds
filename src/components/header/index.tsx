@@ -7,6 +7,8 @@ import ConnectWallet from '../connect-wallet/index';
 import Logo from '~/assets/imgs/logo.png';
 import LogoWhite from '~/assets/imgs/logo-white.png';
 import { homeBasePath, ddsBasePath } from '../../constant/index';
+import { formatInt, isNumberLike } from '../../util/math';
+
 const { SubMenu } = Menu;
 
 const rightMenus = {
@@ -38,8 +40,6 @@ const rightMenus = {
 };
 
 export default class Header extends Component<{ darkMode?: boolean }, any> {
-  componentDidMount() {}
-
   state = {
     current: 'mail',
     drawerOpen: false,
@@ -70,7 +70,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
     });
   };
   renderRightMenus = (config: any) => {
-    return Object.keys(config).map((linkName) => {
+    return Object.keys(config).map(linkName => {
       const url = config[linkName];
       const isUrl = typeof url === 'string';
       return isUrl ? (
@@ -90,7 +90,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
     const { drawerOpen } = this.state;
     return (
       <SiteContext.Consumer>
-        {({ isMobile }) =>
+        {({ isMobile, account }) =>
           isMobile ? (
             darkMode ? (
               <div className={styles.homeHeader}>
@@ -147,7 +147,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
           ) : (
             <div className={[styles.root, darkMode ? '' : styles.light].join(' ')}>
               <Row type="flex" justify="space-between" align="middle">
-                <Col span={16}>
+                <Col span={12}>
                   <Menu onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal">
                     <Menu.Item key="logo" className={styles.dderivatives}>
                       <a href={`${homeBasePath}/home`}>
@@ -170,11 +170,11 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                     >
                       <div className="submenu-dialog">
                         <div className="top">
-                          <p className="title">Token Economics</p>
-                          <p>
+                          <div className="title">Token Economics</div>
+                          <div className="content">
                             SLD is a utility token for community governance and fuels further Sield ecosystem
                             development.
-                          </p>
+                          </div>
                           {/* <Link to="/" className="link" style={{ color: '#1346FF' }}>
                             Learn more
                           </Link> */}
@@ -203,20 +203,35 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                     </Menu.Item> */}
                   </Menu>
                 </Col>
-                <Col className={styles.connectWpr}>
+                <Col span={12} className={styles.connectWpr}>
                   {window.location.hash === '#/home' ? (
                     <Button className={styles.connectBtn}>
                       <a href={`${ddsBasePath}/trade`}>Trade</a>
                     </Button>
                   ) : (
-                    <ConnectWallet>
-                      <Button className={styles.connectBtn}>Connect Wallet</Button>
-                      {/* <div className={styles.accountInfo}>
-                        <span>98 SLD</span>
-                        <span>2.009DAI</span>
-                        <span>0x8317...c496</span>
-                      </div> */}
-                    </ConnectWallet>
+                    <div className={styles.rightContent}>
+                      <div className={styles.network}>
+                        <span className={styles.icon}></span>Kovan
+                      </div>
+                      <ConnectWallet>
+                        {account ? (
+                          <div className={styles.accountInfo}>
+                            {account.USDBalance
+                              ? Object.keys(account.USDBalance).map(coin => (
+                                  <span>
+                                    {isNumberLike(account.USDBalance[coin]) ? formatInt(account.USDBalance[coin]) : 0}
+                                    &nbsp;
+                                    {coin}
+                                  </span>
+                                ))
+                              : null}
+                            <span>{account.address}</span>
+                          </div>
+                        ) : (
+                          <Button className={styles.connectBtn}>Connect Wallet</Button>
+                        )}
+                      </ConnectWallet>
+                    </div>
                   )}
                 </Col>
               </Row>

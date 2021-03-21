@@ -56,7 +56,7 @@ const lockedData: ILockedData[] = [
   },
 ];
 
-export default class PoolArea extends Component<{ address?: string }, any> {
+export default class PoolArea extends Component<any, any> {
   state = {
     selectedTab: TabName.Collaborative,
   };
@@ -135,7 +135,6 @@ export default class PoolArea extends Component<{ address?: string }, any> {
                   </div>
                 </Visible>
               </div>
-              
             </div>
           </div>
         )}

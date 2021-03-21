@@ -48,14 +48,11 @@ export default class LiquidityProvided extends Component<IProps, IState> {
 
   modalVisible = this.setModalVisible('modalVisible');
 
-  async componentDidMount() {}
-
   onSelectChange = (selectedCoin: any) => {
     this.setState({
       selectedCoin,
     });
   };
-
 
   confirmPrivateDeposit = async () => {
     this.modalVisible.hide();

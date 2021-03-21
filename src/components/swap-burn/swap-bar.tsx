@@ -59,7 +59,7 @@ export default ({
                 <span className={styles.rightPecentage}>{right.percentage}%</span>
               </div>
               <div className={styles.amount}>
-                <Placeholder loading={loading}>{formatInt(rightAmount)} USD</Placeholder>
+                <Placeholder loading={loading}>{formatInt(rightAmount)} SLD</Placeholder>
               </div>
             </div>
           </div>

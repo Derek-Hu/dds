@@ -79,9 +79,6 @@ export default class LiquiditorReward extends Component<any, IState> {
     this.setState({ tableLoading: false });
   };
 
-  showWithDraw = () => {};
-  showClaimModal = () => {};
-
   cofirmClaim = async () => {
     await claimLiquidityLocked();
   };
@@ -105,7 +102,7 @@ export default class LiquiditorReward extends Component<any, IState> {
     const { data, loading, visible, tableData } = this.state;
     return (
       <div>
-        <h3>{this.context.account ? 'Your Active Liquidity Rewards' : 'Active Liquidity Rewards Today'}</h3>
+        <h3>{this.context.account ? 'Your Active Liquidity Reward' : 'Active Liquidity Reward Today'}</h3>
         <p className={styles.coins}>
           <Placeholder loading={loading} width={'10em'}>
             {format(data)} SLD
@@ -113,12 +110,12 @@ export default class LiquiditorReward extends Component<any, IState> {
         </p>
         <Auth>
           <p className={styles.dynamic}>
-            <span>Only reward for liquidity locked in private pool</span>
+            <span>Only reward for liquidity locked</span>
           </p>
           <div>
             <Placeholder loading={loading} width={'10em'}>
               <Button type="primary" className={[styles.btn, styles.cliamBtn].join(' ')} onClick={this.cofirmClaim}>
-                Claim
+                CLAIM
               </Button>
             </Placeholder>
             {/* <div>
