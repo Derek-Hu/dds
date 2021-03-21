@@ -7,7 +7,7 @@ import ConnectWallet from '../connect-wallet/index';
 import Logo from '~/assets/imgs/logo.png';
 import LogoWhite from '~/assets/imgs/logo-white.png';
 import { homeBasePath, ddsBasePath } from '../../constant/index';
-import { formatInt, isNumberLike } from '../../util/math';
+import { format, isNumberLike } from '../../util/math';
 
 const { SubMenu } = Menu;
 
@@ -219,7 +219,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                             {account.USDBalance
                               ? Object.keys(account.USDBalance).map(coin => (
                                   <span>
-                                    {isNumberLike(account.USDBalance[coin]) ? formatInt(account.USDBalance[coin]) : 0}
+                                    {isNumberLike(account.USDBalance[coin]) ? format(account.USDBalance[coin]) : 0}
                                     &nbsp;
                                     {coin}
                                   </span>

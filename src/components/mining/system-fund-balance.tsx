@@ -1,6 +1,4 @@
 import { Row, Col, Table, Icon, Button } from 'antd';
-import dayjs from 'dayjs';
-import numeral from 'numeral';
 import styles from './system-fund-balance.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import Pool, { IPool } from '../liquidity-pool/pool';

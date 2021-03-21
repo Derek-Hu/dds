@@ -2,8 +2,8 @@ import { Component } from 'react';
 import { Tabs, Button, Input, Row, Col, Select, Table } from 'antd';
 import styles from './style.module.less';
 import commonStyles from '../funding-balance/modals/style.module.less';
-import numeral from 'numeral';
 import dayjs from 'dayjs';
+import { isNumberLike, isNotZeroLike, format } from '../../util/math';
 import { CustomTabKey, SupportedCoins } from '../../constant/index';
 import Pool, { IPool } from '../liquidity-pool/pool';
 import ColumnConvert from '../column-convert/index';
@@ -56,7 +56,7 @@ const columns = ColumnConvert<IReward, {}>({
       case 'amount':
       case 'price':
       case 'reward':
-        return numeral(value).format('0,0.0000');
+        return format(value);
       default:
         return value;
     }

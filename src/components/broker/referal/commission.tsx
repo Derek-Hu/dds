@@ -6,7 +6,7 @@ import ModalRender from '../../modal-render/index';
 import ColumnConvert from '../../column-convert/index';
 import dayjs from 'dayjs';
 import styles from '../style.module.less';
-import numeral from 'numeral';
+import { format } from '../../../util/math';
 import { SupporttedUSD } from '../../../constant/index';
 
 interface IState {
@@ -35,7 +35,7 @@ const CommissionColumns = ColumnConvert<IBrokerCommissionRecord, {}>({
       case 'amount':
       case 'price':
       case 'reward':
-        return numeral(value).format('0,0.0000');
+        return format(value);
       default:
         return value;
     }

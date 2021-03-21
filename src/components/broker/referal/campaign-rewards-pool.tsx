@@ -5,7 +5,6 @@ import { getBrokerCampaignPool, getBrokerCampaignRewardsPool } from '../../../se
 import ModalRender from '../../modal-render/index';
 import ColumnConvert from '../../column-convert/index';
 import dayjs from 'dayjs';
-import numeral from 'numeral';
 import styles from '../campion-pool.module.less';
 import PoolProgress, { IMiningShare } from '../../progress-bar/pool-progress';
 import WithIndicator, { IIndicatorProgress } from '../../progress-bar/with-indicator';

@@ -49,9 +49,9 @@ export default class Balance extends Component<{
       const balanceInfo =
         process.env.NODE_ENV === 'development'
           ? {
-              balance: 9922332423.4322,
-              locked: 32432.0912,
-              available: 9922332423.4322 - 32432.0912,
+              balance: 9922332423.432223,
+              locked: 32432.091232,
+              available: 9922332423.432223 - 32432.091232,
             }
           : await getFundingBalanceInfo(to);
 

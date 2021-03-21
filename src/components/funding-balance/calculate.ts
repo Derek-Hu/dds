@@ -1,4 +1,4 @@
-import { isNumberLike } from '../../util/math';
+import { isNumberLike, format } from '../../util/math';
 
 export const getMaxFromCoin = (balanceInfo?: IBalanceInfo, price?: number) => {
   if (!balanceInfo) {

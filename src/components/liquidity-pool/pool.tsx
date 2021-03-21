@@ -1,7 +1,7 @@
 import { Row, Col } from 'antd';
 import styles from './pool.module.less';
-import numeral from 'numeral';
 import SiteContext from '../../layouts/SiteContext';
+import { isNumberLike, isNotZeroLike, format } from '../../util/math';
 
 export interface IPool {
   title: string;
@@ -19,7 +19,7 @@ export default (props: IPool) => {
           <h4>{title}</h4>
           {usd === null || usd === undefined ? null : (
             <p className={styles.numbers}>
-              {numeral(usd).format('0,0')} <span>USD</span>
+              {format(usd)} <span>USD</span>
             </p>
           )}
           <Row>

@@ -1,8 +1,8 @@
 import { Table, Icon, Button } from 'antd';
 import dayjs from 'dayjs';
-import numeral from 'numeral';
 import styles from './locked.module.less';
 import SiteContext from '../../layouts/SiteContext';
+import { isNumberLike, isNotZeroLike, format } from '../../util/math';
 
 const columns = [
   {
@@ -23,7 +23,7 @@ const columns = [
     dataIndex: 'locked',
     key: 'locked',
     render: (time: string) => {
-      return numeral(time).format('0,0');
+      return format(time);
     },
   },
   // {
@@ -31,7 +31,7 @@ const columns = [
   //   dataIndex: 'fee',
   //   key: 'fee',
   //   render: (time: string) => {
-  //     return numeral(time).format('0,0');
+  //     return format(time).format('0,0');
   //   },
   // },
   {

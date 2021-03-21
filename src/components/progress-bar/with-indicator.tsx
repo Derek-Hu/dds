@@ -1,8 +1,8 @@
 import { Progress } from 'antd';
 import FillGrid from '../fill-grid';
 import styles from './with.module.less';
-import numeral from 'numeral';
 import Placeholder from '../placeholder/index';
+import { isNumberLike, isNotZeroLike, format } from '../../util/math';
 
 export interface IIndicatorProgress {
   label: string;
@@ -12,7 +12,7 @@ export interface IIndicatorProgress {
 export default ({ data, totalMode, loading }: { data: IIndicatorProgress; loading: boolean; totalMode: boolean }) => {
   const { label, percentage, val } = data;
 
-  const pecentText = numeral(percentage).format('0,0.0000');
+  const pecentText = format(percentage);
   const style = totalMode
     ? {
         color: '#333333',
