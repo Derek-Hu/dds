@@ -48,15 +48,16 @@ export function toBigNumber(num: number, weight: number): BigNumber {
 
 export function tokenBigNumber(amount: number, coin: IDDS | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'): BigNumber {
   const wei = getTokenWei(coin);
+
   if (amount % 1) {
     const str = amount.toString();
     const parts = str.split('.');
     const append: number = wei - parts[1].length;
     const int: string = parts[0] + parts[1] + new Array(append).fill('0').join('');
+
     return BigNumber.from(int);
   }
-
-  return BigNumber.from(amount);
+  return BigNumber.from(amount.toString() + new Array(wei).fill('0').join(''));
 }
 
 function getTokenWei(coin: IDDS | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'): number {
