@@ -13,6 +13,7 @@ import { format, multiple, formatInt, isNotZeroLike } from '../../util/math';
 import Placeholder from '../placeholder/index';
 import InputNumber from '../input/index';
 
+const { Option } = Select;
 interface IState {
   loading: boolean;
   data?: ISwapBurn;
@@ -101,7 +102,7 @@ export default class PoolArea extends Component<any, IState> {
                     1 SLD = {format(data?.rate)} USD
                   </Placeholder>
                 </p>
-                <Hidden when={loading}>
+                <Hidden when={false}>
                   <Auth>
                     <div className={styles.swapContainer}>
                       <Form className="login-form">
@@ -133,7 +134,8 @@ export default class PoolArea extends Component<any, IState> {
                                     onChange={this.onCoinChange}
                                     style={{ width: '100%', height: 50 }}
                                   >
-                                    {CoinSelectOption}
+                                    <Option value="DAI">DAI</Option>
+                                    {/* {CoinSelectOption} */}
                                   </Select>
                                 </Col>
                                 <Col xs={11} sm={11} md={13} lg={13}>

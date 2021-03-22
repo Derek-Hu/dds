@@ -52,11 +52,11 @@ export default ({ data: { price, type, amount, locked, fee, coins }, visible, on
           </Descriptions>
           <Row gutter={[isMobile ? 0 : 16, 16]} className={styles.actionBtns} type="flex">
             <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-              <Button onClick={onCancel}>Cancel</Button>
+              <Button onClick={onCancel}>CANCEL</Button>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
               <Button onClick={onConfirm} type="primary">
-                Confirm
+                CONFIRM
               </Button>
             </Col>
           </Row>

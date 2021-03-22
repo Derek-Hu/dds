@@ -28,7 +28,7 @@ const rightMenus = {
     Github: '/github',
     Twitter: '/Twitter',
     Reddit: '/Reddit',
-    'DDerivatives DAO': '/dao',
+    // 'DDerivatives DAO': '/dao',
     Vote: '/vote',
   },
   Audits: '/home',

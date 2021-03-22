@@ -203,11 +203,11 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
               </Descriptions>
               <Row className={modalStyles.actionBtns} gutter={[16, 16]} type="flex">
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                  <Button onClick={this.orderModalVisible.hide}>Cancel</Button>
+                  <Button onClick={this.orderModalVisible.hide}>CANCEL</Button>
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                   <Button onClick={this.confirmClose} type="primary">
-                    Close Position
+                    CLOSE POSITION
                   </Button>
                 </Col>
               </Row>

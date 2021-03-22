@@ -333,7 +333,7 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
               </Row>
               <Row className={commonStyles.actionBtns} gutter={[16, 16]}>
                 <Col xs={24} sm={24} md={12} lg={12}>
-                  <Button onClick={this.withDrawVisible.hide}>Cancel</Button>
+                  <Button onClick={this.withDrawVisible.hide}>CANCEL</Button>
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12}>
                   <Button type="primary" onClick={this.doWithdraw}>

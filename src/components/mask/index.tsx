@@ -24,8 +24,12 @@ export default {
             <div className={styles.imgContent}>
               <img src={url} alt="" />
             </div>
-            <p>{url === fail ? 'Failed' : url === success ? 'Success' : ''}</p>
-            {url === pending ? null : <Button type="primary" onClick={() => this.hide()}>Done</Button>}
+            <p>{url === fail ? 'Failed' : url === success ? 'Success' : 'Pending'}</p>
+            {url === pending ? null : (
+              <Button type="primary" onClick={() => this.hide()}>
+                Done
+              </Button>
+            )}
           </div>
         </div>
       </div>

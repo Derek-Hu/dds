@@ -114,11 +114,11 @@ export default class LiquidityProvided extends Component<IProps, IState> {
               </Descriptions>
               <Row className={commonStyles.actionBtns} gutter={[16, 16]} type="flex">
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                  <Button onClick={this.modalVisible.hide}>Cancel</Button>
+                  <Button onClick={this.modalVisible.hide}>CANCEL</Button>
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                   <Button onClick={this.confirmPrivateDeposit} type="primary">
-                    Comfirm
+                    CONFIRM
                   </Button>
                 </Col>
               </Row>
