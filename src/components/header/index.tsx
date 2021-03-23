@@ -172,7 +172,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                         <div className="top">
                           <div className="title">Token Economics</div>
                           <div className="content">
-                            SLD is a utility token for community governance and fuels further Sield ecosystem
+                            SLD is a utility token for community governance and fuels further Shield ecosystem
                             development.
                           </div>
                           {/* <Link to="/" className="link" style={{ color: '#1346FF' }}>

@@ -11,6 +11,7 @@ import { Form, Row, Col, Select, Descriptions } from 'antd';
 import modalStyles from '../funding-balance/modals/style.module.less';
 import ModalRender from '../modal-render/index';
 import Placeholder from '../placeholder';
+import { formatTime } from '../../util/time';
 
 const statusColor: { [key in IOrderStatus]: string } = {
   ACTIVE: '#333333',
@@ -95,7 +96,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
     render: (value, key, record) => {
       switch (key) {
         case 'time':
-          return dayjs(value).format('YYYY-MM-DD');
+          return formatTime(value);
         case 'price':
         case 'amount':
         case 'fee':

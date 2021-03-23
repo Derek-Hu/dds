@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import styles from '../style.module.less';
 import { format } from '../../../util/math';
 import { DefaultCoinDatas } from '../../../constant/index';
+import { formatTime } from '../../../util/time';
 
 interface IState {
   data: Array<{ label: string; value: any }> | { [key: string]: number };
@@ -28,7 +29,7 @@ const CommissionColumns = ColumnConvert<IBrokerCommissionRecord, {}>({
   render(value, key, record) {
     switch (key) {
       case 'time':
-        return dayjs(value).format('YYYY-MM-DD');
+        return formatTime(value);
       case 'pair':
         const { from, to } = record[key];
         return from + '/' + to;

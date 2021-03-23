@@ -11,6 +11,7 @@ import ColumnConvert from '../column-convert/index';
 import ModalRender from '../modal-render/index';
 import modalStyles from '../funding-balance/modals/style.module.less';
 import InputNumber from '../input/index';
+import { formatTime } from '../../util/time';
 
 interface IState {
   data: PrivatePoolOrder[];
@@ -71,7 +72,7 @@ export default class Balance extends Component<any, IState> {
     render: (value, key, record) => {
       switch (key) {
         case 'time':
-          return dayjs(value).format('YYYY-MM-DD');
+          return formatTime(value);
         case 'amount':
         case 'openPrice':
         case 'lockedAmount':
@@ -142,7 +143,7 @@ export default class Balance extends Component<any, IState> {
                     {marginRate}
                   </Descriptions.Item>
                   {/* <Descriptions.Item label="Time" span={24}>
-                  {dayjs(selectedItem?.time).format('YYYY-MM-DD')}
+                  {formatTime(selectedItem?.time)}
                 </Descriptions.Item>
                 <Descriptions.Item label="Amount" span={24}>
                   {format(selectedItem?.amount)}
