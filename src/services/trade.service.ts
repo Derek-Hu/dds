@@ -1,15 +1,18 @@
 import { orders, balance, infoItems, curPrice, poolInfo } from './mock/trade.mock';
-import { graphData } from './mock/trade-graph.mock';
 import { walletManager } from '../wallet/wallet-manager';
-import { filter, map, switchMap, take } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
-import { AsyncSubject, of, zip } from 'rxjs';
+import { AsyncSubject, from, of, zip } from 'rxjs';
 import { contractAccessor } from '../wallet/chain-access';
 import { ConfirmInfo, UserAccountInfo } from '../wallet/contract-interface';
 import { BigNumber } from 'ethers';
-import { toEthers } from '../util/ethers';
+import { ETH_WEI, toEthers } from '../util/ethers';
 import * as request from 'superagent';
+import { Response } from 'superagent';
 import { withLoading } from './utils';
+import { CentralHost, DefaultNetwork } from '../constant';
+import { loginUserAccount } from './account';
+import { IOrderInfoData, OrderInfoObject } from './centralization-data';
 
 /**
  * Trade Page
@@ -95,21 +98,39 @@ export const getFundingLocked = async (coin: IUSDCoins, ethAmount: number): Prom
  * @param pageSize
  */
 export const getTradeOrders = async (page: number, pageSize: number = 5): Promise<ITradeRecord[]> => {
-  return walletManager
-    .watchWalletInstance()
+  return from(loginUserAccount())
     .pipe(
-      filter(walletIns => walletIns !== null),
-      switchMap((walletIns: WalletInterface | null) => {
-        return (walletIns as WalletInterface)?.watchAccount();
+      switchMap(account => {
+        const baseHost = 'http://' + CentralHost + '/' + DefaultNetwork;
+        const url: string = baseHost + '/transactions/getTransactionsInfo';
+        const pageIndex = page - 1;
+        return request.post(url).send({ page: pageIndex, offset: pageSize, state: 1, address: account, name: 'taker' });
       }),
-      filter(account => account !== null),
-      take(1),
-      switchMap((account: string | null) => {
-        return contractAccessor.getPriceByETHDAI('DAI').pipe(
-          switchMap(curPrice => {
-            return contractAccessor.getUserOrders(account as string, curPrice, page, pageSize);
-          })
-        );
+      switchMap((res: Response) => {
+        if (res.body.code === 200 && res.body.msg.length > 0) {
+          return contractAccessor.getPriceByETHDAI('DAI').pipe(
+            map((curPrice: BigNumber) => {
+              return {
+                value: curPrice,
+                precision: ETH_WEI,
+              } as CoinNumber;
+            }),
+            map((curPrice: CoinNumber) => {
+              const orders: IOrderInfoData[] = res.body.msg;
+              return orders.map(
+                (o: IOrderInfoData): ITradeRecord => {
+                  return new OrderInfoObject(o).getTakerOrder(curPrice);
+                }
+              );
+            })
+          );
+        } else {
+          return of([]);
+        }
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of([]);
       }),
       take(1)
     )
