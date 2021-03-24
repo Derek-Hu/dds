@@ -1,5 +1,5 @@
 import { Table, Icon, Button } from 'antd';
-import dayjs from 'dayjs';
+import { formatTime } from '../../util/time';
 import styles from './style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import { format } from '../../util/math';
@@ -10,7 +10,7 @@ const columns = [
     dataIndex: 'time',
     key: 'time',
     render: (time: string) => {
-      return dayjs(time).format('YYYY-MM-DD');
+      return formatTime(time);
     },
   },
   {

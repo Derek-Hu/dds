@@ -14,6 +14,7 @@ import ModalRender from '../../modal-render/index';
 import ColumnConvert from '../../column-convert/index';
 import dayjs from 'dayjs';
 import Placeholder from '../../placeholder/index';
+import { formatTime } from '../../../util/time';
 
 interface IState {
   loading: boolean;
@@ -34,7 +35,7 @@ const CommissionColumns = ColumnConvert<ILiquiditorBalanceRecord, {}>({
   render(value, key, record) {
     switch (key) {
       case 'time':
-        return dayjs(value).format('YYYY-MM-DD');
+        return formatTime(value);
       case 'pair':
         const { from, to } = record[key];
         return from + '/' + to;

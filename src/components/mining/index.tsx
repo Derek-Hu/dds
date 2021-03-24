@@ -18,6 +18,7 @@ import Auth, { Public } from '../builtin/auth';
 import ReTokenBalance from './liquidity/re-token-balance';
 import SystemFundBalance from './liquiditor/system-fund-balance';
 import YourMiningShare from './liquidity/your-mining-share';
+import { formatTime } from '../../util/time';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -49,7 +50,7 @@ const columns = ColumnConvert<IReward, {}>({
   render(value, key, record) {
     switch (key) {
       case 'time':
-        return dayjs(value).format('YYYY-MM-DD');
+        return formatTime(value);
       case 'pair':
         const { from, to } = record[key];
         return from + '/' + to;

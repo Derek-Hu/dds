@@ -17,6 +17,7 @@ import {
 import { isNumberLike, isNotZeroLike, format } from '../../util/math';
 import Placeholder from '../placeholder/index';
 import InputNumber from '../input/index';
+import { formatTime } from '../../util/time';
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -38,7 +39,7 @@ const columns = ColumnConvert<ITransfer, {}>({
   render(value, key) {
     switch (key) {
       case 'time':
-        return dayjs(value).format('YYYY-MM-DD');
+        return formatTime(value);
       case 'amount':
       case 'balance':
         return format(value);

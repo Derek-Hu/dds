@@ -29,11 +29,19 @@ export default class InputNumberComp extends Component<
     const val = e.target.value;
     const { max } = this.props;
 
-    const isCompatible = (val: string) => val === '' || /^\d+\.\d*$/.test(val);
+    // const isCompatible = (val: string) => val === '' || /^\d+\.\d*$/.test(val);
     // delete or exceed
-    if ((!isNumberLike(val) && !isCompatible(val)) || (isNumberLike(max) && Number(val) > Number(max!))) {
+    // if ((!isNumberLike(val) && !isCompatible(val)) || (isNumberLike(max) && Number(val) > Number(max!))) {
+    //   return;
+    // }
+    const isCompatible = /^[1-9]+\.?\d{0,4}?$/.test(val) || /^0\.?\d{0,4}?$/.test(val) || val === '';
+    if (!isCompatible) {
       return;
     }
+    if (isNumberLike(max) && isNumberLike(val) && Number(val) > Number(max!)) {
+      return;
+    }
+
     this.setState({
       amount: val,
     });
