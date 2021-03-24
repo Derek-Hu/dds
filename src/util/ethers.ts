@@ -7,10 +7,10 @@ export const USD_WEI = 6;
 export function toEthers(
   num: BigNumber,
   decimal: number,
-  coin: IDDS | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'
+  coin: number | IDDS | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'
 ): string {
   let numStr = num.toString();
-  const wei: number = getTokenWei(coin);
+  const wei = typeof coin === 'number' ? coin : getTokenWei(coin);
 
   if (numStr.length < wei) {
     numStr = _.padStart(numStr, wei, '0');
@@ -24,6 +24,14 @@ export function toEthers(
   const rs = integers + '.' + decimals;
 
   return _.trimEnd(_.trimEnd(rs, '0'), '.');
+}
+
+export function toEtherNumber(num: BigNumber, decimal: number, coin: IDDS | IUSDCoins | IReUSDCoins | IFromCoins) {
+  return Number(toEthers(num, decimal, coin));
+}
+
+export function toDisplayNum(coinNum: CoinNumber, decimal: number): number {
+  return Number(toEthers(coinNum.value, decimal, coinNum.precision));
 }
 
 //
@@ -60,6 +68,16 @@ export function tokenBigNumber(amount: number, coin: IDDS | IUSDCoins | IReUSDCo
   return BigNumber.from(amount.toString() + new Array(wei).fill('0').join(''));
 }
 
-function getTokenWei(coin: IDDS | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'): number {
+export function toExchangePair(pair: IExchangePair): ExchangeCoinPair {
+  const eth: IFromCoins = pair.startsWith('ETH') ? 'ETH' : 'BTC';
+  const usd: IUSDCoins = pair.substr(eth.length) as IUSDCoins;
+
+  return {
+    USD: usd,
+    ETH: eth,
+  };
+}
+
+export function getTokenWei(coin: IDDS | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'): number {
   return ['ETH', 'DDS', 'BTC', 'DAI', 'reDAI'].indexOf(coin) >= 0 ? ETH_WEI : USD_WEI;
 }

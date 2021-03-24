@@ -196,11 +196,9 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     return this.getContract(coin).pipe(
       switchMap((contract: ethers.Contract) => {
         const amount: BigNumber = tokenBigNumber(count, coin);
-        console.log('input amount', count, amount.toString());
         return from(contract.fees('ETHDAI', amount));
       }),
       map((rs: any) => {
-        console.log('rs primary', rs);
         return rs;
       })
     );
@@ -551,10 +549,11 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
             const getOneOrder = (index: number): Observable<any> => {
               return from(contract.functions.lockedLiquidity(BigNumber.from(index))).pipe(
                 map((rs: PrivateLockLiquidity) => {
-                  rs.orderId = index;
-                  rs.usdToken = 'DAI';
-                  rs.status = rs.locked ? 'ACTIVE' : 'CLOSED';
-                  return rs;
+                  const newRs = Object.assign({}, rs);
+                  newRs.orderId = index;
+                  newRs.usdToken = 'DAI';
+                  newRs.status = rs.locked ? 'ACTIVE' : 'CLOSED';
+                  return newRs;
                 })
               );
             };

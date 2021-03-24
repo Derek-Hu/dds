@@ -32,6 +32,16 @@ declare type IUSDCoins = 'DAI' | 'USDT' | 'USDC';
 declare type IReUSDCoins = 'reDAI' | 'reUSDT' | 'reUSDC';
 declare type IExchangePair = 'ETHDAI' | 'EHTUSDT' | 'ETHUSDC' | 'BTCDAI' | 'BTCUSDT' | 'BTCUSDC';
 
+declare interface ExchangeCoinPair {
+  USD: IUSDCoins;
+  ETH: IFromCoins;
+}
+
+declare interface CoinNumber {
+  value: BigNumber;
+  precision: number;
+}
+
 // Funding Balance Withdraw
 // 入参：
 declare interface IRecord {
@@ -269,6 +279,7 @@ declare interface UserAccountInfo {
 }
 
 declare type IAccount = (Omit<UserAccountInfo, 'USDBalance'> & { USDBalance: { [coin: string]: number } }) | null;
+
 // 私池订单信息
 declare interface PrivatePoolOrder {
   orderId: string;

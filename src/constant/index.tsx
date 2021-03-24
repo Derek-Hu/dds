@@ -91,12 +91,6 @@ export const DataRefreshInterval: number = 5 * 1000; // 5 seconds
 
 export const ETH_WEIGHT = '1000000000000000000';
 
-export const CoinWeight = new Map<IUSDCoins, string>([
-  ['DAI', '1000000000000000000'],
-  ['USDT', '1000000'],
-  ['USDC', '1000000'],
-]);
-
 export const CoinEthExchange: { [c: string]: IExchangePair } = {
   DAI: 'ETHDAI',
   USDT: 'EHTUSDT',
@@ -111,3 +105,5 @@ export const CoinBTCExchange = new Map<IUSDCoins, IExchangePair>([
 
 export type ISupporttedUSD = keyof typeof SupporttedUSD;
 export type ICoins = keyof typeof SupporttedCoins;
+
+export const CentralHost = '8.210.112.7:8090';
