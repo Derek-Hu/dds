@@ -114,7 +114,7 @@ export default class ConnectWallet extends Component<any, any> {
     return (
       <SiteContext.Consumer>
         {({ connected, address }) => {
-          const shouldShow = connected !== null && (!hasMetaMaskEnv || !address || visible);
+          const shouldShow = (!hasMetaMaskEnv || !address || visible);
           return (
             <div className={styles.root}>
               <span onClick={this.showModal}>{children}</span>
