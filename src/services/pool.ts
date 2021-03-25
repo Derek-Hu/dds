@@ -85,6 +85,6 @@ export const appendCoinToPrivatePool = async (
  * @param page - from 1
  * @param pageSize - 每页数量
  */
-export const getLiquidityLockedDetails = async (page: number, pageSize: number = 10): Promise<PoolContractDetail[]> => {
+export const getLiquidityLockedDetails = async (page: number, pageSize = 10): Promise<PoolContractDetail[]> => {
   return Promise.resolve([]);
 };

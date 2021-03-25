@@ -4,7 +4,7 @@ export const balance: IBalanceInfo = {
   available: 91912,
 };
 
-export const curPrice: number = 1500.0;
+export const curPrice = 1500.0;
 
 const infos = {
   'Ticker Root': 20,

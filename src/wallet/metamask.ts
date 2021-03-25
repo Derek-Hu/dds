@@ -98,7 +98,7 @@ export class MetamaskWallet implements WalletInterface {
     this.curNetwork.next(network);
   }
 
-  private syncAccount(init: boolean = false): void {
+  private syncAccount(init = false): void {
     if (isMetaMaskInstalled()) {
       this.doRequest(init).subscribe((rsAccounts: string[]) => {
         this.updateAccount(rsAccounts);

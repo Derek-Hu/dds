@@ -47,7 +47,7 @@ import { getPageListRange } from '../util/page';
 declare const window: Window & { ethereum: any };
 
 abstract class BaseTradeContractAccessor implements ContractProxy {
-  public transferable: boolean = false; // 是否可以发起写入操作
+  public transferable = false; // 是否可以发起写入操作
 
   protected contractMap: Map<IUSDCoins, ethers.Contract>;
   protected pubContractMap: Map<IUSDCoins, ethers.Contract>;
@@ -151,7 +151,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         return this.watchUserAccount(userAddress as string, coin);
       }),
       switchMap((info: UserAccountInfo) => {
-        const maxAmount: number = Number(toEthers(info.available, 0));
+        const maxAmount = Number(toEthers(info.available, 0));
         return this.getMaxOpenAmount(coin, exchange, maxAmount);
       })
     );
@@ -208,7 +208,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     coin: IUSDCoins,
     orderType: ITradeType,
     amount: number,
-    inviter: string = ''
+    inviter = ''
   ): Observable<boolean> {
     return this.getContract(coin).pipe(
       switchMap((contract: ethers.Contract) => {
@@ -338,8 +338,8 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         return contract.functions.getLPAmountInfo();
       }),
       map((rs: any) => {
-        const total: number = Number(toEthers(rs.deposit, 4));
-        const available: number = Number(toEthers(rs.availabe, 4));
+        const total = Number(toEthers(rs.deposit, 4));
+        const available = Number(toEthers(rs.availabe, 4));
         return {
           value: available,
           total,
@@ -354,8 +354,8 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         return contract.functions.getLPAmountInfo();
       }),
       map((rs: any) => {
-        const total: number = Number(toEthers(rs.deposit, 4));
-        const available: number = Number(toEthers(rs.availabe, 4));
+        const total = Number(toEthers(rs.deposit, 4));
+        const available = Number(toEthers(rs.availabe, 4));
         return {
           value: available,
           total,
@@ -537,7 +537,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     address: string,
     page: number,
     pageSize: number,
-    devTest: boolean = false
+    devTest = false
   ): Observable<PrivateLockLiquidity[]> {
     return this.getPriPoolContract('DAI').pipe(
       switchMap(contract => {
@@ -1225,7 +1225,7 @@ export class ContractAccessor implements ContractProxy {
     );
   }
 
-  public createContract(coin: IUSDCoins, orderType: ITradeType, amount: number, inviter: string = ''): Observable<any> {
+  public createContract(coin: IUSDCoins, orderType: ITradeType, amount: number, inviter = ''): Observable<any> {
     return this.accessor.pipe(switchMap(accessor => accessor.createContract(coin, orderType, amount, inviter)));
   }
 
@@ -1329,7 +1329,7 @@ export class ContractAccessor implements ContractProxy {
     address: string,
     page: number,
     pageSize: number,
-    devTest: boolean = false
+    devTest = false
   ): Observable<PrivateLockLiquidity[]> {
     return this.accessor.pipe(
       switchMap(accessor => {

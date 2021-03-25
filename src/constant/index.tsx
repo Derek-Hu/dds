@@ -66,8 +66,8 @@ export const CustomTabKey = 'dds-tabs';
 export const CoinSelectOption = SupportedCoins.map(coin => <Option value={coin}>{coin}</Option>);
 // 合约地址
 export const TradeDAIContractAddress = '0x09B20920c4f7d53ED6A5DC69c15776B193C8126e';
-export const TradeUSDTContractAddress: string = '';
-export const TradeUSDCContractAddress: string = '';
+export const TradeUSDTContractAddress = '';
+export const TradeUSDCContractAddress = '';
 export const Lp1DAIContractAddress = '0xfA463AC1D51CB2bC8B6fE7952456830FD1320301';
 export const Lp1USDTContractAddress = '';
 export const Lp1USDCContractAddress = '';

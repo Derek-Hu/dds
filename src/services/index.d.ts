@@ -198,7 +198,7 @@ declare interface ICoinValue {
   value: number;
 }
 
-declare interface IPoolShareInPool extends ICoinItem {}
+type IPoolShareInPool = ICoinItem
 
 declare interface ISwapBurn {
   usd: number;

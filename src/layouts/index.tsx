@@ -22,7 +22,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   state: IState = { connected: null, isMobile: false, address: '', account: null };
 
   componentDidMount() {
-    this.tick();
+    // this.tick();
     this.updateMobileMode();
     window.addEventListener('resize', this.updateMobileMode);
   }
@@ -48,10 +48,10 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   };
   componentWillUnmount() {
     // @ts-ignore
-    if (timer) {
-      // @ts-ignore
-      clearTimeout(timer);
-    }
+    // if (timer) {
+    //   // @ts-ignore
+    //   clearTimeout(timer);
+    // }
     window.removeEventListener('resize', this.updateMobileMode);
   }
 

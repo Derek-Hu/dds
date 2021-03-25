@@ -84,7 +84,7 @@ export default class CommissionPool extends Component<any, IState> {
     // this.tableLoad();
   }
 
-  tableLoad = async (page: number = 1) => {
+  tableLoad = async (page = 1) => {
     this.setState({ tableLoading: true });
 
     const tableData = await getBrokerCommissionRecords();

@@ -70,7 +70,7 @@ export default class LiquiditorReward extends Component<any, IState> {
     // this.tableLoad();
   }
 
-  tableLoad = async (page: number = 1) => {
+  tableLoad = async (page = 1) => {
     this.setState({ tableLoading: true });
 
     const tableData = await getLiquiditorBalanceRecord();

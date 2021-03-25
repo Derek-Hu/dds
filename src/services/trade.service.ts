@@ -97,7 +97,7 @@ export const getFundingLocked = async (coin: IUSDCoins, ethAmount: number): Prom
  * @param page
  * @param pageSize
  */
-export const getTradeOrders = async (page: number, pageSize: number = 5): Promise<ITradeRecord[]> => {
+export const getTradeOrders = async (page: number, pageSize = 5): Promise<ITradeRecord[]> => {
   return from(loginUserAccount())
     .pipe(
       switchMap(account => {

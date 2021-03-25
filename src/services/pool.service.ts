@@ -221,7 +221,7 @@ export const doPrivateWithdraw = async ({ coin, amount }: { coin: IUSDCoins; amo
 export const getPrivateOrders = async (
   page: number,
   pageSize: number,
-  devTest: boolean = false
+  devTest = false
 ): Promise<PrivatePoolOrder[]> => {
   return from(loginUserAccount())
     .pipe(

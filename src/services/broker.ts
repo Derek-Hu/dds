@@ -68,6 +68,6 @@ export const getCampaignReward = async (): Promise<CoinValueInfo> => {
  * @param page
  * @param pageSize
  */
-export const getCampaignRewardRecords = async (page: number, pageSize: number = 10): Promise<[]> => {
+export const getCampaignRewardRecords = async (page: number, pageSize = 10): Promise<[]> => {
   return Promise.resolve([]);
 };
