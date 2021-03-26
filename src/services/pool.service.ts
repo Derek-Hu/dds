@@ -10,11 +10,13 @@ import { defaultPoolData, defaultCoinDatas } from './mock/unlogin-default';
 import { PrivateLockLiquidity } from '../wallet/contract-interface';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(val);
-    }, Math.random() * 2000);
-  });
+  if(process.env.NODE_ENV === 'development'){
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(val);
+      }, Math.random() * 2000);
+    });
+  }
 };
 
 export const getCollaborativeLiquidityProvided = async (): Promise<ICoinValue[]> => {
@@ -27,6 +29,13 @@ export const getCollaborativeArp = async (): Promise<number> => {
 
 /** Done */
 export const getPoolBalance = async (type: 'public' | 'private'): Promise<{ [key in IUSDCoins]: number }> => {
+  if(process.env.NODE_ENV === 'development'){
+    return {
+      DAI: -3432432.3243243,
+      USDC: 0,
+      USDT: 100.23432,
+    }
+  }
   return from(loginUserAccount())
     .pipe(
       switchMap((account: string | null) => {
