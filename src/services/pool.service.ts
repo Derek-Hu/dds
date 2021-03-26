@@ -236,6 +236,17 @@ export const getPrivateOrders = async (
   pageSize: number,
   devTest = false
 ): Promise<PrivatePoolOrder[]> => {
+  if(process.env.NODE_ENV === 'development'){
+    return Promise.resolve([{
+      orderId: 'string',
+      time: new Date().getTime(),
+      amount: 33223.432432,
+      lockedAmount:322323.432432,
+      status: 'ACTIVE',
+      openPrice:334323.432432,
+      coin: 'DAI'
+    }]);
+  }
   return from(loginUserAccount())
     .pipe(
       switchMap(account => {

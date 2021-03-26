@@ -3,7 +3,7 @@ import { Form, Row, Col, Select, Descriptions } from 'antd';
 import dayjs from 'dayjs';
 import styles from './locked.module.less';
 import SiteContext from '../../layouts/SiteContext';
-import { percentage, multiple, isNotZeroLike, format } from '../../util/math';
+import { percentage, multiple, isGreaterZero, format, truncated } from '../../util/math';
 import { Component } from 'react';
 import { getCurPrice } from '../../services/trade.service';
 import { getPrivateOrders, addPrivateOrderMargin } from '../../services/pool.service';
@@ -30,11 +30,16 @@ export default class Balance extends Component<any, IState> {
     curPrice: null,
   };
   async componentDidMount() {
+    this.loadData();
+  }
+
+  async loadData() {
     this.setState({
       loading: true,
     });
     const data = await getPrivateOrders(1, 50, true);
-    const curPrice = await getCurPrice('DAI');
+    // const curPrice = await getCurPrice('DAI');
+    const curPrice = 100;
     this.setState({
       data,
       curPrice,
@@ -60,13 +65,14 @@ export default class Balance extends Component<any, IState> {
 
   columns = ColumnConvert<PrivatePoolOrder, { operation: any }>({
     column: {
+      orderId: 'Order Id',
       time: 'Time',
       amount: 'Amount',
       lockedAmount: 'Locked Amount',
       openPrice: 'Open Price',
       status: 'Status',
       coin: 'Coins',
-      orderId: 'Order Id',
+      operation: 'Action'
     },
     attributes: {},
     render: (value, key, record) => {
@@ -92,10 +98,14 @@ export default class Balance extends Component<any, IState> {
   confirmAddMargin = async () => {
     const { addAmount, selectedItem } = this.state;
 
-    if (!isNotZeroLike(addAmount)) {
+    if (!isGreaterZero(addAmount)) {
       return;
     }
-    await addPrivateOrderMargin(selectedItem!, addAmount!);
+    this.orderModalVisible.hide();
+    const success = await addPrivateOrderMargin(selectedItem!, addAmount!);
+    if(success){
+      this.loadData();
+    }
   };
 
   onOpenAmountChange = (addAmount: number) => {
@@ -110,7 +120,9 @@ export default class Balance extends Component<any, IState> {
       <SiteContext.Consumer>
         {({ isMobile, account }) => {
           const max = selectedItem && account?.USDBalance ? account?.USDBalance[selectedItem?.coin] : undefined;
-          const marginRate = selectedItem ? percentage(selectedItem.lockedAmount, multiple(addAmount, curPrice)) : null;
+          const marginRate = selectedItem ? percentage(selectedItem.lockedAmount, multiple(selectedItem.amount, curPrice)) : null;
+          //@ts-ignore
+          const marginTxt = isNaN(marginRate) ? '-' : marginRate + '%';
           return (
             <div className={styles.tableList}>
               <h4>Liquidity Locked Detail</h4>
@@ -140,7 +152,8 @@ export default class Balance extends Component<any, IState> {
                     {selectedItem?.orderId}
                   </Descriptions.Item>
                   <Descriptions.Item label="Current margin rate" span={24}>
-                    {marginRate}
+                    {/* // @ts-ignore */}
+                    {marginTxt}
                   </Descriptions.Item>
                   {/* <Descriptions.Item label="Time" span={24}>
                   {formatTime(selectedItem?.time)}
@@ -164,20 +177,20 @@ export default class Balance extends Component<any, IState> {
                       className={styles.orderInput}
                       onChange={this.onOpenAmountChange}
                       placeholder={max ? `Max ${max}` : '0.00'}
-                      max={max}
+                      max={truncated(max)}
                       showTag={true}
                       tagClassName={styles.utilMax}
                       suffix={selectedItem?.coin}
                     />
                   </Col>
                 </Row>
-                <Row className={modalStyles.actionBtns} gutter={[16, 16]} type="flex">
+                <Row className={modalStyles.actionBtns} gutter={16} type="flex">
                   <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                    <Button onClick={this.orderModalVisible.hide}>Cancel</Button>
+                    <Button onClick={this.orderModalVisible.hide}>CANCEL</Button>
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                     <Button onClick={this.confirmAddMargin} type="primary">
-                      Confirm
+                      CONFIRM
                     </Button>
                   </Col>
                 </Row>
