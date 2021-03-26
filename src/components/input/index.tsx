@@ -82,7 +82,7 @@ export default class InputNumberComp extends Component<
             justify="space-between"
           >
             <Col span={12}>
-              <Tag onClick={this.onMaxOpenClick} color="#1346FF">
+              <Tag style={{cursor: 'pointer'}} onClick={this.onMaxOpenClick} color="#1346FF">
                 Max
               </Tag>
             </Col>

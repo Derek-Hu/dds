@@ -75,6 +75,10 @@ declare interface ITradeRecord {
   status: IOrderStatus;
 }
 
+declare interface IOpenFee {
+  curPrice: number, settlementFee: number, fundingFeeLocked: number;
+}
+
 declare interface CoinAvailableInfo {
   value: number;
   total: number;

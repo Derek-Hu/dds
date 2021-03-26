@@ -1,13 +1,13 @@
-import { Row, Col, Radio, Input, Tag, Button } from 'antd';
+import { Row, Col, Radio, Input, Icon, Button } from 'antd';
 import styles from './style.module.less';
 import DespositModal from './modals/deposit';
 import WithdrawModal from './modals/withdraw';
 import OrderConfirm from './modals/order-confirm';
 import { Component } from 'react';
 import SiteContext from '../../layouts/SiteContext';
-import { getFundingBalanceInfo, deposit, withdraw, openOrder } from '../../services/trade.service';
-import { getMaxFromCoin, getFee, getLocked } from './calculate';
-import { format, isGreaterZero } from '../../util/math';
+import { getFundingBalanceInfo, confirmOrder, deposit, withdraw, openOrder } from '../../services/trade.service';
+import { getMaxFromCoin, getFee } from './calculate';
+import { format, isGreaterZero, truncated, isNumberLike, divide } from '../../util/math';
 import InputNumber from '../input/index';
 import Placeholder from '../placeholder/index';
 
@@ -19,7 +19,11 @@ interface IState {
   balanceInfo?: IBalanceInfo;
   openAmount: number | undefined;
   maxNumber?: number;
+  available?: number;
   loading: boolean;
+  feeQuery: boolean;
+  fees?: IOpenFee;
+  setFeeQuery: boolean;
 }
 
 type TModalKeys = Pick<IState, 'withdrawVisible' | 'depositVisible' | 'orderConfirmVisible'>;
@@ -34,7 +38,10 @@ export default class Balance extends Component<{
     orderConfirmVisible: false,
     openAmount: undefined,
     tradeType: 'long',
+    available: undefined,
+    setFeeQuery: false,
     loading: false,
+    feeQuery: false,
   };
 
   static contextType = SiteContext;
@@ -43,23 +50,27 @@ export default class Balance extends Component<{
     this.loadBalanceInfo();
   };
 
-  loadBalanceInfo = async () => {
+  loadBalanceInfo = async (damon?: boolean) => {
     const { coins, curPrice } = this.props;
     const { to } = coins;
     try {
-      this.setState({ loading: true });
+      if (!damon) {
+        this.setState({ loading: true });
+      }
       const balanceInfo =
         process.env.NODE_ENV === 'development'
           ? {
-              balance: 9922332423.432223,
-              locked: 32432.091232,
+              balance: 2000000.432223,
+              locked: 100.09232,
               // available: 9922332423.432223 - 32432.0912328,
             }
           : await getFundingBalanceInfo(to);
 
-      const maxNumber = getMaxFromCoin(balanceInfo, process.env.NODE_ENV === 'development' ? 100 : curPrice);
+      const available = getMaxFromCoin(balanceInfo);
+      const maxNumber = divide(available, process.env.NODE_ENV === 'development' ? 100 : curPrice);
       this.setState({
         balanceInfo,
+        available: truncated(available),
         maxNumber,
         loading: false,
       });
@@ -116,9 +127,21 @@ export default class Balance extends Component<{
     });
   };
 
-  onOpenAmountChange = (openAmount: number) => {
+  onOpenAmountChange = async (openAmount: number) => {
+    const { coins } = this.props;
+    const { to } = coins;
+
     this.setState({
       openAmount,
+    });
+
+    this.setState({
+      setFeeQuery: true,
+    });
+    const fees = await confirmOrder(openAmount!, to);
+    this.setState({
+      fees,
+      setFeeQuery: false,
     });
   };
 
@@ -128,6 +151,31 @@ export default class Balance extends Component<{
     const { tradeType, openAmount } = this.state;
     this.orderConfirmVisible.hide();
     const success = await openOrder(to, tradeType, openAmount!);
+    if (success) {
+      // const payedAmount = multiple(openAmount, curPrice, true);
+      this.loadBalanceInfo(true);
+    }
+  };
+
+  queryFee = async () => {
+    this.setState({
+      feeQuery: true,
+    });
+
+    try {
+      const { coins } = this.props;
+      const { to } = coins;
+      const { openAmount } = this.state;
+
+      const fees = await confirmOrder(openAmount!, to);
+      this.orderConfirmVisible.show();
+      this.setState({
+        fees,
+      });
+    } catch {}
+    this.setState({
+      feeQuery: false,
+    });
   };
 
   render() {
@@ -138,8 +186,12 @@ export default class Balance extends Component<{
       tradeType,
       balanceInfo,
       loading,
+      fees,
       openAmount,
       maxNumber,
+      setFeeQuery,
+      feeQuery,
+      available,
     } = this.state;
     const { coins, curPrice } = this.props;
     const { from, to } = coins;
@@ -147,14 +199,9 @@ export default class Balance extends Component<{
     const price = process.env.NODE_ENV === 'development' ? 100 : curPrice;
     const address = this.context.address;
 
-    const fee = getFee(openAmount, price);
-    const locked = openAmount! + fee;
     const openData = {
       type: tradeType,
-      price,
       amount: openAmount,
-      locked,
-      fee: fee,
       coins: coins,
     };
     return (
@@ -210,17 +257,18 @@ export default class Balance extends Component<{
               suffix={'ETH'}
             />
             <p className={styles.settlement}>
-              Settlement Fee : {fee} {to}
+              Settlement Fee : { setFeeQuery ? <Icon type="loading" /> : isNumberLike(fees?.settlementFee) ? fees?.settlementFee : 0} {to}
             </p>
             {/* <Progress strokeColor="#1346FF" showInfo={false} percent={30} strokeWidth={20} /> */}
             <Button
+              loading={feeQuery}
               className={tradeType === 'short' ? 'buttonGreen' : 'buttonRed'}
               type="primary"
               onClick={() => {
                 if (!isGreaterZero(openAmount)) {
                   return;
                 }
-                this.orderConfirmVisible.show();
+                this.queryFee();
               }}
             >
               OPEN
@@ -228,7 +276,7 @@ export default class Balance extends Component<{
 
             <DespositModal
               coin={to}
-              max={account && account.USDBalance ? account?.USDBalance[to] : undefined}
+              max={truncated(account && account.USDBalance ? account?.USDBalance[to] : undefined)}
               onCancel={this.depositVisible.hide}
               onConfirm={this.deposit}
               visible={depositVisible}
@@ -237,11 +285,12 @@ export default class Balance extends Component<{
               coin={to}
               onCancel={this.withdrawVisible.hide}
               onConfirm={this.withdraw}
-              max={balanceInfo?.available}
+              max={available}
               visible={withdrawVisible}
             />
             <OrderConfirm
               data={openData}
+              fees={fees}
               onConfirm={this.onOpen}
               onCancel={this.orderConfirmVisible.hide}
               visible={orderConfirmVisible}
