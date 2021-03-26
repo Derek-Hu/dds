@@ -6,7 +6,7 @@ import OrderConfirm from './modals/order-confirm';
 import { Component } from 'react';
 import SiteContext from '../../layouts/SiteContext';
 import { getFundingBalanceInfo, confirmOrder, deposit, withdraw, openOrder } from '../../services/trade.service';
-import { getMaxFromCoin, getFee } from './calculate';
+import { getMaxFromCoin } from './calculate';
 import { format, isGreaterZero, truncated, isNumberLike, divide } from '../../util/math';
 import InputNumber from '../input/index';
 import Placeholder from '../placeholder/index';

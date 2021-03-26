@@ -123,6 +123,7 @@ interface IState {
   deadlineLoading: boolean;
   amount: any;
   reAmount?: number;
+  unlockInfos: { [coin: string]: string };
   calculating: boolean;
   withdrawBtnEnable: boolean;
 }
@@ -141,6 +142,7 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
     amount: '',
     withdrawBtnEnable: false,
     deadlineLoading: false,
+    unlockInfos: {},
   };
 
   onAmountChange = (amount: number) => {
@@ -172,9 +174,8 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
     };
     // @ts-ignore
     try {
-      
       this.setState({
-        calculating: true
+        calculating: true,
       });
       // @ts-ignore
       const reAmount = await getCollaborativeWithdrawRe({ amount: param.amount, coin: param.selectCoin });
@@ -224,19 +225,23 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
 
     if (!isPrivate) {
       this.setState({ deadlineLoading: true });
-      const timestamp = await getPoolWithDrawDeadline(type);
+      const deadlines = await getPoolWithDrawDeadline(type);
 
-      if (new Date().getTime() < timestamp) {
-        this.setState({
-          deadline: dayjs(new Date(timestamp)).set('second', 0).add(1, 'minute').format('YYYY-MM-DD HH:mm'),
-          deadlineLoading: false,
-        });
-      } else {
-        this.setState({
-          deadline: '',
-          deadlineLoading: false,
+      const now = new Date().getTime();
+      const unlockInfos = {};
+      if (deadlines) {
+        Object.keys(deadlines).forEach(coin => {
+          // @ts-ignore
+          unlockInfos[coin] =
+            now < deadlines[coin]
+              ? dayjs(new Date(deadlines[coin])).set('second', 0).add(1, 'minute').format('YYYY-MM-DD HH:mm')
+              : null;
         });
       }
+      this.setState({
+        deadlineLoading: false,
+        unlockInfos,
+      });
     }
   }
 
@@ -276,12 +281,14 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
       deadline,
       loading,
       deadlineLoading,
+      unlockInfos,
       calculating,
       coins,
       amount,
       reAmount,
     } = this.state;
     const { isPrivate } = this.props;
+    const isLocked = !!unlockInfos[selectCoin!];
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => (
@@ -349,15 +356,17 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
                 </Col>
                 <Col span={24}>
                   <div className={[styles.repay, isMobile ? styles.mobile : ''].join(' ')}>
-                    <InputNumber onChange={this.onAmountChange} placeholder="Amount" max={coins[selectCoin!]} />
+                    <InputNumber disabled={isLocked} onChange={this.onAmountChange} placeholder={isLocked? `Unlock until ${unlockInfos[selectCoin!]}` : 'Withdraw amount'} max={coins[selectCoin!]} />
                     {isPrivate ? null : (
                       <>
-                        <p>
-                          {calculating ? <Icon type="loading" /> : reAmount}
-                          <span>
-                            &nbsp;re{selectCoin} -&gt; {amount} {selectCoin}
-                          </span>
-                        </p>
+                        {isLocked ? null : (
+                          <p>
+                            {calculating ? <Icon type="loading" /> : reAmount}
+                            <span>
+                              &nbsp;re{selectCoin} -&gt; {amount} {selectCoin}
+                            </span>
+                          </p>
+                        )}
                         <p>reToken will be automatically burnt. Stable coin will send to your address.</p>
                       </>
                     )}
@@ -369,8 +378,8 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
                   <Button onClick={this.withDrawVisible.hide}>CANCEL</Button>
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12}>
-                  <Button type="primary" onClick={this.doWithdraw}>
-                    WITHDRAW
+                  <Button type="primary" onClick={isLocked ? this.withDrawVisible.hide : this.doWithdraw}>
+                    {isLocked ? `Got it` : 'WITHDRAW'}
                   </Button>
                 </Col>
               </Row>

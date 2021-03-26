@@ -31,8 +31,8 @@ export const getCollaborativeArp = async (): Promise<number> => {
 export const getPoolBalance = async (type: 'public' | 'private'): Promise<{ [key in IUSDCoins]: number }> => {
   if(process.env.NODE_ENV === 'development'){
     return {
-      DAI: -3432432.3243243,
-      USDC: 0,
+      DAI: 3432432.3243243,
+      USDC: 20,
       USDT: 100.23432,
     }
   }
@@ -69,8 +69,12 @@ export const getPoolBalance = async (type: 'public' | 'private'): Promise<{ [key
     .toPromise();
 };
 
-export const getPoolWithDrawDeadline = async (type: 'public' | 'private'): Promise<number> => {
-  return returnVal(new Date().getTime());
+export const getPoolWithDrawDeadline = async (type: 'public' | 'private'): Promise<{ [coin: string]: number }> => {
+  return returnVal({
+    DAI: new Date().getTime() - 1000000,
+    USDC: new Date().getTime(),
+    USDT: new Date().getTime() + 20000000,
+  });
 };
 
 /** Done */

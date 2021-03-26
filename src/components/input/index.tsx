@@ -13,6 +13,7 @@ export default class InputNumberComp extends Component<
     placeholder?: string;
     max?: number;
     className?: string;
+    disabled?: boolean;
     suffix?: any;
     delay?: boolean;
     onChange: (value: number) => any;
@@ -63,12 +64,13 @@ export default class InputNumberComp extends Component<
     });
   };
   render() {
-    const { placeholder, className, suffix, max, showTag, tagClassName } = this.props;
+    const { placeholder, className, disabled, suffix, max, showTag, tagClassName } = this.props;
     const { amount } = this.state;
     return (
       <>
         <Input
           className={className}
+          disabled={disabled}
           suffix={suffix}
           value={amount}
           onChange={this.amountChange}
