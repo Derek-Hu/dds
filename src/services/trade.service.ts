@@ -229,17 +229,6 @@ export const getPriceGraphData = (
  * @param coin - DAI
  */
 export const confirmOrder = async (amount: number, coin: IUSDCoins): Promise<IOpenFee> => {
-  if(process.env.NODE_ENV==='development'){
-    return new Promise(resolve => {
-        setTimeout(()=> {
-          resolve({
-            curPrice: 32432.32322,
-            settlementFee: 3232.11322,
-            fundingFeeLocked: 323.23322,
-          })
-        }, 2000);
-      })
-  }
   return contractAccessor
     .confirmContract(amount, coin)
     .pipe(

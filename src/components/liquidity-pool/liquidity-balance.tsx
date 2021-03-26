@@ -11,7 +11,7 @@ import CardInfo from '../card-info/index';
 import {
   getPoolBalance,
   doPoolWithdraw,
-  getPoolWithDrawDeadline,
+  getPubPoolWithdrawDeadline,
   getCollaborativeWithdrawRe,
 } from '../../services/pool.service';
 import { Visible } from '../builtin/hidden';
@@ -221,28 +221,27 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
     });
     // } catch (e) {}
 
-    this.setState({ loading: false });
-
     if (!isPrivate) {
       this.setState({ deadlineLoading: true });
-      const deadlines = await getPoolWithDrawDeadline(type);
+      const withdrawDeadline = await getPubPoolWithdrawDeadline();
 
       const now = new Date().getTime();
-      const unlockInfos = {};
-      if (deadlines) {
-        Object.keys(deadlines).forEach(coin => {
-          // @ts-ignore
-          unlockInfos[coin] =
-            now < deadlines[coin]
-              ? dayjs(new Date(deadlines[coin])).set('second', 0).add(1, 'minute').format('YYYY-MM-DD HH:mm')
-              : null;
-        });
-      }
+
+      const unlockInfos =
+        withdrawDeadline && withdrawDeadline.length
+          ? withdrawDeadline.reduce((total, { coin, time }) => {
+              // @ts-ignore
+              total[coin] =
+                now < time ? dayjs(new Date(time)).set('second', 0).add(1, 'minute').format('YYYY-MM-DD HH:mm') : null;
+              return total;
+            }, {})
+          : {};
       this.setState({
         deadlineLoading: false,
         unlockInfos,
       });
     }
+    this.setState({ loading: false });
   }
 
   onSelectChange = (selectCoin: IUSDCoins) => {
@@ -356,7 +355,12 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
                 </Col>
                 <Col span={24}>
                   <div className={[styles.repay, isMobile ? styles.mobile : ''].join(' ')}>
-                    <InputNumber disabled={isLocked} onChange={this.onAmountChange} placeholder={isLocked? `Unlock until ${unlockInfos[selectCoin!]}` : 'Withdraw amount'} max={coins[selectCoin!]} />
+                    <InputNumber
+                      disabled={isLocked}
+                      onChange={this.onAmountChange}
+                      placeholder={isLocked ? `Unlock until ${unlockInfos[selectCoin!]}` : 'Withdraw amount'}
+                      max={coins[selectCoin!]}
+                    />
                     {isPrivate ? null : (
                       <>
                         {isLocked ? null : (

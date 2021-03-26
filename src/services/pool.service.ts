@@ -29,13 +29,6 @@ export const getCollaborativeArp = async (): Promise<number> => {
 
 /** Done */
 export const getPoolBalance = async (type: 'public' | 'private'): Promise<{ [key in IUSDCoins]: number }> => {
-  if(process.env.NODE_ENV === 'development'){
-    return {
-      DAI: 3432432.3243243,
-      USDC: 20,
-      USDT: 100.23432,
-    }
-  }
   return from(loginUserAccount())
     .pipe(
       switchMap((account: string | null) => {
@@ -67,14 +60,6 @@ export const getPoolBalance = async (type: 'public' | 'private'): Promise<{ [key
       take(1)
     )
     .toPromise();
-};
-
-export const getPoolWithDrawDeadline = async (type: 'public' | 'private'): Promise<{ [coin: string]: number }> => {
-  return returnVal({
-    DAI: new Date().getTime() - 1000000,
-    USDC: new Date().getTime(),
-    USDT: new Date().getTime() + 20000000,
-  });
 };
 
 /** Done */
@@ -236,17 +221,6 @@ export const getPrivateOrders = async (
   pageSize: number,
   devTest = false
 ): Promise<PrivatePoolOrder[]> => {
-  if(process.env.NODE_ENV === 'development'){
-    return Promise.resolve([{
-      orderId: 'string',
-      time: new Date().getTime(),
-      amount: 33223.432432,
-      lockedAmount:322323.432432,
-      status: 'ACTIVE',
-      openPrice:334323.432432,
-      coin: 'DAI'
-    }]);
-  }
   return from(loginUserAccount())
     .pipe(
       switchMap(account => {

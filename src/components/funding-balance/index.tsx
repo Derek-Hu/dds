@@ -57,17 +57,10 @@ export default class Balance extends Component<{
       if (!damon) {
         this.setState({ loading: true });
       }
-      const balanceInfo =
-        process.env.NODE_ENV === 'development'
-          ? {
-              balance: 2000000.432223,
-              locked: 100.09232,
-              // available: 9922332423.432223 - 32432.0912328,
-            }
-          : await getFundingBalanceInfo(to);
+      const balanceInfo = await getFundingBalanceInfo(to);
 
       const available = getMaxFromCoin(balanceInfo);
-      const maxNumber = divide(available, process.env.NODE_ENV === 'development' ? 100 : curPrice);
+      const maxNumber = divide(available, curPrice);
       this.setState({
         balanceInfo,
         available: truncated(available),
@@ -196,7 +189,7 @@ export default class Balance extends Component<{
     const { coins, curPrice } = this.props;
     const { from, to } = coins;
 
-    const price = process.env.NODE_ENV === 'development' ? 100 : curPrice;
+    const price = curPrice;
     const address = this.context.address;
 
     const openData = {
