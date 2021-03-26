@@ -7,7 +7,7 @@ import { Component } from 'react';
 import SiteContext from '../../layouts/SiteContext';
 import { getFundingBalanceInfo, deposit, withdraw, openOrder } from '../../services/trade.service';
 import { getMaxFromCoin, getFee, getLocked } from './calculate';
-import { format, isNotZeroLike } from '../../util/math';
+import { format, isGreaterZero } from '../../util/math';
 import InputNumber from '../input/index';
 import Placeholder from '../placeholder/index';
 
@@ -19,7 +19,6 @@ interface IState {
   balanceInfo?: IBalanceInfo;
   openAmount: number | undefined;
   maxNumber?: number;
-  initalVal: number | null;
   loading: boolean;
 }
 
@@ -35,7 +34,6 @@ export default class Balance extends Component<{
     orderConfirmVisible: false,
     openAmount: undefined,
     tradeType: 'long',
-    initalVal: null,
     loading: false,
   };
 
@@ -55,7 +53,7 @@ export default class Balance extends Component<{
           ? {
               balance: 9922332423.432223,
               locked: 32432.091232,
-              available: 9922332423.432223 - 32432.091232,
+              // available: 9922332423.432223 - 32432.0912328,
             }
           : await getFundingBalanceInfo(to);
 
@@ -142,7 +140,6 @@ export default class Balance extends Component<{
       loading,
       openAmount,
       maxNumber,
-      initalVal,
     } = this.state;
     const { coins, curPrice } = this.props;
     const { from, to } = coins;
@@ -220,7 +217,7 @@ export default class Balance extends Component<{
               className={tradeType === 'short' ? 'buttonGreen' : 'buttonRed'}
               type="primary"
               onClick={() => {
-                if (!isNotZeroLike(openAmount)) {
+                if (!isGreaterZero(openAmount)) {
                   return;
                 }
                 this.orderConfirmVisible.show();

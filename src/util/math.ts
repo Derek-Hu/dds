@@ -10,14 +10,27 @@ export const format = (value: any) => {
 
 export const multiple = (one: any, two: any) => {
   if (isNumberLike(one) && isNumberLike(two)) {
-    return new Decimal(Number(one)).times(Number(two)).toNumber();
+    const value = Number(new Decimal(Number(one)).times(Number(two)).toFixed(4));
+    return isNaN(value)? NaN : value;
+  }
+  return NaN;
+};
+
+export const minus = (one: any, two: any) => {
+  if (isNumberLike(one) && isNumberLike(two)) {
+    const value = Number(new Decimal(Number(one)).minus(Number(two)).toFixed(4));
+    return isNaN(value)? NaN : value;
   }
   return NaN;
 };
 
 export const divide = (one: any, two: any) => {
+  if (isNumberLike(one) && Number(one) === 0){
+    return 0;
+  }
   if (isNumberLike(one) && isNumberLike(two)) {
-    return new Decimal(Number(one)).div(Number(two)).toNumber();
+    const value = Number(new Decimal(Number(one)).div(Number(two)).toFixed(4));
+    return isNaN(value)? NaN : value;
   }
   return NaN;
 };

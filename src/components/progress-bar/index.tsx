@@ -26,17 +26,13 @@ export default (props: IBarData) => {
               </Placeholder>
             </Col>
             <Col span={12} className={styles.right}>
-              <span className={styles.amount}>
-                {desc}
-              </span>
+              <span className={styles.amount}>{desc}</span>
               <br />
               <span className={styles.dds}>
                 <Placeholder loading={loading}>{value}</Placeholder>
               </span>
               &nbsp;
-              <span className={styles.unit}>
-                {unit}
-              </span>
+              {loading ? null : <span className={styles.unit}>{unit}</span>}
             </Col>
           </Row>
           <Progress

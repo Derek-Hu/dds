@@ -1,15 +1,14 @@
-import { isNumberLike, format } from '../../util/math';
+import { isNumberLike, divide, minus } from '../../util/math';
 
 export const getMaxFromCoin = (balanceInfo?: IBalanceInfo, price?: number) => {
   if (!balanceInfo) {
     return;
   }
-  const { available } = balanceInfo;
-
-  if (isNumberLike(available) && isNumberLike(price)) {
-    // @ts-ignore
-    return available / price;
+  const { available, balance, locked } = balanceInfo;
+  if(isNumberLike(available)){
+    return divide(available, price);
   }
+  return divide(minus(balance, locked), price);
 };
 
 export const getFee = (amount: any | undefined, price: any) => {
