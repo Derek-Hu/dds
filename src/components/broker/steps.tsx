@@ -1,38 +1,38 @@
-import { Icon, Row, Col } from 'antd';
+import { Row, Col } from 'antd';
 import styles from './style.module.less';
 import SiteContext from '../../layouts/SiteContext';
-import Bar from './bar';
-import CampaignImg from '../../assets/imgs/campaign.png';
+// import Bar from './bar';
+// import CampaignImg from '../../assets/imgs/campaign.png';
 import BrokerIcon1 from '~/assets/imgs/broker-icon1.png';
 import BrokerIcon2 from '~/assets/imgs/broker-icon2.png';
 import BrokerIcon3 from '~/assets/imgs/broker-icon3.png';
 
-const percentages = {
-  center: 30,
-};
+// const percentages = {
+//   center: 30,
+// };
 export default () => {
-  return (
-    <SiteContext.Consumer>
-      {({ isMobile }) => {
-        const rect = isMobile
-          ? {
-              width: 350,
-              height: 200,
-              barHeight: 80,
-              bar: 100,
-              center: 80,
-            }
-          : {
-              width: 750,
-              height: 200,
-              barHeight: 80,
-              bar: 200,
-              center: 140,
-            };
-        const leftCenter = (rect.width - 2 * rect.bar - rect.center) / 2 + rect.bar;
-        const gap = (rect.width - 2 * rect.bar - rect.center) / 2;
+  // return (
+    // <SiteContext.Consumer>
+    //   {({ isMobile }) => {
+        // const rect = isMobile
+        //   ? {
+        //       width: 350,
+        //       height: 200,
+        //       barHeight: 80,
+        //       bar: 100,
+        //       center: 80,
+        //     }
+        //   : {
+        //       width: 750,
+        //       height: 200,
+        //       barHeight: 80,
+        //       bar: 200,
+        //       center: 140,
+        //     };
+        // const leftCenter = (rect.width - 2 * rect.bar - rect.center) / 2 + rect.bar;
+        // const gap = (rect.width - 2 * rect.bar - rect.center) / 2;
         return (
-          <div className={[styles.steps, isMobile ? styles.mobile : ''].join(' ')}>
+          <div className={styles.steps}>
             <h4>Only 3 Steps</h4>
             <Row>
               <Col xs={24} sm={24} md={8} lg={8}>
@@ -103,7 +103,7 @@ export default () => {
             </div> */}
           </div>
         );
-      }}
-    </SiteContext.Consumer>
-  );
+  //     }}
+  //   </SiteContext.Consumer>
+  // );
 };

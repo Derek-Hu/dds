@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { Tabs, Button, Row, Col, Select, Input, Alert, Descriptions } from 'antd';
 import styles from '../style.module.less';
-import { isNotZeroLike } from '../../../util/math';
+import { isGreaterZero } from '../../../util/math';
 import commonStyles from '../../funding-balance/modals/style.module.less';
 // import AvailablePoolUnlogin from './private/available-pool-unlogin';
 import { CoinSelectOption } from '../../../constant/index';
@@ -31,7 +31,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
     return {
       show: () => {
         const { amount } = this.state;
-        if (!isNotZeroLike(amount)) {
+        if (!isGreaterZero(amount)) {
           return;
         }
         this.setState({

@@ -43,6 +43,7 @@
   "scripts": {
     "deploy": "npm run build && gh-pages -d build",
     "dev": "react-scripts start",
+    "dev:mock": "APP_ENV=mock react-scripts start",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "start:stage": "cross-env AppEnv=stage react-app-rewired start",

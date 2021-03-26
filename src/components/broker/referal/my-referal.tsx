@@ -1,10 +1,10 @@
 import { Component } from 'react';
 import { Row, Col, Button } from 'antd';
 import styles from '../style.module.less';
-import { formatInt, format, isNotZeroLike } from '../../../util/math';
+import { formatInt, format, isGreaterZero } from '../../../util/math';
 import { getMyReferalInfo, claimReferalInfo } from '../../../services/broker.service';
-import Mask from '../../mask/index';
 import Placeholder from '../../placeholder/index';
+import { Visible } from '../../builtin/hidden';
 
 interface IState {
   loading: boolean;
@@ -15,8 +15,11 @@ export default class Broker extends Component<any, IState> {
   state: IState = {
     loading: false,
   };
-
   async componentDidMount() {
+    this.loadData();
+  }
+
+  async loadData() {
     this.setState({ loading: true });
     const referalInfo = await getMyReferalInfo();
     this.setState({
@@ -27,7 +30,10 @@ export default class Broker extends Component<any, IState> {
   }
 
   onClaim = async () => {
-    await claimReferalInfo();
+    const success = await claimReferalInfo();
+    if (success) {
+      this.loadData();
+    }
   };
 
   render() {
@@ -64,11 +70,11 @@ export default class Broker extends Component<any, IState> {
         </Row>
         <div style={{ marginTop: '48px', paddingBottom: '40px' }}>
           <div>
-            {isNotZeroLike(bonus) ? (
+            <Visible when={isGreaterZero(bonus)}>
               <Button onClick={this.onClaim} style={{ width: '50%', margin: '20px' }} type="primary">
                 CLAIM
               </Button>
-            ) : null}
+            </Visible>
           </div>
         </div>
       </div>

@@ -34,7 +34,7 @@ export default class InputNumberComp extends Component<
     // if ((!isNumberLike(val) && !isCompatible(val)) || (isNumberLike(max) && Number(val) > Number(max!))) {
     //   return;
     // }
-    const isCompatible = /^[1-9]+\.?\d{0,4}?$/.test(val) || /^0\.?\d{0,4}?$/.test(val) || val === '';
+    const isCompatible = /^[1-9]+\d*\.?\d{0,4}?$/.test(val) || /^0\.?\d{0,4}?$/.test(val) || val === '';
     if (!isCompatible) {
       return;
     }

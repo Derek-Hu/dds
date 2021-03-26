@@ -3,7 +3,7 @@ import { Tabs, Button, Row, Col, Select, Alert, Descriptions } from 'antd';
 import styles from '../style.module.less';
 import SiteContext from '../../../layouts/SiteContext';
 import { Component } from 'react';
-import { format, isNotZeroLike, isNumberLike } from '../../../util/math';
+import { format, isNotZeroLike, isGreaterZero, isNumberLike } from '../../../util/math';
 import { getCollaborativeArp } from '../../../services/pool.service';
 import ModalRender from '../../modal-render/index';
 import commonStyles from '../../funding-balance/modals/style.module.less';
@@ -39,7 +39,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
     return {
       show: () => {
         const { amount } = this.state;
-        if (!isNotZeroLike(amount)) {
+        if (!isGreaterZero(amount)) {
           return;
         }
         this.setState({
@@ -86,7 +86,11 @@ export default class LiquidityProvided extends Component<IProps, IState> {
   confirmDeposit = async () => {
     const { amount, selectedCoin } = this.state;
     this.modalVisible.hide();
-    await doCollaborativeDeposit({ amount: amount!, coin: selectedCoin });
+    const success = await doCollaborativeDeposit({ amount: amount!, coin: selectedCoin });
+    if(success){
+      // TODO: update
+      
+    }
   };
 
   calculateRe = async (newVal: { amount?: number | string; coin?: IUSDCoins }) => {
@@ -98,7 +102,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
       ...newVal,
     };
 
-    if (!isNotZeroLike(params.amount)) {
+    if (!isGreaterZero(params.amount)) {
       this.setState({
         reAmount: 0,
       });
@@ -107,7 +111,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
     // @ts-ignore
     const reAmount = await getCollaborativeDepositRe(params);
     this.setState({
-      reAmount: isNotZeroLike(reAmount) ? reAmount : 0,
+      reAmount: isNumberLike(reAmount) ? reAmount : 0,
     });
   };
 
@@ -117,7 +121,6 @@ export default class LiquidityProvided extends Component<IProps, IState> {
       <SiteContext.Consumer>
         {({ isMobile }) => (
           <div>
-            {/* <Hidden when={loading}> */}
             <div style={{ paddingTop: '10px' }}>
               <h3>ARP</h3>
               <p className={styles.coins}>
@@ -182,7 +185,6 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                 </Row>
               </ModalRender>
             </div>
-            {/* </Hidden> */}
           </div>
         )}
       </SiteContext.Consumer>

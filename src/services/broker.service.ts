@@ -4,6 +4,7 @@ import { from } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { contractAccessor } from '../wallet/chain-access';
 import { toEthers } from '../util/ethers';
+import { withLoading } from './utils';
 import { CoinBalance } from '../wallet/contract-interface';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
@@ -53,14 +54,14 @@ export const getMyReferalInfo = async (): Promise<IBrokerReferal> => {
 };
 
 export const claimReferalInfo = async (): Promise<boolean> => {
-  return from(loginUserAccount())
+  return withLoading(from(loginUserAccount())
     .pipe(
       switchMap(account => {
         return contractAccessor.doBrokerClaim();
       }),
       take(1)
     )
-    .toPromise();
+    .toPromise());
 };
 
 export const getBrokerCampaignRewardData = async (): Promise<ICoinValue[]> => {

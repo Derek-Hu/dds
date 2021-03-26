@@ -8,6 +8,7 @@ import { toEthers } from '../util/ethers';
 import { loginUserAccount } from './account';
 import { CoinBalance, CoinShare } from '../wallet/contract-interface';
 import { defaultPoolData, defaultReTokenData } from './mock/unlogin-default';
+import { withLoading } from './utils';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   return new Promise(resolve => {
@@ -62,15 +63,7 @@ export const claimLiquidity = async () => {
 };
 
 export const claimLiquidityLocked = async () => {
-  Mask.showLoading();
-
-  const isSuccess = await contractAccessor.claimRewardsForLP2().toPromise();
-  if (isSuccess) {
-    Mask.showSuccess();
-  } else {
-    Mask.showFail();
-  }
-  return isSuccess;
+  return await withLoading(contractAccessor.claimRewardsForLP2().toPromise());
 };
 
 export const getLiquidityLockedReward = (type: 'public' | 'private'): Promise<number> => {

@@ -50,3 +50,9 @@ export const isNumberLike = (value: any) => {
 export const isNotZeroLike = (value: any) => {
   return isNumberLike(value) && String(value) !== '0';
 };
+
+export const isGreaterZero = (value: any) => {
+  return isNumberLike(value) && Number(value) > 0;
+};
+
+

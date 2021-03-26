@@ -5,11 +5,11 @@ import { Button, Select, Form, Icon, Input, Row, Col, Descriptions } from 'antd'
 import ModalRender from '../modal-render/index';
 import commonStyles from '../funding-balance/modals/style.module.less';
 import SiteContext from '../../layouts/SiteContext';
-import { CoinSelectOption } from '../../constant/index';
+// import { CoinSelectOption } from '../../constant/index';
 import { Hidden } from '../builtin/hidden';
 import Auth from '../builtin/auth';
 import { getSwapPrice, conformSwap } from '../../services/swap-burn.service';
-import { format, multiple, formatInt, isNotZeroLike } from '../../util/math';
+import { format, multiple, formatInt, isGreaterZero } from '../../util/math';
 import Placeholder from '../placeholder/index';
 import InputNumber from '../input/index';
 
@@ -60,7 +60,7 @@ export default class PoolArea extends Component<any, IState> {
   };
 
   showSwapModal = () => {
-    if (!isNotZeroLike(this.state.amount)) {
+    if (!isGreaterZero(this.state.amount)) {
       // message.warning('')
       return;
     }
@@ -102,7 +102,7 @@ export default class PoolArea extends Component<any, IState> {
                     1 SLD = {format(data?.rate)} USD
                   </Placeholder>
                 </p>
-                <Hidden when={false}>
+                <Hidden when={loading}>
                   <Auth>
                     <div className={styles.swapContainer}>
                       <Form className="login-form">

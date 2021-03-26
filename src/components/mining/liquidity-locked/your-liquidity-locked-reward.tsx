@@ -6,10 +6,10 @@ import {
   getLiquiditorBalanceRecord,
   claimLiquidityLocked,
 } from '../../../services/mining.service';
-import { Hidden } from '../../builtin/hidden';
+import { Visible } from '../../builtin/hidden';
 import SiteContext from '../../../layouts/SiteContext';
 import Auth, { Public } from '../../builtin/auth';
-import { format } from '../../../util/math';
+import { format, isGreaterZero } from '../../../util/math';
 import ModalRender from '../../modal-render/index';
 import ColumnConvert from '../../column-convert/index';
 import dayjs from 'dayjs';
@@ -60,6 +60,9 @@ export default class LiquiditorReward extends Component<any, IState> {
   static contextType = SiteContext;
 
   async componentDidMount() {
+    this.loadData();
+  }
+  async loadData() {
     this.setState({ loading: true });
     const data = await getLiquidityLockedReward(this.context.address ? 'private' : 'public');
     this.setState({
@@ -81,7 +84,10 @@ export default class LiquiditorReward extends Component<any, IState> {
   };
 
   cofirmClaim = async () => {
-    await claimLiquidityLocked();
+    const success = await claimLiquidityLocked();
+    if (success) {
+      this.loadData();
+    }
   };
 
   setModalVisible = (key: 'visible') => {
@@ -115,9 +121,11 @@ export default class LiquiditorReward extends Component<any, IState> {
           </p>
           <div>
             <Placeholder loading={loading} width={'10em'}>
-              <Button type="primary" className={[styles.btn, styles.cliamBtn].join(' ')} onClick={this.cofirmClaim}>
-                CLAIM
-              </Button>
+              <Visible when={isGreaterZero(data)}>
+                <Button type="primary" className={[styles.btn, styles.cliamBtn].join(' ')} onClick={this.cofirmClaim}>
+                  CLAIM
+                </Button>
+              </Visible>
             </Placeholder>
             {/* <div>
               <Button type="link" onClick={this.visible.show} className={styles.recordLink}>

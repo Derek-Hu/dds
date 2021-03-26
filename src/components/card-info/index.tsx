@@ -24,8 +24,8 @@ export default ({ title, theme, loading, children, items, isNumber }: ICardInfo)
         {theme === 'inner' ? <h2>{title}</h2> : null}
         <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
           {Array.isArray(items)
-            ? items.map(({ label, value }) => (
-                <Descriptions.Item label={label} span={24}>
+            ? items.map(({ label, value }, index) => (
+                <Descriptions.Item key={index} label={label} span={24}>
                   <Placeholder width={'32%'} loading={loading}>
                     {isNumber ? format(value) : value}
                   </Placeholder>
@@ -33,7 +33,7 @@ export default ({ title, theme, loading, children, items, isNumber }: ICardInfo)
               ))
             : items
             ? Object.keys(items).map(key => (
-                <Descriptions.Item label={key} span={24}>
+                <Descriptions.Item key={key} label={key} span={24}>
                   <Placeholder width={'32%'} loading={loading}>
                     {isNumber ? format(items[key]) : items[key]}
                   </Placeholder>
