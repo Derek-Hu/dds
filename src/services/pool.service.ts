@@ -1,13 +1,17 @@
 import { liquidityProvided } from './mock/pool.mock';
 import { contractAccessor } from '../wallet/chain-access';
-import { toEthers, tokenBigNumber } from '../util/ethers';
+import { toEthers } from '../util/ethers';
 import { BigNumber } from 'ethers';
-import { filter, map, startWith, switchMap, take, tap } from 'rxjs/operators';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 import { curUserAccount, loginUserAccount } from './account';
-import { EMPTY, from, Observable, of, zip } from 'rxjs';
+import { from, Observable, of, zip } from 'rxjs';
 import { withLoading } from './utils';
-import { defaultPoolData, defaultCoinDatas } from './mock/unlogin-default';
+import { defaultCoinDatas, defaultPoolData } from './mock/unlogin-default';
 import { PrivateLockLiquidity } from '../wallet/contract-interface';
+import { CentralHost, DefaultNetwork } from '../constant';
+import * as request from 'superagent';
+import { Response } from 'superagent';
+import { IOrderInfoData, OrderInfoObject } from './centralization-data';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   if(process.env.NODE_ENV === 'development'){
@@ -224,20 +228,24 @@ export const getPrivateOrders = async (
   return from(loginUserAccount())
     .pipe(
       switchMap(account => {
-        return contractAccessor.getLockedLiquidityList(account, page, pageSize, devTest);
-      }),
-      map((rs: PrivateLockLiquidity[]) => {
-        return rs.map((one: PrivateLockLiquidity) => {
-          return {
-            orderId: one.orderId.toString(),
-            amount: 0,
-            lockedAmount: Number(toEthers(one.marginAmount, 4, one.usdToken)),
-            time: 0,
-            coin: one.usdToken,
-            status: one.status,
-            openPrice: 0,
-          } as PrivatePoolOrder;
+        const baseHost = 'http://' + CentralHost + '/' + DefaultNetwork;
+        const url: string = baseHost + '/transactions/getTransactionsInfo';
+        const pageIndex = page - 1;
+        return request.post(url).send({
+          page: pageIndex,
+          offset: pageSize,
+          state: 1,
+          address: account, //"0xbfce8288fF225188EEC741aBfaac6BC9163d7a2B",
+          name: 'maker',
         });
+      }),
+      map((res: Response) => {
+        if (res.body.code === 200 && res.body.msg.length > 0) {
+          const orders: IOrderInfoData[] = res.body.msg;
+          return orders.map(one => new OrderInfoObject(one).getMakerOrder());
+        } else {
+          return [];
+        }
       }),
       take(1)
     )
