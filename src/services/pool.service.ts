@@ -2,7 +2,7 @@ import { liquidityProvided } from './mock/pool.mock';
 import { contractAccessor } from '../wallet/chain-access';
 import { toEthers } from '../util/ethers';
 import { BigNumber } from 'ethers';
-import { map, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 import { curUserAccount, loginUserAccount } from './account';
 import { from, Observable, of, zip } from 'rxjs';
 import { withLoading } from './utils';
@@ -246,6 +246,9 @@ export const getPrivateOrders = async (
         } else {
           return [];
         }
+      }),
+      catchError(err => {
+        return of([]);
       }),
       take(1)
     )
