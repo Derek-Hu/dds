@@ -652,8 +652,8 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       switchMap(contract => {
         return contract.functions.lpAccount(address);
       }),
-      map((rs: BigNumber[]) => {
-        return rs[0];
+      map((rs: any) => {
+        return rs.availableAmount;
       })
     );
 
