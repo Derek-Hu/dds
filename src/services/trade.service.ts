@@ -181,7 +181,8 @@ export const getCurPrice = async (coin: IUSDCoins): Promise<number> => {
  * @param amount - eth的数量
  */
 export const openOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: number): Promise<boolean> => {
-  return withLoading(contractAccessor.createContract(coin, tradeType, amount).pipe(take(1)).toPromise());
+  const inviteAddress: string | null = localStorage.getItem('referalCode');
+  return withLoading(contractAccessor.createContract(coin, tradeType, amount, inviteAddress).pipe(take(1)).toPromise());
 };
 
 /**

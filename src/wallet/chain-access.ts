@@ -204,7 +204,12 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
-  public createContract(coin: IUSDCoins, orderType: ITradeType, amount: number, inviter = ''): Observable<boolean> {
+  public createContract(
+    coin: IUSDCoins,
+    orderType: ITradeType,
+    amount: number,
+    inviter: string | null = ''
+  ): Observable<boolean> {
     return this.getContract(coin).pipe(
       switchMap((contract: ethers.Contract) => {
         const bigAmount = toBigNumber(amount, 18);
@@ -1220,7 +1225,12 @@ export class ContractAccessor implements ContractProxy {
     );
   }
 
-  public createContract(coin: IUSDCoins, orderType: ITradeType, amount: number, inviter = ''): Observable<any> {
+  public createContract(
+    coin: IUSDCoins,
+    orderType: ITradeType,
+    amount: number,
+    inviter: string | null = ''
+  ): Observable<any> {
     return this.accessor.pipe(switchMap(accessor => accessor.createContract(coin, orderType, amount, inviter)));
   }
 
