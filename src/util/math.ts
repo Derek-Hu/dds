@@ -8,18 +8,47 @@ export const format = (value: any) => {
   return '';
 };
 
-export const multiple = (one: any, two: any) => {
+export const multiple = (one: any, two: any, original?: boolean) => {
   if (isNumberLike(one) && isNumberLike(two)) {
-    return new Decimal(Number(one)).times(Number(two)).toNumber();
+    const val = new Decimal(Number(one)).times(Number(two)).toNumber();
+    if(original){
+      return val;
+    }
+    const res = Number(new Decimal(val).toFixed(4));
+    return isNaN(res)? NaN : res;
+  }
+  return NaN;
+
+};
+
+export const minus = (one: any, two: any, original?: boolean) => {
+  if (isNumberLike(one) && isNumberLike(two)) {
+    const val = new Decimal(Number(one)).minus(Number(two)).toNumber();
+    if(original){
+      return val;
+    }
+    const res = Number(new Decimal(val).toFixed(4));
+    return isNaN(res)? NaN : res;
   }
   return NaN;
 };
 
 export const divide = (one: any, two: any) => {
+  if (isNumberLike(one) && Number(one) === 0){
+    return 0;
+  }
   if (isNumberLike(one) && isNumberLike(two)) {
-    return new Decimal(Number(one)).div(Number(two)).toNumber();
+    const value = Number(new Decimal(Number(one)).div(Number(two)).toFixed(4));
+    return isNaN(value)? NaN : value;
   }
   return NaN;
+};
+
+export const truncated = (value: any) => {
+  if (isNumberLike(value)) {
+    return Number(new Decimal(value).toFixed(4));
+  }
+  return;
 };
 
 export const formatInt = (value: any) => {
@@ -50,3 +79,9 @@ export const isNumberLike = (value: any) => {
 export const isNotZeroLike = (value: any) => {
   return isNumberLike(value) && String(value) !== '0';
 };
+
+export const isGreaterZero = (value: any) => {
+  return isNumberLike(value) && Number(value) > 0;
+};
+
+

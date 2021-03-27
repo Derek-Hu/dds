@@ -1,26 +1,26 @@
 import { Component } from 'react';
 import { Tabs, Button, Input, Row, Col, Select, Table } from 'antd';
 import styles from './style.module.less';
-import commonStyles from '../funding-balance/modals/style.module.less';
-import dayjs from 'dayjs';
+// import commonStyles from '../funding-balance/modals/style.module.less';
+// import dayjs from 'dayjs';
 import { isNumberLike, isNotZeroLike, format } from '../../util/math';
 import { CustomTabKey, SupportedCoins } from '../../constant/index';
-import Pool, { IPool } from '../liquidity-pool/pool';
+// import Pool, { IPool } from '../liquidity-pool/pool';
 import ColumnConvert from '../column-convert/index';
-import ModalRender from '../modal-render/index';
-import currStyles from '../trade-bonus/modals/style.module.less';
+// import ModalRender from '../modal-render/index';
+// import currStyles from '../trade-bonus/modals/style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import Liquidity from './liquidity/your-liquidity-mining-reward';
 import LiquidityLocked from './liquidity-locked/your-liquidity-locked-reward';
 import Liquiditor from './liquiditor/your-liquiditor-mining-reward';
 import { Visible } from 'components/builtin/hidden';
-import Auth, { Public } from '../builtin/auth';
+import Auth from '../builtin/auth';
 import ReTokenBalance from './liquidity/re-token-balance';
-import SystemFundBalance from './liquiditor/system-fund-balance';
+// import SystemFundBalance from './liquiditor/system-fund-balance';
 import YourMiningShare from './liquidity/your-mining-share';
 import { formatTime } from '../../util/time';
 
-const { Option } = Select;
+// const { Option } = Select;
 const { TabPane } = Tabs;
 
 const TabName = {

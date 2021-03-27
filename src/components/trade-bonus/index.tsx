@@ -1,4 +1,4 @@
-import { Table, Button } from 'antd';
+import { Button } from 'antd';
 import ColumnConvert from '../column-convert/index';
 import { format, isNumberLike } from '../../util/math';
 import { toCamelCase } from '../../util/string';
@@ -12,6 +12,7 @@ import modalStyles from '../funding-balance/modals/style.module.less';
 import ModalRender from '../modal-render/index';
 import Placeholder from '../placeholder';
 import { formatTime } from '../../util/time';
+import Table from '../table/index';
 
 const statusColor: { [key in IOrderStatus]: string } = {
   ACTIVE: '#333333',
@@ -62,18 +63,19 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
 
   async componentDidMount() {
     const { page } = this.state;
-    this.loadData(page);
+    // this.loadData(page);
   }
 
-  loadData = async (page: number) => {
-    this.setState({
-      loading: true,
-    });
-    const orders = await getTradeOrders(page).catch(() => []);
-    this.setState({
-      orders,
-      loading: false,
-    });
+  loadData = async (page: number, pageSize: number) => {
+    return await getTradeOrders(page);
+    // this.setState({
+    //   loading: true,
+    // });
+    // const orders = await getTradeOrders(page);
+    // this.setState({
+    //   orders,
+    //   loading: false,
+    // });
   };
 
   columns = ColumnConvert<ITradeRecord, { exercise: any }>({
@@ -153,7 +155,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
     const success = await closeOrder(selectedItem!, curPrice!);
     if (success) {
       const { page } = this.state;
-      this.loadData(page);
+      // this.loadData(page);
     }
   };
 
@@ -167,14 +169,15 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
           <div className={styles.root}>
             <h2>Orders</h2>
             <div className={styles.tableWpr}>
-              <Table
+              <Table columns={this.columns} rowKey="id" loadPage={this.loadData}/>
+              {/* <Table
                 loading={loading}
                 rowKey="id"
                 columns={this.columns}
                 pagination={false}
                 dataSource={orders}
                 scroll={{ x: 1000 }}
-              />
+              /> */}
             </div>
             <ModalRender
               visible={orderCloseVisible}

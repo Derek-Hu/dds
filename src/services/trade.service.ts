@@ -228,7 +228,7 @@ export const getPriceGraphData = (
  * @param amount - eth amount
  * @param coin - DAI
  */
-export const confirmOrder = async (amount: number, coin: IUSDCoins): Promise<any> => {
+export const confirmOrder = async (amount: number, coin: IUSDCoins): Promise<IOpenFee> => {
   return contractAccessor
     .confirmContract(amount, coin)
     .pipe(

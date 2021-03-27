@@ -14,11 +14,13 @@ import { Response } from 'superagent';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(val);
-    }, Math.random() * 2000);
-  });
+  if(process.env.NODE_ENV === 'development'){
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(val);
+      }, Math.random() * 2000);
+    });
+  }
 };
 
 export const getCollaborativeLiquidityProvided = async (): Promise<ICoinValue[]> => {
@@ -62,10 +64,6 @@ export const getPoolBalance = async (type: 'public' | 'private'): Promise<{ [key
       take(1)
     )
     .toPromise();
-};
-
-export const getPoolWithDrawDeadline = async (type: 'public' | 'private'): Promise<number> => {
-  return returnVal(new Date().getTime());
 };
 
 /** Done */

@@ -9,17 +9,15 @@ interface IProps {
   visible: boolean;
   onCancel: () => any;
   onConfirm: () => any;
+  fees?: IOpenFee;
   data: {
     type?: ITradeType;
-    price?: any;
     amount?: any;
-    locked?: any;
-    fee?: any;
     coins: { from: IFromCoins; to: IUSDCoins };
   };
 }
 
-export default ({ data: { price, type, amount, locked, fee, coins }, visible, onCancel, onConfirm }: IProps) => {
+export default ({ fees, data: { type, amount, coins }, visible, onCancel, onConfirm }: IProps) => {
   const { from, to } = coins;
 
   return (
@@ -38,16 +36,16 @@ export default ({ data: { price, type, amount, locked, fee, coins }, visible, on
               {type}
             </Descriptions.Item>
             <Descriptions.Item label="Open Price" span={24}>
-              {price} {to}
+              {fees?.curPrice} {to}
             </Descriptions.Item>
             <Descriptions.Item label="Amount" span={24}>
               {amount} {from}
             </Descriptions.Item>
             <Descriptions.Item label="Funding Fee Locked" span={24}>
-              {locked} {to}
+              {fees?.fundingFeeLocked} {to}
             </Descriptions.Item>
             <Descriptions.Item label="Settlement Fee" span={24}>
-              {fee} {to}
+              {fees?.settlementFee} {to}
             </Descriptions.Item>
           </Descriptions>
           <Row gutter={[isMobile ? 0 : 16, 16]} className={styles.actionBtns} type="flex">

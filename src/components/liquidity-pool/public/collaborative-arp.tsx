@@ -1,9 +1,9 @@
 import { CustomTabKey, CoinSelectOption } from '../../../constant/index';
-import { Tabs, Button, Row, Col, Select, Alert, Descriptions } from 'antd';
+import { Tabs, Button, Row, Col, Select, Icon, Descriptions } from 'antd';
 import styles from '../style.module.less';
 import SiteContext from '../../../layouts/SiteContext';
 import { Component } from 'react';
-import { format, isNotZeroLike, isNumberLike } from '../../../util/math';
+import { format, isNotZeroLike, isGreaterZero, isNumberLike } from '../../../util/math';
 import { getCollaborativeArp } from '../../../services/pool.service';
 import ModalRender from '../../modal-render/index';
 import commonStyles from '../../funding-balance/modals/style.module.less';
@@ -20,6 +20,7 @@ interface IState {
   selectedCoin: IUSDCoins;
   amount: number | undefined;
   reAmount: number | undefined;
+  calculating: boolean;
 }
 
 interface IProps {}
@@ -33,13 +34,14 @@ export default class LiquidityProvided extends Component<IProps, IState> {
     selectedCoin: 'DAI',
     amount: undefined,
     reAmount: 0,
+    calculating: false,
   };
 
   setModalVisible = (key: keyof TModalKeys) => {
     return {
       show: () => {
         const { amount } = this.state;
-        if (!isNotZeroLike(amount)) {
+        if (!isGreaterZero(amount)) {
           return;
         }
         this.setState({
@@ -86,7 +88,10 @@ export default class LiquidityProvided extends Component<IProps, IState> {
   confirmDeposit = async () => {
     const { amount, selectedCoin } = this.state;
     this.modalVisible.hide();
-    await doCollaborativeDeposit({ amount: amount!, coin: selectedCoin });
+    const success = await doCollaborativeDeposit({ amount: amount!, coin: selectedCoin });
+    if (success) {
+      // TODO: update
+    }
   };
 
   calculateRe = async (newVal: { amount?: number | string; coin?: IUSDCoins }) => {
@@ -98,26 +103,27 @@ export default class LiquidityProvided extends Component<IProps, IState> {
       ...newVal,
     };
 
-    if (!isNotZeroLike(params.amount)) {
+    if (!isGreaterZero(params.amount)) {
       this.setState({
         reAmount: 0,
       });
       return;
     }
+    this.setState({ calculating: true });
     // @ts-ignore
     const reAmount = await getCollaborativeDepositRe(params);
+    this.setState({ calculating: false });
     this.setState({
-      reAmount: isNotZeroLike(reAmount) ? reAmount : 0,
+      reAmount: isNumberLike(reAmount) ? reAmount : 0,
     });
   };
 
   render() {
-    const { data, modalVisible, loading, amount, selectedCoin, reAmount } = this.state;
+    const { data, modalVisible, calculating, loading, amount, selectedCoin, reAmount } = this.state;
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => (
           <div>
-            {/* <Hidden when={loading}> */}
             <div style={{ paddingTop: '10px' }}>
               <h3>ARP</h3>
               <p className={styles.coins}>
@@ -144,7 +150,8 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                   </Row>
                   {/* {isNotZeroLike(amount) ? ( */}
                   <p className={styles.cal}>
-                    You Will Receive: <span>{format(reAmount)}</span> re{selectedCoin}
+                    You Will Receive: {calculating ? <Icon type="loading" /> : <span>{format(reAmount)}</span>} re
+                    {selectedCoin}
                   </p>
                   {/* ) : null} */}
                   <Button type="primary" className={styles.btn} onClick={this.modalVisible.show}>
@@ -182,7 +189,6 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                 </Row>
               </ModalRender>
             </div>
-            {/* </Hidden> */}
           </div>
         )}
       </SiteContext.Consumer>

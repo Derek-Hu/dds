@@ -3,6 +3,7 @@ import { contractAccessor } from '../wallet/chain-access';
 import { map, take } from 'rxjs/operators';
 import { CoinBalance } from '../wallet/contract-interface';
 import { toEthers } from '../util/ethers';
+import { withLoading } from './utils';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   return new Promise((resolve) => {
@@ -40,21 +41,9 @@ export const getSwapPrice = async (): Promise<ISwapBurn> => {
 };
 
 export const conformSwap = async (data: IRecord): Promise<boolean> => {
-  Mask.showLoading();
-  console.log('data', data);
-  if (isNaN(data.amount) || data.amount <= 0) {
-    Mask.showFail();
-  }
-
   const doSwap = async (): Promise<boolean> => {
-    return contractAccessor.doSwap(data.coin, data.amount).pipe(take(1)).toPromise();
+    return withLoading(contractAccessor.doSwap(data.coin, data.amount).pipe(take(1)).toPromise());
   };
 
-  const isSuccess = await doSwap();
-  if (isSuccess) {
-    Mask.showSuccess();
-  } else {
-    Mask.showFail();
-  }
-  return isSuccess;
+  return await doSwap();
 };

@@ -3,7 +3,7 @@ import ModalRender from '../../modal-render/index';
 import styles from './style.module.less';
 import SiteContext from '../../../layouts/SiteContext';
 import { Component } from 'react';
-import { format, isNotZeroLike } from '../../../util/math';
+import { format, isGreaterZero } from '../../../util/math';
 import InputNumber from '../../input/index';
 
 const title = 'Funding Fee Deposit';
@@ -71,7 +71,7 @@ export default class Balance extends Component<IProps, IState> {
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                   <Button
                     onClick={() => {
-                      if (!isNotZeroLike(depositAmount)) {
+                      if (!isGreaterZero(depositAmount)) {
                         return;
                       }
                       onConfirm(depositAmount);

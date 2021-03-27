@@ -13,6 +13,7 @@ export default class InputNumberComp extends Component<
     placeholder?: string;
     max?: number;
     className?: string;
+    disabled?: boolean;
     suffix?: any;
     delay?: boolean;
     onChange: (value: number) => any;
@@ -34,7 +35,7 @@ export default class InputNumberComp extends Component<
     // if ((!isNumberLike(val) && !isCompatible(val)) || (isNumberLike(max) && Number(val) > Number(max!))) {
     //   return;
     // }
-    const isCompatible = /^[1-9]+\.?\d{0,4}?$/.test(val) || /^0\.?\d{0,4}?$/.test(val) || val === '';
+    const isCompatible = /^[1-9]+\d*\.?\d{0,4}?$/.test(val) || /^0\.\d{0,4}?$/.test(val) || val === '' || val === '0';
     if (!isCompatible) {
       return;
     }
@@ -63,12 +64,13 @@ export default class InputNumberComp extends Component<
     });
   };
   render() {
-    const { placeholder, className, suffix, max, showTag, tagClassName } = this.props;
+    const { placeholder, className, disabled, suffix, max, showTag, tagClassName } = this.props;
     const { amount } = this.state;
     return (
       <>
         <Input
           className={className}
+          disabled={disabled}
           suffix={suffix}
           value={amount}
           onChange={this.amountChange}
@@ -82,7 +84,7 @@ export default class InputNumberComp extends Component<
             justify="space-between"
           >
             <Col span={12}>
-              <Tag onClick={this.onMaxOpenClick} color="#1346FF">
+              <Tag style={{cursor: 'pointer'}} onClick={this.onMaxOpenClick} color="#1346FF">
                 Max
               </Tag>
             </Col>

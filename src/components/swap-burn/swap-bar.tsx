@@ -43,7 +43,7 @@ export default ({
                 <span>{left.percentage}%</span>
               </div>
               <div className={styles.amount}>
-                <Placeholder loading={loading}>{leftAmount} USD</Placeholder>
+                <Placeholder loading={loading}>{leftAmount}<br/>USD</Placeholder>
               </div>
             </div>
             <div className={styles.shadow} style={{ width: width + 'px', height: height + 'px' }}>
@@ -58,7 +58,7 @@ export default ({
                 <span className={styles.rightPecentage}>{right.percentage}%</span>
               </div>
               <div className={styles.amount}>
-                <Placeholder loading={loading}>{rightAmount} SLD</Placeholder>
+                <Placeholder loading={loading}>{rightAmount}<br/>SLD</Placeholder>
               </div>
             </div>
           </div>

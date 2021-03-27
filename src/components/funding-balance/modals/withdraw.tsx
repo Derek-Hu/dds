@@ -5,7 +5,7 @@ import ModalRender from '../../modal-render/index';
 import { CoinSelectOption } from '../../../constant/index';
 import SiteContext from '../../../layouts/SiteContext';
 import { Component } from 'react';
-import { format, isNotZeroLike } from '../../../util/math';
+import { format, isGreaterZero } from '../../../util/math';
 import InputNumber from '../../input/index';
 
 const title = 'Funding Fee Withdraw';
@@ -86,7 +86,7 @@ export default class Balance extends Component<IProps, IState> {
                 <Button
                   type="primary"
                   onClick={() => {
-                    if (!isNotZeroLike(amount)) {
+                    if (!isGreaterZero(amount)) {
                       return;
                     }
                     onConfirm(amount!, coin);

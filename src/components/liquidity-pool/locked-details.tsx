@@ -1,9 +1,9 @@
-import { Table, Icon, Button } from 'antd';
+import { Icon, Button } from 'antd';
 import { Form, Row, Col, Select, Descriptions } from 'antd';
 import dayjs from 'dayjs';
 import styles from './locked.module.less';
 import SiteContext from '../../layouts/SiteContext';
-import { percentage, multiple, isNotZeroLike, format } from '../../util/math';
+import { percentage, multiple, isGreaterZero, format, truncated } from '../../util/math';
 import { Component } from 'react';
 import { getCurPrice } from '../../services/trade.service';
 import { getPrivateOrders, addPrivateOrderMargin } from '../../services/pool.service';
@@ -12,6 +12,7 @@ import ModalRender from '../modal-render/index';
 import modalStyles from '../funding-balance/modals/style.module.less';
 import InputNumber from '../input/index';
 import { formatTime } from '../../util/time';
+import Table from '../table/index';
 
 interface IState {
   data: PrivatePoolOrder[];
@@ -20,6 +21,10 @@ interface IState {
   selectedItem: PrivatePoolOrder | null;
   addAmount?: number;
   curPrice?: number | null;
+  page: number;
+  pageSize: number;
+  initLoad: boolean;
+  end: boolean;
 }
 export default class Balance extends Component<any, IState> {
   state: IState = {
@@ -28,19 +33,33 @@ export default class Balance extends Component<any, IState> {
     modalVisible: false,
     selectedItem: null,
     curPrice: null,
+    page: 1,
+    pageSize: 50,
+    initLoad: true,
+    end: false,
   };
   async componentDidMount() {
-    this.setState({
-      loading: true,
-    });
-    const data = await getPrivateOrders(1, 50, true);
-    const curPrice = await getCurPrice('DAI');
-    this.setState({
-      data,
-      curPrice,
-      loading: false,
-    });
+    // this.loadData();
   }
+
+  loadPage = async (page: number, pageSize: number) => {
+    return await getPrivateOrders(page, pageSize, true);
+  }
+  // async loadData() {
+  //   this.setState({
+  //     loading: true,
+  //   });
+  //   const { page, pageSize, data } = this.state;
+  //   const pageData = await getPrivateOrders(page, pageSize, true);
+  //   const curPrice = process.env.NODE_ENV === 'development' ? 100 : await getCurPrice('DAI');
+  //   this.setState({
+  //     data: (data || []).concat(pageData),
+  //     curPrice,
+  //     initLoad: false,
+  //     end: pageData && pageData.length === 0,
+  //     loading: false,
+  //   });
+  // }
 
   setModalVisible = (key: 'modalVisible') => {
     return {
@@ -60,13 +79,14 @@ export default class Balance extends Component<any, IState> {
 
   columns = ColumnConvert<PrivatePoolOrder, { operation: any }>({
     column: {
+      orderId: 'Order Id',
       time: 'Time',
       amount: 'Amount',
       lockedAmount: 'Locked Amount',
       openPrice: 'Open Price',
       status: 'Status',
       coin: 'Coins',
-      orderId: 'Order Id',
+      operation: 'Action',
     },
     attributes: {},
     render: (value, key, record) => {
@@ -92,10 +112,14 @@ export default class Balance extends Component<any, IState> {
   confirmAddMargin = async () => {
     const { addAmount, selectedItem } = this.state;
 
-    if (!isNotZeroLike(addAmount)) {
+    if (!isGreaterZero(addAmount)) {
       return;
     }
-    await addPrivateOrderMargin(selectedItem!, addAmount!);
+    this.orderModalVisible.hide();
+    const success = await addPrivateOrderMargin(selectedItem!, addAmount!);
+    if (success) {
+      // this.loadData();
+    }
   };
 
   onOpenAmountChange = (addAmount: number) => {
@@ -105,27 +129,48 @@ export default class Balance extends Component<any, IState> {
   };
 
   render() {
-    const { loading, curPrice, data, modalVisible, addAmount, selectedItem } = this.state;
+    const { loading, end, initLoad, curPrice, data, modalVisible, addAmount, selectedItem } = this.state;
     return (
       <SiteContext.Consumer>
         {({ isMobile, account }) => {
           const max = selectedItem && account?.USDBalance ? account?.USDBalance[selectedItem?.coin] : undefined;
-          const marginRate = selectedItem ? percentage(selectedItem.lockedAmount, multiple(addAmount, curPrice)) : null;
+          const marginRate = selectedItem
+            ? percentage(selectedItem.lockedAmount, multiple(selectedItem.amount, curPrice))
+            : null;
+          //@ts-ignore
+          const marginTxt = isNaN(marginRate) ? '-' : marginRate + '%';
           return (
             <div className={styles.tableList}>
               <h4>Liquidity Locked Detail</h4>
-              <Table
-                loading={loading}
-                rowKey="orderId"
-                columns={this.columns}
-                pagination={false}
-                dataSource={data}
-                scroll={isMobile ? { x: 800 } : undefined}
-              />
-              {/* <Button type="link" className={styles.more}>
-              More&nbsp;
-              <Icon type="down" />
-            </Button> */}
+              <Table columns={this.columns} rowKey="orderId" loadPage={this.loadPage}/>
+              {/* {initLoad ? (
+                <>
+                  <Placeholder style={{margin: '3em 0'}} loading={loading}>&nbsp;</Placeholder>
+                  <Placeholder style={{margin: '3em 0'}} loading={loading}>&nbsp;</Placeholder>
+                </>
+              ) : (
+                <>
+                  <Table
+                    rowKey="orderId"
+                    columns={this.columns}
+                    pagination={false}
+                    dataSource={data}
+                    scroll={isMobile ? { x: 800 } : undefined}
+                  />
+                  {loading ? (
+                    <Button type="link" className={styles.more}>
+                      <Icon type="loading" />
+                    </Button>
+                  ) : end ? null : (
+                    <Button type="link" onClick={this.nextPage} className={styles.more}>
+                      <span>
+                        More&nbsp;
+                        <Icon type="down" />
+                      </span>
+                    </Button>
+                  )}
+                </>
+              )} */}
 
               <ModalRender
                 visible={modalVisible}
@@ -140,7 +185,8 @@ export default class Balance extends Component<any, IState> {
                     {selectedItem?.orderId}
                   </Descriptions.Item>
                   <Descriptions.Item label="Current margin rate" span={24}>
-                    {marginRate}
+                    {/* // @ts-ignore */}
+                    {marginTxt}
                   </Descriptions.Item>
                   {/* <Descriptions.Item label="Time" span={24}>
                   {formatTime(selectedItem?.time)}
@@ -164,20 +210,20 @@ export default class Balance extends Component<any, IState> {
                       className={styles.orderInput}
                       onChange={this.onOpenAmountChange}
                       placeholder={max ? `Max ${max}` : '0.00'}
-                      max={max}
+                      max={truncated(max)}
                       showTag={true}
                       tagClassName={styles.utilMax}
                       suffix={selectedItem?.coin}
                     />
                   </Col>
                 </Row>
-                <Row className={modalStyles.actionBtns} gutter={[16, 16]} type="flex">
+                <Row className={modalStyles.actionBtns} gutter={16} type="flex">
                   <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                    <Button onClick={this.orderModalVisible.hide}>Cancel</Button>
+                    <Button onClick={this.orderModalVisible.hide}>CANCEL</Button>
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                     <Button onClick={this.confirmAddMargin} type="primary">
-                      Confirm
+                      CONFIRM
                     </Button>
                   </Col>
                 </Row>
