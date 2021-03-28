@@ -6,7 +6,7 @@ import { toEthers } from '../util/ethers';
 import { withLoading } from './utils';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     setTimeout(() => {
       resolve(val);
     }, Math.random() * 2000);
@@ -24,8 +24,8 @@ export const getSwapPrice = async (): Promise<ISwapBurn> => {
         });
         return rs;
       }),
-      map((info) => {
-        const ddsAmount: number = info['DDS'] / 10;
+      map(info => {
+        const ddsAmount: number = info['SLD'] / 10;
         const usdAmount: number = info['DAI'] + info['USDT'] + info['USDC'];
         const price: number = ddsAmount / usdAmount;
 

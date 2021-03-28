@@ -27,7 +27,7 @@ declare interface ICoinAmount {
 }
 
 declare type IFromCoins = 'ETH' | 'BTC';
-declare type IDDS = 'DDS';
+declare type ISLD = 'SLD';
 declare type IUSDCoins = 'DAI' | 'USDT' | 'USDC';
 declare type IReUSDCoins = 'reDAI' | 'reUSDT' | 'reUSDC';
 declare type IExchangePair = 'ETHDAI' | 'EHTUSDT' | 'ETHUSDC' | 'BTCDAI' | 'BTCUSDT' | 'BTCUSDC';
@@ -76,7 +76,9 @@ declare interface ITradeRecord {
 }
 
 declare interface IOpenFee {
-  curPrice: number, settlementFee: number, fundingFeeLocked: number;
+  curPrice: number;
+  settlementFee: number;
+  fundingFeeLocked: number;
 }
 
 declare interface CoinAvailableInfo {
@@ -139,23 +141,6 @@ declare interface CoinValueInfo {
   USDC: number;
 }
 
-declare interface SwapValueInfo extends CoinValueInfo {
-  USD: number; // DAI+USDT+USDC总数
-  DDS: number; // DDS总数
-  DDSPartAmount: number; // 1/10数量的DDS，用于页面显示
-  DDSPrice: number; // 一个DDS能兑换多少个USD
-}
-
-declare interface PoolContractDetail {
-  id: string;
-  time: number;
-  amount: number;
-  locked: number;
-  coin: IUSDCoins;
-  fee: number;
-  status: IOrderStatus;
-}
-
 declare interface MiningTokenBalance {
   reDAI: number;
   reUSDT: number;
@@ -171,11 +156,6 @@ declare type RewardRecord = {
   price: number;
   reward: number;
 };
-
-declare interface SwapParam {
-  ddsAmount: number;
-  coin: IUSDCoins;
-}
 
 declare interface MyReferralSummary {
   bonus: number;
@@ -202,7 +182,7 @@ declare interface ICoinValue {
   value: number;
 }
 
-type IPoolShareInPool = ICoinItem
+type IPoolShareInPool = ICoinItem;
 
 declare interface ISwapBurn {
   usd: number;

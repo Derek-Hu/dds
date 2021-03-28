@@ -55,6 +55,8 @@ export const SupporttedCoins = {
   WBTC: 'WBTC',
 };
 
+export const MyTokenSymbol = 'SLD';
+
 export const TIME_FORMAT = 'YYYY-MM-DD HH mm:ss';
 
 export const SupportedCoins = Object.keys(SupporttedUSD);

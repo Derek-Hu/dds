@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import * as _ from 'lodash';
+import { MyTokenSymbol } from '../constant';
 
 export const ETH_WEI = 18;
 export const USD_WEI = 6;
@@ -7,7 +8,7 @@ export const USD_WEI = 6;
 export function toEthers(
   num: BigNumber,
   decimal: number,
-  coin: number | IDDS | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'
+  coin: number | ISLD | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'
 ): string {
   let numStr = num.toString();
   const wei = typeof coin === 'number' ? coin : getTokenWei(coin);
@@ -26,7 +27,7 @@ export function toEthers(
   return _.trimEnd(_.trimEnd(rs, '0'), '.');
 }
 
-export function toEtherNumber(num: BigNumber, decimal: number, coin: IDDS | IUSDCoins | IReUSDCoins | IFromCoins) {
+export function toEtherNumber(num: BigNumber, decimal: number, coin: ISLD | IUSDCoins | IReUSDCoins | IFromCoins) {
   return Number(toEthers(num, decimal, coin));
 }
 
@@ -54,7 +55,7 @@ export function toBigNumber(num: number, weight: number): BigNumber {
   return BigNumber.from(a).mul(by);
 }
 
-export function tokenBigNumber(amount: number, coin: IDDS | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'): BigNumber {
+export function tokenBigNumber(amount: number, coin: ISLD | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'): BigNumber {
   const wei = getTokenWei(coin);
 
   if (amount % 1) {
@@ -78,6 +79,6 @@ export function toExchangePair(pair: IExchangePair): ExchangeCoinPair {
   };
 }
 
-export function getTokenWei(coin: IDDS | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'): number {
-  return ['ETH', 'DDS', 'BTC', 'DAI', 'reDAI'].indexOf(coin) >= 0 ? ETH_WEI : USD_WEI;
+export function getTokenWei(coin: ISLD | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'): number {
+  return ['ETH', MyTokenSymbol, 'BTC', 'DAI', 'reDAI'].indexOf(coin) >= 0 ? ETH_WEI : USD_WEI;
 }
