@@ -26,7 +26,7 @@ export default ({ title, theme, loading, children, items, isNumber }: ICardInfo)
           {Array.isArray(items)
             ? items.map(({ label, value }, index) => (
                 <Descriptions.Item key={index} label={label} span={24}>
-                  <Placeholder width={'32%'} loading={loading}>
+                  <Placeholder width={'100%'} loading={loading}>
                     {isNumber ? format(value) : value}
                   </Placeholder>
                 </Descriptions.Item>
@@ -34,7 +34,7 @@ export default ({ title, theme, loading, children, items, isNumber }: ICardInfo)
             : items
             ? Object.keys(items).map(key => (
                 <Descriptions.Item key={key} label={key} span={24}>
-                  <Placeholder width={'32%'} loading={loading}>
+                  <Placeholder width={'100%'} loading={loading}>
                     {isNumber ? format(items[key]) : items[key]}
                   </Placeholder>
                 </Descriptions.Item>

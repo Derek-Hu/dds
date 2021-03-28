@@ -16,7 +16,7 @@ const infos = {
   'Funding Rate': 'Funding Rate',
 };
 // @ts-ignore
-export const infoItems: ITradeInfo[] = Object.keys(infos).map((key) => ({ label: key, value: infos[key] }));
+export const infoItems: ITradeInfo[] = Object.keys(infos).map(key => ({ label: key, value: infos[key] }));
 
 export const poolInfo: ITradePoolInfo = {
   public: {
@@ -33,7 +33,7 @@ export const orders: ITradeRecord[] = [
   {
     id: '001',
     time: new Date().getTime(),
-    type: 'short',
+    type: 'SHORT',
     price: 400.65,
     amount: 10.36,
     costCoin: 'DAI',
@@ -48,7 +48,7 @@ export const orders: ITradeRecord[] = [
   {
     id: '002',
     time: new Date().getTime(),
-    type: 'short',
+    type: 'SHORT',
     price: 400.65,
     amount: 10.36,
     costCoin: 'USDT',
@@ -63,7 +63,7 @@ export const orders: ITradeRecord[] = [
   {
     id: '003',
     time: new Date().getTime(),
-    type: 'long',
+    type: 'LONG',
     price: 400.65,
     amount: 10.36,
     costCoin: 'USDC',

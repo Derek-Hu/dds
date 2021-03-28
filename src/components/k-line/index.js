@@ -94,6 +94,10 @@ export default class MainLayout extends Component {
           showMaxLabel: true,
         },
       },
+      yAxis: {
+        // min: duration === 'day' ? 1600 : 1200,
+        min: Math.min.apply(null, yData),
+      },
       series: [
         {
           // 根据名字对应到相应的系列

@@ -35,11 +35,14 @@ export class OrderInfoObject {
   public readonly status: IOrderStatus;
   public readonly closePrice: CoinNumber;
 
+  public readonly marginAmount: CoinNumber;
+  public readonly marginFee: CoinNumber;
+
   constructor(orderInfoData: IOrderInfoData) {
     this.orderId = BigNumber.from(orderInfoData.orderId);
     this.exchangePair = toExchangePair(orderInfoData.symbol);
     this.openTime = BigNumber.from(orderInfoData.openContractTime).toNumber();
-    this.orderType = orderInfoData.orderType === 'LONG' ? 'long' : 'short';
+    this.orderType = orderInfoData.orderType === 'LONG' ? 'LONG' : 'SHORT';
     this.openAmount = {
       value: BigNumber.from(orderInfoData.openNumber),
       precision: getTokenWei(this.exchangePair.ETH),
@@ -61,6 +64,15 @@ export class OrderInfoObject {
       value: BigNumber.from(orderInfoData.closePrice),
       precision: getTokenWei(this.exchangePair.USD),
     };
+
+    this.marginAmount = {
+      value: BigNumber.from(orderInfoData.margeAmount),
+      precision: getTokenWei(this.exchangePair.USD),
+    };
+    this.marginFee = {
+      value: BigNumber.from(orderInfoData.margeFee),
+      precision: getTokenWei(this.exchangePair.USD),
+    };
   }
 
   public getTakerOrder(curPrice: CoinNumber): ITradeRecord {
@@ -78,6 +90,18 @@ export class OrderInfoObject {
         percentage: Number(keepDecimal(this.getTakerPLPercent(curPrice), 2)),
       },
       status: this.status,
+    };
+  }
+
+  public getMakerOrder(): PrivatePoolOrder {
+    return {
+      orderId: this.orderId.toString(),
+      time: this.openTime,
+      amount: toDisplayNum(this.openAmount, 4),
+      lockedAmount: toDisplayNum(this.marginAmount, 4),
+      status: this.isActive() ? 'ACTIVE' : 'CLOSED',
+      openPrice: toDisplayNum(this.openPrice, 4),
+      coin: this.exchangePair.USD,
     };
   }
 

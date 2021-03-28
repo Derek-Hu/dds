@@ -3,7 +3,7 @@ import ProgressBar from '../progress-bar/index';
 import styles from './style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import { getTradeLiquidityPoolInfo } from '../../services/trade.service';
-import { dividedPecent } from '../../util/math';
+import { dividedPecent, format, formatInt } from '../../util/math';
 interface IState {
   poolInfo?: ITradePoolInfo;
   loading: boolean;
@@ -38,10 +38,10 @@ export default class TradePool extends Component<{ coin: IUSDCoins }, IState> {
       desc: 'Available Liquidity',
       value: (
         <span>
-          {poolInfo?.public?.value}/ {poolInfo?.public?.total}
+          {format(poolInfo?.public?.value)}/ {formatInt(poolInfo?.public?.total)}
         </span>
       ),
-      percentage: dividedPecent(poolInfo?.public?.value, poolInfo?.public?.total),
+      percentage: Math.floor(dividedPecent(poolInfo?.public?.value, poolInfo?.public?.total)),
       unit: coin,
     };
 
@@ -50,10 +50,10 @@ export default class TradePool extends Component<{ coin: IUSDCoins }, IState> {
       desc: 'Available Liquidity',
       value: (
         <span>
-          {poolInfo?.private?.value}/ {poolInfo?.private?.total}
+          {format(poolInfo?.private?.value)}/ {formatInt(poolInfo?.private?.total)}
         </span>
       ),
-      percentage: dividedPecent(poolInfo?.private?.value, poolInfo?.private?.total),
+      percentage: Math.floor(dividedPecent(poolInfo?.private?.value, poolInfo?.private?.total)),
       unit: coin,
     };
 

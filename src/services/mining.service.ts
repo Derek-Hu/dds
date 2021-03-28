@@ -9,6 +9,7 @@ import { loginUserAccount } from './account';
 import { CoinBalance, CoinShare } from '../wallet/contract-interface';
 import { defaultPoolData, defaultReTokenData } from './mock/unlogin-default';
 import { withLoading } from './utils';
+import { MyTokenSymbol } from '../constant';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   return new Promise(resolve => {
@@ -102,7 +103,7 @@ export const getLiquiditorReward = (type: 'public' | 'private'): Promise<{ campa
         return contractAccessor.getLiquiditorRewards(account);
       }),
       map((balances: CoinBalance[]) => {
-        const ddsReward: CoinBalance[] = balances.filter(one => one.coin === 'DDS');
+        const ddsReward: CoinBalance[] = balances.filter(one => one.coin === MyTokenSymbol);
         if (ddsReward.length > 0) {
           return Number(toEthers(ddsReward[0].balance, 4, ddsReward[0].coin));
         } else {

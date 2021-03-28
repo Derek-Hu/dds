@@ -86,7 +86,7 @@ export default class PoolArea extends Component<any, IState> {
   render() {
     const { loading, data, selectedCoin, amount } = this.state;
     const transfed = multiple(amount, data?.rate, true);
-    const transferText = isNaN(transfed) ? '' : transfed;
+    const transferText = isNaN(transfed) ? '' : transfed.toFixed(2);
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => {

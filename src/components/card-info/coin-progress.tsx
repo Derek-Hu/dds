@@ -2,7 +2,7 @@ import { Component } from 'react';
 import PoolProgress from '../progress-bar/pool-progress';
 import { Hidden } from '../builtin/hidden';
 import { IIndicatorProgress } from '../progress-bar/with-indicator';
-import { dividedPecent } from '../../util/math';
+import { dividedPecent, format } from '../../util/math';
 import { SupporttedUSD, DefaultProgressDatas } from '../../constant/index';
 
 interface IState {
@@ -37,7 +37,7 @@ export default class CoinProgress extends Component<IProps, IState> {
             percentage: dividedPecent(amount, total),
             val: (
               <span>
-                {amount} / {total}
+                {amount} / {format(total)}
               </span>
             ),
           }))

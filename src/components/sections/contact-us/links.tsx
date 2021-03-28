@@ -6,7 +6,7 @@ import styles from './style.module.less';
 export default [
   {
     icon: <Icon type="twitter" style={{ color: '#333333' }} />,
-    url: 'https://twitter.com/shield_dao)',
+    url: 'https://twitter.com/shield_dao',
   },
   {
     icon: <Icon type="medium" style={{ color: '#333333' }} />,

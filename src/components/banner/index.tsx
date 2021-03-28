@@ -15,7 +15,7 @@ export default () => {
         </a>
         <a href="https://docsend.com/view/tik7bk6c6vv6nqwv" rel="noreferrer" target="_blank">
           <Button className={styles.read} type="link">
-            Read the docs
+            READ WHITEPAPER
           </Button>
         </a>
       </div>

@@ -37,6 +37,7 @@ import {
   SystemFundingAccount,
   ERC20DDSAddress,
   BrokerContractAddress,
+  MyTokenSymbol,
 } from '../constant';
 import { walletManager } from '../wallet/wallet-manager';
 import { WalletInterface } from './wallet-interface';
@@ -64,7 +65,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   public getUserSelfWalletBalance(address: string): Observable<CoinBalance[]> {
     const dds$: Observable<CoinBalance> = from(this.getERC20DDSContract().functions.balanceOf(address)).pipe(
       map(rs => {
-        return { coin: 'DDS', balance: rs[0] };
+        return { coin: MyTokenSymbol, balance: rs[0] };
       })
     );
 
@@ -204,11 +205,16 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
-  public createContract(coin: IUSDCoins, orderType: ITradeType, amount: number, inviter = ''): Observable<boolean> {
+  public createContract(
+    coin: IUSDCoins,
+    orderType: ITradeType,
+    amount: number,
+    inviter: string | null = ''
+  ): Observable<boolean> {
     return this.getContract(coin).pipe(
       switchMap((contract: ethers.Contract) => {
         const bigAmount = toBigNumber(amount, 18);
-        const contractType = orderType === 'long' ? 1 : 2;
+        const contractType = orderType === 'LONG' ? 1 : 2;
         const userInviter = inviter && inviter.length === 42 ? inviter : '0x0000000000000000000000000000000000000000';
         return contract.functions.creatContract('ETHDAI', bigAmount, contractType, userInviter);
       }),
@@ -285,7 +291,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
               return {
                 id: order.id.toString(),
                 time: Number(order.info.startTime.toString() + '000'),
-                type: order.info.contractType.toString() === '1' ? 'long' : 'short',
+                type: order.info.contractType.toString() === '1' ? 'LONG' : 'SHORT',
                 amount: Number(toEthers(order.info.number, 4)),
                 price: Number(toEthers(order.info.openPrice, 4)),
                 costCoin: 'DAI',
@@ -652,8 +658,8 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       switchMap(contract => {
         return contract.functions.lpAccount(address);
       }),
-      map((rs: BigNumber[]) => {
-        return rs[0];
+      map((rs: any) => {
+        return rs.availableAmount;
       })
     );
 
@@ -783,7 +789,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
 
   public getLiquiditorRewards(address: string): Observable<CoinBalance[]> {
     return from(this.getLiquidatorContract().functions.getFeeBackByLiquidor(address)).pipe(
-      map((rs: BigNumber[]) => {
+      map((rs: BigNumber[]): CoinBalance[] => {
         return [
           {
             coin: 'DAI',
@@ -798,10 +804,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
             balance: rs[2],
           },
           {
-            coin: 'DDS',
+            coin: MyTokenSymbol,
             balance: rs[3],
           },
-        ] as CoinBalance[];
+        ];
       })
     );
   }
@@ -810,10 +816,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
 
   public getSwapBurnInfo(): Observable<CoinBalance[]> {
     return from(this.getSwapBurnContract().functions.getBuyBackInfo()).pipe(
-      map((rs: BigNumber[]) => {
+      map((rs: BigNumber[]): CoinBalance[] => {
         return [
           {
-            coin: 'DDS',
+            coin: MyTokenSymbol,
             balance: rs[0],
           },
           {
@@ -828,7 +834,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
             coin: 'USDC',
             balance: rs[3],
           },
-        ] as CoinBalance[];
+        ];
       })
     );
   }
@@ -836,7 +842,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   public doSwap(coin: IUSDCoins, ddsAmount: number): Observable<boolean> {
     const coinType: 1 | 2 | 3 = coin === 'DAI' ? 1 : coin === 'USDT' ? 2 : 3;
     const tokenType: BigNumber = BigNumber.from(coinType);
-    const tokenAmount: BigNumber = tokenBigNumber(ddsAmount, 'DDS');
+    const tokenAmount: BigNumber = tokenBigNumber(ddsAmount, MyTokenSymbol);
 
     return from(this.getSwapBurnContract().functions.swap(tokenType, tokenAmount)).pipe(
       switchMap((rs: any) => {
@@ -1220,7 +1226,12 @@ export class ContractAccessor implements ContractProxy {
     );
   }
 
-  public createContract(coin: IUSDCoins, orderType: ITradeType, amount: number, inviter = ''): Observable<any> {
+  public createContract(
+    coin: IUSDCoins,
+    orderType: ITradeType,
+    amount: number,
+    inviter: string | null = ''
+  ): Observable<any> {
     return this.accessor.pipe(switchMap(accessor => accessor.createContract(coin, orderType, amount, inviter)));
   }
 

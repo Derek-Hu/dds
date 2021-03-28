@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Button, Row, Col } from 'antd';
+import { Button, Row, Col, message } from 'antd';
 import styles from '../style.module.less';
 import { format } from '../../../util/math';
 import { getLiquiditorReward } from '../../../services/mining.service';
@@ -51,7 +51,13 @@ export default class LiquiditorReward extends Component<any, IState> {
         </Row>
         <Auth>
           <p className={styles.wantoBe}>Want to become a liquiditor?</p>
-          <Button type="primary" style={{ width: '40%', fontSize: '18px' }}>
+          <Button
+            type="primary"
+            style={{ width: '40%', fontSize: '18px' }}
+            onClick={() => {
+              message.info('coming soon');
+            }}
+          >
             READ DOCS
           </Button>
         </Auth>
