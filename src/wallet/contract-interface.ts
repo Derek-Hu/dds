@@ -4899,7 +4899,7 @@ export interface CoinShare {
 }
 
 export interface CoinBalance {
-  coin: IUSDCoins | IReUSDCoins | IDDS;
+  coin: IUSDCoins | IReUSDCoins | ISLD;
   balance: BigNumber;
 }
 
