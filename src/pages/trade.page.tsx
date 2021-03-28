@@ -65,7 +65,7 @@ export default class TradePage extends Component {
                   <KLine from={from} to={coin} />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={8}>
-                  <FundingBalance curPrice={curPrice} coins={{ from, to: coin }} />
+                  <FundingBalance coins={{ from, to: coin }} />
                 </Col>
               </Row>
               <div>

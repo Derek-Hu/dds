@@ -38,6 +38,9 @@ export default class Balance extends Component<any, IState> {
     initLoad: true,
     end: false,
   };
+
+  static contextType = SiteContext;
+
   async componentDidMount() {
     // this.loadData();
   }
@@ -118,7 +121,7 @@ export default class Balance extends Component<any, IState> {
     this.orderModalVisible.hide();
     const success = await addPrivateOrderMargin(selectedItem!, addAmount!);
     if (success) {
-      // this.loadData();
+      this.context.refreshPage && this.context.refreshPage();
     }
   };
 

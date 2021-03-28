@@ -86,7 +86,8 @@ export default class LiquiditorReward extends Component<any, IState> {
   cofirmClaim = async () => {
     const success = await claimLiquidityLocked();
     if (success) {
-      this.loadData();
+      // this.loadData();
+      this.context.refreshPage && this.context.refreshPage();
     }
   };
 

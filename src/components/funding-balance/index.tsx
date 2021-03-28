@@ -1,11 +1,11 @@
-import { Row, Col, Radio, Input, Icon, Button } from 'antd';
+import { Row, Col, Radio, message, Icon, Button } from 'antd';
 import styles from './style.module.less';
 import DespositModal from './modals/deposit';
 import WithdrawModal from './modals/withdraw';
 import OrderConfirm from './modals/order-confirm';
 import { Component } from 'react';
 import SiteContext from '../../layouts/SiteContext';
-import { getFundingBalanceInfo, confirmOrder, deposit, withdraw, openOrder } from '../../services/trade.service';
+import { getFundingBalanceInfo, confirmOrder, deposit, withdraw,getCurPrice, openOrder } from '../../services/trade.service';
 import { getMaxFromCoin } from './calculate';
 import { format, isGreaterZero, truncated, isNumberLike, divide } from '../../util/math';
 import InputNumber from '../input/index';
@@ -22,6 +22,7 @@ interface IState {
   available?: number;
   loading: boolean;
   feeQuery: boolean;
+  curPrice?: number;
   fees?: IOpenFee;
   setFeeQuery: boolean;
 }
@@ -30,7 +31,6 @@ type TModalKeys = Pick<IState, 'withdrawVisible' | 'depositVisible' | 'orderConf
 
 export default class Balance extends Component<{
   coins: { from: IFromCoins; to: IUSDCoins };
-  curPrice?: number;
 }> {
   state: IState = {
     depositVisible: false,
@@ -51,12 +51,13 @@ export default class Balance extends Component<{
   };
 
   loadBalanceInfo = async (damon?: boolean) => {
-    const { coins, curPrice } = this.props;
+    const { coins } = this.props;
     const { to } = coins;
     try {
       if (!damon) {
         this.setState({ loading: true });
       }
+      const curPrice = await getCurPrice(to);
       const balanceInfo = await getFundingBalanceInfo(to);
 
       const available = getMaxFromCoin(balanceInfo);
@@ -65,6 +66,7 @@ export default class Balance extends Component<{
         balanceInfo,
         available: truncated(available),
         maxNumber,
+        curPrice,
         loading: false,
       });
     } catch (e) {
@@ -81,7 +83,7 @@ export default class Balance extends Component<{
     const { coins } = this.props;
     const success = await deposit({ amount, coin: coins.to });
     if (success) {
-      this.loadBalanceInfo();
+      this.context.refreshPage && this.context.refreshPage();
     }
   };
 
@@ -92,7 +94,7 @@ export default class Balance extends Component<{
     this.withdrawVisible.hide();
     const success = await withdraw({ amount, coin });
     if (success) {
-      this.loadBalanceInfo();
+      this.context.refreshPage && this.context.refreshPage();
     }
   };
 
@@ -145,8 +147,7 @@ export default class Balance extends Component<{
     this.orderConfirmVisible.hide();
     const success = await openOrder(to, tradeType, openAmount!);
     if (success) {
-      // const payedAmount = multiple(openAmount, curPrice, true);
-      this.loadBalanceInfo(true);
+      this.context.refreshPage && this.context.refreshPage();
     }
   };
 
@@ -171,6 +172,24 @@ export default class Balance extends Component<{
     });
   };
 
+  clickOpen = () => {
+    const { openAmount, maxNumber } = this.state;
+    if (!isGreaterZero(openAmount)) {
+      return;
+    }
+    
+    if(!isNumberLike(maxNumber)){
+      return;
+    }
+
+    if(maxNumber! < openAmount!){
+      message.warning('More balance required, Please deposit first!')
+      return;
+    }
+
+    this.queryFee();
+  }
+
   render() {
     const {
       depositVisible,
@@ -184,9 +203,10 @@ export default class Balance extends Component<{
       maxNumber,
       setFeeQuery,
       feeQuery,
+      curPrice,
       available,
     } = this.state;
-    const { coins, curPrice } = this.props;
+    const { coins } = this.props;
     const { from, to } = coins;
 
     const price = curPrice;
@@ -245,6 +265,7 @@ export default class Balance extends Component<{
               onChange={this.onOpenAmountChange}
               placeholder={maxNumber ? `Max ${maxNumber}` : '0.00'}
               max={maxNumber}
+              skip={true}
               showTag={true}
               tagClassName={styles.utilMax}
               suffix={'ETH'}
@@ -257,12 +278,7 @@ export default class Balance extends Component<{
               loading={feeQuery}
               className={tradeType === 'short' ? 'buttonGreen' : 'buttonRed'}
               type="primary"
-              onClick={() => {
-                if (!isGreaterZero(openAmount)) {
-                  return;
-                }
-                this.queryFee();
-              }}
+              onClick={this.clickOpen}
             >
               OPEN
             </Button>

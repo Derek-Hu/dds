@@ -39,6 +39,8 @@ export default class LiquidityProvided extends Component<IProps, IState> {
     calculating: false,
   };
 
+  static contextType = SiteContext;
+
   setModalVisible = (key: keyof TModalKeys) => {
     return {
       show: () => {
@@ -92,7 +94,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
     this.modalVisible.hide();
     const success = await doCollaborativeDeposit({ amount: amount!, coin: selectedCoin });
     if (success) {
-      // TODO: update
+      this.context.refreshPage && this.context.refreshPage();
     }
   };
 
@@ -148,7 +150,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                       </Select>
                     </Col>
                     <Col xs={24} sm={24} md={16} lg={18}>
-                      <InputNumber onChange={this.onAmountChange} placeholder="Enter amount" />
+                      <InputNumber min={1} onChange={this.onAmountChange} placeholder="Min amount: 1 DAI" />
                     </Col>
                   </Row>
                   {/* {isNotZeroLike(amount) ? ( */}

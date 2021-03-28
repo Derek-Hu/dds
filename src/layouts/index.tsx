@@ -13,13 +13,14 @@ interface IState {
   account: IAccount | null;
   address: string;
   connected: boolean | null;
+  timestamp: number | null;
 }
 // @ts-ignore
 let timer = null;
 export default class Layout extends Component<RouteComponentProps, IState> {
   static contextType = SiteContext;
 
-  state: IState = { connected: null, isMobile: false, address: '', account: null };
+  state: IState = { connected: null, timestamp: null,  isMobile: false, address: '', account: null };
 
   componentDidMount() {
     // this.tick();
@@ -71,18 +72,27 @@ export default class Layout extends Component<RouteComponentProps, IState> {
       address: account && account.address ? account.address : '',
     });
   };
+
+  refreshPage = () => {
+    this.setState({
+      timestamp: new Date().getTime()
+    })
+  }
   render() {
     const { children, location } = this.props;
-    const { isMobile, account, address, connected } = this.state;
+    const { isMobile, account, address, timestamp, connected } = this.state;
     const LayoutComp = location.pathname === '/home' ? HomeLayout : TradeLayout;
 
     return (
       <SiteContext.Provider
         value={{
           updateAccount: this.updateAccount,
+          refreshPage: this.refreshPage,
           isMobile,
           connected,
           direction: 'ltr',
+          // @ts-ignore
+          timestamp,
           account,
           address,
           // account:

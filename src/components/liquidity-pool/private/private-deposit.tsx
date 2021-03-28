@@ -28,6 +28,8 @@ export default class LiquidityProvided extends Component<IProps, IState> {
     amount: undefined,
   };
 
+  static contextType = SiteContext;
+
   setModalVisible = (key: keyof TModalKeys) => {
     return {
       show: () => {
@@ -59,7 +61,10 @@ export default class LiquidityProvided extends Component<IProps, IState> {
     this.modalVisible.hide();
     const { amount, selectedCoin } = this.state;
     // @ts-ignore
-    await doPrivateDeposit({ amount: parseFloat(amount), coin: selectedCoin });
+    const success = await doPrivateDeposit({ amount: parseFloat(amount), coin: selectedCoin });
+    if(success){
+      this.context.refreshPage && this.context.refreshPage();
+    }
   };
 
   onAmountChange = (amount: number) => {
@@ -93,7 +98,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                   </Select>
                 </Col>
                 <Col xs={24} sm={24} md={16} lg={18}>
-                  <InputNumber onChange={this.onAmountChange} placeholder="Enter amount" />
+                  <InputNumber min={1} onChange={this.onAmountChange} placeholder="Min amount: 1 DAI" />
                 </Col>
               </Row>
               <Button type="primary" className={styles.btn} onClick={this.modalVisible.show}>

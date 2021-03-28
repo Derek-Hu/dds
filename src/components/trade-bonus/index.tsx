@@ -61,6 +61,8 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
     loading: false,
   };
 
+  static contextType = SiteContext;
+
   async componentDidMount() {
     const { page } = this.state;
     // this.loadData(page);
@@ -154,8 +156,8 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
     const { curPrice } = this.props;
     const success = await closeOrder(selectedItem!, curPrice!);
     if (success) {
-      const { page } = this.state;
-      // this.loadData(page);
+      // const { page } = this.state;
+      this.context.refreshPage && this.context.refreshPage();
     }
   };
 

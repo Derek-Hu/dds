@@ -12,6 +12,7 @@ export default class InputNumberComp extends Component<
   {
     placeholder?: string;
     max?: number;
+    min?: number;
     className?: string;
     disabled?: boolean;
     suffix?: any;
@@ -19,6 +20,7 @@ export default class InputNumberComp extends Component<
     onChange: (value: number) => any;
     tagClassName?: string;
     showTag?: boolean;
+    skip?: boolean;
   },
   IState
 > {
@@ -28,19 +30,24 @@ export default class InputNumberComp extends Component<
 
   amountChange = (e: any) => {
     const val = e.target.value;
-    const { max } = this.props;
+    const { max, min, skip } = this.props;
 
     // const isCompatible = (val: string) => val === '' || /^\d+\.\d*$/.test(val);
     // delete or exceed
     // if ((!isNumberLike(val) && !isCompatible(val)) || (isNumberLike(max) && Number(val) > Number(max!))) {
     //   return;
     // }
-    const isCompatible = /^[1-9]+\d*\.?\d{0,4}?$/.test(val) || /^0\.\d{0,4}?$/.test(val) || val === '' || val === '0';
+    const isCompatible = /^[1-9]+\d*\.?\d{0,9}?$/.test(val) || /^0\.\d{0,9}?$/.test(val) || val === '' || val === '0';
     if (!isCompatible) {
       return;
     }
-    if (isNumberLike(max) && isNumberLike(val) && Number(val) > Number(max!)) {
-      return;
+    if(!skip){
+      if (isNumberLike(max) && isNumberLike(val) && Number(val) > Number(max!)) {
+        return;
+      }
+      if (isNumberLike(min) && isNumberLike(val) && Number(val) < Number(min!)) {
+        return;
+      }
     }
 
     this.setState({

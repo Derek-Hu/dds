@@ -29,6 +29,8 @@ export default class PoolArea extends Component<any, IState> {
     selectedCoin: 'DAI',
   };
 
+  static contextType = SiteContext;
+
   async componentDidMount() {
     this.setState({ loading: true });
     try {
@@ -72,10 +74,13 @@ export default class PoolArea extends Component<any, IState> {
   conformSwap = async () => {
     this.closeSwapModal();
     const { selectedCoin, amount } = this.state;
-    await conformSwap({
+    const success = await conformSwap({
       coin: selectedCoin,
       amount: Number(amount),
     });
+    if(success){
+      this.context.refreshPage && this.context.refreshPage();
+    }
   };
 
   render() {

@@ -6,7 +6,9 @@ export interface SiteContextProps {
   account: IAccount;
   address: string;
   connected: boolean | null;
+  timestamp?: number;
   updateAccount?: (account: IAccount) => any;
+  refreshPage?: () => void;
 }
 
 const SiteContext = React.createContext<SiteContextProps>({

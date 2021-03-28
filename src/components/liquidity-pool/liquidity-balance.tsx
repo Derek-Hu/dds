@@ -145,6 +145,8 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
     unlockInfos: {},
   };
 
+  static contextType = SiteContext;
+
   onAmountChange = (amount: number) => {
     this.setState({
       amount,
@@ -262,7 +264,10 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
     }
 
     this.withDrawVisible.hide();
-    await doPoolWithdraw({ amount, reAmount, coin: selectCoin, type: isPrivate ? 'private' : 'public' });
+    const success = await doPoolWithdraw({ amount, reAmount, coin: selectCoin, type: isPrivate ? 'private' : 'public' });
+    if(success){
+      this.context.refreshPage && this.context.refreshPage();
+    }
   };
 
   onMaxOpenClick = () => {
