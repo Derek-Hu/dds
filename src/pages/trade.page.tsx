@@ -16,7 +16,6 @@ import {
 import Auth from '../components/builtin/auth';
 import { SupporttedUSD, SupporttedCoins } from '../constant/index';
 import TradeInfo from '../components/trade-info/index';
-// import qs from 'query-string';
 import parse from '../util/url';
 
 interface IState {
