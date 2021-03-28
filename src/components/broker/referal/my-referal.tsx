@@ -68,7 +68,7 @@ export default class Broker extends Component<any, IState> {
             <span>Commission Balance(USD)</span>
           </Col>
         </Row>
-        <div style={{ marginTop: '48px', paddingBottom: '40px' }}>
+        <div style={{ marginTop: '48px', paddingBottom: '20px' }}>
           <div>
             <Visible when={isGreaterZero(bonus)}>
               <Button onClick={this.onClaim} style={{ width: '50%', margin: '20px' }} type="primary">

@@ -15,17 +15,10 @@ interface ICardInfo {
   children?: any;
   isNumber: boolean;
   theme: 'outer' | 'inner';
-  isCommission?: boolean;
 }
-export default ({ title, theme, loading, children, items, isNumber, isCommission }: ICardInfo) => {
+export default ({ title, theme, loading, children, items, isNumber }: ICardInfo) => {
   return (
-    <div
-      className={[
-        styles.root,
-        theme === 'outer' ? styles.outer : styles.inner,
-        isCommission ? styles.commissionCard : '',
-      ].join(' ')}
-    >
+    <div className={[styles.root, theme === 'outer' ? styles.outer : styles.inner].join(' ')}>
       {theme === 'outer' ? <h2>{title}</h2> : null}
       <div className={styles.card}>
         {theme === 'inner' ? <h2>{title}</h2> : null}
@@ -33,7 +26,7 @@ export default ({ title, theme, loading, children, items, isNumber, isCommission
           {Array.isArray(items)
             ? items.map(({ label, value }, index) => (
                 <Descriptions.Item key={index} label={label} span={24}>
-                  <Placeholder width={'32%'} loading={loading}>
+                  <Placeholder width={'100%'} loading={loading}>
                     {isNumber ? format(value) : value}
                   </Placeholder>
                 </Descriptions.Item>
@@ -41,7 +34,7 @@ export default ({ title, theme, loading, children, items, isNumber, isCommission
             : items
             ? Object.keys(items).map(key => (
                 <Descriptions.Item key={key} label={key} span={24}>
-                  <Placeholder width={'32%'} loading={loading}>
+                  <Placeholder width={'100%'} loading={loading}>
                     {isNumber ? format(items[key]) : items[key]}
                   </Placeholder>
                 </Descriptions.Item>

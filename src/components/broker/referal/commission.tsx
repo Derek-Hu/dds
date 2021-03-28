@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Icon, Tabs, Row, Col, Input, Button, Table } from 'antd';
+import { Icon, Tabs, Row, Col, Input, Button, Table, Descriptions } from 'antd';
 import CardInfo from '../../card-info/index';
 import { getBrokerCommissionData, getBrokerCommissionRecords } from '../../../services/broker.service';
 import ModalRender from '../../modal-render/index';
@@ -9,6 +9,7 @@ import styles from '../style.module.less';
 import { format } from '../../../util/math';
 import { DefaultCoinDatas } from '../../../constant/index';
 import { formatTime } from '../../../util/time';
+import Placeholder from '../../placeholder/index';
 
 interface IState {
   data: Array<{ label: string; value: any }> | { [key: string]: number };
@@ -95,7 +96,7 @@ export default class CommissionPool extends Component<any, IState> {
   };
 
   render() {
-    const { data, loading, visible, tableData } = this.state;
+    const { data = [], loading, visible, tableData } = this.state;
 
     // const dataInfo = (data || []).reduce((total, item) => {
     //   // @ts-ignore
@@ -112,18 +113,43 @@ export default class CommissionPool extends Component<any, IState> {
 
     return (
       <div>
-        <CardInfo
+        {/* <CardInfo
           isNumber={true}
           loading={loading}
           theme="inner"
           title="Commission(Total)"
           items={data}
-          isCommission={true}
         >
-          {/* <Button type="link" onClick={this.visible.show}>
+          <Button type="link" onClick={this.visible.show}>
             Commission History
-          </Button> */}
-        </CardInfo>
+          </Button>
+        </CardInfo> */}
+        <h3>Commission(Total)</h3>
+        <div style={{ marginTop: '40px' }}>
+          {Array.isArray(data)
+            ? data.map(({ label, value }, index) => (
+                <Col xs={8} sm={8} md={8} lg={8}>
+                  <span className={styles.ads}>
+                    <Placeholder width={'50%'} loading={loading}>
+                      {format(value)}
+                    </Placeholder>
+                  </span>
+                  <span>{label}</span>
+                </Col>
+              ))
+            : data
+            ? Object.keys(data).map(key => (
+                <Col xs={8} sm={8} md={8} lg={8}>
+                  <span className={styles.ads}>
+                    <Placeholder width={'50%'} loading={loading}>
+                      {format(data[key])}
+                    </Placeholder>
+                  </span>
+                  <span>{key}</span>
+                </Col>
+              ))
+            : null}
+        </div>
 
         <ModalRender
           visible={visible}

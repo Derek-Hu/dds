@@ -11,7 +11,7 @@ export default ({ width = '100%', style, height = '20px', loading, children }: I
   return loading ? (
     <div className="animated-background" style={{ width: width, height, ...style }}></div>
   ) : (
-    <div style={{ textAlign: 'center' }}>{children}</div>
+    <div style={{ ...style }}>{children}</div>
   );
 };
 
