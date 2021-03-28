@@ -29,6 +29,11 @@ export const isUserConnected = async (): Promise<boolean> => {
  * 网页初始加载时候测试连接钱包
  */
 export const initTryConnect = async (): Promise<boolean> => {
+  // return new Promise(resolve => {
+  //   setTimeout(()=>{
+  //     resolve(true);
+  //   }, 6000);
+  // })
   return walletManager
     .initTryWallet()
     .pipe(
@@ -72,7 +77,7 @@ export const loginUserAccount = async (): Promise<string> => {
 /**
  * 用户已经连接后返回用户账户信息
  */
-export const userAccountInfo = async (): Promise<UserAccountInfo> => {
+export const userAccountInfo = async (): Promise<IAccount> => {
   return walletManager
     .watchWalletInstance()
     .pipe(
@@ -86,11 +91,17 @@ export const userAccountInfo = async (): Promise<UserAccountInfo> => {
           map((balances: CoinBalance[]) => {
             return {
               address: account,
-              USDBalance: balances.map(one => ({
-                coin: one.coin,
-                amount: Number(toEthers(one.balance, 4, one.coin)),
-              })),
-            } as UserAccountInfo;
+              // USDBalance: balances.map(one => ({
+              //   coin: one.coin,
+              //   amount: Number(toEthers(one.balance, 4, one.coin)),
+              // })),
+              USDBalance: balances&& balances.length ? balances.reduce((total, { coin, balance }) => {
+                // @ts-ignore
+                total[coin] = Number(toEthers(balance, 4, coin));
+                return total;
+              }, {}) : {}
+
+            };
           })
         );
       }),

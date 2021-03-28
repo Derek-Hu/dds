@@ -3,8 +3,8 @@ import HomeLayout from '../layouts/home.layout';
 import TradeLayout from '../layouts/trade.layout';
 import { RouteComponentProps } from 'react-router-dom';
 import SiteContext from './SiteContext';
+import {ddsBasePath} from '../constant/index';
 import { userAccountInfo, initTryConnect } from '../services/account';
-import { clearTimeout } from 'timers';
 
 const RESPONSIVE_MOBILE = 768;
 
@@ -17,15 +17,31 @@ interface IState {
 }
 // @ts-ignore
 let timer = null;
+
+const isDDSPage = window.location.href.indexOf(ddsBasePath)===0;
 export default class Layout extends Component<RouteComponentProps, IState> {
   static contextType = SiteContext;
 
   state: IState = { connected: null, timestamp: null,  isMobile: false, address: '', account: null };
 
   componentDidMount() {
-    this.tick();
+    if(isDDSPage){
+      this.tick();
+      this.connectTimeout();
+    }
     this.updateMobileMode();
     window.addEventListener('resize', this.updateMobileMode);
+  }
+
+  connectTimeout = () => {
+    const { connected } = this.state;
+    setTimeout(() => {
+      if(connected === null){
+        this.setState({
+          connected: false,
+        })
+      }
+    }, 4000);
   }
 
   tick = async () => {
@@ -36,10 +52,9 @@ export default class Layout extends Component<RouteComponentProps, IState> {
       this.setState({
         connected: isConnected,
       });
-    }
-
-    if (!connected) {
-      this.updateAccount(null);
+      if (!isConnected) {
+        this.updateAccount(null);
+      }
     }
 
     // @ts-ignore
@@ -49,10 +64,10 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   };
   componentWillUnmount() {
     // @ts-ignore
-    // if (timer) {
-    //   // @ts-ignore
-    //   clearTimeout(timer);
-    // }
+    if (timer) {
+      // @ts-ignore
+      clearTimeout(timer);
+    }
     window.removeEventListener('resize', this.updateMobileMode);
   }
 

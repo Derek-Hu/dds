@@ -7,12 +7,12 @@ import commonStyles from '../funding-balance/modals/style.module.less';
 import { from, of, Subscription } from 'rxjs';
 import { SupportedWallets, Wallet } from '../../constant/index';
 import { walletManager } from '../../wallet/wallet-manager';
-import { delay, filter, map, switchMap } from 'rxjs/operators';
-import { WalletInterface } from '../../wallet/wallet-interface';
+// import { delay, filter, map, switchMap } from 'rxjs/operators';
+// import { WalletInterface } from '../../wallet/wallet-interface';
 import MetaMaskOnboarding from '@metamask/onboarding';
-import { contractAccessor } from '../../wallet/chain-access';
-import { CoinBalance } from '../../wallet/contract-interface';
-import { toEthers } from '../../util/ethers';
+// import { contractAccessor } from '../../wallet/chain-access';
+// import { CoinBalance } from '../../wallet/contract-interface';
+// import { toEthers } from '../../util/ethers';
 import { userAccountInfo, initTryConnect } from '../../services/account';
 
 const { Option } = Select;
@@ -90,20 +90,9 @@ export default class ConnectWallet extends Component<any, any> {
   watchWalletAccount() {
     this.unWatchWalletAccount();
 
-    from(userAccountInfo()).subscribe((account: UserAccountInfo | null) => {
-      const tranformed: IAccount = {
-        address: account ? account.address : '',
-        USDBalance:
-          account && account.USDBalance
-            ? account.USDBalance.reduce((total, { coin, amount }) => {
-                // @ts-ignore
-                total[coin] = amount;
-                return total;
-              }, {})
-            : {},
-      };
+    from(userAccountInfo()).subscribe((account: IAccount | null) => {
       this.closeDepositModal();
-      this.context.updateAccount(tranformed);
+      this.context.updateAccount(account);
     });
   }
 
