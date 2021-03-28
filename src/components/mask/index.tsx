@@ -22,12 +22,12 @@ export default {
               <Icon type="close" />
             </span>
             <div className={styles.imgContent}>
-              <img src={url} alt="" />
+              <img src={url} alt="" className={url === pending ? styles.loading : ''} />
             </div>
-            <p>{url === fail ? 'Failed' : url === success ? 'Success' : 'Pending'}</p>
+            <p>{url === fail ? 'Failed' : url === success ? 'Succeed' : 'Pending'}</p>
             {url === pending ? null : (
-              <Button type="primary" onClick={() => this.hide()}>
-                Done
+              <Button type="primary" onClick={() => this.hide()} className={styles.btn}>
+                OK
               </Button>
             )}
           </div>

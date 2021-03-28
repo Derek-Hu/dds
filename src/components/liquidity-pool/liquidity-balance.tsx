@@ -296,7 +296,7 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
               <Placeholder loading={loading}>
                 <Visible when={withdrawBtnEnable}>
                   <Button type="primary" onClick={this.withDrawVisible.show} className={styles.btn}>
-                    {deadline ? `Withdraw until ${deadline}` : 'Withdraw'}
+                    {deadline ? `Withdraw until ${deadline}` : 'WITHDRAW'}
                   </Button>
                 </Visible>
                 {/* <Button type="link" onClick={this.recordVisible.show} className={styles.link}>
@@ -383,7 +383,7 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12}>
                   <Button type="primary" onClick={isLocked ? this.withDrawVisible.hide : this.doWithdraw}>
-                    {isLocked ? `Got it` : 'WITHDRAW'}
+                    {isLocked ? `GOT IT` : 'WITHDRAW'}
                   </Button>
                 </Col>
               </Row>

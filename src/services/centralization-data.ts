@@ -42,7 +42,7 @@ export class OrderInfoObject {
     this.orderId = BigNumber.from(orderInfoData.orderId);
     this.exchangePair = toExchangePair(orderInfoData.symbol);
     this.openTime = BigNumber.from(orderInfoData.openContractTime).toNumber();
-    this.orderType = orderInfoData.orderType === 'LONG' ? 'long' : 'short';
+    this.orderType = orderInfoData.orderType === 'LONG' ? 'LONG' : 'SHORT';
     this.openAmount = {
       value: BigNumber.from(orderInfoData.openNumber),
       precision: getTokenWei(this.exchangePair.ETH),

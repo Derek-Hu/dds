@@ -112,7 +112,14 @@ export default class CommissionPool extends Component<any, IState> {
 
     return (
       <div>
-        <CardInfo isNumber={true} loading={loading} theme="inner" title="Commission(Total)" items={data}>
+        <CardInfo
+          isNumber={true}
+          loading={loading}
+          theme="inner"
+          title="Commission(Total)"
+          items={data}
+          isCommission={true}
+        >
           {/* <Button type="link" onClick={this.visible.show}>
             Commission History
           </Button> */}

@@ -214,7 +214,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     return this.getContract(coin).pipe(
       switchMap((contract: ethers.Contract) => {
         const bigAmount = toBigNumber(amount, 18);
-        const contractType = orderType === 'long' ? 1 : 2;
+        const contractType = orderType === 'LONG' ? 1 : 2;
         const userInviter = inviter && inviter.length === 42 ? inviter : '0x0000000000000000000000000000000000000000';
         return contract.functions.creatContract('ETHDAI', bigAmount, contractType, userInviter);
       }),
@@ -291,7 +291,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
               return {
                 id: order.id.toString(),
                 time: Number(order.info.startTime.toString() + '000'),
-                type: order.info.contractType.toString() === '1' ? 'long' : 'short',
+                type: order.info.contractType.toString() === '1' ? 'LONG' : 'SHORT',
                 amount: Number(toEthers(order.info.number, 4)),
                 price: Number(toEthers(order.info.openPrice, 4)),
                 costCoin: 'DAI',

@@ -15,10 +15,17 @@ interface ICardInfo {
   children?: any;
   isNumber: boolean;
   theme: 'outer' | 'inner';
+  isCommission?: boolean;
 }
-export default ({ title, theme, loading, children, items, isNumber }: ICardInfo) => {
+export default ({ title, theme, loading, children, items, isNumber, isCommission }: ICardInfo) => {
   return (
-    <div className={[styles.root, theme === 'outer' ? styles.outer : styles.inner].join(' ')}>
+    <div
+      className={[
+        styles.root,
+        theme === 'outer' ? styles.outer : styles.inner,
+        isCommission ? styles.commissionCard : '',
+      ].join(' ')}
+    >
       {theme === 'outer' ? <h2>{title}</h2> : null}
       <div className={styles.card}>
         {theme === 'inner' ? <h2>{title}</h2> : null}

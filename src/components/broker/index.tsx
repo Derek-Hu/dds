@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Tabs, Row, Col, Input, Button } from 'antd';
+import { Tabs, Row, Col, Input, Button, message } from 'antd';
 import styles from './style.module.less';
 import Step from './steps';
 import { CustomTabKey, ddsBasePath } from '../../constant/index';
@@ -34,6 +34,11 @@ export default class Broker extends Component<any, any> {
     });
   };
 
+  onCopy = () => {
+    message.success('copied');
+    this.setState({ copied: true });
+  };
+
   render() {
     const referalCode = account2ReferalCode(this.context.address);
     const url = referalCode ? `${ddsBasePath}/referal?code=${referalCode}` : '';
@@ -44,7 +49,7 @@ export default class Broker extends Component<any, any> {
           <div className={styles.referalInfo}>
             <Input value={url} disabled={true} className={styles.input} />
             {referalCode ? (
-              <CopyToClipboard text={url} onCopy={() => this.setState({ copied: true })}>
+              <CopyToClipboard text={url} onCopy={this.onCopy}>
                 <Button type="primary" className={styles.btn}>
                   Copy referral link
                 </Button>

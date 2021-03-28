@@ -109,7 +109,7 @@ export default class LiquiditorReward extends Component<any, IState> {
     const { data, loading, visible, tableData } = this.state;
     return (
       <div>
-        <h3>{this.context.address ? 'Your Active Liquidity Reward' : 'Active Liquidity Reward Today'}</h3>
+        <h3>{this.context.address ? 'Your Active Liquidity Rewards' : 'Active Liquidity Reward Today'}</h3>
         <p className={styles.coins}>
           <Placeholder loading={loading} width={'10em'}>
             {format(data)} SLD

@@ -3,7 +3,7 @@ Funding Balance 下单
 // 入参：
 export interface IRecord {
     amount: number;
-    type: 'long' | 'short';
+    type: 'LONG' | 'SHORT';
     referal: string;
     coin: 'DAI' | 'USDT' | 'USDC'
 }

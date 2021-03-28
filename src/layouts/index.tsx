@@ -22,7 +22,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   state: IState = { connected: null, isMobile: false, address: '', account: null };
 
   componentDidMount() {
-    // this.tick();
+    this.tick();
     this.updateMobileMode();
     window.addEventListener('resize', this.updateMobileMode);
   }
@@ -33,7 +33,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
 
     if (isConnected !== connected) {
       this.setState({
-        connected,
+        connected: isConnected,
       });
     }
 

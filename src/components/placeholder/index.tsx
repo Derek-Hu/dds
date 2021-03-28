@@ -8,7 +8,11 @@ interface IProps {
   style?: any;
 }
 export default ({ width = '100%', style, height = '20px', loading, children }: IProps) => {
-  return loading ? <div className="animated-background" style={{ width: width, height, ...style }}></div> : <div>{children}</div>;
+  return loading ? (
+    <div className="animated-background" style={{ width: width, height, ...style }}></div>
+  ) : (
+    <div style={{ textAlign: 'center' }}>{children}</div>
+  );
 };
 
 export const sample = () => {

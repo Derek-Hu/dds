@@ -37,7 +37,7 @@ export default class Balance extends Component<{
     withdrawVisible: false,
     orderConfirmVisible: false,
     openAmount: undefined,
-    tradeType: 'long',
+    tradeType: 'LONG',
     available: undefined,
     setFeeQuery: false,
     loading: false,
@@ -226,10 +226,10 @@ export default class Balance extends Component<{
             </Row>
             <Row className={styles.radioBtn}>
               <Radio.Group value={tradeType} onChange={this.changeType}>
-                <Radio.Button value="long" className={styles.red}>
+                <Radio.Button value="LONG" className={styles.green}>
                   LONG
                 </Radio.Button>
-                <Radio.Button value="short" className={styles.green}>
+                <Radio.Button value="SHORT" className={styles.red}>
                   SHORT
                 </Radio.Button>
               </Radio.Group>
@@ -250,12 +250,13 @@ export default class Balance extends Component<{
               suffix={'ETH'}
             />
             <p className={styles.settlement}>
-              Settlement Fee : { setFeeQuery ? <Icon type="loading" /> : isNumberLike(fees?.settlementFee) ? fees?.settlementFee : 0} {to}
+              Settlement Fee :{' '}
+              {setFeeQuery ? <Icon type="loading" /> : isNumberLike(fees?.settlementFee) ? fees?.settlementFee : 0} {to}
             </p>
             {/* <Progress strokeColor="#1346FF" showInfo={false} percent={30} strokeWidth={20} /> */}
             <Button
               loading={feeQuery}
-              className={tradeType === 'short' ? 'buttonGreen' : 'buttonRed'}
+              className={tradeType === 'SHORT' ? 'buttonRed' : 'buttonGreen'}
               type="primary"
               onClick={() => {
                 if (!isGreaterZero(openAmount)) {

@@ -61,7 +61,7 @@ export default class BecomeSpark extends Component<any, IState> {
             <Col xs={24} sm={12} md={12} lg={12} className={styles.col}>
               <span className={styles.ads}>
                 <Placeholder width={'50%'} loading={loading}>
-                  {format(data?.bonus)}
+                  {formatInt(data?.bonus)}
                 </Placeholder>
               </span>
               <span>Commission(USD)</span>

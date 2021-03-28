@@ -1,4 +1,4 @@
-declare type ITradeType = 'long' | 'short';
+declare type ITradeType = 'LONG' | 'SHORT';
 
 /**
  * Funding Balance 下单入参
