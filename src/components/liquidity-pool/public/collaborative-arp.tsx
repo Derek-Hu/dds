@@ -13,6 +13,8 @@ import { Hidden } from '../../builtin/hidden';
 import Placeholder from '../../placeholder/index';
 import InputNumber from '../../input/index';
 
+const { Option } = Select;
+
 interface IState {
   data: number | '';
   loading: boolean;
@@ -141,7 +143,8 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                         className={styles.coinDropdown}
                         onChange={this.onSelectChange}
                       >
-                        {CoinSelectOption}
+                        {/* {CoinSelectOption} */}
+                        <Option value="DAI">DAI</Option>
                       </Select>
                     </Col>
                     <Col xs={24} sm={24} md={16} lg={18}>

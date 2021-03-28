@@ -2,7 +2,7 @@ import { Tabs, Button, Row, Col, Select, Input, Tag } from 'antd';
 import { CustomTabKey, SupportedCoins } from '../../../constant/index';
 import styles from './style.module.less';
 import ModalRender from '../../modal-render/index';
-import { CoinSelectOption } from '../../../constant/index';
+// import { CoinSelectOption } from '../../../constant/index';
 import SiteContext from '../../../layouts/SiteContext';
 import { Component } from 'react';
 import { format, isGreaterZero } from '../../../util/math';

@@ -11,6 +11,7 @@ import Auth, { Public } from '../../builtin/auth';
 import InputNumber from '../../input/index';
 import SiteContext from '../../../layouts/SiteContext';
 
+const { Option } = Select;
 interface IState {
   modalVisible: boolean;
   selectedCoin: IUSDCoins;
@@ -87,7 +88,8 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                     className={styles.coinDropdown}
                     onChange={this.onSelectChange}
                   >
-                    {CoinSelectOption}
+                    {/* {CoinSelectOption} */}
+                    <Option value="DAI">DAI</Option>
                   </Select>
                 </Col>
                 <Col xs={24} sm={24} md={16} lg={18}>
