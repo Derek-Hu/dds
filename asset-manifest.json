@@ -1,21 +1,21 @@
 {
   "files": {
     "static/css/0.bd0a0ce5.chunk.css": "/dds/static/css/0.bd0a0ce5.chunk.css",
-    "static/js/0.5f1b9c36.chunk.js": "/dds/static/js/0.5f1b9c36.chunk.js",
-    "static/js/0.5f1b9c36.chunk.js.map": "/dds/static/js/0.5f1b9c36.chunk.js.map",
+    "static/js/0.42653f9d.chunk.js": "/dds/static/js/0.42653f9d.chunk.js",
+    "static/js/0.42653f9d.chunk.js.map": "/dds/static/js/0.42653f9d.chunk.js.map",
     "dds.99f50e8.css": "/dds/static/css/dds.99f50e8.4e6e0b6d.chunk.css",
-    "dds.99f50e8.js": "/dds/static/js/dds.99f50e8.445aa56d.chunk.js",
-    "dds.99f50e8.js.map": "/dds/static/js/dds.99f50e8.445aa56d.chunk.js.map",
+    "dds.99f50e8.js": "/dds/static/js/dds.99f50e8.8984cf15.chunk.js",
+    "dds.99f50e8.js.map": "/dds/static/js/dds.99f50e8.8984cf15.chunk.js.map",
     "main.css": "/dds/static/css/main.52f581c1.chunk.css",
-    "main.js": "/dds/static/js/main.a3350a53.chunk.js",
-    "main.js.map": "/dds/static/js/main.a3350a53.chunk.js.map",
+    "main.js": "/dds/static/js/main.5ada9e17.chunk.js",
+    "main.js.map": "/dds/static/js/main.5ada9e17.chunk.js.map",
     "runtime-dds.99f50e8.js": "/dds/static/js/runtime-dds.99f50e8.fb2a61b6.js",
     "runtime-dds.99f50e8.js.map": "/dds/static/js/runtime-dds.99f50e8.fb2a61b6.js.map",
     "runtime-main.js": "/dds/static/js/runtime-main.895a1e3c.js",
     "runtime-main.js.map": "/dds/static/js/runtime-main.895a1e3c.js.map",
     "static/css/5.dfa52685.chunk.css": "/dds/static/css/5.dfa52685.chunk.css",
-    "static/js/5.18f0637c.chunk.js": "/dds/static/js/5.18f0637c.chunk.js",
-    "static/js/5.18f0637c.chunk.js.map": "/dds/static/js/5.18f0637c.chunk.js.map",
+    "static/js/5.a5f0cbb3.chunk.js": "/dds/static/js/5.a5f0cbb3.chunk.js",
+    "static/js/5.a5f0cbb3.chunk.js.map": "/dds/static/js/5.a5f0cbb3.chunk.js.map",
     "static/css/6.51160ebc.chunk.css": "/dds/static/css/6.51160ebc.chunk.css",
     "static/js/6.bb3e0655.chunk.js": "/dds/static/js/6.bb3e0655.chunk.js",
     "static/js/6.bb3e0655.chunk.js.map": "/dds/static/js/6.bb3e0655.chunk.js.map",
@@ -26,8 +26,8 @@
     "static/css/6.51160ebc.chunk.css.map": "/dds/static/css/6.51160ebc.chunk.css.map",
     "static/css/dds.99f50e8.4e6e0b6d.chunk.css.map": "/dds/static/css/dds.99f50e8.4e6e0b6d.chunk.css.map",
     "static/css/main.52f581c1.chunk.css.map": "/dds/static/css/main.52f581c1.chunk.css.map",
-    "static/js/0.5f1b9c36.chunk.js.LICENSE.txt": "/dds/static/js/0.5f1b9c36.chunk.js.LICENSE.txt",
-    "static/js/5.18f0637c.chunk.js.LICENSE.txt": "/dds/static/js/5.18f0637c.chunk.js.LICENSE.txt",
+    "static/js/0.42653f9d.chunk.js.LICENSE.txt": "/dds/static/js/0.42653f9d.chunk.js.LICENSE.txt",
+    "static/js/5.a5f0cbb3.chunk.js.LICENSE.txt": "/dds/static/js/5.a5f0cbb3.chunk.js.LICENSE.txt",
     "static/media/adsImage.1c18ab39.png": "/dds/static/media/adsImage.1c18ab39.png",
     "static/media/style.module.less": "/dds/static/media/banner.9952ca1c.png",
     "static/media/index.less": "/dds/static/media/gilroy-bold-4.a64a9abe.otf",
@@ -40,10 +40,10 @@
   "entrypoints": [
     "static/js/runtime-main.895a1e3c.js",
     "static/css/0.bd0a0ce5.chunk.css",
-    "static/js/0.5f1b9c36.chunk.js",
+    "static/js/0.42653f9d.chunk.js",
     "static/css/6.51160ebc.chunk.css",
     "static/js/6.bb3e0655.chunk.js",
     "static/css/main.52f581c1.chunk.css",
-    "static/js/main.a3350a53.chunk.js"
+    "static/js/main.5ada9e17.chunk.js"
   ]
 }
