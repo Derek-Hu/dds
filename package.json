@@ -26,7 +26,7 @@
     "dev": "react-scripts start",
     "dev:mock": "APP_ENV=mock react-scripts start",
     "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
+    "build": "GENERATE_SOURCEMAP=true react-app-rewired build",
     "fix": "eslint ./src --fix",
     "start:stage": "cross-env AppEnv=stage react-app-rewired start",
     "build:stage": "cross-env AppEnv=stage react-app-rewired build",

@@ -34,8 +34,8 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   }
 
   connectTimeout = () => {
-    const { connected } = this.state;
     setTimeout(() => {
+      const { connected } = this.state;
       if(connected === null){
         this.setState({
           connected: false,
