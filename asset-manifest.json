@@ -4,11 +4,11 @@
     "static/js/0.5f1b9c36.chunk.js": "/dds/static/js/0.5f1b9c36.chunk.js",
     "static/js/0.5f1b9c36.chunk.js.map": "/dds/static/js/0.5f1b9c36.chunk.js.map",
     "dds.99f50e8.css": "/dds/static/css/dds.99f50e8.4e6e0b6d.chunk.css",
-    "dds.99f50e8.js": "/dds/static/js/dds.99f50e8.445aa56d.chunk.js",
-    "dds.99f50e8.js.map": "/dds/static/js/dds.99f50e8.445aa56d.chunk.js.map",
+    "dds.99f50e8.js": "/dds/static/js/dds.99f50e8.12e8ccbe.chunk.js",
+    "dds.99f50e8.js.map": "/dds/static/js/dds.99f50e8.12e8ccbe.chunk.js.map",
     "main.css": "/dds/static/css/main.52f581c1.chunk.css",
-    "main.js": "/dds/static/js/main.a3350a53.chunk.js",
-    "main.js.map": "/dds/static/js/main.a3350a53.chunk.js.map",
+    "main.js": "/dds/static/js/main.abf2a249.chunk.js",
+    "main.js.map": "/dds/static/js/main.abf2a249.chunk.js.map",
     "runtime-dds.99f50e8.js": "/dds/static/js/runtime-dds.99f50e8.fb2a61b6.js",
     "runtime-dds.99f50e8.js.map": "/dds/static/js/runtime-dds.99f50e8.fb2a61b6.js.map",
     "runtime-main.js": "/dds/static/js/runtime-main.895a1e3c.js",
@@ -44,6 +44,6 @@
     "static/css/6.51160ebc.chunk.css",
     "static/js/6.bb3e0655.chunk.js",
     "static/css/main.52f581c1.chunk.css",
-    "static/js/main.a3350a53.chunk.js"
+    "static/js/main.abf2a249.chunk.js"
   ]
 }
