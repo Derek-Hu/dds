@@ -4799,7 +4799,7 @@ export interface ContractProxy {
 
   getMaxOpenAmount(coin: IUSDCoins, exchange: IExchangePair, maxUSDAmount: number): Observable<BigNumber>;
 
-  depositToken(count: number, coin: IUSDCoins): Observable<boolean>;
+  depositToken(address: string, count: number, coin: IUSDCoins): Observable<boolean>;
 
   withdrawToken(count: number, coin: IUSDCoins): Observable<boolean>;
 
@@ -4823,7 +4823,7 @@ export interface ContractProxy {
 
   getPubPoolWithdrawReTokenFromToken(coin: IUSDCoins, tokenAmount: number): Observable<BigNumber>;
 
-  provideToPubPool(coin: IUSDCoins, coinAmount: number): Observable<boolean>;
+  provideToPubPool(address: string, coin: IUSDCoins, coinAmount: number): Observable<boolean>;
 
   withdrawFromPubPool(coin: IUSDCoins, reCoinAmount: number): Observable<boolean>;
 
@@ -4846,7 +4846,7 @@ export interface ContractProxy {
 
   addMarginAmount(orderId: string, coin: IUSDCoins, amount: number): Observable<boolean>;
 
-  provideToPrivatePool(coin: IUSDCoins, coinAmount: number): Observable<boolean>;
+  provideToPrivatePool(address: string, coin: IUSDCoins, coinAmount: number): Observable<boolean>;
 
   withdrawFromPrivatePool(coin: IUSDCoins, coinAmount: number): Observable<boolean>;
 
