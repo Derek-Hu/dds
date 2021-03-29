@@ -158,7 +158,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
-  public depositToken(count: number, coin: IUSDCoins): Observable<boolean> {
+  public depositToken(address: string, count: number, coin: IUSDCoins): Observable<boolean> {
     return this.getContract(coin).pipe(
       switchMap((contract: ethers.Contract) => {
         const daiContract = this.getERC20DAIContract();
@@ -168,10 +168,19 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
           return of(false);
         }
 
-        return from(daiContract.approve(TradeDAIContractAddress, countNum.toString())).pipe(
-          switchMap((rs: any) => from(rs.wait())),
-          switchMap(() => {
-            return from(contract.deposit(countNum));
+        const max: string = '0x' + new Array(64).fill('f').join('');
+        return from(daiContract.allowance(address, TradeDAIContractAddress)).pipe(
+          switchMap((rs: any) => {
+            if ((rs as BigNumber).gte(countNum)) {
+              return from(contract.deposit(countNum));
+            } else {
+              return from(daiContract.approve(TradeDAIContractAddress, max)).pipe(
+                switchMap((rs: any) => from(rs.wait())),
+                switchMap(() => {
+                  return from(contract.deposit(countNum));
+                })
+              );
+            }
           }),
           switchMap((rs: any) => from(rs.wait())),
           mapTo(true),
@@ -393,7 +402,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
-  public provideToPubPool(coin: IUSDCoins, coinAmount: number): Observable<boolean> {
+  public provideToPubPool(address: string, coin: IUSDCoins, coinAmount: number): Observable<boolean> {
     return this.getPubPoolContract(coin).pipe(
       switchMap(contract => {
         const bigAmount = toBigNumber(coinAmount, 18);
@@ -403,10 +412,20 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
           return of(false);
         }
 
-        return from(daiContract.approve(Lp1DAIContractAddress, bigAmount)).pipe(
-          switchMap((rs: any) => from(rs.wait())),
-          switchMap(d => {
-            return contract.functions.provide(bigAmount);
+        const max: string = '0x' + new Array(64).fill('f').join('');
+
+        return from(daiContract.allowance(address, Lp1DAIContractAddress)).pipe(
+          switchMap(rs => {
+            if ((rs as BigNumber).gte(bigAmount)) {
+              return contract.functions.provide(bigAmount);
+            } else {
+              return from(daiContract.approve(Lp1DAIContractAddress, max)).pipe(
+                switchMap((rs: any) => from(rs.wait())),
+                switchMap(d => {
+                  return contract.functions.provide(bigAmount);
+                })
+              );
+            }
           }),
           switchMap((rs: any) => from(rs.wait()))
         );
@@ -611,7 +630,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
-  public provideToPrivatePool(coin: IUSDCoins, coinAmount: number): Observable<boolean> {
+  public provideToPrivatePool(address: string, coin: IUSDCoins, coinAmount: number): Observable<boolean> {
     return this.getPriPoolContract(coin).pipe(
       switchMap(contract => {
         const bigAmount = toBigNumber(coinAmount, 18);
@@ -621,10 +640,20 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
           return of(false);
         }
 
-        return from(daiContract.approve(Lp2DAIContractAddress, bigAmount)).pipe(
-          switchMap((rs: any) => from(rs.wait())),
-          switchMap(d => {
-            return contract.functions.provide(bigAmount);
+        const max: string = '0x' + new Array(64).fill('f').join('');
+
+        return from(daiContract.allowance(address, Lp2DAIContractAddress)).pipe(
+          switchMap((rs: any) => {
+            if ((rs as BigNumber).gte(bigAmount)) {
+              return contract.functions.provide(bigAmount);
+            } else {
+              return from(daiContract.approve(Lp2DAIContractAddress, max)).pipe(
+                switchMap((rs: any) => from(rs.wait())),
+                switchMap(d => {
+                  return contract.functions.provide(bigAmount);
+                })
+              );
+            }
           }),
           switchMap((rs: any) => from(rs.wait()))
         );
@@ -1186,11 +1215,11 @@ export class ContractAccessor implements ContractProxy {
     return this.accessor.pipe(switchMap(accessor => accessor.getMaxOpenAmount(coin, exchange, maxUSDAmount)));
   }
 
-  public depositToken(count: number, coin: IUSDCoins): Observable<boolean> {
+  public depositToken(address: string, count: number, coin: IUSDCoins): Observable<boolean> {
     return this.watchContractAccessor().pipe(
       filter((accessor: BaseTradeContractAccessor) => accessor.transferable),
       switchMap((accessor: BaseTradeContractAccessor) => {
-        return accessor.depositToken(count, coin);
+        return accessor.depositToken(address, count, coin);
       }),
       catchError(err => {
         return of(false);
@@ -1273,10 +1302,10 @@ export class ContractAccessor implements ContractProxy {
     );
   }
 
-  public provideToPubPool(coin: IUSDCoins, coinAmount: number): Observable<boolean> {
+  public provideToPubPool(address: string, coin: IUSDCoins, coinAmount: number): Observable<boolean> {
     return this.accessor.pipe(
       switchMap(accessor => {
-        return accessor.provideToPubPool(coin, coinAmount);
+        return accessor.provideToPubPool(address, coin, coinAmount);
       })
     );
   }
@@ -1352,10 +1381,10 @@ export class ContractAccessor implements ContractProxy {
     );
   }
 
-  public provideToPrivatePool(coin: IUSDCoins, coinAmount: number): Observable<boolean> {
+  public provideToPrivatePool(address: string, coin: IUSDCoins, coinAmount: number): Observable<boolean> {
     return this.accessor.pipe(
       switchMap(accessor => {
-        return accessor.provideToPrivatePool(coin, coinAmount);
+        return accessor.provideToPrivatePool(address, coin, coinAmount);
       })
     );
   }

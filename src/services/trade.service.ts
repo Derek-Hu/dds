@@ -157,7 +157,16 @@ export const getTradeLiquidityPoolInfo = async (coin: IUSDCoins): Promise<ITrade
 };
 
 export const deposit = async (amount: IRecord): Promise<boolean> => {
-  return withLoading(contractAccessor.depositToken(amount.amount, amount.coin).pipe(take(1)).toPromise());
+  const result: Promise<boolean> = from(loginUserAccount())
+    .pipe(
+      switchMap(account => {
+        return contractAccessor.depositToken(account, amount.amount, amount.coin);
+      }),
+      take(1)
+    )
+    .toPromise();
+
+  return withLoading(result);
 };
 
 export const withdraw = async (amount: IRecord): Promise<boolean> => {

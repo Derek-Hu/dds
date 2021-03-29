@@ -7,7 +7,6 @@ import { curUserAccount, loginUserAccount } from './account';
 import { from, Observable, of, zip } from 'rxjs';
 import { withLoading } from './utils';
 import { defaultCoinDatas, defaultPoolData } from './mock/unlogin-default';
-import { PrivateLockLiquidity } from '../wallet/contract-interface';
 import { CentralHost, DefaultNetwork } from '../constant';
 import * as request from 'superagent';
 import { Response } from 'superagent';
@@ -163,7 +162,15 @@ export const doCollaborativeDeposit = async ({
   coin: IUSDCoins;
   amount: number;
 }): Promise<boolean> => {
-  return await withLoading(contractAccessor.provideToPubPool(coin, amount).pipe(take(1)).toPromise());
+  const result: Promise<boolean> = from(loginUserAccount())
+    .pipe(
+      switchMap(account => {
+        return contractAccessor.provideToPubPool(account, coin, amount);
+      }),
+      take(1)
+    )
+    .toPromise();
+  return await withLoading(result);
 };
 
 export const doPoolWithdraw = async ({
@@ -204,7 +211,16 @@ export const doCollaborativeWithdraw = async ({
  * @param amount - DAI的数量
  */
 export const doPrivateDeposit = async ({ coin, amount }: { coin: IUSDCoins; amount: number }): Promise<boolean> => {
-  return withLoading(contractAccessor.provideToPrivatePool(coin, amount).pipe(take(1)).toPromise());
+  const result: Promise<boolean> = from(loginUserAccount())
+    .pipe(
+      switchMap(account => {
+        return contractAccessor.provideToPrivatePool(account, coin, amount);
+      }),
+      take(1)
+    )
+    .toPromise();
+
+  return withLoading(result);
 };
 
 /**
