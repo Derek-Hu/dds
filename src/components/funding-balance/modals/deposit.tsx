@@ -51,6 +51,7 @@ export default class Balance extends Component<IProps, IState> {
                     placeholder={max ? `Max ${max}` : '0.00'}
                     max={max}
                     showTag={true}
+                    skip={true}
                     // tagClassName={styles.utilMax}
                     suffix={coin}
                   />

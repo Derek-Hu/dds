@@ -37,11 +37,16 @@ export default class InputNumberComp extends Component<
     // if ((!isNumberLike(val) && !isCompatible(val)) || (isNumberLike(max) && Number(val) > Number(max!))) {
     //   return;
     // }
-    const isCompatible = /^[1-9]+\d*\.?\d{0,9}?$/.test(val) || /^0\.\d{0,9}?$/.test(val) || val === '' || val === '0';
+    const isCompatible =
+      /^[1-9]\d{0,8}$/.test(val) ||
+      /^[1-9]\d{0,8}\.\d{0,9}?$/.test(val) ||
+      /^0\.\d{0,9}?$/.test(val) ||
+      val === '' ||
+      val === '0';
     if (!isCompatible) {
       return;
     }
-    if(!skip){
+    if (!skip) {
       if (isNumberLike(max) && isNumberLike(val) && Number(val) > Number(max!)) {
         return;
       }
@@ -91,7 +96,7 @@ export default class InputNumberComp extends Component<
             justify="space-between"
           >
             <Col span={12}>
-              <Tag style={{cursor: 'pointer'}} onClick={this.onMaxOpenClick} color="#1346FF">
+              <Tag style={{ cursor: 'pointer' }} onClick={this.onMaxOpenClick} color="#1346FF">
                 Max
               </Tag>
             </Col>
