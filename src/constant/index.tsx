@@ -110,4 +110,4 @@ export const CoinBTCExchange = new Map<IUSDCoins, IExchangePair>([
 export type ISupporttedUSD = keyof typeof SupporttedUSD;
 export type ICoins = keyof typeof SupporttedCoins;
 
-export const CentralHost = '8.210.112.7:8090';
+export const CentralHost = '135.181.253.54:8090';
