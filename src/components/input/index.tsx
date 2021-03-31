@@ -39,8 +39,8 @@ export default class InputNumberComp extends Component<
     // }
     const isCompatible =
       /^[1-9]\d{0,8}$/.test(val) ||
-      /^[1-9]\d{0,8}\.\d{0,9}?$/.test(val) ||
-      /^0\.\d{0,9}?$/.test(val) ||
+      /^[1-9]\d{0,8}\.\d{0,2}?$/.test(val) ||
+      /^0\.\d{0,2}?$/.test(val) ||
       val === '' ||
       val === '0';
     if (!isCompatible) {

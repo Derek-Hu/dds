@@ -1,6 +1,6 @@
 import { Button } from 'antd';
 import ColumnConvert from '../column-convert/index';
-import { format, isNumberLike } from '../../util/math';
+import { format, isNumberLike, formatThree } from '../../util/math';
 import { toCamelCase } from '../../util/string';
 import dayjs from 'dayjs';
 import styles from './style.module.less';
@@ -81,8 +81,8 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
       type: 'Type',
       price: 'Open Price',
       amount: 'Amount',
-      cost: 'Funding Cost',
-      fee: 'Settlement Fee ($)',
+      cost: 'Funding Fee Cost',
+      fee: 'Settlement Fee',
       pl: 'P&L',
       status: 'Status',
       exercise: 'Action',
@@ -98,21 +98,21 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
           return formatTime(value);
         case 'price':
         case 'amount':
-        case 'fee':
           return format(value);
+        case 'fee':
         case 'cost':
-          return `${format(record.cost)}(${record.costCoin})`;
+          return `${formatThree(value)}(${record.costCoin})`;
         case 'pl':
           return getPL(record[key]);
         case 'status':
           const status = record[key];
           return <span style={{ color: statusColor[status] }}>{status}</span>;
         case 'type':
-          const buyShort = toCamelCase(record[key]);
+          const buyShort = record[key].toUpperCase();
           return (
             <span
               style={{
-                color: buyShort === 'Short' ? '#02B464' : buyShort === 'Long' ? '#FA4D56' : '#383838',
+                color: buyShort === 'LONG' ? '#02B464' : buyShort === 'SHORT' ? '#FA4D56' : '#383838',
               }}
             >
               {buyShort}

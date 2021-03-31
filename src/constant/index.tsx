@@ -1,4 +1,5 @@
 import { Select } from 'antd';
+import settings from './settings';
 
 const { Option } = Select;
 
@@ -7,8 +8,8 @@ export enum Wallet {
   WalletConnect = 'Wallet Connect',
 }
 
-export const ddsBasePath = `${window.location.origin}/dds/dds.html#`;
-export const homeBasePath = `${window.location.origin}/dds/index.html#`;
+export const ddsBasePath = `${window.location.origin}${settings.pathname}/dds.html#`;
+export const homeBasePath = `${window.location.origin}${settings.pathname}/index.html#`;
 
 export enum Network {
   homestead = 'homestead',

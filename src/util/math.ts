@@ -8,6 +8,13 @@ export const format = (value: any) => {
   return '';
 };
 
+export const formatThree = (value: any) => {
+  if (isNumberLike(value)) {
+    return numeral(new Decimal(value).toFixed(2)).format('0,0.000');
+  }
+  return '';
+};
+
 export const multiple = (one: any, two: any, original?: boolean) => {
   if (isNumberLike(one) && isNumberLike(two)) {
     const val = new Decimal(Number(one)).times(Number(two)).toNumber();

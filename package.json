@@ -2,7 +2,7 @@
   "name": "dds-dao-frontend2",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://derek-hu.github.io/dds/",
+  "homepage": "/",
   "dependencies": {
     "@metamask/onboarding": "^1.0.0",
     "antd": "^3.26.20",
@@ -22,14 +22,11 @@
     "superagent": "^6.1.0"
   },
   "scripts": {
-    "deploy": "npm run build && gh-pages -d build",
-    "dev": "react-scripts start",
-    "dev:mock": "cross-env APP_ENV=mock react-scripts start",
-    "start": "react-app-rewired start",
-    "build": "cross-env GENERATE_SOURCEMAP=true react-app-rewired build",
+    "deploy:github": "npm run build:github && gh-pages -d build",
+    "start": "cross-env REACT_APP_APP_ENV=dev react-app-rewired start",
+    "build": "cross-env REACT_APP_APP_ENV=prod PUBLIC_URL='./' react-app-rewired build",
+    "build:github": "cross-env REACT_APP_APP_ENV=github PUBLIC_URL='https://derek-hu.github.io/dds/' GENERATE_SOURCEMAP=true react-app-rewired build",
     "fix": "eslint ./src --fix",
-    "start:stage": "cross-env AppEnv=stage react-app-rewired start",
-    "build:stage": "cross-env AppEnv=stage react-app-rewired build",
     "test": "react-app-rewired test",
     "debug": "node --inspect-brk ./node_modules/jest/bin/jest --runInBand --no-cache --no-watchman"
   },
