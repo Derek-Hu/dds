@@ -1,9 +1,9 @@
-import { Tag, Button, Row, Col, Select, Input } from 'antd';
+import { Tag, Button, Row, Col, message, Input } from 'antd';
 import ModalRender from '../../modal-render/index';
 import styles from './style.module.less';
 import SiteContext from '../../../layouts/SiteContext';
 import { Component } from 'react';
-import { format, isGreaterZero } from '../../../util/math';
+import { format, isGreaterZero, isNumberLike } from '../../../util/math';
 import InputNumber from '../../input/index';
 
 const title = 'Funding Fee Deposit';
@@ -73,6 +73,10 @@ export default class Balance extends Component<IProps, IState> {
                   <Button
                     onClick={() => {
                       if (!isGreaterZero(depositAmount)) {
+                        return;
+                      }
+                      if (isNumberLike(max) && depositAmount! > max!) {
+                        message.warning('More account balance required');
                         return;
                       }
                       onConfirm(depositAmount);
