@@ -207,6 +207,14 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
   recordVisible = this.setModalVisible('recordVisible');
 
   async componentDidMount() {
+    this.init();
+  }
+
+  UNSAFE_componentWillReceiveProps() {
+    this.init();
+  }
+
+  async init() {
     const { isPrivate } = this.props;
     const type = isPrivate ? 'private' : 'public';
     this.setState({ loading: true });
@@ -264,8 +272,13 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
     }
 
     this.withDrawVisible.hide();
-    const success = await doPoolWithdraw({ amount, reAmount, coin: selectCoin, type: isPrivate ? 'private' : 'public' });
-    if(success){
+    const success = await doPoolWithdraw({
+      amount,
+      reAmount,
+      coin: selectCoin,
+      type: isPrivate ? 'private' : 'public',
+    });
+    if (success) {
       this.context.refreshPage && this.context.refreshPage();
     }
   };

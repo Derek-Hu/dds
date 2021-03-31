@@ -5,7 +5,14 @@ import WithdrawModal from './modals/withdraw';
 import OrderConfirm from './modals/order-confirm';
 import { Component } from 'react';
 import SiteContext from '../../layouts/SiteContext';
-import { getFundingBalanceInfo, confirmOrder, deposit, withdraw,getCurPrice, openOrder } from '../../services/trade.service';
+import {
+  getFundingBalanceInfo,
+  confirmOrder,
+  deposit,
+  withdraw,
+  getCurPrice,
+  openOrder,
+} from '../../services/trade.service';
 import { getMaxFromCoin } from './calculate';
 import { format, isGreaterZero, truncated, isNumberLike, divide } from '../../util/math';
 import InputNumber from '../input/index';
@@ -47,8 +54,14 @@ export default class Balance extends Component<{
   static contextType = SiteContext;
 
   componentDidMount = () => {
+    console.log('funding balance componentDidMount...');
     this.loadBalanceInfo();
   };
+
+  UNSAFE_componentWillReceiveProps() {
+    console.log('funding balance refresh...');
+    this.loadBalanceInfo();
+  }
 
   loadBalanceInfo = async (damon?: boolean) => {
     const { coins } = this.props;
@@ -177,18 +190,18 @@ export default class Balance extends Component<{
     if (!isGreaterZero(openAmount)) {
       return;
     }
-    
-    if(!isNumberLike(maxNumber)){
+
+    if (!isNumberLike(maxNumber)) {
       return;
     }
 
-    if(maxNumber! < openAmount!){
-      message.warning('More balance required, Please deposit first!')
+    if (maxNumber! < openAmount!) {
+      message.warning('More balance required, Please deposit first!');
       return;
     }
 
     this.queryFee();
-  }
+  };
 
   render() {
     const {

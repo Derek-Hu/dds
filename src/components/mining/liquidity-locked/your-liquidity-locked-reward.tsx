@@ -62,6 +62,11 @@ export default class LiquiditorReward extends Component<any, IState> {
   async componentDidMount() {
     this.loadData();
   }
+
+  UNSAFE_componentWillReceiveProps() {
+    this.loadData();
+  }
+
   async loadData() {
     this.setState({ loading: true });
     const data = await getLiquidityLockedReward(this.context.address ? 'private' : 'public');

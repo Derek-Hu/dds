@@ -20,7 +20,15 @@ export default class LiquidityMiningReward extends Component<any, IState> {
 
   static contextType = SiteContext;
 
+  UNSAFE_componentWillReceiveProps() {
+    this.init();
+  }
+
   async componentDidMount() {
+    this.init();
+  }
+
+  async init() {
     this.setState({ loading: true });
     const data = await getLiquidityMiningReward(this.context.address ? 'private' : 'public');
     this.setState({

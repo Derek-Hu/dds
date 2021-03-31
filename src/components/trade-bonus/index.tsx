@@ -63,11 +63,6 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
 
   static contextType = SiteContext;
 
-  async componentDidMount() {
-    const { page } = this.state;
-    // this.loadData(page);
-  }
-
   loadData = async (page: number, pageSize: number) => {
     return await getTradeOrders(page);
     // this.setState({
@@ -171,7 +166,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
           <div className={styles.root}>
             <h2>Orders</h2>
             <div className={styles.tableWpr}>
-              <Table columns={this.columns} rowKey="id" loadPage={this.loadData}/>
+              <Table columns={this.columns} rowKey="id" loadPage={this.loadData} />
               {/* <Table
                 loading={loading}
                 rowKey="id"

@@ -48,6 +48,10 @@ export default class Balance extends Component<IProps, IState> {
     this.loadData();
   }
 
+  UNSAFE_componentWillReceiveProps() {
+    this.loadData();
+  }
+
   nextPage = () => {
     const { page, pageSize } = this.state;
     this.setState(
@@ -86,7 +90,7 @@ export default class Balance extends Component<IProps, IState> {
                     dataSource={data}
                     scroll={isMobile ? { x: 800 } : undefined}
                   />
-                  <p style={{textAlign: 'center', margin: '2em 0'}}>
+                  <p style={{ textAlign: 'center', margin: '2em 0' }}>
                     {loading ? (
                       <Button type="link">
                         <Icon type="loading" />

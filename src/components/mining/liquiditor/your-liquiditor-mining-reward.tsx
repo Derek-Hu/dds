@@ -19,7 +19,14 @@ export default class LiquiditorReward extends Component<any, IState> {
 
   static contextType = SiteContext;
 
+  UNSAFE_componentWillReceiveProps() {
+    this.loadData();
+  }
+
   async componentDidMount() {
+    this.loadData();
+  }
+  async loadData() {
     this.setState({ loading: true });
     const data = await getLiquiditorReward(this.context.address ? 'private' : 'public');
     this.setState({

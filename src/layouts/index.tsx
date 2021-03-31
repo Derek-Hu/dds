@@ -3,7 +3,7 @@ import HomeLayout from '../layouts/home.layout';
 import TradeLayout from '../layouts/trade.layout';
 import { RouteComponentProps } from 'react-router-dom';
 import SiteContext from './SiteContext';
-import {ddsBasePath} from '../constant/index';
+import { ddsBasePath } from '../constant/index';
 import { userAccountInfo, initTryConnect } from '../services/account';
 
 const RESPONSIVE_MOBILE = 768;
@@ -18,14 +18,19 @@ interface IState {
 // @ts-ignore
 let timer = null;
 
-const isDDSPage = window.location.href.indexOf(ddsBasePath)===0;
+const isDDSPage = window.location.href.indexOf(ddsBasePath) === 0;
 export default class Layout extends Component<RouteComponentProps, IState> {
   static contextType = SiteContext;
 
-  state: IState = { connected: null, timestamp: null,  isMobile: false, address: '', account: null };
+  state: IState = { connected: null, timestamp: null, isMobile: false, address: '', account: null };
 
+  constructor(props: any) {
+    super(props);
+    // @ts-ignore
+    window.globalRefresh = this.refreshPage;
+  }
   componentDidMount() {
-    if(isDDSPage){
+    if (isDDSPage) {
       this.tick();
       this.connectTimeout();
     }
@@ -36,13 +41,13 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   connectTimeout = () => {
     setTimeout(() => {
       const { connected } = this.state;
-      if(connected === null){
+      if (connected === null) {
         this.setState({
           connected: false,
-        })
+        });
       }
     }, 4000);
-  }
+  };
 
   tick = async () => {
     const isConnected = await initTryConnect();
@@ -90,9 +95,9 @@ export default class Layout extends Component<RouteComponentProps, IState> {
 
   refreshPage = () => {
     this.setState({
-      timestamp: new Date().getTime()
-    })
-  }
+      timestamp: new Date().getTime(),
+    });
+  };
   render() {
     const { children, location } = this.props;
     const { isMobile, account, address, timestamp, connected } = this.state;
@@ -115,9 +120,9 @@ export default class Layout extends Component<RouteComponentProps, IState> {
           //     ? {
           //         address: '0x839423432432',
           //         USDBalance: {
-          //           USDT: 234232432.32432,
-          //           USDC: 43243232.32432,
-          //           DAI: 23890230432.3213,
+          //           USDT: 100.32432,
+          //           USDC: 200.32432,
+          //           DAI: 300.3213,
           //         },
           //       }
           //     : account,

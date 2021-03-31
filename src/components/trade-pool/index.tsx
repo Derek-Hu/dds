@@ -13,7 +13,15 @@ export default class TradePool extends Component<{ coin: IUSDCoins }, IState> {
     loading: false,
   };
 
+  UNSAFE_componentWillReceiveProps() {
+    this.loadData();
+  }
+
   async componentDidMount() {
+    this.loadData();
+  }
+
+  async loadData() {
     const { coin } = this.props;
     this.setState({
       loading: true,

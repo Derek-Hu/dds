@@ -25,6 +25,13 @@ export default class CoinProgress extends Component<IProps, IState> {
   };
 
   async componentDidMount() {
+    this.loadData();
+  }
+  UNSAFE_componentWillReceiveProps() {
+    this.loadData();
+  }
+
+  async loadData() {
     const { service } = this.props;
 
     this.setState({ loading: true });

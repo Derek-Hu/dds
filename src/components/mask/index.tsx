@@ -18,7 +18,14 @@ export default {
       <div className={styles.tooltip}>
         <div className={styles.wpr}>
           <div className={styles.content}>
-            <span onClick={() => this.hide()} className={styles.close}>
+            <span
+              onClick={() => {
+                this.hide();
+                // @ts-ignore
+                window.globalRefresh && window.globalRefresh();
+              }}
+              className={styles.close}
+            >
               <Icon type="close" />
             </span>
             <div className={styles.imgContent}>
