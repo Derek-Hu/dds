@@ -94,7 +94,9 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
           isMobile ? (
             darkMode ? (
               <div className={styles.homeHeader}>
-                Shield
+                <a href={`${homeBasePath}/home`}>
+                  <img src={window.location.hash === '#/home' ? LogoWhite : Logo} alt="" width="120px" />
+                </a>
                 {/* <Row>
                   <Col span={12}>Shield</Col>
                   <Col span={12} style={{ textAlign: 'right' }}>
