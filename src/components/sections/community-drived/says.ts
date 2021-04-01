@@ -2,7 +2,7 @@ export default [
   {
     name: 'Roger Spears',
     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    description: 'We are waiting for your testimonials about shield~',
+    description: 'We are waiting for your testimonial about shield~',
   },
   {
     name: 'Roger Spears2',
