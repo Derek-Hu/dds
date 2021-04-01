@@ -12,7 +12,7 @@ import modalStyles from '../funding-balance/modals/style.module.less';
 import ModalRender from '../modal-render/index';
 import Placeholder from '../placeholder';
 import { formatTime } from '../../util/time';
-import Table from '../table/index';
+import DTable from '../table/index';
 
 const statusColor: { [key in IOrderStatus]: string } = {
   ACTIVE: '#333333',
@@ -62,6 +62,10 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
   };
 
   static contextType = SiteContext;
+
+  UNSAFE_componentWillReceiveProps() {
+    console.log('trade orders refresh...');
+  }
 
   loadData = async (page: number, pageSize: number) => {
     return await getTradeOrders(page);
@@ -149,6 +153,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
   confirmClose = async () => {
     const { selectedItem } = this.state;
     const { curPrice } = this.props;
+    this.orderModalVisible.hide();
     const success = await closeOrder(selectedItem!, curPrice!);
     if (success) {
       // const { page } = this.state;
@@ -162,11 +167,11 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
     const { curPrice, coin } = this.props;
     return (
       <SiteContext.Consumer>
-        {({ isMobile }) => (
+        {({ isMobile, timestamp }) => (
           <div className={styles.root}>
             <h2>Orders</h2>
             <div className={styles.tableWpr}>
-              <Table columns={this.columns} rowKey="id" loadPage={this.loadData} />
+              <DTable columns={this.columns} timestamp={timestamp} rowKey="id" loadPage={this.loadData} />
               {/* <Table
                 loading={loading}
                 rowKey="id"
