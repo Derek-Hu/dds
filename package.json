@@ -24,7 +24,7 @@
   "scripts": {
     "deploy:github": "npm run build:github && gh-pages -d build",
     "start": "cross-env REACT_APP_APP_ENV=dev react-app-rewired start",
-    "build": "cross-env REACT_APP_APP_ENV=prod PUBLIC_URL='./' react-app-rewired build",
+    "build": "cross-env REACT_APP_APP_ENV=prod PUBLIC_URL='/' react-app-rewired build",
     "build:github": "cross-env REACT_APP_APP_ENV=github PUBLIC_URL='https://derek-hu.github.io/dds/' GENERATE_SOURCEMAP=true react-app-rewired build",
     "fix": "eslint ./src --fix",
     "test": "react-app-rewired test",
