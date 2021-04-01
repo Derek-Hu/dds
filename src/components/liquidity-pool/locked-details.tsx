@@ -13,6 +13,7 @@ import modalStyles from '../funding-balance/modals/style.module.less';
 import InputNumber from '../input/index';
 import { formatTime } from '../../util/time';
 import Table from '../table/index';
+import settings from '../../constant/settings';
 
 interface IState {
   data: PrivatePoolOrder[];
@@ -46,8 +47,8 @@ export default class Balance extends Component<any, IState> {
   }
 
   loadPage = async (page: number, pageSize: number) => {
-    return await getPrivateOrders(page, pageSize, true);
-  }
+    return await getPrivateOrders(page, pageSize, settings.debug);
+  };
   // async loadData() {
   //   this.setState({
   //     loading: true,
@@ -145,7 +146,7 @@ export default class Balance extends Component<any, IState> {
           return (
             <div className={styles.tableList}>
               <h4>Liquidity Locked Detail</h4>
-              <Table columns={this.columns} rowKey="orderId" loadPage={this.loadPage}/>
+              <Table columns={this.columns} rowKey="orderId" loadPage={this.loadPage} />
               {/* {initLoad ? (
                 <>
                   <Placeholder style={{margin: '3em 0'}} loading={loading}>&nbsp;</Placeholder>

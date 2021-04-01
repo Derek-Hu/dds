@@ -68,7 +68,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
   }
 
   loadData = async (page: number, pageSize: number) => {
-    return await getTradeOrders(page);
+    return await getTradeOrders(page, pageSize);
     // this.setState({
     //   loading: true,
     // });

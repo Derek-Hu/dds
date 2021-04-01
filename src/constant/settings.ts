@@ -1,12 +1,15 @@
 const settings = {
   github: {
     pathname: '/dds',
+    debug: true,
   },
   dev: {
     pathname: '',
+    debug: true,
   },
   prod: {
     pathname: '',
+    debug: false,
   },
 };
 // @ts-ignore
