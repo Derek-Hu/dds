@@ -488,7 +488,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         return contract.functions.getLPAmountInfo();
       }),
       map((rs: any) => {
-        return rs.availabe as BigNumber;
+        return rs.deposit as BigNumber;
       }),
       catchError(err => {
         console.warn('error', err);
@@ -712,7 +712,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         return contract.functions.getLPAmountInfo();
       }),
       map((rs: any) => {
-        return rs.availabe as BigNumber;
+        return rs.deposit as BigNumber;
       })
     );
 
