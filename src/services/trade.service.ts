@@ -98,6 +98,44 @@ export const getFundingLocked = async (coin: IUSDCoins, ethAmount: number): Prom
  * @param pageSize
  */
 export const getTradeOrders = async (page: number, pageSize = 5): Promise<ITradeRecord[]> => {
+  // if (process.env.NODE_ENV === 'development') {
+  //   return returnVal([
+  //     {
+  //       id: 'string',
+  //       time: new Date().getTime(),
+  //       type: 'LONG',
+  //       price: 60,
+  //       // openPrice: number;
+  //       // curPrice: number;
+  //       amount: 50,
+  //       cost: 40,
+  //       costCoin: 'DAI',
+  //       fee: 30,
+  //       pl: {
+  //         val: 100,
+  //         percentage: 20,
+  //       },
+  //       status: 'ACTIVE',
+  //     },
+  //     {
+  //       id: 'string',
+  //       time: new Date().getTime(),
+  //       type: 'SHORT',
+  //       price: 60,
+  //       // openPrice: number;
+  //       // curPrice: number;
+  //       amount: 50,
+  //       cost: 40,
+  //       costCoin: 'DAI',
+  //       fee: 30,
+  //       pl: {
+  //         val: 100,
+  //         percentage: 20,
+  //       },
+  //       status: 'ACTIVE',
+  //     },
+  //   ]);
+  // }
   return from(loginUserAccount())
     .pipe(
       switchMap(account => {
@@ -142,6 +180,18 @@ export const getTradeInfo = async (coin: IUSDCoins): Promise<ITradeInfo[]> => {
 };
 
 export const getTradeLiquidityPoolInfo = async (coin: IUSDCoins): Promise<ITradePoolInfo> => {
+  // if(process.env.NODE_ENV === 'development'){
+  //   return returnVal({
+  //     public: {
+  //       value: 3243,
+  //       total: 10000,
+  //     },
+  //     private: {
+  //       value: 100,
+  //       total: 10000,
+  //     }
+  //   })
+  // }
   const obs = [contractAccessor.getPubPoolInfo(coin), contractAccessor.getPrivatePoolInfo(coin)];
   return zip(...obs)
     .pipe(
