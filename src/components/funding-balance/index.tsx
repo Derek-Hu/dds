@@ -17,6 +17,7 @@ import { getMaxFromCoin } from './calculate';
 import { format, isGreaterZero, truncated, isNumberLike, divide } from '../../util/math';
 import InputNumber from '../input/index';
 import Placeholder from '../placeholder/index';
+import { setPendingOrders } from '../../util/order-cache';
 
 interface IState {
   depositVisible: boolean;
@@ -156,10 +157,20 @@ export default class Balance extends Component<{
   onOpen = async () => {
     const { coins } = this.props;
     const { to } = coins;
-    const { tradeType, openAmount } = this.state;
+    const { tradeType, openAmount, fees } = this.state;
     this.orderConfirmVisible.hide();
     const success = await openOrder(to, tradeType, openAmount!);
     if (success) {
+      setPendingOrders({
+        time: new Date().getTime(),
+        type: tradeType,
+        amount: openAmount,
+        cost: fees?.fundingFeeLocked,
+        fee: fees?.settlementFee,
+        price: fees?.curPrice,
+        status: 'PENDING',
+        costCoin: coins.to,
+      });
       this.context.refreshPage && this.context.refreshPage();
     }
   };
