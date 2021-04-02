@@ -41,7 +41,7 @@ export default ({ fees, data: { type, amount, coins }, visible, onCancel, onConf
             <Descriptions.Item label="Amount" span={24}>
               {amount} {from}
             </Descriptions.Item>
-            <Descriptions.Item label="Funding Fee Cost" span={24}>
+            <Descriptions.Item label="Funding Fee Lock" span={24}>
               {fees?.fundingFeeLocked} {to}
             </Descriptions.Item>
             <Descriptions.Item label="Settlement Fee" span={24}>

@@ -85,7 +85,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
       type: 'Type',
       price: 'Open Price',
       amount: 'Amount',
-      cost: 'Funding Fee Cost',
+      cost: 'Funding Fee Lock',
       fee: 'Settlement Fee',
       pl: 'P&L',
       status: 'Status',

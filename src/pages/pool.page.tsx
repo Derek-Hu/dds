@@ -63,9 +63,8 @@ export default class PoolPage extends Component {
                 ]}
               >
                 <p>
-                  Shield have been audited by Slowmint/Peckshield. Your funds still might be at risk. You can lose up to
-                  100% of the amount that you will provide to the liquidity pools. NEVER provide funds that you can't
-                  afford to lose.
+                  Shield protocol is under audit. Your funds still might be at risk and you can lose up to 100% of the
+                  amount provided. This is BETA version and use at your own risk.
                 </p>
               </Modal>
             </div>
