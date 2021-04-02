@@ -267,7 +267,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                   <Button onClick={this.confirmClose} type="primary">
-                    CLOSE POSITION
+                    CLOSE
                   </Button>
                 </Col>
               </Row>

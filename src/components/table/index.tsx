@@ -97,9 +97,9 @@ export default class Balance extends PureComponent<IProps, IState> {
     this.loadData(false);
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     // @ts-ignore
-    if(timer){
+    if (timer) {
       // @ts-ignore
       clearTimeout(timer);
     }
@@ -150,11 +150,17 @@ export default class Balance extends PureComponent<IProps, IState> {
                     scroll={isMobile ? { x: 800 } : undefined}
                   />
                   {hasMore ? (
-                    <p style={{ textAlign: 'center', margin: '2em 0' }}>
+                    <p
+                      style={{
+                        textAlign: 'center',
+                        margin: 0,
+                        padding: '0 0 2em',
+                        background: '#FFF',
+                        position: 'relative',
+                      }}
+                    >
                       {loading ? (
-                        <Button type="link">
-                          <Icon type="loading" />
-                        </Button>
+                        <Icon type="loading" />
                       ) : end ? null : (
                         <Button type="link" onClick={this.nextPage}>
                           <span>
