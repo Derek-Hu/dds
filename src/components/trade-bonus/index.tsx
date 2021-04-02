@@ -13,6 +13,7 @@ import ModalRender from '../modal-render/index';
 import Placeholder from '../placeholder';
 import { formatTime } from '../../util/time';
 import DTable from '../table/index';
+import { getPendingOrders } from '../../util/order-cache';
 
 const statusColor: { [key in IOrderStatus]: string } = {
   ACTIVE: '#333333',
@@ -171,7 +172,13 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
           <div className={styles.root}>
             <h2>Orders</h2>
             <div className={styles.tableWpr}>
-              <DTable columns={this.columns} timestamp={timestamp} rowKey="id" loadPage={this.loadData} />
+              <DTable
+                columns={this.columns}
+                cacheService={getPendingOrders}
+                timestamp={timestamp}
+                rowKey="id"
+                loadPage={this.loadData}
+              />
               {/* <Table
                 loading={loading}
                 rowKey="id"

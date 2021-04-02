@@ -222,7 +222,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                               ? Object.keys(account.USDBalance)
                                   .filter(coin => coin !== 'USDT' && coin !== 'USDC')
                                   .map(coin => (
-                                    <span>
+                                    <span key={coin}>
                                       {isNumberLike(account.USDBalance[coin]) ? account.USDBalance[coin].toFixed(1) : 0}
                                       &nbsp;
                                       {coin}
