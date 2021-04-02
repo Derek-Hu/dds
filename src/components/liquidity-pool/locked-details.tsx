@@ -47,7 +47,7 @@ export default class Balance extends Component<any, IState> {
   }
 
   loadPage = async (page: number, pageSize: number) => {
-    return await getPrivateOrders(page, pageSize, settings.debug);
+    return await getPrivateOrders(page, pageSize, true);
   };
   // async loadData() {
   //   this.setState({

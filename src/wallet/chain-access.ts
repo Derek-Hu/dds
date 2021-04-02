@@ -242,11 +242,15 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     return this.getContract(order.costCoin).pipe(
       switchMap((contract: ethers.Contract) => {
         const id = BigNumber.from(order.id);
-        const price = toBigNumber(curPrice, 18);
+        const price = tokenBigNumber(curPrice, 'DAI');
         return contract.functions.closeContract(id, price);
+      }),
+      switchMap(rs => {
+        return from(rs.wait());
       }),
       mapTo(true),
       catchError(err => {
+        console.warn('error', err);
         return of(false);
       })
     );
@@ -868,12 +872,29 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
-  public doSwap(coin: IUSDCoins, ddsAmount: number): Observable<boolean> {
+  public doSwap(address: string, coin: IUSDCoins, ddsAmount: number): Observable<boolean> {
     const coinType: 1 | 2 | 3 = coin === 'DAI' ? 1 : coin === 'USDT' ? 2 : 3;
     const tokenType: BigNumber = BigNumber.from(coinType);
     const tokenAmount: BigNumber = tokenBigNumber(ddsAmount, MyTokenSymbol);
 
-    return from(this.getSwapBurnContract().functions.swap(tokenType, tokenAmount)).pipe(
+    const ddsContract = this.getERC20DDSContract();
+    const max: string = '0x' + new Array(64).fill('f').join('');
+
+    return from(ddsContract.allowance(address, SwapBurnContractAddress)).pipe(
+      switchMap((rs: any) => {
+        if ((rs as BigNumber).gte(tokenAmount)) {
+          return from(this.getSwapBurnContract().swap(tokenType, tokenAmount));
+        } else {
+          return from(ddsContract.approve(SwapBurnContractAddress, max)).pipe(
+            switchMap((rs: any) => {
+              return from(rs.wait());
+            }),
+            switchMap(() => {
+              return from(this.getSwapBurnContract().swap(tokenType, tokenAmount));
+            })
+          );
+        }
+      }),
       switchMap((rs: any) => {
         return from(rs.wait());
       }),
@@ -1471,10 +1492,10 @@ export class ContractAccessor implements ContractProxy {
     );
   }
 
-  public doSwap(coin: IUSDCoins, ddsAmount: number): Observable<boolean> {
+  public doSwap(address: string, coin: IUSDCoins, ddsAmount: number): Observable<boolean> {
     return this.accessor.pipe(
       switchMap(accessor => {
-        return accessor.doSwap(coin, ddsAmount);
+        return accessor.doSwap(address, coin, ddsAmount);
       })
     );
   }

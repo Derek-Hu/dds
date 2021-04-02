@@ -97,7 +97,7 @@ export const getFundingLocked = async (coin: IUSDCoins, ethAmount: number): Prom
  * @param page
  * @param pageSize
  */
-export const getTradeOrders = async (page: number, pageSize = 5): Promise<ITradeRecord[]> => {
+export const getTradeOrders = async (page: number, pageSize = 5, isActive = true): Promise<ITradeRecord[]> => {
   // if (process.env.NODE_ENV === 'development') {
   //   return returnVal([
   //     {
@@ -142,7 +142,8 @@ export const getTradeOrders = async (page: number, pageSize = 5): Promise<ITrade
         const baseHost = 'http://' + CentralHost + '/' + DefaultNetwork;
         const url: string = baseHost + '/transactions/getTransactionsInfo';
         const pageIndex = page - 1;
-        return request.post(url).send({ page: pageIndex, offset: pageSize, state: 1, address: account, name: 'taker' });
+        const state = isActive ? 1 : 2; // 1:未平仓，2：已平仓
+        return request.post(url).send({ page: pageIndex, offset: pageSize, state, address: account, name: 'taker' });
       }),
       switchMap((res: Response) => {
         if (res.body.code === 200 && res.body.msg.length > 0) {
