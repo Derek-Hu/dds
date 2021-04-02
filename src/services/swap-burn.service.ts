@@ -1,9 +1,10 @@
-import Mask from '../components/mask';
 import { contractAccessor } from '../wallet/chain-access';
-import { map, take } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 import { CoinBalance } from '../wallet/contract-interface';
 import { toEthers } from '../util/ethers';
 import { withLoading } from './utils';
+import { loginUserAccount } from './account';
+import { from } from 'rxjs';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   return new Promise(resolve => {
@@ -42,7 +43,16 @@ export const getSwapPrice = async (): Promise<ISwapBurn> => {
 
 export const conformSwap = async (data: IRecord): Promise<boolean> => {
   const doSwap = async (): Promise<boolean> => {
-    return withLoading(contractAccessor.doSwap(data.coin, data.amount).pipe(take(1)).toPromise());
+    const swapRs: Promise<boolean> = from(loginUserAccount())
+      .pipe(
+        switchMap(account => {
+          return contractAccessor.doSwap(account, data.coin, data.amount);
+        }),
+        take(1)
+      )
+      .toPromise();
+
+    return withLoading(swapRs);
   };
 
   return await doSwap();

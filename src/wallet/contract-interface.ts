@@ -4872,7 +4872,7 @@ export interface ContractProxy {
 
   getSwapBurnInfo(): Observable<CoinBalance[]>;
 
-  doSwap(coin: IUSDCoins, ddsAmount: number): Observable<boolean>;
+  doSwap(address: string, coin: IUSDCoins, ddsAmount: number): Observable<boolean>;
 
   getBrokerInfo(address: string): Observable<{ refer: BigNumber; claim: CoinBalance[] }>;
 
