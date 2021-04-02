@@ -78,7 +78,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
   }
 
   loadActiveData = async (page: number, pageSize: number) => {
-    return await getTradeOrders(page, pageSize);
+    return await getTradeOrders(page, pageSize, true);
     // this.setState({
     //   loading: true,
     // });
@@ -90,7 +90,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
   };
 
   loadHistoryData = async (page: number, pageSize: number) => {
-    return await getTradeOrders(page, pageSize);
+    return await getTradeOrders(page, pageSize, false);
     // this.setState({
     //   loading: true,
     // });
