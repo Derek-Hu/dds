@@ -872,8 +872,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     const coinType: 1 | 2 | 3 = coin === 'DAI' ? 1 : coin === 'USDT' ? 2 : 3;
     const tokenType: BigNumber = BigNumber.from(coinType);
     const tokenAmount: BigNumber = tokenBigNumber(ddsAmount, MyTokenSymbol);
-
-    return from(this.getSwapBurnContract().functions.swap(tokenType, tokenAmount)).pipe(
+    return from(this.getSwapBurnContract().swap(tokenType, tokenAmount)).pipe(
       switchMap((rs: any) => {
         return from(rs.wait());
       }),

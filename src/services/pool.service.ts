@@ -239,7 +239,7 @@ export const doPrivateWithdraw = async ({ coin, amount }: { coin: IUSDCoins; amo
 export const getPrivateOrders = async (
   page: number,
   pageSize: number,
-  devTest = false
+  isActive = true
 ): Promise<PrivatePoolOrder[]> => {
   return from(loginUserAccount())
     .pipe(
@@ -247,10 +247,11 @@ export const getPrivateOrders = async (
         const baseHost = 'http://' + CentralHost + '/' + DefaultNetwork;
         const url: string = baseHost + '/transactions/getTransactionsInfo';
         const pageIndex = page - 1;
+        const state = isActive ? 1 : 2;
         return request.post(url).send({
           page: pageIndex,
           offset: pageSize,
-          state: 1,
+          state: state,
           address: account, //"0xbfce8288fF225188EEC741aBfaac6BC9163d7a2B",
           name: 'maker',
         });
