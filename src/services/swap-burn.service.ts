@@ -27,7 +27,7 @@ export const getSwapPrice = async (): Promise<ISwapBurn> => {
       map(info => {
         const ddsAmount: number = info['SLD'] / 10;
         const usdAmount: number = info['DAI'] + info['USDT'] + info['USDC'];
-        const price: number = ddsAmount / usdAmount;
+        const price: number = usdAmount / ddsAmount;
 
         return {
           usd: usdAmount,
