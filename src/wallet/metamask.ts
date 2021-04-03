@@ -53,9 +53,14 @@ export class MetamaskWallet implements WalletInterface {
 
   public tryInitConnect(): Observable<boolean> {
     if (isMetaMaskInstalled()) {
-      return this.doRequest(true).pipe(
+      return this.doRequest(false).pipe(
         map((rs: string[]) => {
-          return rs.length > 0;
+          if (rs.length > 0) {
+            this.updateAccount(rs);
+            return true;
+          } else {
+            return false;
+          }
         })
       );
     } else {
