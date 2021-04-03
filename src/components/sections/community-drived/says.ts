@@ -2,7 +2,7 @@ export default [
   {
     name: 'Ruby',
     avatar: '/ruby.png',
-    description: 'Opened my long BTC position and deposit my dai for gain interest, smooth and simple',
+    description: 'Opened my long ETH position and deposit my dai for gain interest, smooth and simple',
   },
   // {
   // name: 'Roger Spears2',

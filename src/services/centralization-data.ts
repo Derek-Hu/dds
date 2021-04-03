@@ -110,8 +110,9 @@ export class OrderInfoObject {
   }
 
   public getPriceDiff(curPrice: CoinNumber): CoinNumber {
+    const sign: 1 | -1 = this.orderType === 'SHORT' ? -1 : 1;
     return {
-      value: this.getEndPrice(curPrice).value.sub(this.openPrice.value),
+      value: this.getEndPrice(curPrice).value.sub(this.openPrice.value).mul(sign),
       precision: this.openPrice.precision,
     };
   }
