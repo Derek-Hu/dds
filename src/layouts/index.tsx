@@ -5,6 +5,8 @@ import { RouteComponentProps } from 'react-router-dom';
 import SiteContext from './SiteContext';
 import { ddsBasePath } from '../constant/index';
 import { userAccountInfo, initTryConnect } from '../services/account';
+import { from, of, Subscription } from 'rxjs';
+import { reject } from 'lodash';
 
 const RESPONSIVE_MOBILE = 768;
 
@@ -50,20 +52,48 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   };
 
   tick = async () => {
-    const isConnected = await initTryConnect();
-    const { connected } = this.state;
+    // let isConnected = null;
+    // let hasError = false;
+    try {
+      const isConnected = await initTryConnect();
+      const { connected, account } = this.state;
 
-    if (isConnected !== connected) {
-      this.setState({
-        connected: isConnected,
-      });
-      if (!isConnected) {
-        this.updateAccount(null);
-      }else{
-        this.refreshPage();
+      if (isConnected !== connected || (connected === true && !account)) {
+        this.setState({
+          connected: isConnected,
+        });
+        if (!isConnected) {
+          this.updateAccount(null);
+        } else {
+          try {
+            // @ts-ignore
+            const account: IAccount = await Promise.race([
+              userAccountInfo(),
+              new Promise((resolve) => {
+                setTimeout(() => {
+                  resolve(null);
+                }, 1000);
+              }),
+            ]);
+            if(account){
+              this.updateAccount(account);
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      }
+    } catch (e) {
+      // hasError = true;
+      // console.log(e);
+      // if (e.code === 32002) {
+      //   // waiting
+      // }
+      if (e.code === 4001) {
+        // reject
+        return;
       }
     }
-
     // @ts-ignore
     timer = setTimeout(() => {
       this.tick();
