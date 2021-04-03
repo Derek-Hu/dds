@@ -14,6 +14,7 @@ interface IState {
 interface IProps {
   columns: any;
   timestamp?: number;
+  hasMore: boolean;
   cacheService?: (timestamp: number) => any[] | undefined;
   rowKey: string;
   loadPage: (page: number, pageSize: number) => any;
@@ -32,6 +33,7 @@ const getMaxTime = (orders: Array<{ time: number }>) => {
     return max;
   }, -1);
 };
+let timer: any = null;
 export default class Balance extends PureComponent<IProps, IState> {
   state: IState = {
     data: [],
@@ -84,7 +86,7 @@ export default class Balance extends PureComponent<IProps, IState> {
       });
     }
     if (cacheService) {
-      setTimeout(() => {
+      timer = setTimeout(() => {
         this.loadData(false, true);
       }, 12000);
     }
@@ -95,6 +97,13 @@ export default class Balance extends PureComponent<IProps, IState> {
     this.loadData(false);
   }
 
+  componentWillUnmount() {
+    // @ts-ignore
+    if (timer) {
+      // @ts-ignore
+      clearTimeout(timer);
+    }
+  }
   UNSAFE_componentWillReceiveProps(nextProps: IProps) {
     if (this.props.timestamp !== nextProps.timestamp) {
       console.log('dtable refresh...');
@@ -116,18 +125,18 @@ export default class Balance extends PureComponent<IProps, IState> {
 
   render() {
     const { loading, end, initLoad, data } = this.state;
-    const { columns, rowKey } = this.props;
+    const { columns, rowKey, hasMore } = this.props;
     return (
       <SiteContext.Consumer>
-        {({ isMobile, account }) => {
+        {({ isMobile }) => {
           return (
             <div>
               {initLoad ? (
                 <>
-                  <Placeholder style={{ margin: '3em 0' }} loading={initLoad}>
+                  <Placeholder width={'95%'} style={{ margin: '3em auto' }} loading={initLoad}>
                     &nbsp;
                   </Placeholder>
-                  <Placeholder style={{ margin: '3em 0' }} loading={initLoad}>
+                  <Placeholder width={'95%'} style={{ margin: '3em auto' }} loading={initLoad}>
                     &nbsp;
                   </Placeholder>
                 </>
@@ -140,20 +149,28 @@ export default class Balance extends PureComponent<IProps, IState> {
                     dataSource={data}
                     scroll={isMobile ? { x: 800 } : undefined}
                   />
-                  <p style={{ textAlign: 'center', margin: '2em 0' }}>
-                    {loading ? (
-                      <Button type="link">
+                  {hasMore ? (
+                    <p
+                      style={{
+                        textAlign: 'center',
+                        margin: 0,
+                        padding: '0 0 2em',
+                        background: '#FFF',
+                        position: 'relative',
+                      }}
+                    >
+                      {loading ? (
                         <Icon type="loading" />
-                      </Button>
-                    ) : end ? null : (
-                      <Button type="link" onClick={this.nextPage}>
-                        <span>
-                          More&nbsp;
-                          <Icon type="down" />
-                        </span>
-                      </Button>
-                    )}
-                  </p>
+                      ) : end ? null : (
+                        <Button type="link" onClick={this.nextPage}>
+                          <span>
+                            More&nbsp;
+                            <Icon type="down" />
+                          </span>
+                        </Button>
+                      )}
+                    </p>
+                  ) : null}
                 </>
               )}
             </div>

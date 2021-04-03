@@ -21,7 +21,7 @@ export default (props: IBarData) => {
             <Col span={12} className={styles.left}>
               <span className={styles.today}>{title}</span>
               <br />
-              <Placeholder loading={loading}>
+              <Placeholder loading={loading} style={loading ? {margin: '12px 0'} : {}}>
                 <span className={styles.percentage}>{percentage}%</span>
               </Placeholder>
             </Col>

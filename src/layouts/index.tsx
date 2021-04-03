@@ -59,6 +59,8 @@ export default class Layout extends Component<RouteComponentProps, IState> {
       });
       if (!isConnected) {
         this.updateAccount(null);
+      }else{
+        this.refreshPage();
       }
     }
 

@@ -12,7 +12,7 @@ import ModalRender from '../modal-render/index';
 import modalStyles from '../funding-balance/modals/style.module.less';
 import InputNumber from '../input/index';
 import { formatTime } from '../../util/time';
-import Table from '../table/index';
+import DTable from '../table/index';
 import settings from '../../constant/settings';
 
 interface IState {
@@ -146,7 +146,7 @@ export default class Balance extends Component<any, IState> {
           return (
             <div className={styles.tableList}>
               <h4>Liquidity Locked Detail</h4>
-              <Table columns={this.columns} rowKey="orderId" loadPage={this.loadPage} />
+              <DTable hasMore={true} columns={this.columns} rowKey="orderId" loadPage={this.loadPage} />
               {/* {initLoad ? (
                 <>
                   <Placeholder style={{margin: '3em 0'}} loading={loading}>&nbsp;</Placeholder>

@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Button, Table } from 'antd';
+import { Button, Table, message } from 'antd';
 import styles from '../style.module.less';
 import {
   getLiquidityLockedReward,
@@ -89,6 +89,13 @@ export default class LiquiditorReward extends Component<any, IState> {
   };
 
   cofirmClaim = async () => {
+
+    const { data } = this.state;
+
+    if(!isGreaterZero(data)){
+      message.info('No availble to claim!');
+      return;
+    }
     const success = await claimLiquidityLocked();
     if (success) {
       // this.loadData();
@@ -127,11 +134,11 @@ export default class LiquiditorReward extends Component<any, IState> {
           </p>
           <div>
             <Placeholder loading={loading} width={'10em'}>
-              <Visible when={isGreaterZero(data)}>
+              {/* <Visible when={isGreaterZero(data)}> */}
                 <Button type="primary" className={[styles.btn, styles.cliamBtn].join(' ')} onClick={this.cofirmClaim}>
                   CLAIM
                 </Button>
-              </Visible>
+              {/* </Visible> */}
             </Placeholder>
             {/* <div>
               <Button type="link" onClick={this.visible.show} className={styles.recordLink}>

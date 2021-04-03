@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button, Tabs } from 'antd';
 import ColumnConvert from '../column-convert/index';
 import { format, isNumberLike, formatThree } from '../../util/math';
 import { toCamelCase } from '../../util/string';
@@ -13,19 +13,27 @@ import ModalRender from '../modal-render/index';
 import Placeholder from '../placeholder';
 import { formatTime } from '../../util/time';
 import DTable from '../table/index';
+import { Visible, Hidden } from '../builtin/hidden';
 import { getPendingOrders } from '../../util/order-cache';
+
+const { TabPane } = Tabs;
 
 const statusColor: { [key in IOrderStatus]: string } = {
   ACTIVE: '#333333',
   CLOSED: '#333333',
 };
 
+const OrderCategory = {
+  active: 'ACTIVE',
+  history: 'HISTORY',
+};
 interface IState {
   orderCloseVisible: boolean;
   orders: ITradeRecord[];
   page: number;
   selectedItem?: ITradeRecord;
   loading: boolean;
+  orderCategory: keyof typeof OrderCategory;
 }
 
 type TModalKeys = Pick<IState, 'orderCloseVisible'>;
@@ -60,6 +68,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
     orders: [],
     page: 1,
     loading: false,
+    orderCategory: 'active',
   };
 
   static contextType = SiteContext;
@@ -68,8 +77,20 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
     console.log('trade orders refresh...');
   }
 
-  loadData = async (page: number, pageSize: number) => {
-    return await getTradeOrders(page, pageSize);
+  loadActiveData = async (page: number, pageSize: number) => {
+    return await getTradeOrders(page, pageSize, true);
+    // this.setState({
+    //   loading: true,
+    // });
+    // const orders = await getTradeOrders(page);
+    // this.setState({
+    //   orders,
+    //   loading: false,
+    // });
+  };
+
+  loadHistoryData = async (page: number, pageSize: number) => {
+    return await getTradeOrders(page, pageSize, false);
     // this.setState({
     //   loading: true,
     // });
@@ -162,8 +183,13 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
     }
   };
 
+  changeCategory = (type: any) => {
+    this.setState({
+      orderCategory: type,
+    });
+  };
   render() {
-    const { orderCloseVisible, orders, selectedItem, loading } = this.state;
+    const { orderCloseVisible, orders, orderCategory, selectedItem, loading } = this.state;
     const { type, price, amount, pl } = selectedItem || {};
     const { curPrice, coin } = this.props;
     return (
@@ -172,13 +198,34 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
           <div className={styles.root}>
             <h2>Orders</h2>
             <div className={styles.tableWpr}>
-              <DTable
-                columns={this.columns}
-                cacheService={getPendingOrders}
-                timestamp={timestamp}
-                rowKey="id"
-                loadPage={this.loadData}
-              />
+              <Tabs className={styles.orderTab} defaultActiveKey={orderCategory} animated={false} onChange={this.changeCategory}>
+                <TabPane
+                  tab={<span className={styles.uppercase}>{OrderCategory.active}</span>}
+                  key={OrderCategory.active}
+                >
+                  <DTable
+                    hasMore={false}
+                    columns={this.columns}
+                    cacheService={getPendingOrders}
+                    timestamp={timestamp}
+                    rowKey="id"
+                    loadPage={this.loadActiveData}
+                  />
+                </TabPane>
+                <TabPane
+                  tab={<span className={styles.uppercase}>{OrderCategory.history}</span>}
+                  key={OrderCategory.history}
+                >
+                  <DTable
+                    hasMore={true}
+                    columns={this.columns}
+                    timestamp={timestamp}
+                    rowKey="id"
+                    loadPage={this.loadHistoryData}
+                  />
+                </TabPane>
+              </Tabs>
+
               {/* <Table
                 loading={loading}
                 rowKey="id"
@@ -220,7 +267,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                   <Button onClick={this.confirmClose} type="primary">
-                    CLOSE POSITION
+                    CLOSE
                   </Button>
                 </Col>
               </Row>
