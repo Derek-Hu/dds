@@ -107,7 +107,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
       type: 'Type',
       price: 'Open Price',
       amount: 'Amount',
-      cost: 'Funding Fee Lock',
+      cost: 'Funding Fee Locked',
       fee: 'Settlement Fee',
       pl: 'P&L',
       status: 'Status',
@@ -150,6 +150,54 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
               CLOSE
             </Button>
           ) : null;
+        default:
+          return value;
+      }
+    },
+  });
+
+  historyColumns = ColumnConvert<ITradeRecord, { exercise: any }>({
+    column: {
+      time: 'Time',
+      type: 'Type',
+      price: 'Open Price',
+      amount: 'Amount',
+      cost: 'Funding Fee Cost',
+      fee: 'Settlement Fee',
+      pl: 'P&L',
+      status: 'Status',
+    },
+    attributes: {
+      fee: {
+        width: '180px',
+      },
+    },
+    render: (value, key, record) => {
+      switch (key) {
+        case 'time':
+          return formatTime(value);
+        case 'price':
+        case 'amount':
+          return format(value);
+        case 'fee':
+        case 'cost':
+          return `${formatThree(value)}(${record.costCoin})`;
+        case 'pl':
+          return getPL(record[key]);
+        case 'status':
+          const status = record[key];
+          return <span style={{ color: statusColor[status] }}>{status}</span>;
+        case 'type':
+          const buyShort = record[key].toUpperCase();
+          return (
+            <span
+              style={{
+                color: buyShort === 'LONG' ? '#02B464' : buyShort === 'SHORT' ? '#FA4D56' : '#383838',
+              }}
+            >
+              {buyShort}
+            </span>
+          );
         default:
           return value;
       }
@@ -218,7 +266,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
                 >
                   <DTable
                     hasMore={true}
-                    columns={this.columns}
+                    columns={this.historyColumns}
                     timestamp={timestamp}
                     rowKey="id"
                     loadPage={this.loadHistoryData}
