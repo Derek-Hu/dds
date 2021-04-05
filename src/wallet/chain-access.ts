@@ -734,6 +734,76 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
+  public priPoolUserBalance(
+    address: string
+  ): Observable<{ total: CoinBalance[]; available: CoinBalance[]; locked: CoinBalance[] }> {
+    const dai$ = this.getPriPoolContract('DAI').pipe(
+      switchMap((contract: ethers.Contract) => {
+        return contract.functions.lpAccount(address);
+      }),
+      map((rs: any) => {
+        return {
+          total: rs.amount,
+          available: rs.availableAmount,
+          locked: rs.lockedAmount,
+        };
+      })
+    );
+
+    const z: BigNumber = BigNumber.from(0);
+    const usdt$ = of({ total: z, available: z, locked: z });
+    const usdc$ = of({ total: z, available: z, locked: z });
+
+    return zip(dai$, usdt$, usdc$).pipe(
+      map(([dai, usdt, usdc]: { total: BigNumber; available: BigNumber; locked: BigNumber }[]) => {
+        return {
+          total: [
+            {
+              coin: 'DAI',
+              balance: dai.total,
+            },
+            {
+              coin: 'USDT',
+              balance: usdt.total,
+            },
+            {
+              coin: 'USDC',
+              balance: usdc.total,
+            },
+          ],
+          available: [
+            {
+              coin: 'DAI',
+              balance: dai.available,
+            },
+            {
+              coin: 'USDT',
+              balance: usdt.available,
+            },
+            {
+              coin: 'USDC',
+              balance: usdc.available,
+            },
+          ],
+          locked: [
+            {
+              coin: 'DAI',
+              balance: dai.locked,
+            },
+            {
+              coin: 'USDT',
+              balance: usdt.locked,
+            },
+            {
+              coin: 'USDC',
+              balance: usdc.locked,
+            },
+          ],
+        };
+      })
+    );
+  }
+
   //
 
   public getLiquidityMiningReward(address: string): Observable<BigNumber> {
@@ -1430,6 +1500,16 @@ export class ContractAccessor implements ContractProxy {
     return this.accessor.pipe(
       switchMap(accessor => {
         return accessor.priPoolBalanceWhole();
+      })
+    );
+  }
+
+  public priPoolUserBalance(
+    address: string
+  ): Observable<{ total: CoinBalance[]; available: CoinBalance[]; locked: CoinBalance[] }> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.priPoolUserBalance(address);
       })
     );
   }
