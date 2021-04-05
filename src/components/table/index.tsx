@@ -72,6 +72,7 @@ export default class Balance extends PureComponent<IProps, IState> {
         loading: false,
       });
       const pageSize = !data || !data.length ? PageSize : data.length;
+      console.log('timer load', pageSize);
       let pageData = await loadPage(1, pageSize);
       if (cacheService) {
         const max = getMaxTime(pageData);

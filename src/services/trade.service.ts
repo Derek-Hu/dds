@@ -138,6 +138,8 @@ export const getTradeOrders = async (page: number, pageSize = 5, isActive = true
   //     },
   //   ]);
   // }
+
+  pageSize = 999999;
   return from(loginUserAccount())
     .pipe(
       switchMap(account => {
@@ -251,7 +253,11 @@ export const openOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: 
 
   const toBoolean = (a: Promise<string>) =>
     from(a)
-      .pipe(map(r => r.length > 0))
+      .pipe(
+        map(r => {
+          return r.length > 0;
+        })
+      )
       .toPromise();
 
   return withLoading(toBoolean(res));
