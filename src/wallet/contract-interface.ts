@@ -4852,6 +4852,10 @@ export interface ContractProxy {
 
   priPoolBalanceOf(address: string): Observable<Map<IUSDCoins, BigNumber>>;
 
+  priPoolUserBalance(
+    address: string
+  ): Observable<{ total: CoinBalance[]; available: CoinBalance[]; locked: CoinBalance[] }>;
+
   priPoolBalanceWhole(): Observable<Map<IUSDCoins, BigNumber>>;
 
   //

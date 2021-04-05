@@ -41,7 +41,15 @@ export const getPoolBalance = async (type: 'public' | 'private'): Promise<{ [key
           if (type === 'public') {
             return contractAccessor.pubPoolBalanceOf(account);
           } else {
-            return contractAccessor.priPoolBalanceOf(account);
+            return contractAccessor.priPoolUserBalance(account).pipe(
+              map(rs => {
+                const res = new Map<IUSDCoins, BigNumber>();
+                rs.total.forEach(one => {
+                  res.set(one.coin as IUSDCoins, one.balance);
+                });
+                return res;
+              })
+            );
           }
         } else {
           return of(null);
@@ -92,12 +100,15 @@ export const getCollaborativeShareInPool = async (): Promise<IPoolShareInPool[]>
 /** Done */
 export const getPrivateSharePool = async (): Promise<ICoinItem[]> => {
   const getSharePool = (account: string): Observable<ICoinItem[]> => {
-    return zip(contractAccessor.priPoolBalanceOf(account), contractAccessor.priPoolBalanceWhole()).pipe(
-      map((rs: Map<IUSDCoins, BigNumber>[]) => {
-        return Array.from(rs[0].keys()).map(coin => {
-          const amount = Number(toEthers(rs[0].get(coin) as BigNumber, 4));
-          const total = Number(toEthers(rs[1].get(coin) as BigNumber, 4));
-          return { coin, amount, total };
+    return contractAccessor.priPoolUserBalance(account).pipe(
+      map(rs => {
+        return rs.total.map(one => {
+          const availableNum: BigNumber = rs.available.filter(c => c.coin === one.coin)[0].balance;
+          return {
+            coin: one.coin as IUSDCoins,
+            amount: Number(toEthers(availableNum, 4, one.coin)),
+            total: Number(toEthers(one.balance, 4, one.coin)),
+          } as ICoinItem;
         });
       })
     );
