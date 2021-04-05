@@ -12,6 +12,7 @@ import {
   withdraw,
   getCurPrice,
   openOrder,
+  getMaxOpenAmount,
 } from '../../services/trade.service';
 import { getMaxFromCoin } from './calculate';
 import { format, isGreaterZero, truncated, isNumberLike, divide } from '../../util/math';
@@ -75,7 +76,11 @@ export default class Balance extends Component<{
       const balanceInfo = await getFundingBalanceInfo(to);
 
       const available = getMaxFromCoin(balanceInfo);
-      const maxNumber = divide(available, curPrice);
+      const maxNumber = await getMaxOpenAmount(
+        (coins.from + coins.to) as IExchangeStr,
+        available,
+        this.state.tradeType
+      ); //divide(available, curPrice);//
       this.setState({
         balanceInfo,
         available: truncated(available),
@@ -129,10 +134,17 @@ export default class Balance extends Component<{
   depositVisible = this.setModalVisible('depositVisible');
   orderConfirmVisible = this.setModalVisible('orderConfirmVisible');
 
-  changeType = (e: any) => {
+  changeType = async (e: any) => {
     console.log(e);
+
+    const tradeType: ITradeType = e.target.value;
+    const { coins } = this.props;
+    // 新的APi要求获取maxOpen时传入long，short类型，这里同步获取略有卡顿，后期可优化。 --by 蒜苗 2021-04-05
+    const maxNumber = await getMaxOpenAmount((coins.from + coins.to) as IExchangeStr, this.state.available, tradeType); //divide(available, curPrice);//
+
     this.setState({
-      tradeType: e.target.value,
+      tradeType: tradeType,
+      maxNumber,
     });
   };
 
@@ -147,7 +159,7 @@ export default class Balance extends Component<{
     this.setState({
       setFeeQuery: true,
     });
-    const fees = await confirmOrder(openAmount!, to);
+    const fees = await confirmOrder(openAmount!, to, this.state.tradeType);
     this.setState({
       fees,
       setFeeQuery: false,
@@ -186,7 +198,7 @@ export default class Balance extends Component<{
       const { to } = coins;
       const { openAmount } = this.state;
 
-      const fees = await confirmOrder(openAmount!, to);
+      const fees = await confirmOrder(openAmount!, to, this.state.tradeType);
       this.orderConfirmVisible.show();
       this.setState({
         fees,

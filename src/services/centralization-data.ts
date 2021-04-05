@@ -1,4 +1,4 @@
-import { getTokenWei, keepDecimal, toDisplayNum, toEthers, toExchangePair } from '../util/ethers';
+import { getTokenWei, keepDecimal, toDisplayNum, toExchangePair } from '../util/ethers';
 import { BigNumber } from 'ethers';
 
 export interface IOrderInfoData {
@@ -17,13 +17,14 @@ export interface IOrderInfoData {
   orderType: 'LONG' | 'SHORT';
   poolType: number;
   state: number;
-  symbol: IExchangePair;
+  symbol: IExchangeStr;
   takerAddress: string;
   takerId: string; // orderId
   txId: string;
 }
 
 export class OrderInfoObject {
+  public readonly transactionHash: string;
   public readonly orderId: BigNumber;
   public readonly exchangePair: ExchangeCoinPair;
   public readonly openTime: number;
@@ -39,6 +40,7 @@ export class OrderInfoObject {
   public readonly marginFee: CoinNumber;
 
   constructor(orderInfoData: IOrderInfoData) {
+    this.transactionHash = orderInfoData.txId;
     this.orderId = BigNumber.from(orderInfoData.orderId);
     this.exchangePair = toExchangePair(orderInfoData.symbol);
     this.openTime = BigNumber.from(orderInfoData.openContractTime).toNumber();
@@ -77,10 +79,12 @@ export class OrderInfoObject {
 
   public getTakerOrder(curPrice: CoinNumber): ITradeRecord {
     return {
+      hash: this.transactionHash,
       id: this.orderId.toString(),
       time: this.openTime,
       type: this.orderType,
       price: toDisplayNum(this.openPrice, 4),
+      closePrice: this.status === 'ACTIVE' ? undefined : toDisplayNum(this.closePrice, 4),
       amount: toDisplayNum(this.openAmount, 4),
       cost: toDisplayNum(this.lockFee, 4),
       costCoin: this.exchangePair.USD,
@@ -95,6 +99,7 @@ export class OrderInfoObject {
 
   public getMakerOrder(): PrivatePoolOrder {
     return {
+      hash: this.transactionHash,
       orderId: this.orderId.toString(),
       time: this.openTime,
       amount: toDisplayNum(this.openAmount, 4),

@@ -105,6 +105,25 @@ export const ABI = [
     inputs: [
       {
         indexed: true,
+        internalType: 'uint256',
+        name: 'orderID',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'currentPrice',
+        type: 'uint256',
+      },
+    ],
+    name: 'DDSRiskHandler',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
         internalType: 'address',
         name: 'sender',
         type: 'address',
@@ -145,6 +164,32 @@ export const ABI = [
     type: 'event',
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'addr',
+        type: 'address',
+      },
+    ],
+    name: 'SetFormular',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'addr',
+        type: 'address',
+      },
+    ],
+    name: 'SetrepayFudAddr',
+    type: 'event',
+  },
+  {
     inputs: [],
     name: 'DDSBrokerAddr',
     outputs: [
@@ -182,6 +227,11 @@ export const ABI = [
         name: 'currentPrice',
         type: 'uint256',
       },
+      {
+        internalType: 'uint256',
+        name: 'intervalDay',
+        type: 'uint256',
+      },
     ],
     name: 'addFeesForUser',
     outputs: [
@@ -197,6 +247,30 @@ export const ABI = [
       },
     ],
     stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'startTime',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'endTime',
+        type: 'uint256',
+      },
+    ],
+    name: 'calculatIntervalDay',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'pure',
     type: 'function',
   },
   {
@@ -263,13 +337,8 @@ export const ABI = [
         name: 'orderID',
         type: 'uint256',
       },
-      {
-        internalType: 'uint256',
-        name: 'currentPrice',
-        type: 'uint256',
-      },
     ],
-    name: 'closeContract',
+    name: 'closecontract',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -326,6 +395,11 @@ export const ABI = [
         internalType: 'uint256',
         name: 'number',
         type: 'uint256',
+      },
+      {
+        internalType: 'enum IDDSCommon.ContractType',
+        name: 'contractType',
+        type: 'uint8',
       },
     ],
     name: 'fees',
@@ -468,6 +542,11 @@ export const ABI = [
         name: 'currentPrice',
         type: 'uint256',
       },
+      {
+        internalType: 'uint256',
+        name: 'intervalDay',
+        type: 'uint256',
+      },
     ],
     name: 'getHoldFeeByOrderID',
     outputs: [
@@ -588,6 +667,11 @@ export const ABI = [
         name: 'amount',
         type: 'uint256',
       },
+      {
+        internalType: 'enum IDDSCommon.ContractType',
+        name: 'contractType',
+        type: 'uint8',
+      },
     ],
     name: 'getMaxOpenAmount',
     outputs: [
@@ -616,6 +700,11 @@ export const ABI = [
         internalType: 'uint256',
         name: 'openPrice',
         type: 'uint256',
+      },
+      {
+        internalType: 'enum IDDSCommon.ContractType',
+        name: 'contractType',
+        type: 'uint8',
       },
     ],
     name: 'getOpenPositionFee',
@@ -723,7 +812,7 @@ export const ABI = [
   },
   {
     inputs: [],
-    name: 'getPriceByETHDAI',
+    name: 'getPriceByBTCDAI',
     outputs: [
       {
         internalType: 'uint256',
@@ -736,7 +825,7 @@ export const ABI = [
   },
   {
     inputs: [],
-    name: 'getPriceByWBTCDAI',
+    name: 'getPriceByETHDAI',
     outputs: [
       {
         internalType: 'uint256',
@@ -750,19 +839,38 @@ export const ABI = [
   {
     inputs: [
       {
-        internalType: 'uint256',
-        name: 'orderID',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'currentPrice',
-        type: 'uint256',
+        internalType: 'uint256[]',
+        name: 'orderIDs',
+        type: 'uint256[]',
       },
     ],
     name: 'migrationContract',
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'migrationInfo',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -924,11 +1032,6 @@ export const ABI = [
         name: 'orderIDs',
         type: 'uint256[]',
       },
-      {
-        internalType: 'uint256',
-        name: 'currentPrice',
-        type: 'uint256',
-      },
     ],
     name: 'riskControl',
     outputs: [],
@@ -946,6 +1049,32 @@ export const ABI = [
       },
     ],
     stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_DDSLiquidorAddr',
+        type: 'address',
+      },
+    ],
+    name: 'setDDSLiquidorAddr',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_DDSBrokerAddr',
+        type: 'address',
+      },
+    ],
+    name: 'setDDSbrokerAddr',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -1026,7 +1155,20 @@ export const ABI = [
         type: 'address',
       },
     ],
-    name: 'setrepayFudAddr',
+    name: 'setRepayFudAddr',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_riskFundAddr',
+        type: 'address',
+      },
+    ],
+    name: 'setRiskFundAddr',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -1055,19 +1197,6 @@ export const ABI = [
     name: 'transferOwnership',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'uniswapRouter',
-    outputs: [
-      {
-        internalType: 'contract IUniswapV2Router01',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -4797,19 +4926,25 @@ export interface ContractProxy {
 
   watchUserAccount(address: string, coin: IUSDCoins): Observable<UserAccountInfo>;
 
-  getMaxOpenAmount(coin: IUSDCoins, exchange: IExchangePair, maxUSDAmount: number): Observable<BigNumber>;
+  getMaxOpenAmount(coin: IUSDCoins, exchange: IExchangeStr, maxUSDAmount: number): Observable<BigNumber>;
+
+  getMaxOpenTradeAmount(
+    exchange: ExchangeCoinPair,
+    type: ITradeType,
+    availableUsdAmount: number
+  ): Observable<BigNumber>;
 
   depositToken(address: string, count: number, coin: IUSDCoins): Observable<boolean>;
 
   withdrawToken(count: number, coin: IUSDCoins): Observable<boolean>;
 
-  confirmContract(count: number, coin: IUSDCoins): Observable<ConfirmInfo>;
+  confirmContract(exchangeStr: IExchangeStr, count: number, type: ITradeType): Observable<ConfirmInfo>;
 
-  createContract(coin: IUSDCoins, orderType: ITradeType, amount: number, inviter: string): Observable<boolean>;
+  createContract(coin: IUSDCoins, orderType: ITradeType, amount: number, inviter: string): Observable<string>;
 
-  closeContract(orderId: ITradeRecord, curPrice: number): Observable<boolean>;
+  closeContract(orderId: ITradeRecord): Observable<boolean>;
 
-  getFundingLockedAmount(coin: IUSDCoins, exchange: IExchangePair, ethAmount: number): Observable<BigNumber>;
+  getFundingLockedAmount(coin: IUSDCoins, exchange: IExchangeStr, ethAmount: number): Observable<BigNumber>;
 
   getUserOrders(address: string, curPrice: BigNumber, page: number, pageSize: number): Observable<any>;
 
