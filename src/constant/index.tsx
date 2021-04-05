@@ -78,7 +78,7 @@ export const Lp2DAIContractAddress = '0x646bc895a5617644dDBA4F054478586dF7Ecb338
 export const Lp2USDTContractAddress = '';
 export const Lp2USDCContractAddress = '';
 export const MiningRewardContractAddress = '0xFeEB057342a4cCF4a46ba6624Edadcde31d0d6fd';
-export const LiquidatorContractAddress = 'x03F4A3EF4befD5e56646A9f110D80193eC61B6e8';
+export const LiquidatorContractAddress = '0x03F4A3EF4befD5e56646A9f110D80193eC61B6e8';
 export const SwapBurnContractAddress = '0x3414275C767c2317789D64256254566430b6d1ac'; // buy back
 export const BrokerContractAddress = '0x3036EE3F92fa483eE2881081CFF9820F40d48448';
 
