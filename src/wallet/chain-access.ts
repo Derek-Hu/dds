@@ -248,7 +248,9 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         const bigAmount = toBigNumber(amount, 18);
         const contractType = orderType === 'LONG' ? 1 : 2;
         const userInviter = inviter && inviter.length === 42 ? inviter : '0x0000000000000000000000000000000000000000';
-        return contract.functions.creatContract('ETHDAI', bigAmount, contractType, userInviter);
+        const exchange = 'ETHDAI';
+
+        return this.increaseGasLimit(contract, 'creatContract', [exchange, bigAmount, contractType, userInviter]);
       }),
       switchMap((rs: any) => {
         return rs.wait();
@@ -447,12 +449,12 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         return from(daiContract.allowance(address, Lp1DAIContractAddress)).pipe(
           switchMap(rs => {
             if ((rs as BigNumber).gte(bigAmount)) {
-              return contract.functions.provide(bigAmount);
+              return this.increaseGasLimit(contract, 'provide', [bigAmount]);
             } else {
               return from(daiContract.approve(Lp1DAIContractAddress, max)).pipe(
                 switchMap((rs: any) => from(rs.wait())),
                 switchMap(d => {
-                  return contract.functions.provide(bigAmount);
+                  return this.increaseGasLimit(contract, 'provide', [bigAmount]);
                 })
               );
             }
@@ -471,7 +473,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     return this.getPubPoolContract(coin).pipe(
       switchMap(contract => {
         const bigAmount: BigNumber = toBigNumber(reCoinAmount, 18);
-        return contract.withdraw(bigAmount);
+        return this.increaseGasLimit(contract, 'withdraw', [bigAmount]);
       }),
       switchMap((rs: any) => {
         return from(rs.wait());
@@ -1074,6 +1076,14 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
 
   protected getERC20DDSContract(): ethers.Contract {
     return new ethers.Contract(ERC20DDSAddress, ERC20, this.getSigner());
+  }
+
+  protected increaseGasLimit(contract: ethers.Contract, funName: string, args: any[]): Observable<any> {
+    return from(contract.estimateGas[funName](...args)).pipe(
+      switchMap((gas: BigNumber) => {
+        return contract.functions[funName](...args, { gasLimit: BigNumber.from(Math.ceil(gas.toNumber() * 1.5)) });
+      })
+    );
   }
 
   protected abstract getTradeContractMap(): Map<IUSDCoins, ethers.Contract>;
