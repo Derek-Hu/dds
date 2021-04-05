@@ -246,7 +246,12 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
           <div className={styles.root}>
             <h2>Orders</h2>
             <div className={styles.tableWpr}>
-              <Tabs className={styles.orderTab} defaultActiveKey={orderCategory} animated={false} onChange={this.changeCategory}>
+              <Tabs
+                className={styles.orderTab}
+                defaultActiveKey={orderCategory}
+                animated={false}
+                onChange={this.changeCategory}
+              >
                 <TabPane
                   tab={<span className={styles.uppercase}>{OrderCategory.active}</span>}
                   key={OrderCategory.active}
@@ -254,7 +259,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
                   <DTable
                     hasMore={false}
                     columns={this.columns}
-                    cacheService={getPendingOrders}
+                    // cacheService={getPendingOrders}
                     timestamp={timestamp}
                     rowKey="id"
                     loadPage={this.loadActiveData}
