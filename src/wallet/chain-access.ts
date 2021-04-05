@@ -232,7 +232,6 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         return from(contract.fees(exchangeStr, amount, contractType));
       }),
       map((rs: any) => {
-        console.log('fee rs', rs);
         return rs;
       })
     );
