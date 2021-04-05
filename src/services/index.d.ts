@@ -30,7 +30,7 @@ declare type IFromCoins = 'ETH' | 'BTC';
 declare type ISLD = 'SLD';
 declare type IUSDCoins = 'DAI' | 'USDT' | 'USDC';
 declare type IReUSDCoins = 'reDAI' | 'reUSDT' | 'reUSDC';
-declare type IExchangePair = 'ETHDAI' | 'EHTUSDT' | 'ETHUSDC' | 'BTCDAI' | 'BTCUSDT' | 'BTCUSDC';
+declare type IExchangeStr = 'ETHDAI' | 'EHTUSDT' | 'ETHUSDC' | 'BTCDAI' | 'BTCUSDT' | 'BTCUSDC';
 
 declare interface ExchangeCoinPair {
   USD: IUSDCoins;
@@ -58,12 +58,12 @@ declare type IOrderStatus = 'ACTIVE' | 'CLOSED';
  * Trade Order 记录
  */
 declare interface ITradeRecord {
+  hash: string;
   id: string;
   time: number;
   type: ITradeType;
   price: number;
-  // openPrice: number;
-  // curPrice: number;
+  closePrice: number | undefined;
   amount: number;
   cost: number;
   costCoin: IUSDCoins;
@@ -266,6 +266,7 @@ declare type IAccount = (Omit<UserAccountInfo, 'USDBalance'> & { USDBalance: { [
 
 // 私池订单信息
 declare interface PrivatePoolOrder {
+  hash: string;
   orderId: string;
   time: number;
   amount: number;

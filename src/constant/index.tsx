@@ -68,19 +68,19 @@ export const CustomTabKey = 'dds-tabs';
 
 export const CoinSelectOption = SupportedCoins.map(coin => <Option value={coin}>{coin}</Option>);
 // 合约地址
-export const TradeDAIContractAddress = '0x09B20920c4f7d53ED6A5DC69c15776B193C8126e';
+export const TradeDAIContractAddress = '0x1d94b6ec592223630dA56eB0Be63611E16a7Ece7';
 export const TradeUSDTContractAddress = '';
 export const TradeUSDCContractAddress = '';
-export const Lp1DAIContractAddress = '0xfA463AC1D51CB2bC8B6fE7952456830FD1320301';
+export const Lp1DAIContractAddress = '0xeCf4C00F93abEcA9d163A2FD26B199ba69Ff2475';
 export const Lp1USDTContractAddress = '';
 export const Lp1USDCContractAddress = '';
-export const Lp2DAIContractAddress = '0xd9b87Aff19DF6DE79b77E071DC0831b36FB458c8';
+export const Lp2DAIContractAddress = '0x646bc895a5617644dDBA4F054478586dF7Ecb338';
 export const Lp2USDTContractAddress = '';
 export const Lp2USDCContractAddress = '';
-export const MiningRewardContractAddress = '0xa8aA9a758fFE006Fa8D604dc59D43447064c77f1';
-export const LiquidatorContractAddress = '0xbB4FFe3F43E32D76eB8F469FE13362c625df59e0';
-export const SwapBurnContractAddress = '0xCc7193CF946D4a8D3eeAfBE7572D4b243422BDCa'; // buy back
-export const BrokerContractAddress = '0x28209d91c291c351B7DA2bfA313bc1Cb7aC0F97D';
+export const MiningRewardContractAddress = '0xFeEB057342a4cCF4a46ba6624Edadcde31d0d6fd';
+export const LiquidatorContractAddress = 'x03F4A3EF4befD5e56646A9f110D80193eC61B6e8';
+export const SwapBurnContractAddress = '0x3414275C767c2317789D64256254566430b6d1ac'; // buy back
+export const BrokerContractAddress = '0x3036EE3F92fa483eE2881081CFF9820F40d48448';
 
 export const ERC20DDSAddress = '0x904bC1433bD601ceB887b0890B9a9536B43A9e80';
 export const ERC20DAIAddress = '0x113587939c8967e61aa2360613951b23ab2af49a';
@@ -96,13 +96,13 @@ export const DataRefreshInterval: number = 5 * 1000; // 5 seconds
 
 export const ETH_WEIGHT = '1000000000000000000';
 
-export const CoinEthExchange: { [c: string]: IExchangePair } = {
+export const CoinEthExchange: { [c: string]: IExchangeStr } = {
   DAI: 'ETHDAI',
   USDT: 'EHTUSDT',
   USDC: 'ETHUSDC',
 };
 
-export const CoinBTCExchange = new Map<IUSDCoins, IExchangePair>([
+export const CoinBTCExchange = new Map<IUSDCoins, IExchangeStr>([
   ['DAI', 'BTCDAI'],
   ['USDT', 'BTCUSDT'],
   ['USDC', 'BTCUSDC'],

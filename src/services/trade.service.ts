@@ -2,11 +2,11 @@ import { orders, balance, infoItems, curPrice, poolInfo } from './mock/trade.moc
 import { walletManager } from '../wallet/wallet-manager';
 import { catchError, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
-import { AsyncSubject, from, of, zip } from 'rxjs';
+import { AsyncSubject, from, Observable, of, zip } from 'rxjs';
 import { contractAccessor } from '../wallet/chain-access';
 import { ConfirmInfo, UserAccountInfo } from '../wallet/contract-interface';
 import { BigNumber } from 'ethers';
-import { ETH_WEI, toEthers } from '../util/ethers';
+import { ETH_WEI, toEthers, toExchangePair } from '../util/ethers';
 import * as request from 'superagent';
 import { Response } from 'superagent';
 import { withLoading } from './utils';
@@ -65,14 +65,16 @@ export const getFundingBalanceInfo = async (coin: IUSDCoins): Promise<IBalanceIn
 };
 
 export const getMaxOpenAmount = async (
-  coin: IUSDCoins,
-  exchange: IExchangePair,
-  availedAmount: number
+  exchangeStr: IExchangeStr,
+  availedAmount: number | undefined,
+  type: ITradeType
 ): Promise<number> => {
+  const exchange: ExchangeCoinPair = toExchangePair(exchangeStr);
+  const amount: number = availedAmount === undefined ? 0 : availedAmount;
   return contractAccessor
-    .getMaxOpenAmount(coin, exchange, availedAmount)
+    .getMaxOpenTradeAmount(exchange, type, amount)
     .pipe(
-      map((num: BigNumber) => Number(toEthers(num, 0))),
+      map((num: BigNumber) => Number(toEthers(num, 2))),
       take(1)
     )
     .toPromise();
@@ -242,16 +244,25 @@ export const getCurPrice = async (coin: IUSDCoins): Promise<number> => {
  */
 export const openOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: number): Promise<boolean> => {
   const inviteAddress: string | null = localStorage.getItem('referalCode');
-  return withLoading(contractAccessor.createContract(coin, tradeType, amount, inviteAddress).pipe(take(1)).toPromise());
+  const res: Promise<string> = contractAccessor
+    .createContract(coin, tradeType, amount, inviteAddress)
+    .pipe(take(1))
+    .toPromise();
+
+  const toBoolean = (a: Promise<string>) =>
+    from(a)
+      .pipe(map(r => r.length > 0))
+      .toPromise();
+
+  return withLoading(toBoolean(res));
 };
 
 /**
  * 关仓操作
  * @param order - 订单对象，从返回的order列表中选取
- * @param closePrice - 用户看到并认可的的此刻价格
  */
 export const closeOrder = async (order: ITradeRecord, closePrice: number): Promise<boolean> => {
-  return withLoading(contractAccessor.closeContract(order, closePrice).pipe(take(1)).toPromise());
+  return withLoading(contractAccessor.closeContract(order).pipe(take(1)).toPromise());
 };
 
 export const getPriceGraphData = (
@@ -289,9 +300,9 @@ export const getPriceGraphData = (
  * @param amount - eth amount
  * @param coin - DAI
  */
-export const confirmOrder = async (amount: number, coin: IUSDCoins): Promise<IOpenFee> => {
+export const confirmOrder = async (amount: number, coin: IUSDCoins, type: ITradeType): Promise<IOpenFee> => {
   return contractAccessor
-    .confirmContract(amount, coin)
+    .confirmContract('ETHDAI', amount, type)
     .pipe(
       map((info: ConfirmInfo) => {
         return {

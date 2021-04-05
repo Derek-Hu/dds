@@ -69,7 +69,7 @@ export function tokenBigNumber(amount: number, coin: ISLD | IUSDCoins | IReUSDCo
   return BigNumber.from(amount.toString() + new Array(wei).fill('0').join(''));
 }
 
-export function toExchangePair(pair: IExchangePair): ExchangeCoinPair {
+export function toExchangePair(pair: IExchangeStr): ExchangeCoinPair {
   const eth: IFromCoins = pair.startsWith('ETH') ? 'ETH' : 'BTC';
   const usd: IUSDCoins = pair.substr(eth.length) as IUSDCoins;
 
@@ -77,6 +77,10 @@ export function toExchangePair(pair: IExchangePair): ExchangeCoinPair {
     USD: usd,
     ETH: eth,
   };
+}
+
+export function fromExchangePair(exchange: ExchangeCoinPair): IExchangeStr {
+  return (exchange.ETH + exchange.USD) as IExchangeStr;
 }
 
 export function getTokenWei(coin: ISLD | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'): number {

@@ -31,10 +31,12 @@ export const poolInfo: ITradePoolInfo = {
 
 export const orders: ITradeRecord[] = [
   {
+    hash: '0xabebbe4b2982a0aa601daed0eda47e32e7b476b923dd6dbf1746654bec3522513',
     id: '001',
     time: new Date().getTime(),
     type: 'SHORT',
     price: 400.65,
+    closePrice: undefined,
     amount: 10.36,
     costCoin: 'DAI',
     cost: 5.23,
@@ -46,10 +48,12 @@ export const orders: ITradeRecord[] = [
     status: 'CLOSED',
   },
   {
+    hash: '0xabebbe4b2982a0aa601daed0eda47e32e7b476b923dd6dbf1746654bec3522513',
     id: '002',
     time: new Date().getTime(),
     type: 'SHORT',
     price: 400.65,
+    closePrice: undefined,
     amount: 10.36,
     costCoin: 'USDT',
     cost: 5.23,
@@ -61,10 +65,12 @@ export const orders: ITradeRecord[] = [
     status: 'ACTIVE',
   },
   {
+    hash: '0xabebbe4b2982a0aa601daed0eda47e32e7b476b923dd6dbf1746654bec3522513',
     id: '003',
     time: new Date().getTime(),
     type: 'LONG',
     price: 400.65,
+    closePrice: undefined,
     amount: 10.36,
     costCoin: 'USDC',
     cost: 5.23,

@@ -41,7 +41,7 @@ import {
 } from '../constant';
 import { walletManager } from '../wallet/wallet-manager';
 import { WalletInterface } from './wallet-interface';
-import { toBigNumber, toEthers, tokenBigNumber } from '../util/ethers';
+import { fromExchangePair, toBigNumber, toEthers, toExchangePair, tokenBigNumber } from '../util/ethers';
 import { isMetaMaskInstalled } from './metamask';
 import { getPageListRange } from '../util/page';
 
@@ -120,7 +120,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
-  public getMaxOpenAmount(coin: IUSDCoins, exchange: IExchangePair, maxUSDAmount: number): Observable<BigNumber> {
+  public getMaxOpenAmount(coin: IUSDCoins, exchange: IExchangeStr, maxUSDAmount: number): Observable<BigNumber> {
     return this.getContract(coin).pipe(
       switchMap((contract: ethers.Contract) => {
         // 用户输入数字转成接口精度
@@ -137,7 +137,28 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
-  public watchMaxOpenAmount(coin: IUSDCoins, exchange: IExchangePair): Observable<BigNumber> {
+  public getMaxOpenTradeAmount(
+    exchange: ExchangeCoinPair,
+    type: ITradeType,
+    availableUsdAmount: number
+  ): Observable<BigNumber> {
+    return this.getContract(exchange.USD).pipe(
+      switchMap((contract: ethers.Contract) => {
+        const exStr: IExchangeStr = fromExchangePair(exchange);
+        const amount: BigNumber = tokenBigNumber(availableUsdAmount, exchange.USD);
+        const contractType = type === 'LONG' ? 1 : 2;
+        return from(contract.getMaxOpenAmount(exStr, amount, contractType));
+      }),
+      map((rs: any) => {
+        return rs as BigNumber;
+      }),
+      catchError(err => {
+        return of(BigNumber.from(0));
+      })
+    );
+  }
+
+  public watchMaxOpenAmount(coin: IUSDCoins, exchange: IExchangeStr): Observable<BigNumber> {
     return this.timer.pipe(
       switchMap(() => {
         return walletManager.watchWalletInstance().pipe(
@@ -202,13 +223,16 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
-  public confirmContract(count: number, coin: IUSDCoins): Observable<ConfirmInfo> {
-    return this.getContract(coin).pipe(
+  public confirmContract(exchangeStr: IExchangeStr, count: number, type: ITradeType): Observable<ConfirmInfo> {
+    const exchange = toExchangePair(exchangeStr);
+    const contractType = type === 'LONG' ? 1 : 2;
+    return this.getContract(exchange.USD).pipe(
       switchMap((contract: ethers.Contract) => {
-        const amount: BigNumber = tokenBigNumber(count, coin);
-        return from(contract.fees('ETHDAI', amount));
+        const amount: BigNumber = tokenBigNumber(count, exchange.USD);
+        return from(contract.fees(exchangeStr, amount, contractType));
       }),
       map((rs: any) => {
+        console.log('fee rs', rs);
         return rs;
       })
     );
@@ -219,7 +243,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     orderType: ITradeType,
     amount: number,
     inviter: string | null = ''
-  ): Observable<boolean> {
+  ): Observable<string> {
     return this.getContract(coin).pipe(
       switchMap((contract: ethers.Contract) => {
         const bigAmount = toBigNumber(amount, 18);
@@ -230,20 +254,21 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       switchMap((rs: any) => {
         return rs.wait();
       }),
-      mapTo(true),
+      map((rs: any) => {
+        return rs.transactionHash as string;
+      }),
       catchError(err => {
         console.warn('error', err);
-        return of(false);
+        return of('');
       })
     );
   }
 
-  public closeContract(order: ITradeRecord, curPrice: number): Observable<boolean> {
+  public closeContract(order: ITradeRecord): Observable<boolean> {
     return this.getContract(order.costCoin).pipe(
       switchMap((contract: ethers.Contract) => {
         const id = BigNumber.from(order.id);
-        const price = tokenBigNumber(curPrice, 'DAI');
-        return contract.functions.closeContract(id, price);
+        return contract.functions.closeContract(id);
       }),
       switchMap(rs => {
         return from(rs.wait());
@@ -302,11 +327,13 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
                 Number(toEthers(diffPrice.mul('100'), 0)) / Number(toEthers(order.info.openPrice, 0));
               const pl: number = Number(toEthers(diffPrice, 0)) * Number(toEthers(order.info.number, 0));
               return {
+                hash: '',
                 id: order.id.toString(),
                 time: Number(order.info.startTime.toString() + '000'),
                 type: order.info.contractType.toString() === '1' ? 'LONG' : 'SHORT',
                 amount: Number(toEthers(order.info.number, 4)),
                 price: Number(toEthers(order.info.openPrice, 4)),
+                closePrice: undefined,
                 costCoin: 'DAI',
                 exchange: order.info.exchangeType,
                 cost: Number(toEthers((order.info.lockFee as BigNumber).add(order.info.newLockFee as BigNumber), 4)),
@@ -329,7 +356,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
-  public getFundingLockedAmount(coin: IUSDCoins, exchange: IExchangePair, ethAmount: number): Observable<BigNumber> {
+  public getFundingLockedAmount(coin: IUSDCoins, exchange: IExchangeStr, ethAmount: number): Observable<BigNumber> {
     return this.getContract(coin).pipe(
       switchMap((contract: ethers.Contract) => {
         return this.getPriceByETHDAI(coin).pipe(
@@ -1302,8 +1329,18 @@ export class ContractAccessor implements ContractProxy {
     );
   }
 
-  public getMaxOpenAmount(coin: IUSDCoins, exchange: IExchangePair, maxUSDAmount: number): Observable<BigNumber> {
+  public getMaxOpenAmount(coin: IUSDCoins, exchange: IExchangeStr, maxUSDAmount: number): Observable<BigNumber> {
     return this.accessor.pipe(switchMap(accessor => accessor.getMaxOpenAmount(coin, exchange, maxUSDAmount)));
+  }
+
+  public getMaxOpenTradeAmount(
+    exchange: ExchangeCoinPair,
+    type: ITradeType,
+    availableUsdAmount: number
+  ): Observable<BigNumber> {
+    return this.accessor.pipe(
+      switchMap(accessor => accessor.getMaxOpenTradeAmount(exchange, type, availableUsdAmount))
+    );
   }
 
   public depositToken(address: string, count: number, coin: IUSDCoins): Observable<boolean> {
@@ -1330,12 +1367,13 @@ export class ContractAccessor implements ContractProxy {
     );
   }
 
-  public confirmContract(count: number, coin: IUSDCoins): Observable<ConfirmInfo> {
+  public confirmContract(exchangeStr: IExchangeStr, count: number, type: ITradeType): Observable<ConfirmInfo> {
     return this.accessor.pipe(
       switchMap(accessor => {
-        return accessor.confirmContract(count, coin);
+        return accessor.confirmContract(exchangeStr, count, type);
       }),
       catchError(err => {
+        console.warn('error', err);
         return of({
           currentPrice: BigNumber.from(0),
           exchgFee: BigNumber.from(0),
@@ -1351,19 +1389,19 @@ export class ContractAccessor implements ContractProxy {
     orderType: ITradeType,
     amount: number,
     inviter: string | null = ''
-  ): Observable<any> {
+  ): Observable<string> {
     return this.accessor.pipe(switchMap(accessor => accessor.createContract(coin, orderType, amount, inviter)));
   }
 
-  public closeContract(orderId: ITradeRecord, curPrice: number): Observable<boolean> {
-    return this.accessor.pipe(switchMap(accessor => accessor.closeContract(orderId, curPrice)));
+  public closeContract(orderId: ITradeRecord): Observable<boolean> {
+    return this.accessor.pipe(switchMap(accessor => accessor.closeContract(orderId)));
   }
 
   public getUserOrders(address: string, curPrice: BigNumber, page: number, pageSize: number): Observable<any> {
     return this.accessor.pipe(switchMap(accessor => accessor.getUserOrders(address, curPrice, page, pageSize)));
   }
 
-  public getFundingLockedAmount(coin: IUSDCoins, exchange: IExchangePair, ethAmount: number): Observable<BigNumber> {
+  public getFundingLockedAmount(coin: IUSDCoins, exchange: IExchangeStr, ethAmount: number): Observable<BigNumber> {
     return this.accessor.pipe(switchMap(accessor => accessor.getFundingLockedAmount(coin, exchange, ethAmount)));
   }
 
