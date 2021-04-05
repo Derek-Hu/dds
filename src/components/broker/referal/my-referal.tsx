@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Row, Col, Button } from 'antd';
+import { Row, Col, Button, message } from 'antd';
 import styles from '../style.module.less';
 import { formatInt, format, isGreaterZero } from '../../../util/math';
 import { getMyReferalInfo, claimReferalInfo } from '../../../services/broker.service';
@@ -30,6 +30,12 @@ export default class Broker extends Component<any, IState> {
   }
 
   onClaim = async () => {
+    const { referalInfo } = this.state;
+    const { bonus } = referalInfo || {};
+    if (!isGreaterZero(bonus)) {
+      message.warn('No available to claim!');
+      return;
+    }
     const success = await claimReferalInfo();
     if (success) {
       this.loadData();
@@ -70,11 +76,11 @@ export default class Broker extends Component<any, IState> {
         </Row>
         <div style={{ marginTop: '48px', paddingBottom: '20px' }}>
           <div>
-            <Visible when={isGreaterZero(bonus)}>
-              <Button onClick={this.onClaim} style={{ width: '50%', margin: '20px' }} type="primary">
-                CLAIM
-              </Button>
-            </Visible>
+            {/* <Visible when={isGreaterZero(bonus)}> */}
+            <Button onClick={this.onClaim} style={{ width: '50%', margin: '20px' }} type="primary">
+              CLAIM
+            </Button>
+            {/* </Visible> */}
           </div>
         </div>
       </div>

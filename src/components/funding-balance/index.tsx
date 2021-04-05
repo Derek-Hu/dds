@@ -159,10 +159,11 @@ export default class Balance extends Component<{
     const { to } = coins;
     const { tradeType, openAmount, fees } = this.state;
     this.orderConfirmVisible.hide();
+    const openTime = new Date().getTime();
     const success = await openOrder(to, tradeType, openAmount!);
     if (success) {
       setPendingOrders({
-        time: new Date().getTime(),
+        time: openTime,
         type: tradeType,
         amount: openAmount,
         cost: fees?.fundingFeeLocked,

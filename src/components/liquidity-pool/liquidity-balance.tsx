@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Tabs, Button, Table, Row, Select, Col, Icon, Tag } from 'antd';
+import { Tabs, Button, Table, Row, Select, Col, Icon, Tag, message } from 'antd';
 import styles from './balance.module.less';
 import commonStyles from '../funding-balance/modals/style.module.less';
 import ColumnConvert from '../column-convert/index';
@@ -290,6 +290,14 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
     });
   };
 
+  onWithDrawClick = () => {
+    const { withdrawBtnEnable } = this.state;
+    if (!withdrawBtnEnable) {
+      message.warn('No available balance!');
+      return;
+    }
+    this.withDrawVisible.show();
+  };
   render() {
     const {
       data,
@@ -312,11 +320,11 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
           <div>
             <CardInfo isNumber={true} loading={loading} title="Liquidity Balance" theme="inner" items={coins}>
               <Placeholder loading={loading}>
-                <Visible when={withdrawBtnEnable}>
-                  <Button type="primary" onClick={this.withDrawVisible.show} className={styles.btn}>
-                    {deadline ? `Withdraw until ${deadline}` : 'WITHDRAW'}
-                  </Button>
-                </Visible>
+                {/* <Visible when={withdrawBtnEnable}> */}
+                <Button type="primary" onClick={this.onWithDrawClick} className={styles.btn}>
+                  {deadline ? `Withdraw until ${deadline}` : 'WITHDRAW'}
+                </Button>
+                {/* </Visible> */}
                 {/* <Button type="link" onClick={this.recordVisible.show} className={styles.link}>
                     Liquidity Balance History
                   </Button> */}

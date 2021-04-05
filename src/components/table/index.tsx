@@ -20,7 +20,7 @@ interface IProps {
   loadPage: (page: number, pageSize: number) => any;
 }
 
-const PageSize = 50;
+const PageSize = 10;
 
 const getMaxTime = (orders: Array<{ time: number }>) => {
   if (!orders || !orders.length) {
@@ -85,11 +85,9 @@ export default class Balance extends PureComponent<IProps, IState> {
         end: pageData && pageData.length === 0,
       });
     }
-    if (cacheService) {
-      timer = setTimeout(() => {
-        this.loadData(false, true);
-      }, 12000);
-    }
+    timer = setTimeout(() => {
+      this.loadData(false, true);
+    }, 12000);
   }
 
   async componentDidMount() {
@@ -161,7 +159,7 @@ export default class Balance extends PureComponent<IProps, IState> {
                     >
                       {loading ? (
                         <Icon type="loading" />
-                      ) : end ? null : (
+                      ) : end ? null : data && data.length < PageSize ? null : (
                         <Button type="link" onClick={this.nextPage}>
                           <span>
                             More&nbsp;

@@ -40,7 +40,7 @@ export default class BecomeSpark extends Component<any, IState> {
               {data?.commission}%
             </Placeholder>
           </div>
-          <p className={styles.descTwo}>Settlement Fee Commission</p>
+          <p className={styles.descTwo}>Commission Rate</p>
           <Row className={styles.tabSpark}>
             <Col xs={24} sm={12} md={12} lg={12} className={styles.col}>
               <span className={styles.ads}>20+</span>
