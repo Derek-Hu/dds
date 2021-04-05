@@ -268,7 +268,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     return this.getContract(order.costCoin).pipe(
       switchMap((contract: ethers.Contract) => {
         const id = BigNumber.from(order.id);
-        return contract.functions.closeContract(id);
+        return contract.functions.closecontract(id);
       }),
       switchMap(rs => {
         return from(rs.wait());
