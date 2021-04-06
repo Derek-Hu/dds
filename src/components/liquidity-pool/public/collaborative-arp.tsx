@@ -173,11 +173,11 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                 height={300}
                 footer={null}
               >
-                <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
-                  <Descriptions.Item label="Amount" span={24}>
+                <Descriptions column={1} colon={false}>
+                  <Descriptions.Item label="Amount">
                     {amount} {selectedCoin}
                   </Descriptions.Item>
-                  <Descriptions.Item label="Receive" span={24}>
+                  <Descriptions.Item label="Receive">
                     {reAmount} re{selectedCoin}
                   </Descriptions.Item>
                 </Descriptions>

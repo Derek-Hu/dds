@@ -62,7 +62,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
     const { amount, selectedCoin } = this.state;
     // @ts-ignore
     const success = await doPrivateDeposit({ amount: parseFloat(amount), coin: selectedCoin });
-    if(success){
+    if (success) {
       this.context.refreshPage && this.context.refreshPage();
     }
   };
@@ -114,8 +114,8 @@ export default class LiquidityProvided extends Component<IProps, IState> {
               height={300}
               footer={null}
             >
-              <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
-                <Descriptions.Item label="Amount" span={24}>
+              <Descriptions column={1} colon={false}>
+                <Descriptions.Item label="Amount">
                   {amount} {selectedCoin}
                 </Descriptions.Item>
               </Descriptions>

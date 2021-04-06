@@ -4,12 +4,13 @@ import styles from './balance.module.less';
 import commonStyles from '../funding-balance/modals/style.module.less';
 import ColumnConvert from '../column-convert/index';
 import dayjs from 'dayjs';
-import { SupportedCoins, DefaultCoinDatas } from '../../constant/index';
+import { SupportedCoins, DefaultCoinWithdrawDatas, DefaultCoinDatas } from '../../constant/index';
 import ModalRender from '../modal-render/index';
 import SiteContext from '../../layouts/SiteContext';
 import CardInfo from '../card-info/index';
 import {
   getPoolBalance,
+  getPrivateLiquidityBalance,
   doPoolWithdraw,
   getPubPoolWithdrawDeadline,
   getCollaborativeWithdrawRe,
@@ -118,7 +119,8 @@ interface IState {
   data: Array<{ label: string; value: any }>;
   loading: boolean;
   selectCoin?: IUSDCoins;
-  coins: { [key: string]: number };
+  cardData: { [key: string]: number };
+  coins: { [key: string]: { total: number; maxWithdraw: number } };
   deadline: string;
   deadlineLoading: boolean;
   amount: any;
@@ -130,14 +132,15 @@ interface IState {
 
 type TModalKeys = Pick<IState, 'withDrawVisible' | 'recordVisible'>;
 
-export default class PoolPage extends Component<{ isPrivate: boolean }, IState> {
+export default class PoolBalance extends Component<{ isPrivate: boolean }, IState> {
   state: IState = {
     withDrawVisible: false,
     recordVisible: false,
     data: [],
     loading: false,
     calculating: false,
-    coins: { ...DefaultCoinDatas },
+    cardData: { ...DefaultCoinDatas },
+    coins: { ...DefaultCoinWithdrawDatas },
     deadline: '',
     amount: '',
     withdrawBtnEnable: false,
@@ -214,16 +217,31 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
     this.init();
   }
 
+  getBalanceAndWithdraw = async (): Promise<{ [key in IUSDCoins]: { total: number; maxWithdraw: number } }> => {
+    const { isPrivate } = this.props;
+    if (isPrivate) {
+      return await getPrivateLiquidityBalance();
+    }
+    const coins = await getPoolBalance('public');
+    // @ts-ignore
+    return Object.keys(coins).reduce((all, key) => {
+      // @ts-ignore
+      all[key] = { total: coins[key], maxWithdraw: coins[key] };
+      return all;
+    }, {});
+  };
   async init() {
     const { isPrivate } = this.props;
-    const type = isPrivate ? 'private' : 'public';
     this.setState({ loading: true });
     // try {
-    const coins = await getPoolBalance(type);
+
+    const coins = await this.getBalanceAndWithdraw();
     // @ts-ignore
-    const availableCoins = coins && Object.keys(coins).filter(coin => isGreaterZero(coins[coin]));
+    const availableCoins = coins && Object.keys(coins).filter(coin => isGreaterZero(coins[coin].total));
     this.setState({
       coins,
+      // @ts-ignore
+      cardData: coins ? Object.keys(coins).map(coin => ({ label: coin, value: coins[coin].total })) : {},
       // @ts-ignore
       withdrawBtnEnable: availableCoins && availableCoins.length,
       // @ts-ignore
@@ -286,7 +304,7 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
   onMaxOpenClick = () => {
     const { coins, selectCoin } = this.state;
     this.setState({
-      amount: coins[selectCoin!],
+      amount: coins[selectCoin!].maxWithdraw,
     });
   };
 
@@ -310,6 +328,7 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
       calculating,
       coins,
       amount,
+      cardData,
       reAmount,
     } = this.state;
     const { isPrivate } = this.props;
@@ -318,7 +337,7 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
       <SiteContext.Consumer>
         {({ isMobile }) => (
           <div>
-            <CardInfo isNumber={true} loading={loading} title="Liquidity Balance" theme="inner" items={coins}>
+            <CardInfo isNumber={true} loading={loading} title="Liquidity Balance" theme="inner" items={cardData}>
               <Placeholder loading={loading}>
                 {/* <Visible when={withdrawBtnEnable}> */}
                 <Button type="primary" onClick={this.onWithDrawClick} className={styles.btn}>
@@ -366,8 +385,10 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
               <Row gutter={[16, 16]} type="flex" justify="space-between" align="middle">
                 <Col xs={24} sm={24} md={6} lg={6}>
                   <Select value={selectCoin} onChange={this.onSelectChange} style={{ width: '100%', height: 50 }}>
-                    {SupportedCoins.filter(coin => isGreaterZero(coins[coin])).map(coin => (
-                      <Option value={coin}>{coin}</Option>
+                    {SupportedCoins.filter(coin => isGreaterZero(coins[coin]?.total)).map(coin => (
+                      <Option key={coin} value={coin}>
+                        {coin}
+                      </Option>
                     ))}
                   </Select>
                 </Col>
@@ -376,7 +397,7 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
                     <Tag onClick={this.onMaxOpenClick} color="#1346FF">
                       Max
                     </Tag>
-                    <span>{format(coins[selectCoin!])}</span> {selectCoin}
+                    <span>{format(coins[selectCoin!]?.maxWithdraw)}</span> {selectCoin}
                   </span>
                 </Col>
                 <Col span={24}>
@@ -385,7 +406,7 @@ export default class PoolPage extends Component<{ isPrivate: boolean }, IState> 
                       disabled={isLocked}
                       onChange={this.onAmountChange}
                       placeholder={isLocked ? `Unlock until ${unlockInfos[selectCoin!]}` : 'Withdraw amount'}
-                      max={coins[selectCoin!]}
+                      max={coins[selectCoin!]?.maxWithdraw}
                     />
                     {isPrivate ? null : (
                       <>

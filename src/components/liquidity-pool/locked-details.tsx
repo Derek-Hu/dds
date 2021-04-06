@@ -184,27 +184,25 @@ export default class Balance extends Component<any, IState> {
                 title="Add Margin"
                 className={modalStyles.commonModal}
               >
-                <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
-                  <Descriptions.Item label="Order Id" span={24}>
-                    {selectedItem?.orderId}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Current margin rate" span={24}>
+                <Descriptions column={1} colon={false}>
+                  <Descriptions.Item label="Order Id">{selectedItem?.orderId}</Descriptions.Item>
+                  <Descriptions.Item label="Current margin rate">
                     {/* // @ts-ignore */}
                     {marginTxt}
                   </Descriptions.Item>
-                  {/* <Descriptions.Item label="Time" span={24}>
+                  {/* <Descriptions.Item label="Time" >
                   {formatTime(selectedItem?.time)}
                 </Descriptions.Item>
-                <Descriptions.Item label="Amount" span={24}>
+                <Descriptions.Item label="Amount" >
                   {format(selectedItem?.amount)}
                 </Descriptions.Item>
-                <Descriptions.Item label="Locked Amount" span={24}>
+                <Descriptions.Item label="Locked Amount" >
                   {format(selectedItem?.lockedAmount)}
                 </Descriptions.Item>
-                <Descriptions.Item label="Open Price" span={24}>
+                <Descriptions.Item label="Open Price" >
                   {format(selectedItem?.openPrice)}
                 </Descriptions.Item>
-                <Descriptions.Item label="Coins" span={24}>
+                <Descriptions.Item label="Coins" >
                   {selectedItem?.coin}
                 </Descriptions.Item> */}
                 </Descriptions>

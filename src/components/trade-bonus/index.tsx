@@ -78,7 +78,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
   }
 
   loadActiveData = async (page: number, pageSize: number) => {
-    return await getTradeOrders(page, pageSize, true);
+    return await getTradeOrders(page, 999999, true);
     // this.setState({
     //   loading: true,
     // });
@@ -259,9 +259,9 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
                   <DTable
                     hasMore={false}
                     columns={this.columns}
-                    // cacheService={getPendingOrders}
+                    cacheService={getPendingOrders}
                     timestamp={timestamp}
-                    rowKey="id"
+                    rowKey="hash"
                     loadPage={this.loadActiveData}
                   />
                 </TabPane>
@@ -273,7 +273,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
                     hasMore={true}
                     columns={this.historyColumns}
                     timestamp={timestamp}
-                    rowKey="id"
+                    rowKey="hash"
                     loadPage={this.loadHistoryData}
                   />
                 </TabPane>
@@ -296,23 +296,15 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
               title="Close Position"
               className={modalStyles.commonModal}
             >
-              <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
-                <Descriptions.Item label="Type" span={24}>
-                  {toCamelCase(type)}
-                </Descriptions.Item>
-                <Descriptions.Item label="Open Price" span={24}>
-                  {format(price)}
-                </Descriptions.Item>
-                <Descriptions.Item label="Amount" span={24}>
-                  {format(amount)}
-                </Descriptions.Item>
-                <Descriptions.Item label="Close Price" span={24}>
+              <Descriptions column={1} colon={false}>
+                <Descriptions.Item label="Type">{toCamelCase(type)}</Descriptions.Item>
+                <Descriptions.Item label="Open Price">{format(price)}</Descriptions.Item>
+                <Descriptions.Item label="Amount">{format(amount)}</Descriptions.Item>
+                <Descriptions.Item label="Close Price">
                   {format(curPrice)}
                   {coin}
                 </Descriptions.Item>
-                <Descriptions.Item label="P&L" span={24}>
-                  {getPL(pl)}
-                </Descriptions.Item>
+                <Descriptions.Item label="P&L">{getPL(pl)}</Descriptions.Item>
               </Descriptions>
               <Row className={modalStyles.actionBtns} gutter={[16, 16]} type="flex">
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>

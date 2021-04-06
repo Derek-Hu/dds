@@ -1,9 +1,9 @@
 import Mask from '../components/mask/index';
 
-export const withLoading = (promiseInstance: Promise<boolean>) => {
+export const withLoading = <T = boolean>(promiseInstance: Promise<T>, fallback?: T): Promise<T> => {
   Mask.showLoading();
   return promiseInstance
-    .then((rs: boolean) => {
+    .then((rs: T) => {
       if (rs) {
         Mask.showSuccess();
       } else {
@@ -11,9 +11,9 @@ export const withLoading = (promiseInstance: Promise<boolean>) => {
       }
       return rs;
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
       Mask.showFail();
-      return false;
+      return (fallback === undefined ? false : fallback) as T;
     });
 };

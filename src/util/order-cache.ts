@@ -1,7 +1,6 @@
-import { v4 as uuidv4 } from 'uuid';
-
-export const getPendingOrders = (timestamp: number) => {
-  const orders = localStorage.getItem('PendingOrders');
+const CacheKey = 'PendingOrdersHash';
+export const getPendingOrders = (remoteList?: ITradeRecord[]) => {
+  const orders = localStorage.getItem(CacheKey);
   if (!orders) {
     return;
   }
@@ -10,12 +9,17 @@ export const getPendingOrders = (timestamp: number) => {
     if (!Array.isArray(data)) {
       return;
     }
-    const valid = data.filter(item => {
-      return item.time > timestamp;
-    });
-    if (valid.length !== data.length) {
-      localStorage.setItem('PendingOrders', JSON.stringify(data));
+    if (!remoteList || !remoteList.length) {
+      return data;
     }
+    const valid = data.filter(item => {
+      return !remoteList.find(remote => remote.hash === item.hash);
+    });
+
+    if (valid.length !== data.length) {
+      JSON.stringify(valid);
+    }
+    localStorage.setItem(CacheKey, JSON.stringify(valid));
     return valid;
   } catch {
     return;
@@ -23,8 +27,7 @@ export const getPendingOrders = (timestamp: number) => {
 };
 
 export const setPendingOrders = (order: any) => {
-  order.id = uuidv4();
-  const orders = localStorage.getItem('PendingOrders');
+  const orders = localStorage.getItem(CacheKey);
   let data;
   try {
     // @ts-ignore
@@ -36,5 +39,5 @@ export const setPendingOrders = (order: any) => {
     data = [order];
   }
 
-  localStorage.setItem('PendingOrders', JSON.stringify(data));
+  localStorage.setItem(CacheKey, JSON.stringify(data));
 };

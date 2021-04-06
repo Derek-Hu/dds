@@ -15,25 +15,13 @@ interface IProps {
   columns: any;
   timestamp?: number;
   hasMore: boolean;
-  cacheService?: (timestamp: number) => any[] | undefined;
+  cacheService?: (remoteList: any[]) => any[] | undefined;
   rowKey: string;
   loadPage: (page: number, pageSize: number) => any;
 }
 
 const PageSize = 10;
 
-const getMaxTime = (orders: Array<{ time: number }>) => {
-  if (!orders || !orders.length) {
-    return -1;
-  }
-  return orders.reduce((max, item) => {
-    if (item.time > max) {
-      max = item.time;
-    }
-    return max;
-  }, -1);
-};
-let timer: any = null;
 export default class Balance extends PureComponent<IProps, IState> {
   state: IState = {
     data: [],
@@ -42,6 +30,8 @@ export default class Balance extends PureComponent<IProps, IState> {
     initLoad: true,
     end: false,
   };
+
+  timer = null;
 
   async loadData(append: boolean, hideLoading?: boolean) {
     const { page, data } = this.state;
@@ -55,8 +45,7 @@ export default class Balance extends PureComponent<IProps, IState> {
       console.log('init page, pageSize', page, PageSize);
       let all = (data || []).concat(pageData);
       if (cacheService) {
-        const max = getMaxTime(all);
-        const pendingOrders = cacheService(max);
+        const pendingOrders = cacheService(all);
         // @ts-ignore
         all = pendingOrders && pendingOrders.length ? pendingOrders.concat(all) : all;
       }
@@ -74,8 +63,7 @@ export default class Balance extends PureComponent<IProps, IState> {
       const pageSize = !data || !data.length ? PageSize : data.length;
       let pageData = await loadPage(1, pageSize);
       if (cacheService) {
-        const max = getMaxTime(pageData);
-        const pendingOrders = cacheService(max);
+        const pendingOrders = cacheService(pageData);
         // @ts-ignore
         pageData = pendingOrders && pendingOrders.length ? pendingOrders.concat(pageData) : pageData;
       }
@@ -85,7 +73,8 @@ export default class Balance extends PureComponent<IProps, IState> {
         end: pageData && pageData.length === 0,
       });
     }
-    timer = setTimeout(() => {
+    // @ts-ignore
+    this.timer = setTimeout(() => {
       this.loadData(false, true);
     }, 12000);
   }
@@ -97,9 +86,9 @@ export default class Balance extends PureComponent<IProps, IState> {
 
   componentWillUnmount() {
     // @ts-ignore
-    if (timer) {
+    if (this.timer) {
       // @ts-ignore
-      clearTimeout(timer);
+      clearTimeout(this.timer);
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: IProps) {

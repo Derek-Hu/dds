@@ -78,7 +78,7 @@ export default class PoolArea extends Component<any, IState> {
       coin: selectedCoin,
       amount: Number(amount),
     });
-    if(success){
+    if (success) {
       this.context.refreshPage && this.context.refreshPage();
     }
   };
@@ -170,14 +170,10 @@ export default class PoolArea extends Component<any, IState> {
                     onCancel={this.closeSwapModal}
                     footer={null}
                   >
-                    <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
-                      <Descriptions.Item label="Swap Ratio" span={24}>
-                        1SLD : {format(data?.rate)} USD
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Swap Amount" span={24}>
-                        {format(amount)} SLD
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Receive" span={24}>
+                    <Descriptions column={1} colon={false}>
+                      <Descriptions.Item label="Swap Ratio">1SLD : {format(data?.rate)} USD</Descriptions.Item>
+                      <Descriptions.Item label="Swap Amount">{format(amount)} SLD</Descriptions.Item>
+                      <Descriptions.Item label="Receive">
                         {transferText} {selectedCoin}
                       </Descriptions.Item>
                     </Descriptions>

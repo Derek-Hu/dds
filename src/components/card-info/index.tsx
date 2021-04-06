@@ -22,10 +22,10 @@ export default ({ title, theme, loading, children, items, isNumber }: ICardInfo)
       {theme === 'outer' ? <h2>{title}</h2> : null}
       <div className={styles.card}>
         {theme === 'inner' ? <h2>{title}</h2> : null}
-        <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
+        <Descriptions column={1} colon={false}>
           {Array.isArray(items)
             ? items.map(({ label, value }, index) => (
-                <Descriptions.Item key={index} label={label} span={24}>
+                <Descriptions.Item key={index} label={label}>
                   <Placeholder width={'100%'} loading={loading}>
                     {isNumber ? format(value) : value}
                   </Placeholder>
@@ -33,7 +33,7 @@ export default ({ title, theme, loading, children, items, isNumber }: ICardInfo)
               ))
             : items
             ? Object.keys(items).map(key => (
-                <Descriptions.Item key={key} label={key} span={24}>
+                <Descriptions.Item key={key} label={key}>
                   <Placeholder width={'100%'} loading={loading}>
                     {isNumber ? format(items[key]) : items[key]}
                   </Placeholder>

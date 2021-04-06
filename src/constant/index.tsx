@@ -31,6 +31,12 @@ export const DefaultCoinDatas = {
   USDC: 0,
 };
 
+export const DefaultCoinWithdrawDatas = {
+  DAI: { total: 0, maxWithdraw: 0 },
+  USDT: { total: 0, maxWithdraw: 0 },
+  USDC: { total: 0, maxWithdraw: 0 },
+};
+
 export const DefaultProgressDatas = {
   DAI: {
     percentage: 0,

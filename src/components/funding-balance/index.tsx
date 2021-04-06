@@ -11,7 +11,7 @@ import {
   deposit,
   withdraw,
   getCurPrice,
-  openOrder,
+  createOrder,
   getMaxOpenAmount,
 } from '../../services/trade.service';
 import { getMaxFromCoin } from './calculate';
@@ -172,9 +172,10 @@ export default class Balance extends Component<{
     const { tradeType, openAmount, fees } = this.state;
     this.orderConfirmVisible.hide();
     const openTime = new Date().getTime();
-    const success = await openOrder(to, tradeType, openAmount!);
-    if (success) {
+    const orderId = await createOrder(to, tradeType, openAmount!);
+    if (orderId) {
       setPendingOrders({
+        hash: orderId,
         time: openTime,
         type: tradeType,
         amount: openAmount,

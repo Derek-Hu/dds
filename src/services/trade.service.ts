@@ -27,6 +27,10 @@ const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
 };
 
 export const getFundingBalanceInfo = async (coin: IUSDCoins): Promise<IBalanceInfo> => {
+  // return returnVal({
+  //   balance: 10000,
+  //   locked: 0,
+  // })
   return walletManager
     .watchWalletInstance()
     .pipe(
@@ -71,6 +75,10 @@ export const getMaxOpenAmount = async (
 ): Promise<number> => {
   const exchange: ExchangeCoinPair = toExchangePair(exchangeStr);
   const amount: number = availedAmount === undefined ? 0 : availedAmount;
+
+  // if(process.env.NODE_ENV === 'development'){
+  //   return returnVal(23042)
+  // }
   return contractAccessor
     .getMaxOpenTradeAmount(exchange, type, amount)
     .pipe(
@@ -103,6 +111,7 @@ export const getTradeOrders = async (page: number, pageSize = 5, isActive = true
   // if (process.env.NODE_ENV === 'development') {
   //   return returnVal([
   //     {
+  //       hash: '0.5520740463908274',
   //       id: 'string',
   //       time: new Date().getTime(),
   //       type: 'LONG',
@@ -120,6 +129,7 @@ export const getTradeOrders = async (page: number, pageSize = 5, isActive = true
   //       status: 'ACTIVE',
   //     },
   //     {
+  //       hash: '20000',
   //       id: 'string',
   //       time: new Date().getTime(),
   //       type: 'SHORT',
@@ -139,7 +149,6 @@ export const getTradeOrders = async (page: number, pageSize = 5, isActive = true
   //   ]);
   // }
 
-  pageSize = 999999;
   return from(loginUserAccount())
     .pipe(
       switchMap(account => {
@@ -229,6 +238,7 @@ export const withdraw = async (amount: IRecord): Promise<boolean> => {
 };
 
 export const getCurPrice = async (coin: IUSDCoins): Promise<number> => {
+  // return returnVal(100);
   return contractAccessor
     .getPriceByETHDAI(coin)
     .pipe(
@@ -268,12 +278,15 @@ export const openOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: 
  */
 export const createOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: number): Promise<string> => {
   const inviteAddress: string | null = localStorage.getItem('referalCode');
+  // if(process.env.NODE_ENV === 'development'){
+  //   return Promise.resolve(`${Math.random()}`);
+  // }
   const res: Promise<string> = contractAccessor
     .createContract(coin, tradeType, amount, inviteAddress)
     .pipe(take(1))
     .toPromise();
 
-  return res;
+  return withLoading<string>(res, '');
 };
 
 /**
@@ -320,6 +333,11 @@ export const getPriceGraphData = (
  * @param coin - DAI
  */
 export const confirmOrder = async (amount: number, coin: IUSDCoins, type: ITradeType): Promise<IOpenFee> => {
+  // return returnVal({
+  //   curPrice: 100,
+  //   settlementFee: 1001,
+  //   fundingFeeLocked: 0.2
+  // });
   return contractAccessor
     .confirmContract('ETHDAI', amount, type)
     .pipe(
