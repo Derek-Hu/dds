@@ -21,10 +21,11 @@ export interface IOrderInfoData {
   takerAddress: string;
   takerId: string; // orderId
   txId: string;
+  createHash: string;
 }
 
 export class OrderInfoObject {
-  public readonly transactionHash: string;
+  public readonly createHash: string;
   public readonly orderId: BigNumber;
   public readonly exchangePair: ExchangeCoinPair;
   public readonly openTime: number;
@@ -40,7 +41,7 @@ export class OrderInfoObject {
   public readonly marginFee: CoinNumber;
 
   constructor(orderInfoData: IOrderInfoData) {
-    this.transactionHash = orderInfoData.txId;
+    this.createHash = orderInfoData.createHash;
     this.orderId = BigNumber.from(orderInfoData.orderId);
     this.exchangePair = toExchangePair(orderInfoData.symbol);
     this.openTime = BigNumber.from(orderInfoData.openContractTime).toNumber();
@@ -79,7 +80,7 @@ export class OrderInfoObject {
 
   public getTakerOrder(curPrice: CoinNumber): ITradeRecord {
     return {
-      hash: this.transactionHash,
+      hash: this.createHash,
       id: this.orderId.toString(),
       time: this.openTime,
       type: this.orderType,
@@ -99,7 +100,7 @@ export class OrderInfoObject {
 
   public getMakerOrder(): PrivatePoolOrder {
     return {
-      hash: this.transactionHash,
+      hash: this.createHash,
       orderId: this.orderId.toString(),
       time: this.openTime,
       amount: toDisplayNum(this.openAmount, 4),

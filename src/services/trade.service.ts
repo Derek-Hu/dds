@@ -245,11 +245,7 @@ export const getCurPrice = async (coin: IUSDCoins): Promise<number> => {
  * @param amount - eth的数量
  */
 export const openOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: number): Promise<boolean> => {
-  const inviteAddress: string | null = localStorage.getItem('referalCode');
-  const res: Promise<string> = contractAccessor
-    .createContract(coin, tradeType, amount, inviteAddress)
-    .pipe(take(1))
-    .toPromise();
+  const res: Promise<string> = createOrder(coin, tradeType, amount);
 
   const toBoolean = (a: Promise<string>) =>
     from(a)
@@ -261,6 +257,23 @@ export const openOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: 
       .toPromise();
 
   return withLoading(toBoolean(res));
+};
+
+/**
+ * 开仓下单操作
+ * @param coin - 交易对
+ * @param tradeType - 下单类型
+ * @param amount  - eth的数量
+ * @returns - 交易hash，如果下单失败，将返回空字符串 ''
+ */
+export const createOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: number): Promise<string> => {
+  const inviteAddress: string | null = localStorage.getItem('referalCode');
+  const res: Promise<string> = contractAccessor
+    .createContract(coin, tradeType, amount, inviteAddress)
+    .pipe(take(1))
+    .toPromise();
+
+  return res;
 };
 
 /**

@@ -11,6 +11,7 @@ import { CentralHost, DefaultNetwork } from '../constant';
 import * as request from 'superagent';
 import { Response } from 'superagent';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
+import { CoinBalance } from '../wallet/contract-interface';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   if (process.env.NODE_ENV === 'development') {
@@ -307,6 +308,41 @@ export const getPubPoolWithdrawDeadline = async (): Promise<{ coin: IUSDCoins; t
     .pipe(
       switchMap((account: string) => {
         return contractAccessor.getPubPoolWithdrawDate(account);
+      }),
+      take(1)
+    )
+    .toPromise();
+};
+
+/**
+ * 获取私池流动性总余额以及最大可取余额
+ *
+ * @return - 三种USD稳定币的总余额以及最大可取余额
+ */
+export const getPrivateLiquidityBalance = async (): Promise<
+  { [key in IUSDCoins]: { total: number; maxWithdraw: number } }
+> => {
+  return from(loginUserAccount())
+    .pipe(
+      switchMap(account => {
+        return contractAccessor.priPoolUserBalance(account);
+      }),
+      map(allBalances => {
+        const res = {
+          DAI: { total: 0, maxWithdraw: 0 },
+          USDT: { total: 0, maxWithdraw: 0 },
+          USDC: { total: 0, maxWithdraw: 0 },
+        };
+        allBalances.total.forEach((balance: CoinBalance) => {
+          const coin: IUSDCoins = balance.coin as IUSDCoins;
+          res[coin]['total'] = Number(toEthers(balance.balance, 4));
+        });
+        allBalances.available.forEach(balance => {
+          const coin: IUSDCoins = balance.coin as IUSDCoins;
+          res[coin]['maxWithdraw'] = Number(toEthers(balance.balance, 4));
+        });
+
+        return res;
       }),
       take(1)
     )
