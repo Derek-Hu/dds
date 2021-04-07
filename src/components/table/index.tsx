@@ -119,14 +119,14 @@ export default class Balance extends PureComponent<IProps, IState> {
           return (
             <div>
               {initLoad ? (
-                <>
-                  <Placeholder width={'95%'} style={{ margin: '3em auto' }} loading={initLoad}>
+                <div style={{ height: '166px', background: '#FFF', padding: '3em 0' }}>
+                  <Placeholder width={'95%'} style={{ margin: '0 auto' }} loading={initLoad}>
                     &nbsp;
                   </Placeholder>
                   <Placeholder width={'95%'} style={{ margin: '3em auto' }} loading={initLoad}>
                     &nbsp;
                   </Placeholder>
-                </>
+                </div>
               ) : (
                 <>
                   <Table

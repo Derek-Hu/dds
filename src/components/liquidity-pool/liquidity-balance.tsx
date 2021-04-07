@@ -338,7 +338,7 @@ export default class PoolBalance extends Component<{ isPrivate: boolean }, IStat
         {({ isMobile }) => (
           <div>
             <CardInfo isNumber={true} loading={loading} title="Liquidity Balance" theme="inner" items={cardData}>
-              <Placeholder loading={loading}>
+              <Placeholder loading={loading} style={{ margin: '22px 0' }}>
                 {/* <Visible when={withdrawBtnEnable}> */}
                 <Button type="primary" onClick={this.onWithDrawClick} className={styles.btn}>
                   {deadline ? `Withdraw until ${deadline}` : 'WITHDRAW'}
