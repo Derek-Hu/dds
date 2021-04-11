@@ -126,13 +126,21 @@ export class OrderInfoObject {
   // -----------------------------------------------------------------------
 
   private getTakerPLPercent(curPrice: CoinNumber): number {
-    return (100 * toDisplayNum(this.getPriceDiff(curPrice), 4)) / toDisplayNum(this.openPrice, 4);
+    let rs: number = (100 * toDisplayNum(this.getPriceDiff(curPrice), 4)) / toDisplayNum(this.openPrice, 4);
+    if (rs < 0) {
+      rs = 0;
+    }
+    return rs;
   }
 
   private getTakerPL(curPrice: CoinNumber): number {
     const diff: number = toDisplayNum(this.getPriceDiff(curPrice), 4);
     const count: number = toDisplayNum(this.openAmount, 4);
-    return diff * count;
+    let rs = diff * count;
+    if (rs < 0) {
+      rs = 0;
+    }
+    return rs;
   }
 
   private getEndPrice(curPrice: CoinNumber): CoinNumber {
