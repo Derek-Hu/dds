@@ -329,6 +329,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
               const pl: number = Number(toEthers(diffPrice, 0)) * Number(toEthers(order.info.number, 0));
               return {
                 hash: '',
+                userAddress: address,
                 id: order.id.toString(),
                 time: Number(order.info.startTime.toString() + '000'),
                 type: order.info.contractType.toString() === '1' ? 'LONG' : 'SHORT',

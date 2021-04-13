@@ -32,6 +32,7 @@ export const poolInfo: ITradePoolInfo = {
 export const orders: ITradeRecord[] = [
   {
     hash: '0xabebbe4b2982a0aa601daed0eda47e32e7b476b923dd6dbf1746654bec3522513',
+    userAddress: '',
     id: '001',
     time: new Date().getTime(),
     type: 'SHORT',
@@ -49,6 +50,7 @@ export const orders: ITradeRecord[] = [
   },
   {
     hash: '0xabebbe4b2982a0aa601daed0eda47e32e7b476b923dd6dbf1746654bec3522513',
+    userAddress: '',
     id: '002',
     time: new Date().getTime(),
     type: 'SHORT',
@@ -66,6 +68,7 @@ export const orders: ITradeRecord[] = [
   },
   {
     hash: '0xabebbe4b2982a0aa601daed0eda47e32e7b476b923dd6dbf1746654bec3522513',
+    userAddress: '',
     id: '003',
     time: new Date().getTime(),
     type: 'LONG',
