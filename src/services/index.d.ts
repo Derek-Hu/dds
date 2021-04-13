@@ -59,6 +59,7 @@ declare type IOrderStatus = 'ACTIVE' | 'CLOSED';
  */
 declare interface ITradeRecord {
   hash: string;
+  userAddress: string;
   id: string;
   time: number;
   type: ITradeType;
@@ -267,6 +268,7 @@ declare type IAccount = (Omit<UserAccountInfo, 'USDBalance'> & { USDBalance: { [
 // 私池订单信息
 declare interface PrivatePoolOrder {
   hash: string;
+  userAddress: string;
   orderId: string;
   time: number;
   amount: number;
