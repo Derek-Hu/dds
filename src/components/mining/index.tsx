@@ -17,8 +17,11 @@ import { Visible } from 'components/builtin/hidden';
 import Auth from '../builtin/auth';
 import ReTokenBalance from './liquidity/re-token-balance';
 // import SystemFundBalance from './liquiditor/system-fund-balance';
+import SystemRanking from './system-ranking';
 import YourMiningShare from './liquidity/your-mining-share';
 import { formatTime } from '../../util/time';
+
+const showRanking = process.env.REACT_APP_APP_ENV === 'github';
 
 // const { Option } = Select;
 const { TabPane } = Tabs;
@@ -257,9 +260,9 @@ export default class Mining extends Component {
                   </div>
                 </Auth>
               </Visible>
-              {/* <Visible when={selectedTab === TabName.Liquiditor}>
-                <SystemFundBalance />
-              </Visible> */}
+              <Visible when={showRanking && selectedTab === TabName.Liquiditor}>
+                <SystemRanking />
+              </Visible>
             </div>
           </div>
         )}

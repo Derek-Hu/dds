@@ -259,7 +259,7 @@ export interface IOutput{
 
 // MINING - LIQUIDITOR -未登录 Ranking
 // 出参 Array<String> 3个排名
-export interface IOutput{
+export interface IRanking{
     top: Array<string>
     current: number;
 }

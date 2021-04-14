@@ -19,6 +19,13 @@ const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   });
 };
 
+// 获取Top 3及用户排名
+export const getRankings = (): Promise<IRankings> => {
+  return returnVal({
+    top: ['0x32489320432432', '0x3248932043243542', '0x32489320432430003'],
+    current: 1230,
+  });
+};
 //
 export const getLiquidityMiningReward = (
   type: 'public' | 'private'

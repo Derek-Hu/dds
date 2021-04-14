@@ -2,7 +2,6 @@ import { Button, Tabs } from 'antd';
 import ColumnConvert from '../column-convert/index';
 import { format, isNumberLike, formatThree } from '../../util/math';
 import { toCamelCase } from '../../util/string';
-import dayjs from 'dayjs';
 import styles from './style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import { Component } from 'react';

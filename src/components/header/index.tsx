@@ -8,6 +8,7 @@ import Logo from '~/assets/imgs/logo.png';
 import LogoWhite from '~/assets/imgs/logo-white.png';
 import { homeBasePath, ddsBasePath } from '../../constant/index';
 import { isNumberLike } from '../../util/math';
+import { shortAddress } from '../../util/index';
 
 const { SubMenu } = Menu;
 
@@ -229,7 +230,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                                     </span>
                                   ))
                               : null}
-                            <span>{account.address.replace(/^(.{6})(.*)(.{4})/, '$1...$3')}</span>
+                            <span>{shortAddress(account.address)}</span>
                           </div>
                         ) : (
                           <Button className={styles.connectBtn}>Connect Wallet</Button>

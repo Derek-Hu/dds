@@ -275,3 +275,8 @@ declare interface PrivatePoolOrder {
   openPrice: number;
   coin: IUSDCoins;
 }
+
+declare interface IRankings {
+  top: Array<string>;
+  current: number;
+}
