@@ -15,7 +15,7 @@
   "plugins": ["@typescript-eslint"],
   "globals": {
     "d3": true,
-    "webvowl": true
+    "PendingOrderCacheKey": true,
   },
   "rules": {
     "no-empty": 1,

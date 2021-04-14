@@ -16,6 +16,7 @@ interface IState {
   address: string;
   connected: boolean | null;
   timestamp: number | null;
+  network: 'kovan' | 'main';
 }
 // @ts-ignore
 let timer = null;
@@ -24,7 +25,7 @@ const isDDSPage = window.location.href.indexOf(ddsBasePath) === 0;
 export default class Layout extends Component<RouteComponentProps, IState> {
   static contextType = SiteContext;
 
-  state: IState = { connected: null, timestamp: null, isMobile: false, address: '', account: null };
+  state: IState = { network: 'kovan', connected: null, timestamp: null, isMobile: false, address: '', account: null };
 
   constructor(props: any) {
     super(props);
@@ -69,13 +70,13 @@ export default class Layout extends Component<RouteComponentProps, IState> {
             // @ts-ignore
             const account: IAccount = await Promise.race([
               userAccountInfo(),
-              new Promise((resolve) => {
+              new Promise(resolve => {
                 setTimeout(() => {
                   resolve(null);
                 }, 1000);
               }),
             ]);
-            if(account){
+            if (account) {
               this.updateAccount(account);
             }
           } catch (error) {
@@ -109,7 +110,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   }
 
   updateMobileMode = () => {
-    const { isMobile } = this.state;
+    const { isMobile, network } = this.state;
     const newIsMobile = window.innerWidth < RESPONSIVE_MOBILE;
     if (isMobile !== newIsMobile) {
       this.setState({
@@ -119,10 +120,13 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   };
 
   updateAccount = (account: IAccount) => {
+    const { network } = this.state;
     this.setState({
       account,
       address: account && account.address ? account.address : '',
     });
+    // @ts-ignore
+    window.PendingOrderCacheKey = `PendingOrdersHash-${account?.address}-${network}`;
   };
 
   refreshPage = () => {

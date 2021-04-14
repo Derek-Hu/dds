@@ -20,21 +20,25 @@ export default (props: IBarData) => {
           <Row>
             <Col span={12} className={styles.left}>
               <span className={styles.today}>{title}</span>
-              <br />
-              <Placeholder loading={loading} style={loading ? {margin: '12px 0'} : {}}>
-                <span className={styles.percentage}>{percentage}%</span>
-              </Placeholder>
             </Col>
             <Col span={12} className={styles.right}>
               <span className={styles.amount}>{desc}</span>
-              <br />
-              <span className={styles.dds}>
-                <Placeholder loading={loading}>{value}</Placeholder>
-              </span>
-              &nbsp;
-              {loading ? null : <span className={styles.unit}>{unit}</span>}
             </Col>
           </Row>
+          <Placeholder loading={loading} style={loading ? { margin: '12px 0' } : {}}>
+            <div className={styles.barValues}>
+              <span>
+                <span className={styles.percentage}>{percentage}%</span>
+              </span>
+              <span>
+                <span className={styles.dds}>
+                  <Placeholder loading={loading}>{value}</Placeholder>
+                </span>
+                &nbsp;
+                {loading ? null : <span className={styles.unit}>{unit}</span>}
+              </span>
+            </div>
+          </Placeholder>
           <Progress
             percent={percentage}
             strokeColor={{ from: '#0072F4', to: '#0055FF' }}

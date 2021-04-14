@@ -197,12 +197,12 @@ export const getTradeLiquidityPoolInfo = async (coin: IUSDCoins): Promise<ITrade
   // if(process.env.NODE_ENV === 'development'){
   //   return returnVal({
   //     public: {
-  //       value: 3243,
-  //       total: 10000,
+  //       value: 100000000.12,
+  //       total: 1234567890.1235,
   //     },
   //     private: {
-  //       value: 100,
-  //       total: 10000,
+  //       value: 10232003222,
+  //       total: 30232003222,
   //     }
   //   })
   // }

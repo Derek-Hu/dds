@@ -1,6 +1,8 @@
-const CacheKey = 'PendingOrdersHash';
+// @ts-ignore
+const CacheKey = () => window.PendingOrderCacheKey;
+
 export const getPendingOrders = (remoteList?: ITradeRecord[]) => {
-  const orders = localStorage.getItem(CacheKey);
+  const orders = localStorage.getItem(CacheKey());
   if (!orders) {
     return;
   }
@@ -19,7 +21,7 @@ export const getPendingOrders = (remoteList?: ITradeRecord[]) => {
     if (valid.length !== data.length) {
       JSON.stringify(valid);
     }
-    localStorage.setItem(CacheKey, JSON.stringify(valid));
+    localStorage.setItem(CacheKey(), JSON.stringify(valid));
     return valid;
   } catch {
     return;
@@ -27,7 +29,7 @@ export const getPendingOrders = (remoteList?: ITradeRecord[]) => {
 };
 
 export const setPendingOrders = (order: any) => {
-  const orders = localStorage.getItem(CacheKey);
+  const orders = localStorage.getItem(CacheKey());
   let data;
   try {
     // @ts-ignore
@@ -39,5 +41,5 @@ export const setPendingOrders = (order: any) => {
     data = [order];
   }
 
-  localStorage.setItem(CacheKey, JSON.stringify(data));
+  localStorage.setItem(CacheKey(), JSON.stringify(data));
 };
