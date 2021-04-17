@@ -1,5 +1,4 @@
-import { Observable } from 'rxjs';
-import { BigNumber } from 'ethers';
+import { ContractAddress } from '../constant/address';
 
 export const ABI = [
   {
@@ -4910,157 +4909,44 @@ export const ERC20 = [
   },
 ];
 
-/**
- * 合约接口
- */
-export interface ContractProxy {
-  getUserSelfWalletBalance(address: string): Observable<CoinBalance[]>;
+export const ETH_ABI: { [p in keyof ContractAddress]: any[] } = {
+  TradeDAIContract: ABI,
+  TradeUSDTContract: ABI,
+  TradeUSDCContract: ABI,
+  Lp1DAIContract: Pl1ABI,
+  Lp1USDTContract: Pl1ABI,
+  Lp1USDCContract: Pl1ABI,
+  Lp2DAIContract: Pl2ABI,
+  Lp2USDTContract: Pl2ABI,
+  Lp2USDCContract: Pl2ABI,
+  MiningRewardContract: RewardsABI,
+  LiquidatorContract: LiquidatorABI,
+  SwapBurnContract: SwapBurnABI,
+  BrokerContract: BrokerABI,
 
-  //
+  ERC20DDS: ERC20,
+  ERC20DAI: ERC20,
+  ERC20USDT: ERC20,
+  ERC20USDC: ERC20,
+};
 
-  getPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber>;
+export const BN_ABI: { [p in keyof ContractAddress]: any[] } = {
+  TradeDAIContract: ABI,
+  TradeUSDTContract: ABI,
+  TradeUSDCContract: ABI,
+  Lp1DAIContract: Pl1ABI,
+  Lp1USDTContract: Pl1ABI,
+  Lp1USDCContract: Pl1ABI,
+  Lp2DAIContract: Pl2ABI,
+  Lp2USDTContract: Pl2ABI,
+  Lp2USDCContract: Pl2ABI,
+  MiningRewardContract: RewardsABI,
+  LiquidatorContract: LiquidatorABI,
+  SwapBurnContract: SwapBurnABI,
+  BrokerContract: BrokerABI,
 
-  watchPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber>;
-
-  getUserAccount(address: string, coin: IUSDCoins): Observable<UserAccountInfo>;
-
-  watchUserAccount(address: string, coin: IUSDCoins): Observable<UserAccountInfo>;
-
-  getMaxOpenAmount(coin: IUSDCoins, exchange: IExchangeStr, maxUSDAmount: number): Observable<BigNumber>;
-
-  getMaxOpenTradeAmount(
-    exchange: ExchangeCoinPair,
-    type: ITradeType,
-    availableUsdAmount: number
-  ): Observable<BigNumber>;
-
-  depositToken(address: string, count: number, coin: IUSDCoins): Observable<boolean>;
-
-  withdrawToken(count: number, coin: IUSDCoins): Observable<boolean>;
-
-  confirmContract(exchangeStr: IExchangeStr, count: number, type: ITradeType): Observable<ConfirmInfo>;
-
-  createContract(coin: IUSDCoins, orderType: ITradeType, amount: number, inviter: string): Observable<string>;
-
-  closeContract(orderId: ITradeRecord): Observable<boolean>;
-
-  getFundingLockedAmount(coin: IUSDCoins, exchange: IExchangeStr, ethAmount: number): Observable<BigNumber>;
-
-  getUserOrders(address: string, curPrice: BigNumber, page: number, pageSize: number): Observable<any>;
-
-  getPubPoolInfo(coin: IUSDCoins): Observable<any>;
-
-  getPrivatePoolInfo(coin: IUSDCoins): Observable<any>;
-
-  //
-
-  getPubPoolDepositReTokenFromToken(coin: IUSDCoins, tokenAmount: number): Observable<BigNumber>;
-
-  getPubPoolWithdrawReTokenFromToken(coin: IUSDCoins, tokenAmount: number): Observable<BigNumber>;
-
-  provideToPubPool(address: string, coin: IUSDCoins, coinAmount: number): Observable<boolean>;
-
-  withdrawFromPubPool(coin: IUSDCoins, reCoinAmount: number): Observable<boolean>;
-
-  pubPoolBalanceOf(address: string): Observable<Map<IUSDCoins, BigNumber>>;
-
-  pubPoolBalanceWhole(): Observable<Map<IUSDCoins, BigNumber>>;
-
-  getReTokenBalance(address: string): Observable<CoinBalance[]>;
-
-  getPubPoolWithdrawDate(address: string): Observable<{ coin: IUSDCoins; time: number }[]>;
-
-  //
-
-  getLockedLiquidityList(
-    address: string,
-    page: number,
-    pageSize: number,
-    devTest: boolean
-  ): Observable<PrivateLockLiquidity[]>;
-
-  addMarginAmount(orderId: string, coin: IUSDCoins, amount: number): Observable<boolean>;
-
-  provideToPrivatePool(address: string, coin: IUSDCoins, coinAmount: number): Observable<boolean>;
-
-  withdrawFromPrivatePool(coin: IUSDCoins, coinAmount: number): Observable<boolean>;
-
-  priPoolBalanceOf(address: string): Observable<Map<IUSDCoins, BigNumber>>;
-
-  priPoolUserBalance(
-    address: string
-  ): Observable<{ total: CoinBalance[]; available: CoinBalance[]; locked: CoinBalance[] }>;
-
-  priPoolBalanceWhole(): Observable<Map<IUSDCoins, BigNumber>>;
-
-  //
-
-  getLiquidityMiningReward(address: string): Observable<BigNumber>;
-
-  getLiquidityMiningShare(address: string): Observable<CoinShare[]>;
-
-  getActiveLiquidityRewards(address: string): Observable<BigNumber>;
-
-  claimRewardsForLP2(): Observable<boolean>;
-
-  getSystemFundingBalance(): Observable<CoinBalance[]>;
-
-  getLiquiditorRewards(address: string): Observable<CoinBalance[]>;
-
-  //
-
-  getSwapBurnInfo(): Observable<CoinBalance[]>;
-
-  doSwap(address: string, coin: IUSDCoins, ddsAmount: number): Observable<boolean>;
-
-  getBrokerInfo(address: string): Observable<{ refer: BigNumber; claim: CoinBalance[] }>;
-
-  getBrokerAllCommission(address: string): Observable<CoinBalance[]>;
-
-  doBrokerClaim(): Observable<boolean>;
-}
-
-export interface UserAccountInfo {
-  deposit: BigNumber;
-  available: BigNumber;
-}
-
-export interface ContractParam {
-  exchangeType: 'ETHDAI';
-  number: BigNumber;
-  contractType: 1 | 2;
-}
-
-export interface CoinShare {
-  coin: IUSDCoins;
-  value: BigNumber;
-  total: BigNumber;
-}
-
-export interface CoinBalance {
-  coin: IUSDCoins | IReUSDCoins | ISLD;
-  balance: BigNumber;
-}
-
-export interface PrivateLockLiquidity {
-  orderId: number;
-  usdToken: IUSDCoins;
-  makerAddr: string;
-  marginAmount: BigNumber;
-  marginFee: BigNumber;
-  takerId: BigNumber;
-  status: IOrderStatus;
-  locked: boolean;
-}
-
-export interface ConfirmInfo {
-  currentPrice: BigNumber;
-  exchgFee: BigNumber;
-  openFee: BigNumber;
-  total: BigNumber;
-}
-
-export interface ContractInfo {
-  abi: any[];
-  address: string;
-}
+  ERC20DDS: ERC20,
+  ERC20DAI: ERC20,
+  ERC20USDT: ERC20,
+  ERC20USDC: ERC20,
+};

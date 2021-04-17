@@ -95,12 +95,14 @@ export const userAccountInfo = async (): Promise<IAccount> => {
               //   coin: one.coin,
               //   amount: Number(toEthers(one.balance, 4, one.coin)),
               // })),
-              USDBalance: balances&& balances.length ? balances.reduce((total, { coin, balance }) => {
-                // @ts-ignore
-                total[coin] = Number(toEthers(balance, 4, coin));
-                return total;
-              }, {}) : {}
-
+              USDBalance:
+                balances && balances.length
+                  ? balances.reduce((total, { coin, balance }) => {
+                      // @ts-ignore
+                      total[coin] = Number(toEthers(balance, 4, coin));
+                      return total;
+                    }, {})
+                  : {},
             };
           })
         );

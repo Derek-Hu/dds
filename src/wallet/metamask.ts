@@ -100,6 +100,7 @@ export class MetamaskWallet implements WalletInterface {
   }
 
   private updateNetwork(network: string) {
+    console.log('update network', network);
     this.curNetwork.next(network);
   }
 
