@@ -234,6 +234,7 @@ declare interface ICoinProgressObj {
 
 declare interface UserAccountInfo {
   address: string;
+  network: string;
   USDBalance: { coin: IUSDCoins; amount: number }[];
 }
 

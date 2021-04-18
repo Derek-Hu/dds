@@ -1,7 +1,7 @@
 import { walletManager } from '../wallet/wallet-manager';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
-import { Observable, of, zip } from 'rxjs';
+import { combineLatest, NEVER, Observable, of, zip } from 'rxjs';
 import { contractAccessor } from '../wallet/chain-access';
 import { CoinBalance } from '../wallet/contract-interface';
 import { toEthers } from '../util/ethers';
@@ -83,19 +83,14 @@ export const userAccountInfo = async (): Promise<IAccount> => {
     .watchWalletInstance()
     .pipe(
       switchMap((wallet: WalletInterface | null) => {
-        return wallet === null ? of(null) : wallet.watchAccount();
+        return wallet === null ? NEVER : combineLatest([wallet.watchAccount(), wallet.watchNetwork()]);
       }),
-      filter(acc => acc !== null),
-      map(acc => acc as string),
-      switchMap((account: string) => {
+      switchMap(([account, network]: [string, EthNetwork]) => {
         return contractAccessor.getUserSelfWalletBalance(account).pipe(
           map((balances: CoinBalance[]) => {
             return {
+              network: network,
               address: account,
-              // USDBalance: balances.map(one => ({
-              //   coin: one.coin,
-              //   amount: Number(toEthers(one.balance, 4, one.coin)),
-              // })),
               USDBalance:
                 balances && balances.length
                   ? balances.reduce((total, { coin, balance }) => {
@@ -132,7 +127,7 @@ export const getNetworkAndAccount = async (old?: {
       switchMap((wallet: WalletInterface) => {
         const net$ = wallet.watchNetwork();
         const acc$ = wallet.watchAccount();
-        return zip(net$, acc$).pipe(
+        return combineLatest([net$, acc$]).pipe(
           map(([network, account]: [EthNetwork, string]) => {
             return {
               network,
