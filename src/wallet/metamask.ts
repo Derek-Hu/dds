@@ -3,6 +3,7 @@ import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { Wallet } from '../constant';
 import { WalletInterface } from '../wallet/wallet-interface';
 import { filter, map, take } from 'rxjs/operators';
+import { EthNetwork } from '../constant/address';
 
 declare const window: Window & { ethereum: any };
 
@@ -14,7 +15,7 @@ export const { isMetaMaskInstalled } = MetaMaskOnboarding;
 export class MetamaskWallet implements WalletInterface {
   public readonly walletType: Wallet = Wallet.Metamask;
   private curSelectedAccount: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
-  private curNetwork: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private curNetwork: BehaviorSubject<EthNetwork | undefined> = new BehaviorSubject<EthNetwork | undefined>(undefined);
 
   constructor() {
     // 初始化时自动尝试连接
@@ -43,11 +44,14 @@ export class MetamaskWallet implements WalletInterface {
     return this.curSelectedAccount.getValue();
   }
 
-  public watchNetwork(): Observable<string> {
-    return this.curNetwork.pipe(filter(net => net !== ''));
+  public watchNetwork(): Observable<EthNetwork> {
+    return this.curNetwork.pipe(
+      filter(net => net !== undefined),
+      map(net => net as EthNetwork)
+    );
   }
 
-  public getNetwork(): string {
+  public getNetwork(): EthNetwork | undefined {
     return this.curNetwork.getValue();
   }
 
@@ -68,8 +72,11 @@ export class MetamaskWallet implements WalletInterface {
     }
   }
 
-  public watchAccount(): Observable<string | null> {
-    return this.curSelectedAccount.pipe(filter(account => account !== null));
+  public watchAccount(): Observable<string> {
+    return this.curSelectedAccount.pipe(
+      filter(account => account !== null),
+      map(acc => acc as string)
+    );
   }
 
   // --------------------------------------------------------------------------
@@ -99,7 +106,7 @@ export class MetamaskWallet implements WalletInterface {
     }
   }
 
-  private updateNetwork(network: string) {
+  private updateNetwork(network: EthNetwork) {
     console.log('update network', network);
     this.curNetwork.next(network);
   }
@@ -114,7 +121,7 @@ export class MetamaskWallet implements WalletInterface {
       });
 
       this.doRequestNetwork().subscribe(network => {
-        this.updateNetwork(network);
+        this.updateNetwork(network as EthNetwork);
         this.watchNetworkChange();
       });
     }
@@ -137,7 +144,7 @@ export class MetamaskWallet implements WalletInterface {
     this.updateAccount(accounts);
   };
 
-  private networkChangeCallback = (network: string) => {
+  private networkChangeCallback = (network: EthNetwork) => {
     this.updateNetwork(network);
   };
 

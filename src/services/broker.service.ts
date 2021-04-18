@@ -54,31 +54,36 @@ export const getMyReferalInfo = async (): Promise<IBrokerReferal> => {
 };
 
 export const claimReferalInfo = async (): Promise<boolean> => {
-  return withLoading(from(loginUserAccount())
+  return withLoading(
+    from(loginUserAccount())
+      .pipe(
+        switchMap(account => {
+          return contractAccessor.doBrokerClaim();
+        }),
+        take(1)
+      )
+      .toPromise()
+  );
+};
+
+// 获取broker月度活动奖励信息 new 4.18
+export const getBrokerCampaignRewardData = async (): Promise<ICoinValue[]> => {
+  return from(loginUserAccount())
     .pipe(
       switchMap(account => {
-        return contractAccessor.doBrokerClaim();
+        return contractAccessor.getBrokerMonthlyAwardsInfo(account);
+      }),
+      map((balances: CoinBalance[]) => {
+        return balances.map(one => {
+          return {
+            coin: one.coin,
+            value: Number(toEthers(one.balance, 4, one.coin)),
+          } as ICoinValue;
+        });
       }),
       take(1)
     )
-    .toPromise());
-};
-
-export const getBrokerCampaignRewardData = async (): Promise<ICoinValue[]> => {
-  return returnVal([
-    {
-      coin: 'DAI',
-      value: 2 * 10000000,
-    },
-    {
-      coin: 'USDC',
-      value: 3 * 10000000,
-    },
-    {
-      coin: 'USDT',
-      value: 4 * 10000000,
-    },
-  ]);
+    .toPromise();
 };
 
 export const getBrokerCampaignPool = async (): Promise<{ nextDistribution: string; data: ICoinItem[] }> => {
@@ -117,6 +122,11 @@ export const getBrokerCampaignRewardsPool = async (): Promise<IBrokerCampaignRec
       reward: 32,
     },
   ]);
+};
+
+// 获取当前活动周期的开始时间 new 4.18
+export const getBrokerCampaignCurCycleStartTime = async (): Promise<number> => {
+  return contractAccessor.getBrokerMonthlyStartTime().pipe(take(1)).toPromise();
 };
 
 export const getBrokerCommissionData = async (): Promise<ICoinValue[]> => {

@@ -5007,6 +5007,15 @@ export interface ContractProxy {
 
   getLiquiditorRewards(address: string): Observable<CoinBalance[]>;
 
+  getLiquiditorPeriod(): Observable<{ startTime: BigNumber; period: BigNumber }>;
+
+  getLiquiditorRewardsOfPeriod(
+    address: string
+  ): Observable<{
+    rewards: CoinBalance[];
+    info: { extSLD: BigNumber; rank: BigNumber };
+  }>;
+
   //
 
   getSwapBurnInfo(): Observable<CoinBalance[]>;
@@ -5016,6 +5025,10 @@ export interface ContractProxy {
   getBrokerInfo(address: string): Observable<{ refer: BigNumber; claim: CoinBalance[] }>;
 
   getBrokerAllCommission(address: string): Observable<CoinBalance[]>;
+
+  getBrokerMonthlyAwardsInfo(address: string): Observable<CoinBalance[]>;
+
+  getBrokerMonthlyStartTime(): Observable<number>;
 
   doBrokerClaim(): Observable<boolean>;
 }

@@ -20,11 +20,6 @@ export enum Network {
   goerli = 'goerli',
 }
 
-export enum NetworkId {
-  kaovan = '42',
-  homestead = '1',
-}
-
 export const DefaultCoinDatas = {
   DAI: 0,
   USDT: 0,
@@ -98,5 +93,3 @@ export const CoinBTCExchange = new Map<IUSDCoins, IExchangeStr>([
 
 export type ISupporttedUSD = keyof typeof SupporttedUSD;
 export type ICoins = keyof typeof SupporttedCoins;
-
-export const CentralHost = '135.181.253.54:8090';

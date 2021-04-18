@@ -53,9 +53,9 @@ export const BIAN_TEST_ADDRESS: ContractAddress = {
   Lp2USDTContract: '',
   Lp2USDCContract: '',
   MiningRewardContract: '0xd3aC30353330FA928Aa2926310BB77fE6D21e11D', //
-  LiquidatorContract: '0x9E99B0f7be5722a67E7E2805dddC215D51536b9A', //
+  LiquidatorContract: '0xa2A3F80F0dbA70743cc57031990c9A0CfB7681A8', //
   SwapBurnContract: '0x2B704446AF5aB018115Cb27250170a2dD8409Af0', //
-  BrokerContract: '0x8e131FDe45d825c024D0abc76F40B342F7108144', //
+  BrokerContract: '0x8f14Be330aCB4227dcf80236A3842d3aC09A3672', //
 
   ERC20DDS: '0xcD1ad28e73d8b37866d02Bc2217b86Eb0da34EaC', //
   ERC20DAI: '0x21160DcCF818c5D8df20AbfA1B937ea3Ba1bD451', //
@@ -65,5 +65,15 @@ export const BIAN_TEST_ADDRESS: ContractAddress = {
 
 export enum EthNetwork {
   kovan = '42',
-  bianTest = '95',
+  bianTest = '97',
 }
+
+export const CentralHost = '135.181.253.54';
+export const CentralPort = {
+  [EthNetwork.kovan]: '8090',
+  [EthNetwork.bianTest]: '8095',
+};
+export const CentralPath = {
+  [EthNetwork.kovan]: 'kovan',
+  [EthNetwork.bianTest]: 'bsctest',
+};

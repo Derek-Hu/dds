@@ -17,7 +17,7 @@ import { fromExchangePair, toEthers, toExchangePair, tokenBigNumber } from '../u
 import { isMetaMaskInstalled } from './metamask';
 import { getPageListRange } from '../util/page';
 import { ContractAddress, EthNetwork } from '../constant/address';
-import { getContractInfo, getContractAddress } from './contract-info';
+import { getContractAddress, getContractInfo } from './contract-info';
 
 declare const window: Window & { ethereum: any };
 
@@ -68,8 +68,17 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
 
   public getPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber> {
     return this.getContract(coin).pipe(
-      switchMap((contract: ethers.Contract) => contract.functions.getPriceByETHDAI()),
-      map((num: BigNumber[]) => num[0]),
+      switchMap((contract: ethers.Contract) => {
+        return this.getExchangeStr(coin).pipe(
+          switchMap((pair: IExchangeStr) => {
+            const funName: string = 'getPriceBy' + pair;
+            return from(contract[funName]());
+          })
+        );
+      }),
+      map((num: any) => {
+        return num as BigNumber;
+      }),
       catchError(e => {
         console.warn('error', e);
         return NEVER;
@@ -123,7 +132,11 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     type: ITradeType,
     availableUsdAmount: number
   ): Observable<BigNumber> {
-    return this.getContract(exchange.USD).pipe(
+    return this.confirmChainExchangePair(exchange).pipe(
+      switchMap((newExchange: ExchangeCoinPair) => {
+        exchange = newExchange;
+        return this.getContract(exchange.USD);
+      }),
       switchMap((contract: ethers.Contract) => {
         const exStr: IExchangeStr = fromExchangePair(exchange);
         const amount: BigNumber = tokenBigNumber(availableUsdAmount, exchange.USD);
@@ -168,8 +181,8 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         const max: string = '0x' + new Array(64).fill('f').join('');
 
         const allow$ = this.getErc20USDContract(coin).pipe(
-          map((usdContract: ethers.Contract) => {
-            return usdContract.allowance(address, tradeContract.address);
+          switchMap((usdContract: ethers.Contract) => {
+            return from(usdContract.allowance(address, tradeContract.address));
           }),
           map((rs: any) => {
             return rs as BigNumber;
@@ -218,9 +231,16 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   }
 
   public confirmContract(exchangeStr: IExchangeStr, count: number, type: ITradeType): Observable<ConfirmInfo> {
-    const exchange = toExchangePair(exchangeStr);
+    let exchange: ExchangeCoinPair = toExchangePair(exchangeStr);
     const contractType = type === 'LONG' ? 1 : 2;
-    return this.getContract(exchange.USD).pipe(
+
+    return this.confirmChainExchangePair(exchange).pipe(
+      switchMap((newExchange: ExchangeCoinPair) => {
+        exchange = newExchange;
+        exchangeStr = fromExchangePair(exchange);
+
+        return this.getContract(exchange.USD);
+      }),
       switchMap((contract: ethers.Contract) => {
         const amount: BigNumber = tokenBigNumber(count, exchange.USD);
         return from(contract.fees(exchangeStr, amount, contractType));
@@ -238,13 +258,21 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     inviter: string | null = ''
   ): Observable<string> {
     return this.getContract(coin).pipe(
-      switchMap((contract: ethers.Contract) => {
+      switchMap((tradeContract: ethers.Contract) => {
         const bigAmount = tokenBigNumber(amount, coin);
         const contractType = orderType === 'LONG' ? 1 : 2;
         const userInviter = inviter && inviter.length === 42 ? inviter : '0x0000000000000000000000000000000000000000';
-        const exchange = 'ETHDAI';
 
-        return this.increaseGasLimit(contract, 'creatContract', [exchange, bigAmount, contractType, userInviter]);
+        return this.getExchangeStr(coin).pipe(
+          switchMap((exchange: IExchangeStr) => {
+            return this.increaseGasLimit(tradeContract, 'creatContract', [
+              exchange,
+              bigAmount,
+              contractType,
+              userInviter,
+            ]);
+          })
+        );
       }),
       switchMap((rs: any) => {
         return rs.wait();
@@ -322,6 +350,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
                 Number(toEthers(diffPrice.mul('100'), 0)) / Number(toEthers(order.info.openPrice, 0));
               const pl: number = Number(toEthers(diffPrice, 0)) * Number(toEthers(order.info.number, 0));
               return {
+                network: '',
                 hash: '',
                 userAddress: address,
                 id: order.id.toString(),
@@ -947,6 +976,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
+  // 获取某位清算者的稳定币奖励总数
   public getLiquiditorRewards(address: string): Observable<CoinBalance[]> {
     return this.getLiquidatorContract().pipe(
       switchMap(liqContract => {
@@ -975,7 +1005,45 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
-  //
+  public getLiquiditorPeriod(): Observable<{ startTime: BigNumber; period: BigNumber }> {
+    return this.getLiquidatorContract().pipe(
+      switchMap((liqContract: ethers.Contract) => {
+        return from(liqContract.getStartTimeAndCurrentPeriod());
+      }),
+      map((rs: any) => {
+        return { startTime: rs.time as BigNumber, period: rs.period as BigNumber };
+      })
+    );
+  }
+
+  // 获取当前周期的清算者的奖励信息
+  public getLiquiditorRewardsOfPeriod(
+    address: string
+  ): Observable<{
+    rewards: CoinBalance[];
+    info: { extSLD: BigNumber; rank: BigNumber };
+  }> {
+    return this.getLiquidatorContract().pipe(
+      switchMap((liqContract: ethers.Contract) => {
+        return this.getLiquiditorPeriod().pipe(
+          switchMap(period => {
+            return from(liqContract.getFeeBackByLiquidorAndPeriod(address, period.period));
+          })
+        );
+      }),
+      map((rs: any) => {
+        return {
+          rewards: [
+            { coin: 'DAI', balance: rs[0] as BigNumber },
+            { coin: 'USDT', balance: rs[1] as BigNumber },
+            { coin: 'USDC', balance: rs[2] as BigNumber },
+            { coin: MyTokenSymbol, balance: rs[3] as BigNumber },
+          ],
+          info: { extSLD: rs[4] as BigNumber, rank: rs[5] as BigNumber },
+        };
+      })
+    );
+  }
 
   public getSwapBurnInfo(): Observable<CoinBalance[]> {
     return this.getSwapBurnContract().pipe(
@@ -1075,6 +1143,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
+  // broker所有的累积手续费分成，包含为claim的
   public getBrokerAllCommission(address: string): Observable<CoinBalance[]> {
     return this.getBrokerContract().pipe(
       switchMap(contract => {
@@ -1086,6 +1155,35 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
           { coin: 'USDT', balance: rs[1] },
           { coin: 'USDC', balance: rs[2] },
         ];
+      })
+    );
+  }
+
+  // 查询broker的月度奖励的信息
+  public getBrokerMonthlyAwardsInfo(address: string): Observable<CoinBalance[]> {
+    return this.getBrokerContract().pipe(
+      switchMap(brokerContract => {
+        return from(brokerContract.getBrokerMonthlyAwardsInfo(address));
+      }),
+      map((rs: any) => {
+        const balance = rs as BigNumber[];
+        return [
+          { coin: 'DAI', balance: balance[0] },
+          { coin: 'USDT', balance: balance[1] },
+          { coin: 'USDC', balance: balance[2] },
+        ] as CoinBalance[];
+      })
+    );
+  }
+
+  // 查询活动开始时间
+  public getBrokerMonthlyStartTime(): Observable<number> {
+    return this.getBrokerContract().pipe(
+      switchMap(brokerContract => {
+        return from(brokerContract.getStartTime());
+      }),
+      map(rs => {
+        return (rs as BigNumber).toNumber() * 1000;
       })
     );
   }
@@ -1133,6 +1231,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   protected abstract getBrokerContract(): Observable<ethers.Contract>;
 
   protected abstract getContractAddress(contract: keyof ContractAddress): Observable<string>;
+
+  protected abstract confirmChainExchangePair(pair: ExchangeCoinPair): Observable<ExchangeCoinPair>;
+
+  protected abstract getExchangeStr(coin: IUSDCoins): Observable<IExchangeStr>;
 
   protected abstract getProvider(): ethers.providers.BaseProvider;
 
@@ -1247,6 +1349,35 @@ class MetamaskContractAccessor extends BaseTradeContractAccessor {
 
   protected getSigner(): ethers.Signer {
     return this.getProvider().getSigner();
+  }
+
+  protected confirmChainExchangePair(pair: ExchangeCoinPair): Observable<ExchangeCoinPair> {
+    return this.getNetwork().pipe(
+      map(network => {
+        if (network === EthNetwork.bianTest) {
+          if (pair.ETH === 'ETH') {
+            return Object.assign({}, pair, { ETH: 'BNB' });
+          }
+        }
+        return pair;
+      })
+    );
+  }
+
+  // TODO 只处理当前链Token与USD的交易，未来引入BTC后再调整
+  protected getExchangeStr(coin: IUSDCoins): Observable<IExchangeStr> {
+    return this.getNetwork().pipe(
+      map((network: EthNetwork) => {
+        switch (network) {
+          case EthNetwork.bianTest: {
+            return ('BNB' + coin) as IExchangeStr;
+          }
+          default: {
+            return ('ETH' + coin) as IExchangeStr;
+          }
+        }
+      })
+    );
   }
 
   private getNetwork(): Observable<EthNetwork> {
@@ -1371,6 +1502,7 @@ export class ContractAccessor implements ContractProxy {
         return accessor.depositToken(address, count, coin);
       }),
       catchError(err => {
+        console.warn('error', err);
         return of(false);
       })
     );
@@ -1589,6 +1721,27 @@ export class ContractAccessor implements ContractProxy {
     );
   }
 
+  public getLiquiditorPeriod(): Observable<{ startTime: BigNumber; period: BigNumber }> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.getLiquiditorPeriod();
+      })
+    );
+  }
+
+  public getLiquiditorRewardsOfPeriod(
+    address: string
+  ): Observable<{
+    rewards: CoinBalance[];
+    info: { extSLD: BigNumber; rank: BigNumber };
+  }> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.getLiquiditorRewardsOfPeriod(address);
+      })
+    );
+  }
+
   //
 
   public getLiquidityMiningReward(address: string): Observable<BigNumber> {
@@ -1651,6 +1804,22 @@ export class ContractAccessor implements ContractProxy {
     return this.accessor.pipe(
       switchMap(accessor => {
         return accessor.getBrokerAllCommission(address);
+      })
+    );
+  }
+
+  public getBrokerMonthlyAwardsInfo(address: string): Observable<CoinBalance[]> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.getBrokerMonthlyAwardsInfo(address);
+      })
+    );
+  }
+
+  public getBrokerMonthlyStartTime(): Observable<number> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.getBrokerMonthlyStartTime();
       })
     );
   }
