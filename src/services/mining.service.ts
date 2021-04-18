@@ -121,7 +121,7 @@ export const getLiquiditorReward = (type: 'public' | 'private'): Promise<{ campa
     .toPromise();
 };
 
-// 获取清算着在当前周期中获得的奖励 new 4.18
+// 获取清算者在当前周期中获得的奖励 new 4.18
 export const getLiquiditorPeriodReward = (): Promise<ILiquiditorPeriodReward> => {
   return from(loginUserAccount())
     .pipe(
@@ -136,6 +136,22 @@ export const getLiquiditorPeriodReward = (): Promise<ILiquiditorPeriodReward> =>
           extSLD: Number(toEthers(rs.info.extSLD, 4, 'SLD')),
           rank: rs.info.rank.toNumber(),
         } as ILiquiditorPeriodReward;
+      }),
+      take(1)
+    )
+    .toPromise();
+};
+
+// 获取清算周期的信息 new 4.18
+export const getLiqiditorPeriodInfo = (): Promise<{ startTime: number; period: number }> => {
+  return contractAccessor
+    .getLiquiditorPeriod()
+    .pipe(
+      map(({ startTime, period }) => {
+        return {
+          startTime: startTime.toNumber() * 1000,
+          period: period.toNumber(),
+        };
       }),
       take(1)
     )
