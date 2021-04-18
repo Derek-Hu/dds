@@ -7,12 +7,10 @@ import { curUserAccount, getNetworkAndAccount, loginUserAccount } from './accoun
 import { from, Observable, of, zip } from 'rxjs';
 import { withLoading } from './utils';
 import { defaultCoinDatas, defaultPoolData } from './mock/unlogin-default';
-import { DefaultNetwork } from '../constant';
 import * as request from 'superagent';
-import { Response } from 'superagent';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
 import { CoinBalance } from '../wallet/contract-interface';
-import { CentralHost, CentralPath, CentralPort, EthNetwork } from '../constant/address';
+import { CentralHost, CentralPath, CentralPort } from '../constant/address';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   if (process.env.NODE_ENV === 'development') {
