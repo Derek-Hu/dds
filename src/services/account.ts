@@ -1,11 +1,12 @@
 import { walletManager } from '../wallet/wallet-manager';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
-import { Observable, of } from 'rxjs';
+import { Observable, of, zip } from 'rxjs';
 import { contractAccessor } from '../wallet/chain-access';
 import { CoinBalance } from '../wallet/contract-interface';
 import { toEthers } from '../util/ethers';
 import { Wallet } from '../constant';
+import { EthNetwork } from '../constant/address';
 
 /**
  * 用户是否已经连接账户地址
@@ -95,12 +96,14 @@ export const userAccountInfo = async (): Promise<IAccount> => {
               //   coin: one.coin,
               //   amount: Number(toEthers(one.balance, 4, one.coin)),
               // })),
-              USDBalance: balances&& balances.length ? balances.reduce((total, { coin, balance }) => {
-                // @ts-ignore
-                total[coin] = Number(toEthers(balance, 4, coin));
-                return total;
-              }, {}) : {}
-
+              USDBalance:
+                balances && balances.length
+                  ? balances.reduce((total, { coin, balance }) => {
+                      // @ts-ignore
+                      total[coin] = Number(toEthers(balance, 4, coin));
+                      return total;
+                    }, {})
+                  : {},
             };
           })
         );
@@ -109,3 +112,54 @@ export const userAccountInfo = async (): Promise<IAccount> => {
     )
     .toPromise();
 };
+
+/**
+ * 获取当前network与account new - 4.18
+ *
+ * @param old - 如果
+ *  1>填入之前获得的network和account，则会比较最新的network与account，network或者account发生了改变，才会返回，否则一直阻塞。
+ *  2>保留为空，则获取到当前network和account之后就会返回。
+ */
+export const getNetworkAndAccount = async (old?: {
+  network: EthNetwork;
+  account: string;
+}): Promise<{ network: EthNetwork; account: string }> => {
+  return walletManager
+    .watchWalletInstance()
+    .pipe(
+      filter(wallet => wallet !== null),
+      map(wallet => wallet as WalletInterface),
+      switchMap((wallet: WalletInterface) => {
+        const net$ = wallet.watchNetwork();
+        const acc$ = wallet.watchAccount();
+        return zip(net$, acc$).pipe(
+          map(([network, account]: [EthNetwork, string]) => {
+            return {
+              network,
+              account,
+            };
+          })
+        );
+      }),
+      filter(newInfo => {
+        if (old) {
+          return old.network !== newInfo.network || old.account !== newInfo.account;
+        } else {
+          return true;
+        }
+      }),
+      take(1)
+    )
+    .toPromise();
+};
+
+// 循环等待账号或连接网络变化
+
+// let old: { network: EthNetwork, account: string } | undefined = undefined;
+// const callback = (info: { network: EthNetwork, account: string }) => {
+//   old = info;
+//   console.log("get acc info", info);
+//   getNetworkAndAccount(old).then(callback);
+// }
+//
+// getNetworkAndAccount(old).then(callback);

@@ -121,6 +121,27 @@ export const getLiquiditorReward = (type: 'public' | 'private'): Promise<{ campa
     .toPromise();
 };
 
+// 获取清算着在当前周期中获得的奖励 new 4.18
+export const getLiquiditorPeriodReward = (): Promise<ILiquiditorPeriodReward> => {
+  return from(loginUserAccount())
+    .pipe(
+      switchMap(account => {
+        return contractAccessor.getLiquiditorRewardsOfPeriod(account);
+      }),
+      map(rs => {
+        return {
+          rewards: rs.rewards.map(one => {
+            return { coin: one.coin, value: Number(toEthers(one.balance, 4, one.coin)) } as ICoinValue;
+          }),
+          extSLD: Number(toEthers(rs.info.extSLD, 4, 'SLD')),
+          rank: rs.info.rank.toNumber(),
+        } as ILiquiditorPeriodReward;
+      }),
+      take(1)
+    )
+    .toPromise();
+};
+
 export const getLiquidityReTokenBalance = (): Promise<ICoinValue[]> => {
   const getReTokenBalance = (account: string): Observable<ICoinValue[]> => {
     return contractAccessor.getReTokenBalance(account).pipe(
