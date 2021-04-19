@@ -1,18 +1,17 @@
-import { orders, balance, infoItems, curPrice, poolInfo } from './mock/trade.mock';
+import { infoItems } from './mock/trade.mock';
 import { walletManager } from '../wallet/wallet-manager';
-import { catchError, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
-import { AsyncSubject, from, Observable, of, zip } from 'rxjs';
+import { AsyncSubject, from, of, zip } from 'rxjs';
 import { contractAccessor } from '../wallet/chain-access';
 import { ConfirmInfo, UserAccountInfo } from '../wallet/contract-interface';
 import { BigNumber } from 'ethers';
 import { ETH_WEI, toEthers, toExchangePair } from '../util/ethers';
 import * as request from 'superagent';
-import { Response } from 'superagent';
 import { withLoading } from './utils';
-import { CentralHost, DefaultNetwork } from '../constant';
-import { loginUserAccount } from './account';
+import { getNetworkAndAccount, loginUserAccount } from './account';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
+import { CentralHost, CentralPath, CentralPort, EthNetwork } from '../constant/address';
 
 /**
  * Trade Page
@@ -76,9 +75,6 @@ export const getMaxOpenAmount = async (
   const exchange: ExchangeCoinPair = toExchangePair(exchangeStr);
   const amount: number = availedAmount === undefined ? 0 : availedAmount;
 
-  // if(process.env.NODE_ENV === 'development'){
-  //   return returnVal(23042)
-  // }
   return contractAccessor
     .getMaxOpenTradeAmount(exchange, type, amount)
     .pipe(
@@ -149,16 +145,22 @@ export const getTradeOrders = async (page: number, pageSize = 5, isActive = true
   //   ]);
   // }
 
-  return from(loginUserAccount())
+  return from(getNetworkAndAccount())
     .pipe(
-      switchMap(account => {
-        const baseHost = 'http://' + CentralHost + '/' + DefaultNetwork;
+      switchMap(({ account, network }) => {
+        const baseHost: string = 'http://' + CentralHost + ':' + CentralPort[network] + '/' + CentralPath[network];
         const url: string = baseHost + '/transactions/getTransactionsInfo';
         const pageIndex = page - 1;
         const state = isActive ? 1 : 2; // 1:未平仓，2：已平仓
-        return request.post(url).send({ page: pageIndex, offset: pageSize, state, address: account, name: 'taker' });
+        return from(
+          request.post(url).send({ page: pageIndex, offset: pageSize, state, address: account, name: 'taker' })
+        ).pipe(
+          map(res => {
+            return { res, network };
+          })
+        );
       }),
-      switchMap((res: Response) => {
+      switchMap(({ res, network }) => {
         if (res.body.code === 200 && res.body.msg.length > 0) {
           return contractAccessor.getPriceByETHDAI('DAI').pipe(
             map((curPrice: BigNumber) => {
@@ -171,7 +173,7 @@ export const getTradeOrders = async (page: number, pageSize = 5, isActive = true
               const orders: IOrderInfoData[] = res.body.msg;
               return orders.map(
                 (o: IOrderInfoData): ITradeRecord => {
-                  return new OrderInfoObject(o).getTakerOrder(curPrice);
+                  return new OrderInfoObject(o, network).getTakerOrder(curPrice);
                 }
               );
             })
@@ -303,28 +305,35 @@ export const getPriceGraphData = (
 ): Promise<IPriceGraph> => {
   const days = duration === 'day' ? 1 : duration === 'week' ? 7 : 30;
 
-  const rs = new AsyncSubject<IPriceGraph>();
-  request
-    .get('https://api.coingecko.com/api/v3/coins/ethereum/market_chart?vs_currency=USD&days=' + days)
-    .end((err, res) => {
-      if (!err) {
-        const obj = JSON.parse(res.text);
-        const data: { timestamp: number; value: number }[] = obj.prices.map((el: number[]) => ({
-          timestamp: el[0],
-          value: el[1],
-        }));
-        const last: number = data[data.length - 1].value;
-        const dataRs = {
-          price: last,
-          percentage: -14.2,
-          range: 23,
-          data: data,
-        };
-        rs.next(dataRs);
-        rs.complete();
-      }
-    });
-  return rs.toPromise();
+  return from(getNetworkAndAccount())
+    .pipe(
+      switchMap(({ network, account }) => {
+        const coinid = network === EthNetwork.bianTest ? 'binancecoin' : 'ethereum';
+        const url = `https://api.coingecko.com/api/v3/coins/${coinid}/market_chart?vs_currency=USD&days=` + days;
+        const rs = new AsyncSubject<IPriceGraph>();
+        request.get(url).end((err, res) => {
+          if (!err) {
+            const obj = JSON.parse(res.text);
+            const data: { timestamp: number; value: number }[] = obj.prices.map((el: number[]) => ({
+              timestamp: el[0],
+              value: el[1],
+            }));
+            const last: number = data[data.length - 1].value;
+            const dataRs = {
+              price: last,
+              percentage: -14.2,
+              range: 23,
+              data: data,
+            };
+            rs.next(dataRs);
+            rs.complete();
+          }
+        });
+
+        return rs;
+      })
+    )
+    .toPromise();
 };
 
 /**

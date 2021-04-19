@@ -2,16 +2,15 @@ import { liquidityProvided } from './mock/pool.mock';
 import { contractAccessor } from '../wallet/chain-access';
 import { toEthers } from '../util/ethers';
 import { BigNumber } from 'ethers';
-import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
-import { curUserAccount, loginUserAccount } from './account';
+import { catchError, map, switchMap, take } from 'rxjs/operators';
+import { curUserAccount, getNetworkAndAccount, loginUserAccount } from './account';
 import { from, Observable, of, zip } from 'rxjs';
 import { withLoading } from './utils';
 import { defaultCoinDatas, defaultPoolData } from './mock/unlogin-default';
-import { CentralHost, DefaultNetwork } from '../constant';
 import * as request from 'superagent';
-import { Response } from 'superagent';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
 import { CoinBalance } from '../wallet/contract-interface';
+import { CentralHost, CentralPath, CentralPort } from '../constant/address';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   if (process.env.NODE_ENV === 'development') {
@@ -272,25 +271,31 @@ export const getPrivateOrders = async (
   //     coin: 'DAI',
   //   }])
   // }
-  return from(loginUserAccount())
+  return from(getNetworkAndAccount())
     .pipe(
-      switchMap(account => {
-        const baseHost = 'http://' + CentralHost + '/' + DefaultNetwork;
+      switchMap(({ account, network }) => {
+        const baseHost: string = 'http://' + CentralHost + ':' + CentralPort[network] + '/' + CentralPath[network];
         const url: string = baseHost + '/transactions/getTransactionsInfo';
         const pageIndex = page - 1;
         const state = isActive ? 1 : 2;
-        return request.post(url).send({
-          page: pageIndex,
-          offset: pageSize,
-          state: state,
-          address: account, //"0xbfce8288fF225188EEC741aBfaac6BC9163d7a2B",
-          name: 'maker',
-        });
+        return from(
+          request.post(url).send({
+            page: pageIndex,
+            offset: pageSize,
+            state: state,
+            address: account,
+            name: 'maker',
+          })
+        ).pipe(
+          map(res => {
+            return { res, network };
+          })
+        );
       }),
-      map((res: Response) => {
+      map(({ res, network }) => {
         if (res.body.code === 200 && res.body.msg.length > 0) {
           const orders: IOrderInfoData[] = res.body.msg;
-          return orders.map(one => new OrderInfoObject(one).getMakerOrder());
+          return orders.map(one => new OrderInfoObject(one, network).getMakerOrder());
         } else {
           return [];
         }

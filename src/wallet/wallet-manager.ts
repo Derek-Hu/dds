@@ -55,6 +55,10 @@ export class WalletManager {
     );
   }
 
+  public getMetamaskIns(): WalletInterface {
+    return this.metamask;
+  }
+
   // -------------------------------------------------------------------
 
   // 监听钱包状态，设置当前使用的钱包
