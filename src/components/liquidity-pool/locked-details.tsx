@@ -85,11 +85,11 @@ export default class Balance extends Component<any, IState> {
     column: {
       orderId: 'Order Id',
       time: 'Time',
+      coin: 'Type',
       amount: 'Amount',
       lockedAmount: 'Locked Amount',
       openPrice: 'Open Price',
       status: 'Status',
-      coin: 'Coins',
       operation: 'Action',
     },
     attributes: {},
@@ -99,8 +99,9 @@ export default class Balance extends Component<any, IState> {
           return formatTime(value);
         case 'amount':
         case 'openPrice':
-        case 'lockedAmount':
           return format(value);
+        case 'lockedAmount':
+          return `${format(value)} DAI`;
         case 'operation':
           return record.status === 'ACTIVE' ? (
             <Button type="link" onClick={() => this.orderModalVisible.show(record)}>

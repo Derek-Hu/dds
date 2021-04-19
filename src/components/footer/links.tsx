@@ -51,8 +51,9 @@ const links: { [key: string]: ILink[] } = {
   // ...(isStage? null : { Ecosystem }),
   Security: [
     {
-      name: 'Audits',
-      link: '',
+      name: 'Audits(Slowmist)',
+      link:
+        'https://github.com/slowmist/Knowledge-Base/blob/master/open-report/Smart%20Contract%20Security%20Audit%20Report%20-%20Shield.pdf',
     },
     {
       name: 'Bug Bounty',
@@ -72,7 +73,7 @@ const links: { [key: string]: ILink[] } = {
   About: [
     {
       name: 'Blog',
-      link: 'https://medium.com/@shielddaoofficial',
+      link: 'https://shield-dao.medium.com/',
     },
     {
       name: 'Brand Assets',

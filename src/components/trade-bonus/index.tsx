@@ -44,17 +44,23 @@ const getPL = (value?: { val: number; percentage: number }) => {
   const { val, percentage } = value;
   const flag = percentage === 0 ? '' : percentage < 0 ? <span>-</span> : <span>+</span>;
   const color = percentage === 0 ? '#383838' : percentage < 0 ? '#FA4D56' : '#02B464';
+
+  const negative = val <= 0;
   return (
     <span>
       {isNumberLike(val) ? (
-        <>
-          {format(val)}(
-          <span style={{ color }}>
-            {flag}
-            {Math.abs(percentage)}%
-          </span>
-          )
-        </>
+        negative ? (
+          0
+        ) : (
+          <>
+            {format(val)}(
+            <span style={{ color }}>
+              {flag}
+              {Math.abs(percentage)}%
+            </span>
+            )
+          </>
+        )
       ) : (
         '-'
       )}
@@ -161,6 +167,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
       type: 'Type',
       price: 'Open Price',
       amount: 'Amount',
+      closePrice: 'Close Price',
       cost: 'Funding Fee Cost',
       fee: 'Settlement Fee',
       pl: 'P&L',
@@ -176,6 +183,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
         case 'time':
           return formatTime(value);
         case 'price':
+        case 'closePrice':
         case 'amount':
           return format(value);
         case 'fee':

@@ -214,6 +214,11 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                   ) : (
                     <div className={styles.rightContent}>
                       <div className={styles.network}>
+                        <a href="https://faucet.kovan.network/" rel="noreferrer" target="_blank">
+                          Kovan-Faucet
+                        </a>
+                      </div>
+                      <div className={styles.network}>
                         <span className={styles.icon}></span>Kovan
                       </div>
                       <ConnectWallet>
