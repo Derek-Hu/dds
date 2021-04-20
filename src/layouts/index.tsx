@@ -3,10 +3,11 @@ import HomeLayout from '../layouts/home.layout';
 import TradeLayout from '../layouts/trade.layout';
 import { RouteComponentProps } from 'react-router-dom';
 import SiteContext from './SiteContext';
-import { ddsBasePath } from '../constant/index';
+import { ddsBasePath, Wallet } from '../constant/index';
 import { userAccountInfo, initTryConnect } from '../services/account';
 import { from, of, Subscription } from 'rxjs';
 import { reject } from 'lodash';
+import { walletManager } from '../wallet/wallet-manager';
 
 const RESPONSIVE_MOBILE = 768;
 
@@ -16,7 +17,7 @@ interface IState {
   address: string;
   connected: boolean | null;
   timestamp: number | null;
-  network: 'kovan' | 'main';
+  network: string;
 }
 // @ts-ignore
 let timer = null;
@@ -52,6 +53,33 @@ export default class Layout extends Component<RouteComponentProps, IState> {
     }, 4000);
   };
 
+  reloadBalance = async () => {
+    try {
+      // @ts-ignore
+      const account: IAccount = await Promise.race([
+        userAccountInfo(),
+        new Promise(resolve => {
+          setTimeout(() => {
+            resolve(null);
+          }, 1000);
+        }),
+      ]);
+      if (account) {
+        this.updateAccount(account);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  switNetwork = async (network: string) => {
+    console.log('switch....');
+    walletManager.doSelectWallet(Wallet.Metamask);
+    this.setState({
+      network,
+    });
+    await this.reloadBalance();
+  };
   tick = async () => {
     // let isConnected = null;
     // let hasError = false;
@@ -66,22 +94,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
         if (!isConnected) {
           this.updateAccount(null);
         } else {
-          try {
-            // @ts-ignore
-            const account: IAccount = await Promise.race([
-              userAccountInfo(),
-              new Promise(resolve => {
-                setTimeout(() => {
-                  resolve(null);
-                }, 1000);
-              }),
-            ]);
-            if (account) {
-              this.updateAccount(account);
-            }
-          } catch (error) {
-            console.log(error);
-          }
+          this.reloadBalance();
         }
       }
     } catch (e) {
@@ -110,7 +123,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   }
 
   updateMobileMode = () => {
-    const { isMobile, network } = this.state;
+    const { isMobile } = this.state;
     const newIsMobile = window.innerWidth < RESPONSIVE_MOBILE;
     if (isMobile !== newIsMobile) {
       this.setState({
@@ -120,9 +133,11 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   };
 
   updateAccount = (account: IAccount) => {
-    const { network } = this.state;
+    const network = account?.network;
     this.setState({
       account,
+      // @ts-ignore
+      network,
       address: account && account.address ? account.address : '',
     });
     // @ts-ignore
@@ -130,13 +145,14 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   };
 
   refreshPage = () => {
+    this.reloadBalance();
     this.setState({
       timestamp: new Date().getTime(),
     });
   };
   render() {
     const { children, location } = this.props;
-    const { isMobile, account, address, timestamp, connected } = this.state;
+    const { isMobile, account, address, network, timestamp, connected } = this.state;
     const LayoutComp = location.pathname === '/home' ? HomeLayout : TradeLayout;
 
     return (
@@ -144,25 +160,28 @@ export default class Layout extends Component<RouteComponentProps, IState> {
         value={{
           updateAccount: this.updateAccount,
           refreshPage: this.refreshPage,
+          switNetwork: this.switNetwork,
           isMobile,
           connected,
+          network,
           direction: 'ltr',
           // @ts-ignore
           timestamp,
-          account,
-          address,
-          // account:
-          //   process.env.NODE_ENV === 'development'
-          //     ? {
-          //         address: '0x839423432432',
-          //         USDBalance: {
-          //           USDT: 100.32432,
-          //           USDC: 200.32432,
-          //           DAI: 300.3213,
-          //         },
-          //       }
-          //     : account,
-          // address: process.env.NODE_ENV === 'development' ? '0x839423432432' : address,
+          // account,
+          // address,
+          account:
+            process.env.NODE_ENV === 'development'
+              ? {
+                  network: '42',
+                  address: '0x839423432432',
+                  USDBalance: {
+                    USDT: 100.32432,
+                    USDC: 200.32432,
+                    DAI: 300.3213,
+                  },
+                }
+              : account,
+          address: process.env.NODE_ENV === 'development' ? '0x839423432432' : address,
         }}
       >
         <div className={isMobile ? 'mobile' : ''}>
