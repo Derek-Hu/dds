@@ -52,6 +52,25 @@ export default class Layout extends Component<RouteComponentProps, IState> {
     }, 4000);
   };
 
+  reloadBalance = async () => {
+    try {
+      // @ts-ignore
+      const account: IAccount = await Promise.race([
+        userAccountInfo(),
+        new Promise(resolve => {
+          setTimeout(() => {
+            resolve(null);
+          }, 1000);
+        }),
+      ]);
+      if (account) {
+        this.updateAccount(account);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   tick = async () => {
     // let isConnected = null;
     // let hasError = false;
@@ -66,22 +85,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
         if (!isConnected) {
           this.updateAccount(null);
         } else {
-          try {
-            // @ts-ignore
-            const account: IAccount = await Promise.race([
-              userAccountInfo(),
-              new Promise(resolve => {
-                setTimeout(() => {
-                  resolve(null);
-                }, 1000);
-              }),
-            ]);
-            if (account) {
-              this.updateAccount(account);
-            }
-          } catch (error) {
-            console.log(error);
-          }
+          this.reloadBalance();
         }
       }
     } catch (e) {
@@ -130,6 +134,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   };
 
   refreshPage = () => {
+    this.reloadBalance();
     this.setState({
       timestamp: new Date().getTime(),
     });
