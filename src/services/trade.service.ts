@@ -301,39 +301,31 @@ export const closeOrder = async (order: ITradeRecord, closePrice: number): Promi
 
 export const getPriceGraphData = (
   coins: { from: IFromCoins; to: IUSDCoins },
-  duration: IGraphDuration
+  duration: IGraphDuration,
+  network: 'binancecoin' | 'ethereum' = 'ethereum'
 ): Promise<IPriceGraph> => {
   const days = duration === 'day' ? 1 : duration === 'week' ? 7 : 30;
-
-  return from(getNetworkAndAccount())
-    .pipe(
-      switchMap(({ network, account }) => {
-        const coinid = network === EthNetwork.bianTest ? 'binancecoin' : 'ethereum';
-        const url = `https://api.coingecko.com/api/v3/coins/${coinid}/market_chart?vs_currency=USD&days=` + days;
-        const rs = new AsyncSubject<IPriceGraph>();
-        request.get(url).end((err, res) => {
-          if (!err) {
-            const obj = JSON.parse(res.text);
-            const data: { timestamp: number; value: number }[] = obj.prices.map((el: number[]) => ({
-              timestamp: el[0],
-              value: el[1],
-            }));
-            const last: number = data[data.length - 1].value;
-            const dataRs = {
-              price: last,
-              percentage: -14.2,
-              range: 23,
-              data: data,
-            };
-            rs.next(dataRs);
-            rs.complete();
-          }
-        });
-
-        return rs;
-      })
-    )
-    .toPromise();
+  const url = `https://api.coingecko.com/api/v3/coins/${network}/market_chart?vs_currency=USD&days=` + days;
+  const rs = new AsyncSubject<IPriceGraph>();
+  request.get(url).end((err, res) => {
+    if (!err) {
+      const obj = JSON.parse(res.text);
+      const data: { timestamp: number; value: number }[] = obj.prices.map((el: number[]) => ({
+        timestamp: el[0],
+        value: el[1],
+      }));
+      const last: number = data[data.length - 1].value;
+      const dataRs = {
+        price: last,
+        percentage: -14.2,
+        range: 23,
+        data: data,
+      };
+      rs.next(dataRs);
+      rs.complete();
+    }
+  });
+  return rs.toPromise();
 };
 
 /**

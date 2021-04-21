@@ -155,6 +155,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
           //   process.env.NODE_ENV === 'development'
           //     ? {
           //         address: '0x839423432432',
+          //         network: 'kovan',
           //         USDBalance: {
           //           USDT: 100.32432,
           //           USDC: 200.32432,

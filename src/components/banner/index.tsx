@@ -18,7 +18,7 @@ export default () => {
               <a href={`${ddsBasePath}/trade`}>
                 <Button className={styles.spot}>Start Trading</Button>
               </a>
-              <a href="https://docsend.com/view/tik7bk6c6vv6nqwv" rel="noreferrer" target="_blank">
+              <a href="https://docsend.com/view/pd7y4yayibd4nrpu" rel="noreferrer" target="_blank">
                 <Button className={styles.read} type="link">
                   READ WHITEPAPER
                 </Button>
