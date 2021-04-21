@@ -274,7 +274,7 @@ export const getPrivateOrders = async (
   return from(getNetworkAndAccount())
     .pipe(
       switchMap(({ account, network }) => {
-        const baseHost: string = 'http://' + CentralHost + ':' + CentralPort[network] + '/' + CentralPath[network];
+        const baseHost: string = CentralHost + ':' + CentralPort[network] + '/' + CentralPath[network];
         const url: string = baseHost + '/transactions/getTransactionsInfo';
         const pageIndex = page - 1;
         const state = isActive ? 1 : 2;

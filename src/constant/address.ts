@@ -68,7 +68,7 @@ export enum EthNetwork {
   bianTest = '97',
 }
 
-export const CentralHost = '135.181.253.54';
+export const CentralHost = window.location.protocol + '//shieldex.io';
 export const CentralPort = {
   [EthNetwork.kovan]: '8090',
   [EthNetwork.bianTest]: '8095',
