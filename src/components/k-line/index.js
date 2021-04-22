@@ -4,14 +4,15 @@ import styles from './style.module.less';
 import option, { seryName } from './option';
 // import MockData from './mock';
 import dayjs from 'dayjs';
-import { Select, Row, Col, Button } from 'antd';
+import { Row, Col, Button } from 'antd';
+// import { Select, Row, Col, Button } from 'antd';
 import SiteContext from '../../layouts/SiteContext';
 import { getPriceGraphData } from '../../services/trade.service';
 import { format, isNumberLike } from '../../util/math';
 import Coin1 from '~/assets/imgs/coin1.png';
 import Coin2 from '~/assets/imgs/coin2.png';
 
-const { Option } = Select;
+// const { Option } = Select;
 
 const echarts = window.echarts;
 
@@ -34,6 +35,7 @@ const sig = value => {
   }
   return '';
 };
+
 export default class MainLayout extends Component {
   ref = React.createRef();
 

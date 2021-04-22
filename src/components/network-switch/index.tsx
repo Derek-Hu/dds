@@ -3,22 +3,23 @@ import styles from './style.module.less';
 import ModalRender from '../modal-render/index';
 import { Button, Col, Row, Select } from 'antd';
 import commonStyles from '../funding-balance/modals/style.module.less';
-import SiteContext from '../../layouts/SiteContext';
+import SiteContext, { ISiteContextProps } from '../../layouts/SiteContext';
+import { DefaultKeNetwork } from '../../constant/index';
 
-const Nets = {
+const Nets: Record<INetworkKey, string> = {
   kovan: 'Ethereum Kovan Testnet',
-  'BSC-Testnet': 'BSC Testnet',
-  'BSC-Mainnet': 'BSC Mainnet',
+  'bsc-testnet': 'BSC Testnet',
+  'bsc-mainnet': 'BSC Mainnet',
 };
 
 interface IState {
   visible: boolean;
-  selectedNetwork: keyof typeof Nets;
+  selectedNetwork: INetworkKey;
 }
-export default class ConnectWallet extends Component<any, IState> {
+export default class NetworkSwitch extends Component<any, IState> {
   state: IState = {
     visible: false,
-    selectedNetwork: 'kovan',
+    selectedNetwork: (this.context as ISiteContextProps).currentNetwork || DefaultKeNetwork,
   };
 
   static contextType = SiteContext;
@@ -34,7 +35,14 @@ export default class ConnectWallet extends Component<any, IState> {
     });
   };
 
-  setType = (selectedNetwork: any) => {
+  componentDidMount() {
+    console.log('NetworkSwitch componentDidMount');
+  }
+
+  componentWillUnmount() {
+    console.log('NetworkSwitch componentWillUnmount');
+  }
+  setType = (selectedNetwork: INetworkKey) => {
     this.setState({
       selectedNetwork,
     });
@@ -45,11 +53,10 @@ export default class ConnectWallet extends Component<any, IState> {
   };
 
   render() {
-    const { visible, selectedNetwork } = this.state;
-    console.log('selectedNetwork === network', selectedNetwork);
+    const { visible } = this.state;
     return (
       <SiteContext.Consumer>
-        {({ network }) => (
+        {({ currentNetwork }) => (
           <>
             <div className={styles.network} onClick={this.openModal}>
               <span className={styles.icon}></span>Kovan
@@ -67,10 +74,8 @@ export default class ConnectWallet extends Component<any, IState> {
             >
               <Row gutter={[16, 24]} type="flex" className={styles.coinList}>
                 {Object.keys(Nets).map(key => (
-                  <Col key={key} span={24} className={network === key ? styles.active : ''}>
-                    <Button onClick={() => this.setType(key)}>
-                      {Nets[key as keyof typeof Nets]} {network}
-                    </Button>
+                  <Col key={key} span={24} className={currentNetwork === key ? styles.active : ''}>
+                    <Button onClick={() => this.setType(key as INetworkKey)}>{Nets[key as INetworkKey]}</Button>
                   </Col>
                 ))}
                 <Col span={24}>

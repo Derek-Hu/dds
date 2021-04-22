@@ -5,8 +5,6 @@ import { RouteComponentProps } from 'react-router-dom';
 import SiteContext from './SiteContext';
 import { ddsBasePath, Wallet } from '../constant/index';
 import { userAccountInfo, initTryConnect } from '../services/account';
-import { from, of, Subscription } from 'rxjs';
-import { reject } from 'lodash';
 import { walletManager } from '../wallet/wallet-manager';
 
 const RESPONSIVE_MOBILE = 768;
@@ -17,7 +15,7 @@ interface IState {
   address: string;
   connected: boolean | null;
   timestamp: number | null;
-  network: string;
+  currentNetwork: INetworkKey;
 }
 // @ts-ignore
 let timer = null;
@@ -26,7 +24,14 @@ const isDDSPage = window.location.href.indexOf(ddsBasePath) === 0;
 export default class Layout extends Component<RouteComponentProps, IState> {
   static contextType = SiteContext;
 
-  state: IState = { network: 'kovan', connected: null, timestamp: null, isMobile: false, address: '', account: null };
+  state: IState = {
+    currentNetwork: 'bsc-testnet',
+    connected: null,
+    timestamp: null,
+    isMobile: false,
+    address: '',
+    account: null,
+  };
 
   constructor(props: any) {
     super(props);
@@ -72,11 +77,11 @@ export default class Layout extends Component<RouteComponentProps, IState> {
     }
   };
 
-  switNetwork = async (network: string) => {
+  switNetwork = async (currentNetwork: INetworkKey) => {
     console.log('switch....');
     walletManager.doSelectWallet(Wallet.Metamask);
     this.setState({
-      network,
+      currentNetwork,
     });
     await this.reloadBalance();
   };
@@ -152,7 +157,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   };
   render() {
     const { children, location } = this.props;
-    const { isMobile, account, address, network, timestamp, connected } = this.state;
+    const { isMobile, account, address, currentNetwork, timestamp, connected } = this.state;
     const LayoutComp = location.pathname === '/home' ? HomeLayout : TradeLayout;
 
     return (
@@ -163,7 +168,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
           switNetwork: this.switNetwork,
           isMobile,
           connected,
-          network,
+          currentNetwork,
           direction: 'ltr',
           // @ts-ignore
           timestamp,

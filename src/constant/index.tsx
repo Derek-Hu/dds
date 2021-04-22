@@ -8,6 +8,14 @@ export enum Wallet {
   WalletConnect = 'Wallet Connect',
 }
 
+export const DefaultKeNetwork: INetworkKey = 'kovan';
+
+export const NetWork2Coin: Record<INetworkKey, IFromCoins> = {
+  'bsc-mainnet': 'BNB',
+  'bsc-testnet': 'BNB',
+  kovan: 'ETH',
+};
+
 export const ddsBasePath = `${window.location.origin}${settings.pathname}/dds.html#`;
 export const homeBasePath = `${window.location.origin}${settings.pathname}/index.html#`;
 

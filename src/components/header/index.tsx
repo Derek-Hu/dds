@@ -219,9 +219,6 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                           Kovan-Faucet
                         </a>
                       </div>
-                      {/* <div className={styles.network}>
-                        <span className={styles.icon}></span>Kovan
-                      </div> */}
                       <NetworkSwitch></NetworkSwitch>
                       <ConnectWallet>
                         {account ? (

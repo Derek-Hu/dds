@@ -1,23 +1,23 @@
 import * as React from 'react';
 
-export interface SiteContextProps {
+export interface ISiteContextProps {
   isMobile: boolean;
   direction: string;
   account: IAccount;
   address: string;
   connected: boolean | null;
   timestamp?: number;
-  network: string;
+  currentNetwork: INetworkKey;
   updateAccount?: (account: IAccount) => any;
-  switNetwork?: (network: string) => any;
+  switNetwork?: (network: INetworkKey) => any;
   refreshPage?: () => void;
 }
 
-const SiteContext = React.createContext<SiteContextProps>({
+const SiteContext = React.createContext<ISiteContextProps>({
   isMobile: false,
   direction: 'ltr',
   address: '',
-  network: 'kovan',
+  currentNetwork: 'kovan',
   connected: null,
   account: null,
 });
