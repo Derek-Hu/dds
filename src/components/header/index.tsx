@@ -9,6 +9,7 @@ import LogoWhite from '~/assets/imgs/logo-white.png';
 import { homeBasePath, ddsBasePath } from '../../constant/index';
 import { isNumberLike } from '../../util/math';
 import { shortAddress } from '../../util/index';
+import NetworkSwitch from '../network-switch/index';
 
 const { SubMenu } = Menu;
 
@@ -218,9 +219,10 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                           Kovan-Faucet
                         </a>
                       </div>
-                      <div className={styles.network}>
+                      {/* <div className={styles.network}>
                         <span className={styles.icon}></span>Kovan
-                      </div>
+                      </div> */}
+                      <NetworkSwitch></NetworkSwitch>
                       <ConnectWallet>
                         {account ? (
                           <div className={styles.accountInfo}>
