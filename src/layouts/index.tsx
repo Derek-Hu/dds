@@ -114,7 +114,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   }
 
   updateMobileMode = () => {
-    const { isMobile, network } = this.state;
+    const { isMobile } = this.state;
     const newIsMobile = window.innerWidth < RESPONSIVE_MOBILE;
     if (isMobile !== newIsMobile) {
       this.setState({
@@ -154,21 +154,21 @@ export default class Layout extends Component<RouteComponentProps, IState> {
           direction: 'ltr',
           // @ts-ignore
           timestamp,
-          account,
-          address,
-          // account:
-          //   process.env.NODE_ENV === 'development'
-          //     ? {
-          //         address: '0x839423432432',
-          //         network: 'kovan',
-          //         USDBalance: {
-          //           USDT: 100.32432,
-          //           USDC: 200.32432,
-          //           DAI: 300.3213,
-          //         },
-          //       }
-          //     : account,
-          // address: process.env.NODE_ENV === 'development' ? '0x839423432432' : address,
+          // account,
+          // address,
+          account:
+            process.env.NODE_ENV === 'development'
+              ? {
+                  address: '0x839423432432',
+                  network: 'kovan',
+                  USDBalance: {
+                    USDT: 100.32432,
+                    USDC: 200.32432,
+                    DAI: 300.3213,
+                  },
+                }
+              : account,
+          address: process.env.NODE_ENV === 'development' ? '0x839423432432' : address,
         }}
       >
         <div className={isMobile ? 'mobile' : ''}>

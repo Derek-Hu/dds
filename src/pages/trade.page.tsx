@@ -6,13 +6,7 @@ import styles from './style.module.less';
 import KLine from '../components/k-line/index';
 import FundingBalance from '../components/funding-balance/index';
 import SiteContext from '../layouts/SiteContext';
-import {
-  getFundingBalanceInfo,
-  getCurPrice,
-  getTradeOrders,
-  getTradeInfo,
-  getPriceGraphData,
-} from '../services/trade.service';
+import { getCurPrice } from '../services/trade.service';
 import Auth from '../components/builtin/auth';
 import { SupporttedUSD, SupporttedCoins } from '../constant/index';
 import TradeInfo from '../components/trade-info/index';
@@ -30,28 +24,29 @@ export default class TradePage extends Component {
     coin: 'DAI',
   };
 
+  static contextType = SiteContext;
+
   async componentDidMount() {
     // @ts-ignore
     const { from, to } = parse();
     // @ts-ignore
-    if (from && to && SupporttedCoins[from] && SupporttedUSD[to]) {
+    const isValid = from && to && SupporttedCoins[from] && SupporttedUSD[to];
+    if (isValid) {
       this.setState({
         from,
         coin: to,
       });
     }
 
-    const { coin } = this.state;
+    const coin = isValid ? to : this.state.coin;
     const curPrice = await getCurPrice(coin);
-    const tradeInfos = await getTradeInfo(coin);
     this.setState({
-      tradeInfos,
       curPrice,
     });
   }
 
   render() {
-    const { tradeInfos, curPrice } = this.state;
+    const { curPrice } = this.state;
     const coin = 'DAI';
     const from = 'ETH';
     return (
