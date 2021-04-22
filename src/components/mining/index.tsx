@@ -20,8 +20,9 @@ import ReTokenBalance from './liquidity/re-token-balance';
 import SystemRanking from './system-ranking';
 import YourMiningShare from './liquidity/your-mining-share';
 import { formatTime } from '../../util/time';
+import Settings from '../../constant/settings';
 
-const showRanking = process.env.REACT_APP_APP_ENV === 'github';
+const showRanking = Settings.test;
 
 // const { Option } = Select;
 const { TabPane } = Tabs;

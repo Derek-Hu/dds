@@ -83,7 +83,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
     this.setState({
       currentNetwork,
     });
-    await this.reloadBalance();
+    await this.refreshPage();
   };
   tick = async () => {
     // let isConnected = null;

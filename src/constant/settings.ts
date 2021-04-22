@@ -2,10 +2,12 @@ const settings = {
   github: {
     pathname: '/dds',
     debug: true,
+    test: true,
   },
   dev: {
     pathname: '',
     debug: true,
+    test: true,
   },
   prod: {
     pathname: '',
