@@ -11,8 +11,8 @@ export enum Wallet {
 export const DefaultKeNetwork: INetworkKey = 'kovan';
 
 export const NetWork2Coin: Record<INetworkKey, IFromCoins> = {
-  'bsc-mainnet': 'BNB',
-  'bsc-testnet': 'BNB',
+  bscmain: 'BNB',
+  bsctest: 'BNB',
   kovan: 'ETH',
 };
 

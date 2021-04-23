@@ -8,7 +8,7 @@ import FundingBalance from '../components/funding-balance/index';
 import SiteContext, { ISiteContextProps } from '../layouts/SiteContext';
 import { getCurPrice } from '../services/trade.service';
 import Auth from '../components/builtin/auth';
-import { SupporttedUSD, SupporttedCoins, NetWork2Coin } from '../constant/index';
+import { SupporttedUSD, SupporttedCoins, NetWork2Coin, DefaultKeNetwork } from '../constant/index';
 import TradeInfo from '../components/trade-info/index';
 import parse from '../util/url';
 
@@ -20,7 +20,7 @@ interface IState {
 }
 export default class TradePage extends Component {
   state: IState = {
-    from: 'ETH',
+    from: NetWork2Coin[DefaultKeNetwork],
     coin: 'DAI',
   };
 
@@ -47,11 +47,11 @@ export default class TradePage extends Component {
 
   render() {
     const { curPrice, coin, from } = this.state;
-    const network = (this.context as ISiteContextProps).currentNetwork;
-    const fromCoin = NetWork2Coin[network] || from;
     return (
       <SiteContext.Consumer>
-        {({ isMobile }) => {
+        {({ isMobile, currentNetwork }) => {
+          const fromCoin = NetWork2Coin[currentNetwork] || from;
+          console.log('trade currentNetwork', currentNetwork, fromCoin);
           return (
             <div className={[styles.tradeInfoPool, isMobile ? styles.mobile : ''].join(' ')}>
               <Row className={styles.chartBalance}>

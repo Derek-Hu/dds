@@ -3,9 +3,10 @@ import HomeLayout from '../layouts/home.layout';
 import TradeLayout from '../layouts/trade.layout';
 import { RouteComponentProps } from 'react-router-dom';
 import SiteContext from './SiteContext';
-import { ddsBasePath, Wallet } from '../constant/index';
-import { userAccountInfo, initTryConnect } from '../services/account';
+import { ddsBasePath, DefaultKeNetwork } from '../constant/index';
+import { userAccountInfo, initTryConnect, getNetworkAndAccount } from '../services/account';
 import { walletManager } from '../wallet/wallet-manager';
+import { CentralPath, EthNetwork } from '../constant/address';
 
 const RESPONSIVE_MOBILE = 768;
 
@@ -25,7 +26,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   static contextType = SiteContext;
 
   state: IState = {
-    currentNetwork: 'bsc-testnet',
+    currentNetwork: DefaultKeNetwork,
     connected: null,
     timestamp: null,
     isMobile: false,
@@ -79,7 +80,14 @@ export default class Layout extends Component<RouteComponentProps, IState> {
 
   switNetwork = async (currentNetwork: INetworkKey) => {
     console.log('switch....');
-    walletManager.doSelectWallet(Wallet.Metamask);
+    const { address } = this.state;
+    // @ts-ignore
+    const networkCode: EthNetwork = Object.keys(CentralPath).find(v => CentralPath[v as EthNetwork] === currentNetwork);
+    const switched = await getNetworkAndAccount({
+      network: networkCode,
+      account: address,
+    });
+    console.log('switch done....', switched);
     this.setState({
       currentNetwork,
     });
@@ -172,21 +180,21 @@ export default class Layout extends Component<RouteComponentProps, IState> {
           direction: 'ltr',
           // @ts-ignore
           timestamp,
-          // account,
-          // address,
-          account:
-            process.env.NODE_ENV === 'development'
-              ? {
-                  address: '0x839423432432',
-                  network: 'kovan',
-                  USDBalance: {
-                    USDT: 100.32432,
-                    USDC: 200.32432,
-                    DAI: 300.3213,
-                  },
-                }
-              : account,
-          address: process.env.NODE_ENV === 'development' ? '0x839423432432' : address,
+          account,
+          address,
+          // account:
+          //   process.env.NODE_ENV === 'development'
+          //     ? {
+          //         address: '0x839423432432',
+          //         network: 'kovan',
+          //         USDBalance: {
+          //           USDT: 100.32432,
+          //           USDC: 200.32432,
+          //           DAI: 300.3213,
+          //         },
+          //       }
+          //     : account,
+          // address: process.env.NODE_ENV === 'development' ? '0x839423432432' : address,
         }}
       >
         <div className={isMobile ? 'mobile' : ''}>

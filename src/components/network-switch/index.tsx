@@ -8,8 +8,8 @@ import { DefaultKeNetwork } from '../../constant/index';
 
 const Nets: Record<INetworkKey, string> = {
   kovan: 'Ethereum Kovan Testnet',
-  'bsc-testnet': 'BSC Testnet',
-  'bsc-mainnet': 'BSC Mainnet',
+  bsctest: 'BSC Testnet',
+  bscmain: 'BSC Mainnet',
 };
 
 interface IState {
@@ -31,6 +31,7 @@ export default class NetworkSwitch extends Component<any, IState> {
   };
   openModal = () => {
     this.setState({
+      selectedNetwork: (this.context as ISiteContextProps).currentNetwork,
       visible: true,
     });
   };
@@ -47,19 +48,22 @@ export default class NetworkSwitch extends Component<any, IState> {
       selectedNetwork,
     });
   };
-  switch = () => {
+  switch = async () => {
     const { selectedNetwork } = this.state;
-    this.context.switNetwork && this.context.switNetwork(selectedNetwork);
+    if (this.context.switNetwork) {
+      await this.context.switNetwork(selectedNetwork);
+    }
   };
 
   render() {
-    const { visible } = this.state;
+    const { visible, selectedNetwork } = this.state;
     return (
       <SiteContext.Consumer>
         {({ currentNetwork }) => (
           <>
             <div className={styles.network} onClick={this.openModal}>
-              <span className={styles.icon}></span>Kovan
+              <span className={styles.icon}></span>
+              {Nets[currentNetwork]}
             </div>
             <ModalRender
               visible={visible}
@@ -74,13 +78,16 @@ export default class NetworkSwitch extends Component<any, IState> {
             >
               <Row gutter={[16, 24]} type="flex" className={styles.coinList}>
                 {Object.keys(Nets).map(key => (
-                  <Col key={key} span={24} className={currentNetwork === key ? styles.active : ''}>
-                    <Button onClick={() => this.setType(key as INetworkKey)}>{Nets[key as INetworkKey]}</Button>
+                  <Col key={key} span={24} className={selectedNetwork === key ? styles.active : ''}>
+                    <Button onClick={() => this.setType(key as INetworkKey)}>
+                      {currentNetwork === key ? <span className={styles.icon}></span> : null}
+                      {Nets[key as INetworkKey]}
+                    </Button>
                   </Col>
                 ))}
                 <Col span={24}>
                   <Button type="primary" onClick={() => this.switch()}>
-                    Connect Wallet
+                    Switch Network
                   </Button>
                 </Col>
               </Row>

@@ -127,7 +127,8 @@ export default class MainLayout extends Component {
       clearTimeout(this.timer);
     }
   }
-  async componentDidMount() {
+
+  updateProps = () => {
     const { from, to } = this.props;
     const { duration } = this.state;
 
@@ -137,6 +138,13 @@ export default class MainLayout extends Component {
     });
 
     this.loadGraph(from, to, duration);
+  };
+  UNSAFE_componentWillReceiveProps() {
+    this.updateProps();
+  }
+
+  async componentDidMount() {
+    this.updateProps();
   }
 
   changeDuration = key => {

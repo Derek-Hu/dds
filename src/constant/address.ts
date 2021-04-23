@@ -73,7 +73,7 @@ export const CentralPort = {
   [EthNetwork.kovan]: '8090',
   [EthNetwork.bianTest]: '8095',
 };
-export const CentralPath = {
+export const CentralPath: Record<EthNetwork, INetworkKey> = {
   [EthNetwork.kovan]: 'kovan',
   [EthNetwork.bianTest]: 'bsctest',
 };

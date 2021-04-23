@@ -254,7 +254,7 @@ declare interface PrivatePoolOrder {
   coin: IUSDCoins;
 }
 
-declare type INetworkKey = 'kovan' | 'bsc-testnet' | 'bsc-mainnet';
+declare type INetworkKey = 'kovan' | 'bsctest' | 'bscmain';
 
 declare type INetworkChain = 'binancecoin' | 'ethereum';
 declare interface IRankings {
