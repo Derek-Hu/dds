@@ -159,7 +159,7 @@ export default class Balance extends Component<{
     this.setState({
       setFeeQuery: true,
     });
-    const fees = await confirmOrder(openAmount!, to, this.state.tradeType);
+    const fees = await confirmOrder(openAmount, to, this.state.tradeType);
     this.setState({
       fees,
       setFeeQuery: false,
@@ -306,7 +306,7 @@ export default class Balance extends Component<{
               skip={true}
               showTag={true}
               tagClassName={styles.utilMax}
-              suffix={'ETH'}
+              suffix={from}
             />
             <p className={styles.settlement}>
               Settlement Fee :{' '}

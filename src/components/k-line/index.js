@@ -4,14 +4,15 @@ import styles from './style.module.less';
 import option, { seryName } from './option';
 // import MockData from './mock';
 import dayjs from 'dayjs';
-import { Select, Row, Col, Button } from 'antd';
+import { Row, Col, Button } from 'antd';
+// import { Select, Row, Col, Button } from 'antd';
 import SiteContext from '../../layouts/SiteContext';
 import { getPriceGraphData } from '../../services/trade.service';
 import { format, isNumberLike } from '../../util/math';
 import Coin1 from '~/assets/imgs/coin1.png';
 import Coin2 from '~/assets/imgs/coin2.png';
 
-const { Option } = Select;
+// const { Option } = Select;
 
 const echarts = window.echarts;
 
@@ -34,6 +35,7 @@ const sig = value => {
   }
   return '';
 };
+
 export default class MainLayout extends Component {
   ref = React.createRef();
 
@@ -41,8 +43,6 @@ export default class MainLayout extends Component {
 
   state = {
     duration: 'day',
-    from: 'ETH',
-    to: 'DAI',
   };
 
   chartInstance = null;
@@ -127,7 +127,8 @@ export default class MainLayout extends Component {
       clearTimeout(this.timer);
     }
   }
-  async componentDidMount() {
+
+  updateProps = () => {
     const { from, to } = this.props;
     const { duration } = this.state;
 
@@ -137,6 +138,13 @@ export default class MainLayout extends Component {
     });
 
     this.loadGraph(from, to, duration);
+  };
+  UNSAFE_componentWillReceiveProps() {
+    this.updateProps();
+  }
+
+  async componentDidMount() {
+    this.updateProps();
   }
 
   changeDuration = key => {
@@ -149,6 +157,7 @@ export default class MainLayout extends Component {
   render() {
     const { from, to, graphData, duration, price } = this.state;
     const { percentage, range } = graphData || {};
+    const selectedCoinPair = `${from}/${to}`;
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => {
@@ -158,24 +167,14 @@ export default class MainLayout extends Component {
               <div className={styles.headArea}>
                 <img src={Coin1} alt="" width="26px" style={{ position: 'relative', right: '-4px' }} />
                 <img src={Coin2} alt="" width="26px" />
-                <Select defaultValue="ETH/DAI" style={{ width: 120 }}>
+                <span style={{ display: 'inline-block', marginLeft: '1.5em', lineHeight: '26px' }}>
+                  {selectedCoinPair}
+                </span>
+                {/* <Select value={selectedCoinPair} style={{ width: 120 }}>
                   <Option value="ETH/DAI">ETH/DAI</Option>
-                  <Option value="ETH/USDT" disabled>
-                    ETH/USDT
-                  </Option>
-                  <Option value="ETH/USDC" disabled>
-                    ETH/USDC
-                  </Option>
-                  <Option value="WBTC/DAI" disabled>
-                    WBTC/DAI
-                  </Option>
-                  <Option value="WBTC/USDT" disabled>
-                    WBTC/USDT
-                  </Option>
-                  <Option value="WBTC/USDC" disabled>
-                    WBTC/USDC
-                  </Option>
-                </Select>
+                  <Option value="BNB/DAI">BNB/DAI</Option>
+                  <Option value={selectedCoinPair}>{selectedCoinPair}</Option>
+                </Select> */}
               </div>
               <Row type="flex" justify="space-between" align="middle">
                 <Col xs={24} sm={24} md={12} lg={12} className={styles.currPrice}>

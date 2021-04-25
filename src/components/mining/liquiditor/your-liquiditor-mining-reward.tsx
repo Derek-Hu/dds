@@ -43,13 +43,17 @@ export default class LiquiditorReward extends Component<any, IState> {
         <h3>{this.context.address ? 'Your Liquiditor Mining Rewards' : 'Liquiditor Mining Rewards'}</h3>
         <p>Get compensated when insurance fund is empty</p>
         <Row>
-          {/* <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
-              <span className={styles.ads}>{campaign} SLD</span>
-              <span>Campaign Rewards</span>
-            </Col> */}
-          <Col xs={24} sm={24} md={24} lg={24} className={styles.col}>
+          <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
             <span className={styles.ads}>
-              <Placeholder loading={loading} width={'10em'}>
+              <Placeholder loading={loading} width={'6em'}>
+                {format(campaign)} SLD
+              </Placeholder>
+            </span>
+            <span>Campaign Rewards</span>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
+            <span className={styles.ads}>
+              <Placeholder loading={loading} width={'6em'}>
                 {format(compensate)} SLD
               </Placeholder>
             </span>

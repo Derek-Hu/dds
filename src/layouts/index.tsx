@@ -3,10 +3,10 @@ import HomeLayout from '../layouts/home.layout';
 import TradeLayout from '../layouts/trade.layout';
 import { RouteComponentProps } from 'react-router-dom';
 import SiteContext from './SiteContext';
-import { ddsBasePath } from '../constant/index';
-import { userAccountInfo, initTryConnect } from '../services/account';
-import { from, of, Subscription } from 'rxjs';
-import { reject } from 'lodash';
+import { ddsBasePath, DefaultKeNetwork } from '../constant/index';
+import { userAccountInfo, initTryConnect, getNetworkAndAccount } from '../services/account';
+import { walletManager } from '../wallet/wallet-manager';
+import { CentralPath, EthNetwork } from '../constant/address';
 
 const RESPONSIVE_MOBILE = 768;
 
@@ -16,7 +16,7 @@ interface IState {
   address: string;
   connected: boolean | null;
   timestamp: number | null;
-  network: 'kovan' | 'main';
+  currentNetwork: INetworkKey;
 }
 // @ts-ignore
 let timer = null;
@@ -25,7 +25,14 @@ const isDDSPage = window.location.href.indexOf(ddsBasePath) === 0;
 export default class Layout extends Component<RouteComponentProps, IState> {
   static contextType = SiteContext;
 
-  state: IState = { network: 'kovan', connected: null, timestamp: null, isMobile: false, address: '', account: null };
+  state: IState = {
+    currentNetwork: DefaultKeNetwork,
+    connected: null,
+    timestamp: null,
+    isMobile: false,
+    address: '',
+    account: null,
+  };
 
   constructor(props: any) {
     super(props);
@@ -71,6 +78,21 @@ export default class Layout extends Component<RouteComponentProps, IState> {
     }
   };
 
+  switNetwork = async (currentNetwork: INetworkKey) => {
+    console.log('switch....');
+    const { address } = this.state;
+    // @ts-ignore
+    const networkCode: EthNetwork = Object.keys(CentralPath).find(v => CentralPath[v as EthNetwork] === currentNetwork);
+    const switched = await getNetworkAndAccount({
+      network: networkCode,
+      account: address,
+    });
+    console.log('switch done....', switched);
+    this.setState({
+      currentNetwork,
+    });
+    await this.refreshPage();
+  };
   tick = async () => {
     // let isConnected = null;
     // let hasError = false;
@@ -114,7 +136,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   }
 
   updateMobileMode = () => {
-    const { isMobile, network } = this.state;
+    const { isMobile } = this.state;
     const newIsMobile = window.innerWidth < RESPONSIVE_MOBILE;
     if (isMobile !== newIsMobile) {
       this.setState({
@@ -124,9 +146,11 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   };
 
   updateAccount = (account: IAccount) => {
-    const { network } = this.state;
+    const network = account?.network;
     this.setState({
       account,
+      // @ts-ignore
+      network,
       address: account && account.address ? account.address : '',
     });
     // @ts-ignore
@@ -141,7 +165,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   };
   render() {
     const { children, location } = this.props;
-    const { isMobile, account, address, timestamp, connected } = this.state;
+    const { isMobile, account, address, currentNetwork, timestamp, connected } = this.state;
     const LayoutComp = location.pathname === '/home' ? HomeLayout : TradeLayout;
 
     return (
@@ -149,8 +173,10 @@ export default class Layout extends Component<RouteComponentProps, IState> {
         value={{
           updateAccount: this.updateAccount,
           refreshPage: this.refreshPage,
+          switNetwork: this.switNetwork,
           isMobile,
           connected,
+          currentNetwork,
           direction: 'ltr',
           // @ts-ignore
           timestamp,

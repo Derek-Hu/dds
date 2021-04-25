@@ -7,8 +7,8 @@ import BecomeSpark from './spark/become-spark';
 import MyReferal from './referal/my-referal';
 import { Visible } from '../builtin/hidden';
 import Auth, { Public } from '../builtin/auth';
-// import CampaignRewards from './referal/campaign-rewards';
-// import CampaignRewardsPool from './referal/campaign-rewards-pool';
+import CampaignRewards from './referal/campaign-rewards';
+import CampaignRewardsPool from './referal/campaign-rewards-pool';
 import Commission from './referal/commission';
 import SiteContext from '../../layouts/SiteContext';
 import { account2ReferalCode } from '../../services/broker.service';
@@ -85,21 +85,19 @@ export default class Broker extends Component<any, any> {
         <Visible when={this.state.selectedTab === tabName.spark}>
           <Step />
         </Visible>
-        {/* <Visible when={this.state.selectedTab === tabName.referal}>
+        <Visible when={this.state.selectedTab === tabName.referal}>
           <Row gutter={20} style={{ marginTop: '20px' }}>
-            <Col xs={24} sm={24} md={24} lg={24}>
+            {/* <Col xs={24} sm={24} md={24} lg={24}>
               <Commission />
-            </Col>
+            </Col> */}
             <Col xs={24} sm={24} md={12} lg={12}>
               <CampaignRewards />
             </Col>
-          </Row>
-          <Row style={{ marginTop: '24px' }}>
-            <Col xs={24} sm={24} md={24} lg={24}>
+            <Col xs={24} sm={24} md={12} lg={12}>
               <CampaignRewardsPool />
             </Col>
           </Row>
-        </Visible> */}
+        </Visible>
       </div>
     );
   }
