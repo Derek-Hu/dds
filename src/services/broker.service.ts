@@ -40,12 +40,17 @@ export const getMyReferalInfo = async (): Promise<IBrokerReferal> => {
           .map(one => Number(toEthers(one.balance, 4, one.coin)))
           .reduce((acc, cur) => acc + cur, 0);
         const refer = rs.refer.toNumber();
+        const rank: number = rs.rank.toNumber();
+        const level =
+          rank > 0 && rank <= 20 ? 'A' : rank >= 21 && rank <= 50 ? 'B' : rank >= 51 && rank <= 100 ? 'C' : 'D';
+
+        const rankStr: string = rank === 0 || rank > 100 ? '100+' : rank.toString();
 
         return {
           bonus: total,
           referals: refer,
-          level: 'A',
-          ranking: 39,
+          level,
+          ranking: rankStr,
         };
       }),
       take(1)

@@ -168,7 +168,7 @@ declare interface IBrokerSpark {
 declare interface IBrokerReferal {
   bonus: number;
   level: string;
-  ranking: number;
+  ranking: string;
   referals: number;
 }
 
@@ -247,6 +247,7 @@ declare interface PrivatePoolOrder {
   userAddress: string;
   orderId: string;
   time: number;
+  type: ITradeType;
   amount: number;
   lockedAmount: number;
   status: IOrderStatus;
