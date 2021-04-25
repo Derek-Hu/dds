@@ -253,6 +253,7 @@ declare interface PrivatePoolOrder {
   status: IOrderStatus;
   openPrice: number;
   coin: IUSDCoins;
+  type?: string;
 }
 
 declare type INetworkKey = 'kovan' | 'bsctest' | 'bscmain';

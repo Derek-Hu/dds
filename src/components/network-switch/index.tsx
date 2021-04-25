@@ -61,7 +61,7 @@ export default class NetworkSwitch extends Component<any, IState> {
       <SiteContext.Consumer>
         {({ currentNetwork }) => (
           <>
-            <div className={styles.network} onClick={this.openModal}>
+            <div className={styles.network}>
               <span className={styles.icon}></span>
               {Nets[currentNetwork]}
             </div>

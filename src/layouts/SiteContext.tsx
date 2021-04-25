@@ -6,6 +6,7 @@ export interface ISiteContextProps {
   account: IAccount;
   address: string;
   connected: boolean | null;
+  isBSC: boolean;
   timestamp?: number;
   currentNetwork: INetworkKey;
   updateAccount?: (account: IAccount) => any;
@@ -17,6 +18,7 @@ const SiteContext = React.createContext<ISiteContextProps>({
   isMobile: false,
   direction: 'ltr',
   address: '',
+  isBSC: false,
   currentNetwork: 'kovan',
   connected: null,
   account: null,

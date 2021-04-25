@@ -177,6 +177,8 @@ export default class Layout extends Component<RouteComponentProps, IState> {
           isMobile,
           connected,
           currentNetwork,
+          isBSC: currentNetwork === 'bscmain' || currentNetwork === 'bsctest',
+          // isBSC: process.env.NODE_ENV === 'development' ? true: currentNetwork === 'bscmain' || currentNetwork === 'bsctest',
           direction: 'ltr',
           // @ts-ignore
           timestamp,
