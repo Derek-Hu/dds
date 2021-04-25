@@ -6,7 +6,7 @@ import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { BigNumber } from 'ethers';
 import { toEthers } from '../util/ethers';
 import { loginUserAccount } from './account';
-import { CoinBalance, CoinShare } from '../wallet/contract-interface';
+import { CoinBalance, CoinShare, LiquditorRewardsResult } from '../wallet/contract-interface';
 import { defaultPoolData, defaultReTokenData } from './mock/unlogin-default';
 import { withLoading } from './utils';
 import { MyTokenSymbol } from '../constant';
@@ -103,24 +103,21 @@ export const getLiquiditorBalanceRecord = (): Promise<ILiquiditorBalanceRecord[]
   ]);
 };
 
+/**
+ * Your Liquiditor Mining Rewards 4.26
+ * Get compensated when insurance fund is empty
+ * 累积收益
+ */
 export const getLiquiditorReward = (type: 'public' | 'private'): Promise<{ campaign: number; compensate: number }> => {
   return from(loginUserAccount())
     .pipe(
       switchMap((account: string) => {
         return contractAccessor.getLiquiditorRewards(account);
       }),
-      map((balances: CoinBalance[]) => {
-        const ddsReward: CoinBalance[] = balances.filter(one => one.coin === MyTokenSymbol);
-        if (ddsReward.length > 0) {
-          return Number(toEthers(ddsReward[0].balance, 4, ddsReward[0].coin));
-        } else {
-          return 0;
-        }
-      }),
-      map((compensate: number) => {
+      map((balances: LiquditorRewardsResult) => {
         return {
-          campaign: 0,
-          compensate: compensate,
+          campaign: Number(toEthers(balances.campaign, 4, MyTokenSymbol)),
+          compensate: Number(toEthers(balances.compensate, 4, MyTokenSymbol)),
         };
       }),
       take(1)

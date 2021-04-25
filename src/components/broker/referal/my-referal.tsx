@@ -60,7 +60,7 @@ export default class Broker extends Component<any, IState> {
           <Col xs={24} sm={24} md={8} lg={8} className={styles.col}>
             <span className={styles.ads}>
               <Placeholder width={'50%'} loading={loading}>
-                {formatInt(ranking)}
+                {ranking}
               </Placeholder>
             </span>
             <span>Ranking</span>

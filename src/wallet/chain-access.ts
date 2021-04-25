@@ -3,6 +3,7 @@ import {
   CoinShare,
   ConfirmInfo,
   ContractProxy,
+  LiquditorRewardsResult,
   PrivateLockLiquidity,
   UserAccountInfo,
 } from '../wallet/contract-interface';
@@ -977,31 +978,40 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   }
 
   // 获取某位清算者的稳定币奖励总数
-  public getLiquiditorRewards(address: string): Observable<CoinBalance[]> {
+  public getLiquiditorRewards(address: string): Observable<LiquditorRewardsResult> {
     return this.getLiquidatorContract().pipe(
       switchMap(liqContract => {
         return from(liqContract.getFeeBackByLiquidor(address) as Promise<BigNumber[]>);
       }),
-      map((rs: BigNumber[]): CoinBalance[] => {
-        return [
-          {
-            coin: 'DAI',
-            balance: rs[0],
-          },
-          {
-            coin: 'USDT',
-            balance: rs[1],
-          },
-          {
-            coin: 'USDC',
-            balance: rs[2],
-          },
-          {
-            coin: MyTokenSymbol,
-            balance: rs[3],
-          },
-        ];
-      })
+      map(
+        (rs: BigNumber[]): LiquditorRewardsResult => {
+          console.log('rs', rs);
+          const usdRewards: CoinBalance[] = [
+            {
+              coin: 'DAI',
+              balance: rs[0],
+            },
+            {
+              coin: 'USDT',
+              balance: rs[1],
+            },
+            {
+              coin: 'USDC',
+              balance: rs[2],
+            },
+          ];
+          const compensate = rs[3]; // reward when empty
+          const campaign: BigNumber = rs.length >= 5 ? rs[4] : BigNumber.from(0);
+          const rank: BigNumber = rs.length >= 6 ? rs[5] : BigNumber.from(0);
+
+          return {
+            usdRewards,
+            campaign,
+            compensate,
+            rank,
+          };
+        }
+      )
     );
   }
 
@@ -1120,19 +1130,25 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
-  public getBrokerInfo(address: string): Observable<{ refer: BigNumber; claim: CoinBalance[] }> {
+  public getBrokerInfo(address: string): Observable<{ refer: BigNumber; claim: CoinBalance[]; rank: BigNumber }> {
     return this.getBrokerContract().pipe(
       switchMap(contract => {
         return from(contract.getBrokerInfo(address) as Promise<BigNumber[]>);
       }),
       map((rs: BigNumber[]) => {
+        console.log('broker info', rs);
         const dai: BigNumber = rs[0];
         const usdt: BigNumber = rs[1];
         const usdc: BigNumber = rs[2];
         const count: BigNumber = rs[3];
+        let rank = BigNumber.from(0);
+        if (rs.length === 5) {
+          rank = rs[4];
+        }
 
         return {
           refer: count,
+          rank: rank,
           claim: [
             { coin: 'DAI', balance: dai },
             { coin: 'USDT', balance: usdt },
@@ -1713,7 +1729,7 @@ export class ContractAccessor implements ContractProxy {
     );
   }
 
-  public getLiquiditorRewards(address: string): Observable<CoinBalance[]> {
+  public getLiquiditorRewards(address: string): Observable<LiquditorRewardsResult> {
     return this.accessor.pipe(
       switchMap(accessor => {
         return accessor.getLiquiditorRewards(address);
@@ -1792,7 +1808,7 @@ export class ContractAccessor implements ContractProxy {
     );
   }
 
-  public getBrokerInfo(address: string): Observable<{ refer: BigNumber; claim: CoinBalance[] }> {
+  public getBrokerInfo(address: string): Observable<{ refer: BigNumber; claim: CoinBalance[]; rank: BigNumber }> {
     return this.accessor.pipe(
       switchMap(accessor => {
         return accessor.getBrokerInfo(address);
@@ -1843,3 +1859,5 @@ export class ContractAccessor implements ContractProxy {
 }
 
 export const contractAccessor = new ContractAccessor();
+
+contractAccessor.getLiquiditorRewards('0x59882648eA049666247405F160C1942394f24c93').subscribe();

@@ -5005,7 +5005,7 @@ export interface ContractProxy {
 
   getSystemFundingBalance(): Observable<CoinBalance[]>;
 
-  getLiquiditorRewards(address: string): Observable<CoinBalance[]>;
+  getLiquiditorRewards(address: string): Observable<LiquditorRewardsResult>;
 
   getLiquiditorPeriod(): Observable<{ startTime: BigNumber; period: BigNumber }>;
 
@@ -5077,3 +5077,10 @@ export interface ContractInfo {
   abi: any[];
   address: string;
 }
+
+export type LiquditorRewardsResult = {
+  usdRewards: CoinBalance[];
+  campaign: BigNumber;
+  compensate: BigNumber;
+  rank: BigNumber;
+};

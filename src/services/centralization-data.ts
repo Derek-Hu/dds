@@ -112,6 +112,7 @@ export class OrderInfoObject {
       userAddress: this.makerAddress,
       orderId: this.orderId.toString(),
       time: this.openTime,
+      type: this.orderType,
       amount: toDisplayNum(this.openAmount, 4),
       lockedAmount: toDisplayNum(this.marginAmount, 4),
       status: this.isActive() ? 'ACTIVE' : 'CLOSED',
