@@ -310,6 +310,7 @@ export const getPriceGraphData = (
   duration: IGraphDuration
 ): Promise<IPriceGraph> => {
   const network = NetworkChains[coins.from];
+  console.log('getPriceGraphData network', from, network);
   const days = duration === 'day' ? 1 : duration === 'week' ? 7 : 30;
   const url = `https://api.coingecko.com/api/v3/coins/${network}/market_chart?vs_currency=USD&days=` + days;
   const rs = new AsyncSubject<IPriceGraph>();
