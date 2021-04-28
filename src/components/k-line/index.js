@@ -116,7 +116,7 @@ export default class MainLayout extends Component {
       if (this.chartInstance.containPixel('series', pointInPixel)) {
         let xIndex = this.chartInstance.convertFromPixel({ seriesIndex: 0 }, [params.offsetX, params.offsetY])[0];
         this.setState({
-          price: yData[xIndex],
+          // price: yData[xIndex],
         });
       }
     });
@@ -146,7 +146,7 @@ export default class MainLayout extends Component {
   render() {
     const { dataFrom, dataTo, graphData, duration, price } = this.state;
     const { percentage, range } = graphData || {};
-    const selectedCoinPair = `${dataFrom}/${dataTo}`;
+    const selectedCoinPair = dataFrom ? `${dataFrom}/${dataTo}` : '';
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => {
