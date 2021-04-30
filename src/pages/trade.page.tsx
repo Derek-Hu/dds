@@ -8,7 +8,7 @@ import FundingBalance from '../components/funding-balance/index';
 import SiteContext, { ISiteContextProps } from '../layouts/SiteContext';
 import { getCurPrice } from '../services/trade.service';
 import Auth from '../components/builtin/auth';
-import { SupporttedUSD, SupporttedCoins, NetWork2Coin, DefaultKeNetwork } from '../constant/index';
+import { SupporttedUSD, SupporttedCoins, NetWork2Coin, DefaultKeNetwork, ISupporttedUSD } from '../constant/index';
 import TradeInfo from '../components/trade-info/index';
 import parse from '../util/url';
 
@@ -39,27 +39,40 @@ export default class TradePage extends Component {
     }
 
     const coin = isValid ? to : this.state.coin;
-    const curPrice = await getCurPrice(coin);
+    console.log('dataFrom getCurPrice start, componentDidMount', coin);
+    // const curPrice = await getCurPrice(coin);
+    // console.log('dataFrom getCurPrice end', coin, curPrice);
     this.setState({
-      curPrice,
+      // curPrice,
     });
   }
 
+  updatePrice = (val: any) => {
+    console.log('dataFrom getCurPrice updatePrice', val);
+    // const { coin } = this.state;
+    // const currentNetwork = (this.context as ISiteContextProps) .currentNetwork;
+    // const fromCoin = NetWork2Coin[currentNetwork];
+    // if(fromCoin === preFrome && preTo === coin){
+    this.setState({
+      curPrice: val,
+    });
+    // }
+  };
   render() {
     const { curPrice, coin, from } = this.state;
     return (
       <SiteContext.Consumer>
-        {({ isMobile, currentNetwork }) => {
+        {({ isMobile, currentNetwork, timestamp }) => {
           const fromCoin = NetWork2Coin[currentNetwork] || from;
           console.log('trade currentNetwork', currentNetwork, fromCoin);
           return (
             <div className={[styles.tradeInfoPool, isMobile ? styles.mobile : ''].join(' ')}>
               <Row className={styles.chartBalance}>
                 <Col xs={24} sm={24} md={12} lg={16} className={styles.charWpr}>
-                  <KLine from={fromCoin} to={coin} />
+                  <KLine updatePrice={this.updatePrice} curPrice={curPrice} from={fromCoin} to={coin} />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={8}>
-                  <FundingBalance coins={{ from: fromCoin, to: coin }} />
+                  <FundingBalance timestamp={timestamp} curPrice={curPrice} coins={{ from: fromCoin, to: coin }} />
                 </Col>
               </Row>
               <div>

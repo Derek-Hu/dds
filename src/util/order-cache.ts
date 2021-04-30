@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 // @ts-ignore
 const CacheKey = () => window.PendingOrderCacheKey;
 
@@ -11,17 +13,32 @@ export const getPendingOrders = (remoteList?: ITradeRecord[]) => {
     if (!Array.isArray(data)) {
       return;
     }
+    const now = new Date().getTime();
+    const exipred = dayjs(new Date(now)).add(20, 'minute').toDate().getTime();
+
+    data.forEach(item => {
+      if (!item.$expireTime) {
+        item.$expireTime = exipred;
+      }
+    });
     if (!remoteList || !remoteList.length) {
       return data;
     }
+
     const valid = data.filter(item => {
-      return !remoteList.find(remote => remote.hash === item.hash);
+      return (
+        item.$expireTime > now &&
+        !remoteList.find(remote => {
+          return remote.hash === item.hash;
+        })
+      );
     });
 
     if (valid.length !== data.length) {
-      JSON.stringify(valid);
+      localStorage.setItem(CacheKey(), JSON.stringify(valid));
+    } else {
+      localStorage.setItem(CacheKey(), JSON.stringify(data));
     }
-    localStorage.setItem(CacheKey(), JSON.stringify(valid));
     return valid;
   } catch {
     return;

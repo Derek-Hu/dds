@@ -4,6 +4,7 @@ import DespositModal from './modals/deposit';
 import WithdrawModal from './modals/withdraw';
 import OrderConfirm from './modals/order-confirm';
 import { Component } from 'react';
+import dayjs from 'dayjs';
 import SiteContext from '../../layouts/SiteContext';
 import {
   getFundingBalanceInfo,
@@ -31,16 +32,18 @@ interface IState {
   available?: number;
   loading: boolean;
   feeQuery: boolean;
-  curPrice?: number;
   fees?: IOpenFee;
   setFeeQuery: boolean;
 }
 
+interface IProps {
+  coins: { from: IFromCoins; to: IUSDCoins };
+  curPrice?: number;
+  timestamp: any;
+}
 type TModalKeys = Pick<IState, 'withdrawVisible' | 'depositVisible' | 'orderConfirmVisible'>;
 
-export default class Balance extends Component<{
-  coins: { from: IFromCoins; to: IUSDCoins };
-}> {
+export default class Balance extends Component<IProps, IState> {
   state: IState = {
     depositVisible: false,
     withdrawVisible: false,
@@ -60,9 +63,11 @@ export default class Balance extends Component<{
     this.loadBalanceInfo();
   };
 
-  UNSAFE_componentWillReceiveProps() {
+  UNSAFE_componentWillReceiveProps(nextProps: IProps) {
     console.log('funding balance refresh...');
-    this.loadBalanceInfo();
+    if (this.props.timestamp !== nextProps.timestamp) {
+      this.loadBalanceInfo();
+    }
   }
 
   loadBalanceInfo = async (damon?: boolean) => {
@@ -72,7 +77,6 @@ export default class Balance extends Component<{
       if (!damon) {
         this.setState({ loading: true });
       }
-      const curPrice = await getCurPrice(to);
       const balanceInfo = await getFundingBalanceInfo(to);
 
       const available = getMaxFromCoin(balanceInfo);
@@ -80,12 +84,11 @@ export default class Balance extends Component<{
         (coins.from + coins.to) as IExchangeStr,
         available,
         this.state.tradeType
-      ); //divide(available, curPrice);//
+      );
       this.setState({
         balanceInfo,
         available: truncated(available),
         maxNumber,
-        curPrice,
         loading: false,
       });
     } catch (e) {
@@ -120,10 +123,12 @@ export default class Balance extends Component<{
   setModalVisible = (key: keyof TModalKeys) => {
     return {
       show: () =>
+        // @ts-ignore
         this.setState({
           [key]: true,
         }),
       hide: () =>
+        // @ts-ignore
         this.setState({
           [key]: false,
         }),
@@ -140,7 +145,7 @@ export default class Balance extends Component<{
     const tradeType: ITradeType = e.target.value;
     const { coins } = this.props;
     // 新的APi要求获取maxOpen时传入long，short类型，这里同步获取略有卡顿，后期可优化。 --by 蒜苗 2021-04-05
-    const maxNumber = await getMaxOpenAmount((coins.from + coins.to) as IExchangeStr, this.state.available, tradeType); //divide(available, curPrice);//
+    const maxNumber = await getMaxOpenAmount((coins.from + coins.to) as IExchangeStr, this.state.available, tradeType);
 
     this.setState({
       tradeType: tradeType,
@@ -184,6 +189,7 @@ export default class Balance extends Component<{
         price: fees?.curPrice,
         status: 'PENDING',
         costCoin: coins.to,
+        $expireTime: dayjs(new Date(openTime)).add(20, 'minute').toDate().getTime(),
       });
       this.context.refreshPage && this.context.refreshPage();
     }
@@ -241,13 +247,12 @@ export default class Balance extends Component<{
       maxNumber,
       setFeeQuery,
       feeQuery,
-      curPrice,
+      // curPrice,
       available,
     } = this.state;
-    const { coins } = this.props;
+    const { coins, curPrice } = this.props;
     const { from, to } = coins;
 
-    const price = curPrice;
     const address = this.context.address;
 
     const openData = {
@@ -294,7 +299,7 @@ export default class Balance extends Component<{
             </Row>
             <p className={styles.price}>
               <Placeholder loading={loading}>
-                Current Price: {format(price)} {to}
+                Current Price: {format(curPrice)} {to}
               </Placeholder>
             </p>
             <p className={styles.amountTip}>Amount</p>

@@ -47,27 +47,19 @@ export default class MainLayout extends Component {
 
   chartInstance = null;
 
-  loadGraph = async duration => {
+  updateGraphData = (data, duration) => {
     const { from, to } = this.props;
+    let pFrom = from;
+    let pTo = to;
 
-    if (this.timer) {
-      clearTimeout(this.timer);
-    }
-    const graphData = await getPriceGraphData({ from, to }, duration).catch(() => ({}));
-
-    this.timer = setTimeout(() => {
-      this.loadGraph(duration);
-    }, 5000);
-
-    const { data } = graphData || {};
     if (!data || !data.length) {
-      return;
+      data = [];
     }
+
     this.setState({
-      graphData,
-      price: graphData.price,
-      dataFrom: from,
-      dataTo: to,
+      // price: graphData.price,
+      dataFrom: pFrom,
+      dataTo: pTo,
     });
 
     if (!this.chartInstance) {
@@ -76,14 +68,19 @@ export default class MainLayout extends Component {
       this.chartInstance = echarts.init(container);
       this.chartInstance.setOption(option);
     }
-    const { xData, yData } = data.reduce(
-      (all, { timestamp, value }) => {
-        all.xData.push(dayjs(timestamp).format(Rule[duration]));
-        all.yData.push(value);
-        return all;
-      },
-      { xData: [], yData: [] }
-    );
+    const consistent = pFrom === this.props.from && pTo === this.props.to;
+    console.log('consistent', this.props.from, this.props.to);
+
+    const { xData, yData } = consistent
+      ? data.reduce(
+          (all, { timestamp, value }) => {
+            all.xData.push(dayjs(timestamp).format(Rule[duration]));
+            all.yData.push(value);
+            return all;
+          },
+          { xData: [], yData: [] }
+        )
+      : { xData: [], yData: [] };
 
     this.chartInstance.setOption({
       grid: {
@@ -122,13 +119,40 @@ export default class MainLayout extends Component {
     });
     this.chartInstance.getZr().on('mouseout', () => {
       this.setState({
-        price: graphData.price,
+        // price: graphData.price,
       });
     });
+  };
+
+  loadGraph = async duration => {
+    const { from, to, updatePrice } = this.props;
+    let pFrom = from;
+    let pTo = to;
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
+    // console.log('dataFrom loadGraph start', from, to);
+    const graphData = await getPriceGraphData({ from: pFrom, to: pTo }, duration).catch(() => ({}));
+    console.log('dataFrom loadGraph end', pFrom, this.props.from);
+    this.timer = setTimeout(() => {
+      this.loadGraph(duration);
+    }, 5000);
+
+    updatePrice && updatePrice(graphData.price);
+
+    const { data } = graphData || {};
+    this.updateGraphData(data, duration);
   };
   componentWillUnmount() {
     if (this.timer) {
       clearTimeout(this.timer);
+    }
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (this.props.from !== nextProps.from) {
+      const { duration } = this.state;
+      this.updateGraphData([], duration);
     }
   }
 
@@ -144,9 +168,12 @@ export default class MainLayout extends Component {
     this.loadGraph(key);
   };
   render() {
-    const { dataFrom, dataTo, graphData, duration, price } = this.state;
+    const { curPrice, from, to } = this.props;
+    const { dataFrom, dataTo, graphData, duration } = this.state;
     const { percentage, range } = graphData || {};
-    const selectedCoinPair = dataFrom ? `${dataFrom}/${dataTo}` : '';
+    const consistent = dataFrom === from && to === dataTo;
+    const selectedCoinPair = `${from}/${to}`;
+    const price = consistent ? curPrice : '';
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => {
