@@ -135,8 +135,6 @@ export default class Balance extends Component<{
   orderConfirmVisible = this.setModalVisible('orderConfirmVisible');
 
   changeType = async (e: any) => {
-    console.log(e);
-
     const tradeType: ITradeType = e.target.value;
     const { coins } = this.props;
     // 新的APi要求获取maxOpen时传入long，short类型，这里同步获取略有卡顿，后期可优化。 --by 蒜苗 2021-04-05
