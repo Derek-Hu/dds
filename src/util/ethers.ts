@@ -67,13 +67,29 @@ export function tokenBigNumber(amount: number, coin: ISLD | IUSDCoins | IReUSDCo
 }
 
 export function toExchangePair(pair: IExchangeStr): ExchangeCoinPair {
-  const eth: IFromCoins = pair.startsWith('ETH') ? 'ETH' : 'BTC';
-  const usd: IUSDCoins = pair.substr(eth.length) as IUSDCoins;
-
-  return {
-    USD: usd,
-    ETH: eth,
-  };
+  switch (pair) {
+    case 'ETHDAI': {
+      return { USD: 'DAI', ETH: 'ETH' };
+    }
+    case 'BNBDAI': {
+      return { USD: 'DAI', ETH: 'BNB' };
+    }
+    case 'BTCDAI': {
+      return { USD: 'DAI', ETH: 'BTC' };
+    }
+    case 'BTCUSDC': {
+      return { USD: 'USDC', ETH: 'BTC' };
+    }
+    case 'BTCUSDT': {
+      return { USD: 'USDT', ETH: 'BTC' };
+    }
+    case 'EHTUSDT': {
+      return { USD: 'USDT', ETH: 'ETH' };
+    }
+    case 'ETHUSDC': {
+      return { USD: 'USDC', ETH: 'ETH' };
+    }
+  }
 }
 
 export function fromExchangePair(exchange: ExchangeCoinPair): IExchangeStr {
