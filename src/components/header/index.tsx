@@ -219,7 +219,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                           Kovan-Faucet
                         </a>
                       </div>
-                      <NetworkSwitch></NetworkSwitch>
+                      {account && account.address ? <NetworkSwitch></NetworkSwitch> : null}
                       <ConnectWallet>
                         {account ? (
                           <div className={styles.accountInfo}>

@@ -47,14 +47,16 @@ export default class MainLayout extends Component {
 
   chartInstance = null;
 
-  loadGraph = async (from, to, duration) => {
+  loadGraph = async duration => {
+    const { from, to } = this.props;
+
     if (this.timer) {
       clearTimeout(this.timer);
     }
     const graphData = await getPriceGraphData({ from, to }, duration).catch(() => ({}));
 
     this.timer = setTimeout(() => {
-      this.loadGraph(from, to, duration);
+      this.loadGraph(duration);
     }, 5000);
 
     const { data } = graphData || {};
@@ -64,6 +66,8 @@ export default class MainLayout extends Component {
     this.setState({
       graphData,
       price: graphData.price,
+      dataFrom: from,
+      dataTo: to,
     });
 
     if (!this.chartInstance) {
@@ -112,7 +116,7 @@ export default class MainLayout extends Component {
       if (this.chartInstance.containPixel('series', pointInPixel)) {
         let xIndex = this.chartInstance.convertFromPixel({ seriesIndex: 0 }, [params.offsetX, params.offsetY])[0];
         this.setState({
-          price: yData[xIndex],
+          // price: yData[xIndex],
         });
       }
     });
@@ -128,36 +132,21 @@ export default class MainLayout extends Component {
     }
   }
 
-  updateProps = () => {
-    const { from, to } = this.props;
-    const { duration } = this.state;
-
-    this.setState({
-      from: from.toUpperCase(),
-      to: to.toUpperCase(),
-    });
-
-    this.loadGraph(from, to, duration);
-  };
-  UNSAFE_componentWillReceiveProps() {
-    this.updateProps();
-  }
-
   async componentDidMount() {
-    this.updateProps();
+    const { duration } = this.state;
+    this.loadGraph(duration);
   }
 
   changeDuration = key => {
-    const { from, to } = this.state;
     this.setState({
       duration: key,
     });
-    this.loadGraph(from, to, key);
+    this.loadGraph(key);
   };
   render() {
-    const { from, to, graphData, duration, price } = this.state;
+    const { dataFrom, dataTo, graphData, duration, price } = this.state;
     const { percentage, range } = graphData || {};
-    const selectedCoinPair = `${from}/${to}`;
+    const selectedCoinPair = dataFrom ? `${dataFrom}/${dataTo}` : '';
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => {

@@ -72,7 +72,7 @@ export const claimReferalInfo = async (): Promise<boolean> => {
 };
 
 // 获取broker月度活动奖励信息 new 4.18
-export const getBrokerCampaignRewardData = async (): Promise<ICoinValue[]> => {
+export const getBrokerCampaignRewardData = async (): Promise<ICoinItem[]> => {
   return from(loginUserAccount())
     .pipe(
       switchMap(account => {
@@ -82,8 +82,8 @@ export const getBrokerCampaignRewardData = async (): Promise<ICoinValue[]> => {
         return balances.map(one => {
           return {
             coin: one.coin,
-            value: Number(toEthers(one.balance, 4, one.coin)),
-          } as ICoinValue;
+            amount: Number(toEthers(one.balance, 4, one.coin)),
+          } as ICoinItem;
         });
       }),
       take(1)

@@ -12,7 +12,7 @@ interface IState {
   loading: boolean;
   data?: { campaign: number; compensate: number };
 }
-export default class LiquiditorReward extends Component<any, IState> {
+export default class LiquiditorReward extends Component<{ isBSC: boolean }, IState> {
   state: IState = {
     loading: false,
   };
@@ -37,21 +37,24 @@ export default class LiquiditorReward extends Component<any, IState> {
 
   render() {
     const { data, loading } = this.state;
+    const { isBSC } = this.props;
     const { campaign, compensate } = data || {};
     return (
       <div className={styles.liquiditorWpr}>
         <h3>{this.context.address ? 'Your Liquiditor Mining Rewards' : 'Liquiditor Mining Rewards'}</h3>
         <p>Get compensated when insurance fund is empty</p>
         <Row>
-          <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
-            <span className={styles.ads}>
-              <Placeholder loading={loading} width={'6em'}>
-                {format(campaign)} SLD
-              </Placeholder>
-            </span>
-            <span>Campaign Rewards</span>
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
+          {isBSC ? (
+            <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
+              <span className={styles.ads}>
+                <Placeholder loading={loading} width={'6em'}>
+                  {format(campaign)} SLD
+                </Placeholder>
+              </span>
+              <span>Campaign Rewards</span>
+            </Col>
+          ) : null}
+          <Col xs={24} sm={24} md={isBSC ? 12 : 24} className={styles.col}>
             <span className={styles.ads}>
               <Placeholder loading={loading} width={'6em'}>
                 {format(compensate)} SLD

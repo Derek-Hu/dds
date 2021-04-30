@@ -133,7 +133,7 @@ export default class Mining extends Component {
 
     return (
       <SiteContext.Consumer>
-        {({ isMobile }) => (
+        {({ isMobile, isBSC }) => (
           <div className={[styles.root, isMobile ? styles.mobile : ''].join(' ')}>
             <h2>Mining</h2>
             <div className={styles.tabContainer}>
@@ -153,7 +153,7 @@ export default class Mining extends Component {
                   <LiquidityLocked />
                 </TabPane>
                 <TabPane tab={<span className={styles.uppercase}>{TabName.Liquiditor}</span>} key={TabName.Liquiditor}>
-                  <Liquiditor />
+                  <Liquiditor isBSC={isBSC} />
                 </TabPane>
               </Tabs>
 
@@ -261,7 +261,7 @@ export default class Mining extends Component {
                   </div>
                 </Auth>
               </Visible>
-              <Visible when={showRanking && selectedTab === TabName.Liquiditor}>
+              <Visible when={isBSC && showRanking && selectedTab === TabName.Liquiditor}>
                 <SystemRanking />
               </Visible>
             </div>

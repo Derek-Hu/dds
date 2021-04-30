@@ -146,11 +146,14 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   };
 
   updateAccount = (account: IAccount) => {
-    const network = account?.network;
+    const networkCode = account?.network;
+    // @ts-ignore
+    const network = CentralPath[networkCode] || DefaultKeNetwork;
+    console.log('updateAccount network', network);
     this.setState({
       account,
       // @ts-ignore
-      network,
+      currentNetwork: network,
       address: account && account.address ? account.address : '',
     });
     // @ts-ignore
@@ -177,6 +180,8 @@ export default class Layout extends Component<RouteComponentProps, IState> {
           isMobile,
           connected,
           currentNetwork,
+          isBSC: currentNetwork === 'bscmain' || currentNetwork === 'bsctest',
+          // isBSC: process.env.NODE_ENV === 'development' ? true: currentNetwork === 'bscmain' || currentNetwork === 'bsctest',
           direction: 'ltr',
           // @ts-ignore
           timestamp,
