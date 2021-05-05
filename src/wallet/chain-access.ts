@@ -919,8 +919,8 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       switchMap(rewardContract => {
         return from(rewardContract.queryRewardsForLP2(address) as Promise<BigNumber>);
       }),
-      map((rs: BigNumber) => {
-        return rs;
+      map((rs: any) => {
+        return (rs as BigNumber[])[0];
       }),
       catchError(err => {
         console.warn('error', err);
@@ -985,7 +985,6 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       }),
       map(
         (rs: BigNumber[]): LiquditorRewardsResult => {
-          console.log('rs', rs);
           const usdRewards: CoinBalance[] = [
             {
               coin: 'DAI',
@@ -1859,5 +1858,3 @@ export class ContractAccessor implements ContractProxy {
 }
 
 export const contractAccessor = new ContractAccessor();
-
-contractAccessor.getLiquiditorRewards('0x59882648eA049666247405F160C1942394f24c93').subscribe();
