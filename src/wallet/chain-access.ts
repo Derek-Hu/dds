@@ -917,10 +917,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   public getActiveLiquidityRewards(address: string): Observable<BigNumber> {
     return this.getMiningRewardContract().pipe(
       switchMap(rewardContract => {
-        return from(rewardContract.queryRewardsForLP2(address) as Promise<BigNumber>);
+        return from(rewardContract.queryRewardsForLP2(address) as Promise<BigNumber[]>);
       }),
-      map((rs: any) => {
-        return (rs as BigNumber[])[0];
+      map((rs: BigNumber[]) => {
+        return rs[0];
       }),
       catchError(err => {
         console.warn('error', err);
