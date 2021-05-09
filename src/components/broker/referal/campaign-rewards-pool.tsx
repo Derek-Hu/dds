@@ -59,7 +59,6 @@ export default class CampaignRewardsPool extends Component<any, IState> {
                 <br />
                 <span>{nextDistribution}</span>
               </p>
-              ,
               <p className={styles.shareTotalTip}>
                 <span>
                   Your

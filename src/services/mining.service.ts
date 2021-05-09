@@ -19,12 +19,32 @@ const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   });
 };
 
-// 获取Top 3及用户排名
+// 获取Top 3及用户排名  -- modified 05-09
 export const getRankings = (): Promise<IRankings> => {
-  return returnVal({
-    top: ['0x32489320432432', '0x3248932043243542', '0x32489320432430003'],
-    current: 1230,
-  });
+  return contractAccessor
+    .getLiquiditorPeriod()
+    .pipe(
+      switchMap(period => {
+        const periodVal = period.period.toNumber();
+
+        const info$ = from(loginUserAccount()).pipe(
+          switchMap((account: string) => {
+            return contractAccessor.getLiquiditorRewardsOfPeriod(account, periodVal);
+          }),
+          map(info => {
+            return info.info.rank.toNumber();
+          })
+        );
+        const top$ = contractAccessor.getLiquiditorRatingList(periodVal);
+
+        return zip(info$, top$);
+      }),
+      map(([current, top]) => {
+        return { top, current };
+      }),
+      take(1)
+    )
+    .toPromise();
 };
 //
 export const getLiquidityMiningReward = (
@@ -130,7 +150,11 @@ export const getLiquiditorPeriodReward = (): Promise<ILiquiditorPeriodReward> =>
   return from(loginUserAccount())
     .pipe(
       switchMap(account => {
-        return contractAccessor.getLiquiditorRewardsOfPeriod(account);
+        return contractAccessor.getLiquiditorPeriod().pipe(
+          switchMap(period => {
+            return contractAccessor.getLiquiditorRewardsOfPeriod(account, period.period.toNumber());
+          })
+        );
       }),
       map(rs => {
         return {
