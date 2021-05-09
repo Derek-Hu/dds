@@ -1027,18 +1027,15 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
 
   // 获取当前周期的清算者的奖励信息
   public getLiquiditorRewardsOfPeriod(
-    address: string
+    address: string,
+    period: number
   ): Observable<{
     rewards: CoinBalance[];
     info: { extSLD: BigNumber; rank: BigNumber };
   }> {
     return this.getLiquidatorContract().pipe(
       switchMap((liqContract: ethers.Contract) => {
-        return this.getLiquiditorPeriod().pipe(
-          switchMap(period => {
-            return from(liqContract.getFeeBackByLiquidorAndPeriod(address, period.period));
-          })
-        );
+        return from(liqContract.getFeeBackByLiquidorAndPeriod(address, BigNumber.from(period)));
       }),
       map((rs: any) => {
         return {
@@ -1050,6 +1047,21 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
           ],
           info: { extSLD: rs[4] as BigNumber, rank: rs[5] as BigNumber },
         };
+      })
+    );
+  }
+
+  public getLiquiditorRatingList(period: number): Observable<string[]> {
+    return this.getLiquidatorContract().pipe(
+      switchMap((liqContract: ethers.Contract) => {
+        return from(liqContract.getLiquidorsRatingList(BigNumber.from(period)) as Promise<string[]>);
+      }),
+      map((rs: string[]) => {
+        return rs;
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of([]);
       })
     );
   }
@@ -1135,7 +1147,6 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         return from(contract.getBrokerInfo(address) as Promise<BigNumber[]>);
       }),
       map((rs: BigNumber[]) => {
-        console.log('broker info', rs);
         const dai: BigNumber = rs[0];
         const usdt: BigNumber = rs[1];
         const usdc: BigNumber = rs[2];
@@ -1174,7 +1185,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
-  // 查询broker的月度奖励的信息
+  // 查询broker的月度累积奖励的信息
   public getBrokerMonthlyAwardsInfo(address: string): Observable<CoinBalance[]> {
     return this.getBrokerContract().pipe(
       switchMap(brokerContract => {
@@ -1199,6 +1210,29 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       }),
       map(rs => {
         return (rs as BigNumber).toNumber() * 1000;
+      })
+    );
+  }
+
+  // 查询月活动奖池中的当前余额
+  public getBrokerMonthlyRewardPool(): Observable<CoinBalance[]> {
+    return this.getBrokerContract().pipe(
+      switchMap(brokerContract => {
+        return from(brokerContract.getTotalMonthlyAwards() as Promise<BigNumber[]>);
+      }),
+      map((rs: BigNumber[]) => {
+        const balances: CoinBalance[] = (['DAI', 'USDT', 'USDC'] as IUSDCoins[]).map((coin, index) => {
+          return {
+            coin,
+            balance: rs[index],
+          };
+        });
+
+        return balances;
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return [];
       })
     );
   }
@@ -1745,14 +1779,23 @@ export class ContractAccessor implements ContractProxy {
   }
 
   public getLiquiditorRewardsOfPeriod(
-    address: string
+    address: string,
+    period: number
   ): Observable<{
     rewards: CoinBalance[];
     info: { extSLD: BigNumber; rank: BigNumber };
   }> {
     return this.accessor.pipe(
       switchMap(accessor => {
-        return accessor.getLiquiditorRewardsOfPeriod(address);
+        return accessor.getLiquiditorRewardsOfPeriod(address, period);
+      })
+    );
+  }
+
+  public getLiquiditorRatingList(period: number): Observable<string[]> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.getLiquiditorRatingList(period);
       })
     );
   }
@@ -1835,6 +1878,14 @@ export class ContractAccessor implements ContractProxy {
     return this.accessor.pipe(
       switchMap(accessor => {
         return accessor.getBrokerMonthlyStartTime();
+      })
+    );
+  }
+
+  public getBrokerMonthlyRewardPool(): Observable<CoinBalance[]> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.getBrokerMonthlyRewardPool();
       })
     );
   }
