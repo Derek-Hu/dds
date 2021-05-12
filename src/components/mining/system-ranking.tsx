@@ -30,6 +30,7 @@ interface IState {
   loading: boolean;
   rankings: IRankings | null;
 }
+
 export default class Ranking extends Component<any, IState> {
   UNSAFE_componentWillReceiveProps() {
     this.loadData();
@@ -85,7 +86,17 @@ export default class Ranking extends Component<any, IState> {
                 {address ? (
                   <Placeholder noWrp={true} loading={loading} style={{ margin: '63px auto' }} width="50%">
                     <p className={styles.current}>
-                      You are at <span>NO.{current}</span>
+                      {current !== undefined && current > 0 && current < 4 ? (
+                        <span>
+                          You are at <span>NO.{current}</span>
+                        </span>
+                      ) : current === 0 ? (
+                        <span>You are not yet the liquidator</span>
+                      ) : current === 4 ? (
+                        <span>You are not in the top 3</span>
+                      ) : (
+                        ''
+                      )}
                     </p>
                   </Placeholder>
                 ) : (

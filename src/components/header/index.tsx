@@ -2,11 +2,11 @@ import { Component } from 'react';
 import { Menu, Icon, Row, Col, Button, Drawer } from 'antd';
 import styles from './style.module.less';
 import { NavLink as Link, Link as LLink } from 'react-router-dom';
-import SiteContext from '../../layouts/SiteContext';
+import SiteContext, { ISiteContextProps } from '../../layouts/SiteContext';
 import ConnectWallet from '../connect-wallet/index';
 import Logo from '~/assets/imgs/logo.png';
 import LogoWhite from '~/assets/imgs/logo-white.png';
-import { homeBasePath, ddsBasePath } from '../../constant/index';
+import { homeBasePath, ddsBasePath, DefaultKeNetwork } from '../../constant/index';
 import { isNumberLike } from '../../util/math';
 import { shortAddress } from '../../util/index';
 import NetworkSwitch from '../network-switch/index';
@@ -45,6 +45,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
   state = {
     current: 'mail',
     drawerOpen: false,
+    selectedNetwork: (this.context as ISiteContextProps).currentNetwork || DefaultKeNetwork,
   };
 
   openDrawer = () => {
@@ -90,9 +91,10 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
   render() {
     const { darkMode } = this.props;
     const { drawerOpen } = this.state;
+    // const { currentNetwork } = this.context;
     return (
       <SiteContext.Consumer>
-        {({ isMobile, account }) =>
+        {({ isMobile, account, currentNetwork }) =>
           isMobile ? (
             darkMode ? (
               <div className={styles.homeHeader}>
@@ -215,9 +217,15 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                   ) : (
                     <div className={styles.rightContent}>
                       <div className={styles.network}>
-                        <a href="https://faucet.kovan.network/" rel="noreferrer" target="_blank">
-                          Kovan-Faucet
-                        </a>
+                        {currentNetwork === 'kovan' ? (
+                          <a href="https://faucet.kovan.network/" rel="noreferrer" target="_blank">
+                            Kovan-Faucet
+                          </a>
+                        ) : (
+                          <a href="https://testnet.binance.org/faucet-smart" rel="noreferrer" target="_blank">
+                            BSC-faucet
+                          </a>
+                        )}
                       </div>
                       {account && account.address ? <NetworkSwitch></NetworkSwitch> : null}
                       <ConnectWallet>

@@ -18,6 +18,7 @@ interface IState {
   timestamp: number | null;
   currentNetwork: INetworkKey;
 }
+
 // @ts-ignore
 let timer = null;
 
@@ -39,6 +40,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
     // @ts-ignore
     window.globalRefresh = this.refreshPage;
   }
+
   componentDidMount() {
     if (isDDSPage) {
       this.tick();
@@ -99,7 +101,6 @@ export default class Layout extends Component<RouteComponentProps, IState> {
     try {
       const isConnected = await initTryConnect();
       const { connected, account } = this.state;
-
       if (isConnected !== connected || (connected === true && !account)) {
         this.setState({
           connected: isConnected,
@@ -126,6 +127,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
       this.tick();
     }, 5000);
   };
+
   componentWillUnmount() {
     // @ts-ignore
     if (timer) {
@@ -166,6 +168,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
       timestamp: new Date().getTime(),
     });
   };
+
   render() {
     const { children, location } = this.props;
     const { isMobile, account, address, currentNetwork, timestamp, connected } = this.state;
