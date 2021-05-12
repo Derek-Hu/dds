@@ -89,9 +89,21 @@ export default () => {
               </div>
               <div className={styles.campionLevels}>
                 <h4>Campaign</h4>
-                <p>
-                  不同等级的返佣率不同，C、D等级将分别拿出10%和20%的手续费注入奖励池。
-                  每30天奖励池的60%和40%的奖励将被均分给等级A、B的经纪人， 并基于最新的排名重置等级。
+                <p
+                  style={{
+                    textAlign: 'center',
+                    lineHeight: 1.4,
+                    fontWeight: 700,
+                    fontSize: '16px',
+                    letterSpacing: '0.01em',
+                    marginBottom: '3em',
+                    color: '#333333',
+                  }}
+                >
+                  Different levels of Brokers have different commission rates. Brokers who have level C and D will
+                  inject 10% and 20% of the transaction fee into the Reward Pool. Every 30 day, 60% of fee in Reward
+                  pool will be distributed to level A, and 40 % of fee will go to level B. After the distribution, the
+                  level will be reset for all brokers.
                 </p>
                 <div>
                   <div className={styles.title}>
@@ -101,7 +113,7 @@ export default () => {
                   </div>
                   <img src={CampaignImg} width="87%" alt="" />
                 </div>
-                <p>Rewards distribute every 30 days</p>
+                <p style={{ marginTop: '2em' }}>Rewards distribute every 30 days</p>
               </div>
             </Visible>
           </div>

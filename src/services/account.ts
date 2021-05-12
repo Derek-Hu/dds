@@ -46,15 +46,6 @@ export const initTryConnect = async (): Promise<boolean> => {
 };
 
 export const curUserAccount = async (): Promise<string | null> => {
-  // return walletManager
-  //   .watchWalletInstance()
-  //   .pipe(
-  //     switchMap((wallet: WalletInterface | null) => {
-  //       return wallet === null ? of(null) : wallet.watchAccount();
-  //     }),
-  //     take(1)
-  //   )
-  //   .toPromise();
   return loginUserAccount();
 };
 
