@@ -11,7 +11,7 @@ import * as request from 'superagent';
 import { withLoading } from './utils';
 import { getNetworkAndAccount, loginUserAccount } from './account';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
-import { CentralHost, CentralPath, CentralPort, EthNetwork } from '../constant/address';
+import { CentralHost, CentralPath, CentralPort, CentralProto, EthNetwork } from '../constant/address';
 
 /**
  * Trade Page
@@ -148,7 +148,10 @@ export const getTradeOrders = async (page: number, pageSize = 5, isActive = true
   return from(getNetworkAndAccount())
     .pipe(
       switchMap(({ account, network }) => {
-        const baseHost: string = CentralHost + ':' + CentralPort[network] + '/' + CentralPath[network];
+        const baseHost: string =
+          CentralProto === 'https:'
+            ? CentralHost + '/' + CentralPath[network]
+            : CentralHost + ':' + CentralPort[network] + '/' + CentralPath[network];
         const url: string = baseHost + '/transactions/getTransactionsInfo';
         const pageIndex = page - 1;
         const state = isActive ? 1 : 2; // 1:未平仓，2：已平仓
