@@ -1,7 +1,7 @@
 import { walletManager } from '../wallet/wallet-manager';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
-import { combineLatest, NEVER, Observable, of, zip } from 'rxjs';
+import { combineLatest, NEVER, Observable, of, Subject, zip } from 'rxjs';
 import { contractAccessor } from '../wallet/chain-access';
 import { CoinBalance } from '../wallet/contract-interface';
 import { toEthers } from '../util/ethers';
@@ -77,6 +77,7 @@ export const userAccountInfo = async (): Promise<IAccount> => {
         return wallet === null ? NEVER : combineLatest([wallet.watchAccount(), wallet.watchNetwork()]);
       }),
       switchMap(([account, network]: [string, EthNetwork]) => {
+        //console.log("account or network", account, network);
         return contractAccessor.getUserSelfWalletBalance(account).pipe(
           map((balances: CoinBalance[]) => {
             return {
@@ -139,13 +140,18 @@ export const getNetworkAndAccount = async (old?: {
     .toPromise();
 };
 
-// 循环等待账号或连接网络变化
-
-// let old: { network: EthNetwork, account: string } | undefined = undefined;
-// const callback = (info: { network: EthNetwork, account: string }) => {
-//   old = info;
-//   console.log("get acc info", info);
-//   getNetworkAndAccount(old).then(callback);
-// }
-//
-// getNetworkAndAccount(old).then(callback);
+/**
+ * 切换网络
+ * @param id - chain id
+ */
+export const switchNetwork = async (id: EthNetwork): Promise<boolean> => {
+  return walletManager
+    .watchWalletInstance()
+    .pipe(
+      switchMap(wallet => {
+        return wallet === null ? of(false) : wallet.switchNetwork(id);
+      }),
+      take(1)
+    )
+    .toPromise();
+};

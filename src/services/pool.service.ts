@@ -10,7 +10,7 @@ import { defaultCoinDatas, defaultPoolData } from './mock/unlogin-default';
 import * as request from 'superagent';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
 import { CoinBalance } from '../wallet/contract-interface';
-import { CentralHost, CentralPath, CentralPort } from '../constant/address';
+import { CentralHost, CentralPath, CentralPort, CentralProto } from '../constant/address';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   if (process.env.NODE_ENV === 'development') {
@@ -274,7 +274,10 @@ export const getPrivateOrders = async (
   return from(getNetworkAndAccount())
     .pipe(
       switchMap(({ account, network }) => {
-        const baseHost: string = CentralHost + ':' + CentralPort[network] + '/' + CentralPath[network];
+        const baseHost: string =
+          CentralProto === 'https:'
+            ? CentralHost + '/' + CentralPath[network]
+            : CentralHost + ':' + CentralPort[network] + '/' + CentralPath[network];
         const url: string = baseHost + '/transactions/getTransactionsInfo';
         const pageIndex = page - 1;
         const state = isActive ? 1 : 2;

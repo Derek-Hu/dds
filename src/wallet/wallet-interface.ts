@@ -21,4 +21,6 @@ export interface WalletInterface {
   watchNetwork(): Observable<EthNetwork>;
 
   tryInitConnect(): Observable<boolean>;
+
+  switchNetwork(id: EthNetwork): Observable<boolean>;
 }

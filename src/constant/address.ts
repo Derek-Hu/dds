@@ -68,7 +68,22 @@ export enum EthNetwork {
   bianTest = '97',
 }
 
-export const CentralHost = window.location.protocol + '//shieldex.io';
+export const NetworkParam = {
+  [EthNetwork.bianTest]: {
+    chainId: '0x61',
+    chainName: 'BSC Test Network',
+    nativeCurrency: {
+      name: 'BNB',
+      symbol: 'BNB',
+      decimals: 18,
+    },
+    rpcUrls: ['https://data-seed-prebsc-2-s3.binance.org:8545'],
+    blockExplorerUrls: ['https://testnet.bscscan.com/'],
+  },
+};
+
+export const CentralProto = window.location.protocol;
+export const CentralHost = CentralProto + '//shieldex.io';
 export const CentralPort = {
   [EthNetwork.kovan]: '8090',
   [EthNetwork.bianTest]: '8095',

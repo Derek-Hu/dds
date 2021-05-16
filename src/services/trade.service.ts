@@ -11,7 +11,7 @@ import * as request from 'superagent';
 import { withLoading } from './utils';
 import { getNetworkAndAccount, loginUserAccount } from './account';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
-import { CentralHost, CentralPath, CentralPort, EthNetwork } from '../constant/address';
+import { CentralHost, CentralPath, CentralPort, CentralProto, EthNetwork } from '../constant/address';
 
 /**
  * Trade Page
@@ -104,51 +104,54 @@ export const getFundingLocked = async (coin: IUSDCoins, ethAmount: number): Prom
  * @param pageSize
  */
 export const getTradeOrders = async (page: number, pageSize = 5, isActive = true): Promise<ITradeRecord[]> => {
-  if (process.env.NODE_ENV === 'development') {
-    return returnVal([
-      {
-        hash: '0.5520740463908274',
-        id: 'string',
-        time: new Date().getTime(),
-        type: 'LONG',
-        price: 60,
-        // openPrice: number;
-        // curPrice: number;
-        amount: 50,
-        cost: 40,
-        costCoin: 'DAI',
-        fee: 30,
-        pl: {
-          val: 100,
-          percentage: 20,
-        },
-        status: 'ACTIVE',
-      },
-      {
-        hash: '20000',
-        id: 'string',
-        time: new Date().getTime(),
-        type: 'SHORT',
-        price: 60,
-        // openPrice: number;
-        // curPrice: number;
-        amount: 50,
-        cost: 40,
-        costCoin: 'DAI',
-        fee: 30,
-        pl: {
-          val: 100,
-          percentage: 20,
-        },
-        status: 'ACTIVE',
-      },
-    ]);
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   return returnVal([
+  //     {
+  //       hash: '0.5520740463908274',
+  //       id: 'string',
+  //       time: new Date().getTime(),
+  //       type: 'LONG',
+  //       price: 60,
+  //       // openPrice: number;
+  //       // curPrice: number;
+  //       amount: 50,
+  //       cost: 40,
+  //       costCoin: 'DAI',
+  //       fee: 30,
+  //       pl: {
+  //         val: 100,
+  //         percentage: 20,
+  //       },
+  //       status: 'ACTIVE',
+  //     },
+  //     {
+  //       hash: '20000',
+  //       id: 'string',
+  //       time: new Date().getTime(),
+  //       type: 'SHORT',
+  //       price: 60,
+  //       // openPrice: number;
+  //       // curPrice: number;
+  //       amount: 50,
+  //       cost: 40,
+  //       costCoin: 'DAI',
+  //       fee: 30,
+  //       pl: {
+  //         val: 100,
+  //         percentage: 20,
+  //       },
+  //       status: 'ACTIVE',
+  //     },
+  //   ]);
+  // }
 
   return from(getNetworkAndAccount())
     .pipe(
       switchMap(({ account, network }) => {
-        const baseHost: string = CentralHost + ':' + CentralPort[network] + '/' + CentralPath[network];
+        const baseHost: string =
+          CentralProto === 'https:'
+            ? CentralHost + '/' + CentralPath[network]
+            : CentralHost + ':' + CentralPort[network] + '/' + CentralPath[network];
         const url: string = baseHost + '/transactions/getTransactionsInfo';
         const pageIndex = page - 1;
         const state = isActive ? 1 : 2; // 1:未平仓，2：已平仓
