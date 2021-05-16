@@ -7,6 +7,8 @@ import { ddsBasePath, DefaultKeNetwork } from '../constant/index';
 import { userAccountInfo, initTryConnect, getNetworkAndAccount } from '../services/account';
 import { walletManager } from '../wallet/wallet-manager';
 import { CentralPath, EthNetwork } from '../constant/address';
+import { accountEvents } from '../services/global-event.service';
+import { Subscription } from 'rxjs';
 
 const RESPONSIVE_MOBILE = 768;
 
@@ -35,6 +37,8 @@ export default class Layout extends Component<RouteComponentProps, IState> {
     account: null,
   };
 
+  private eventSub: Subscription | undefined;
+
   constructor(props: any) {
     super(props);
     // @ts-ignore
@@ -48,6 +52,12 @@ export default class Layout extends Component<RouteComponentProps, IState> {
     }
     this.updateMobileMode();
     window.addEventListener('resize', this.updateMobileMode);
+
+    this.eventSub = accountEvents.watchAccountEvent().subscribe(() => {
+      if (this.state.connected) {
+        this.refreshPage();
+      }
+    });
   }
 
   connectTimeout = () => {
@@ -69,19 +79,18 @@ export default class Layout extends Component<RouteComponentProps, IState> {
         new Promise(resolve => {
           setTimeout(() => {
             resolve(null);
-          }, 1000);
+          }, 2000);
         }),
       ]);
       if (account) {
         this.updateAccount(account);
       }
     } catch (error) {
-      console.log(error);
+      console.warn(error);
     }
   };
 
   switNetwork = async (currentNetwork: INetworkKey) => {
-    console.log('switch....');
     const { address } = this.state;
     // @ts-ignore
     const networkCode: EthNetwork = Object.keys(CentralPath).find(v => CentralPath[v as EthNetwork] === currentNetwork);
@@ -89,7 +98,6 @@ export default class Layout extends Component<RouteComponentProps, IState> {
       network: networkCode,
       account: address,
     });
-    console.log('switch done....', switched);
     this.setState({
       currentNetwork,
     });
@@ -135,6 +143,11 @@ export default class Layout extends Component<RouteComponentProps, IState> {
       clearTimeout(timer);
     }
     window.removeEventListener('resize', this.updateMobileMode);
+
+    if (this.eventSub) {
+      this.eventSub.unsubscribe();
+      this.eventSub = undefined;
+    }
   }
 
   updateMobileMode = () => {
@@ -151,7 +164,6 @@ export default class Layout extends Component<RouteComponentProps, IState> {
     const networkCode = account?.network;
     // @ts-ignore
     const network = CentralPath[networkCode] || DefaultKeNetwork;
-    console.log('updateAccount network', network);
     this.setState({
       account,
       // @ts-ignore

@@ -259,6 +259,7 @@ declare interface PrivatePoolOrder {
 declare type INetworkKey = 'kovan' | 'bsctest' | 'bscmain';
 
 declare type INetworkChain = 'binancecoin' | 'ethereum';
+
 declare interface IRankings {
   top: Array<string>;
   current: number;

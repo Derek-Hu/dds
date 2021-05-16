@@ -227,7 +227,9 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                           </a>
                         )}
                       </div>
+
                       {account && account.address ? <NetworkSwitch></NetworkSwitch> : null}
+
                       <ConnectWallet>
                         {account ? (
                           <div className={styles.accountInfo}>

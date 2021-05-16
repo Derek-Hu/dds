@@ -104,46 +104,46 @@ export const getFundingLocked = async (coin: IUSDCoins, ethAmount: number): Prom
  * @param pageSize
  */
 export const getTradeOrders = async (page: number, pageSize = 5, isActive = true): Promise<ITradeRecord[]> => {
-  if (process.env.NODE_ENV === 'development') {
-    return returnVal([
-      {
-        hash: '0.5520740463908274',
-        id: 'string',
-        time: new Date().getTime(),
-        type: 'LONG',
-        price: 60,
-        // openPrice: number;
-        // curPrice: number;
-        amount: 50,
-        cost: 40,
-        costCoin: 'DAI',
-        fee: 30,
-        pl: {
-          val: 100,
-          percentage: 20,
-        },
-        status: 'ACTIVE',
-      },
-      {
-        hash: '20000',
-        id: 'string',
-        time: new Date().getTime(),
-        type: 'SHORT',
-        price: 60,
-        // openPrice: number;
-        // curPrice: number;
-        amount: 50,
-        cost: 40,
-        costCoin: 'DAI',
-        fee: 30,
-        pl: {
-          val: 100,
-          percentage: 20,
-        },
-        status: 'ACTIVE',
-      },
-    ]);
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   return returnVal([
+  //     {
+  //       hash: '0.5520740463908274',
+  //       id: 'string',
+  //       time: new Date().getTime(),
+  //       type: 'LONG',
+  //       price: 60,
+  //       // openPrice: number;
+  //       // curPrice: number;
+  //       amount: 50,
+  //       cost: 40,
+  //       costCoin: 'DAI',
+  //       fee: 30,
+  //       pl: {
+  //         val: 100,
+  //         percentage: 20,
+  //       },
+  //       status: 'ACTIVE',
+  //     },
+  //     {
+  //       hash: '20000',
+  //       id: 'string',
+  //       time: new Date().getTime(),
+  //       type: 'SHORT',
+  //       price: 60,
+  //       // openPrice: number;
+  //       // curPrice: number;
+  //       amount: 50,
+  //       cost: 40,
+  //       costCoin: 'DAI',
+  //       fee: 30,
+  //       pl: {
+  //         val: 100,
+  //         percentage: 20,
+  //       },
+  //       status: 'ACTIVE',
+  //     },
+  //   ]);
+  // }
 
   return from(getNetworkAndAccount())
     .pipe(

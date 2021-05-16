@@ -133,7 +133,7 @@ export default class MainLayout extends Component {
     }
     // console.log('dataFrom loadGraph start', from, to);
     const graphData = await getPriceGraphData({ from: pFrom, to: pTo }, duration).catch(() => ({}));
-    console.log('dataFrom loadGraph end', pFrom, this.props.from);
+    // console.log('dataFrom loadGraph end', pFrom, this.props.from);
     this.timer = setTimeout(() => {
       this.loadGraph(duration);
     }, 5000);
