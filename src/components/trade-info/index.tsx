@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import { getTradeInfo } from '../../services/trade.service';
 import CardInfo from '../card-info/index';
+import SiteContext from '../../layouts/SiteContext';
 
 // interface IState {
 //   info?: any;
@@ -59,6 +60,14 @@ export default class TradeInfo extends Component<{ from: string; coin: IUSDCoins
     };
     // @ts-ignore
     const items = Object.keys(info).map(key => info[key]);
-    return <CardInfo isNumber={false} loading={false} items={items} theme="outer" title="Info" />;
+    return (
+      <SiteContext.Consumer>
+        {({ isMobile }) => (
+          <div style={{ padding: isMobile ? '0 16px' : '' }}>
+            <CardInfo isNumber={false} loading={false} items={items} theme="outer" title="Info" />
+          </div>
+        )}
+      </SiteContext.Consumer>
+    );
   }
 }

@@ -116,7 +116,7 @@ body {
   }
   .ant-menu-submenu-inline > .ant-menu-submenu-title .ant-menu-submenu-arrow::before,
   .ant-menu-submenu-inline > .ant-menu-submenu-title .ant-menu-submenu-arrow::after {
-    background: #c5c8ce;
+    background: #1346ff;
   }
 }
 /** Progress */
@@ -138,6 +138,22 @@ body {
 /** Select */
 .ant-row.ant-form-item {
   margin-bottom: 16px;
+}
+
+.ant-menu-submenu > .ant-menu {
+  background: #fff !important;
+
+  .ant-menu-item > a {
+    color: #333;
+  }
+  .ant-menu-item-selected > a,
+  .ant-menu-item-selected > a:hover {
+    color: #fff;
+  }
+}
+.ant-menu.ant-menu-horizontal > .ant-menu-submenu-selected,
+.ant-menu.ant-menu-horizontal > .ant-menu-submenu:hover {
+  border-color: #1346ff;
 }
 
 /** Tabs */
@@ -191,8 +207,7 @@ body {
       .ant-tabs-tab {
         font-size: 14px;
         line-height: 50px;
-        padding-top: 0;
-        padding-bottom: 0;
+        padding: 0;
       }
     }
   }

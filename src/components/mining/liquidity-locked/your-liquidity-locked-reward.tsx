@@ -89,10 +89,9 @@ export default class LiquiditorReward extends Component<any, IState> {
   };
 
   cofirmClaim = async () => {
-
     const { data } = this.state;
 
-    if(!isGreaterZero(data)){
+    if (!isGreaterZero(data)) {
       message.info('No availble to claim!');
       return;
     }
@@ -121,7 +120,7 @@ export default class LiquiditorReward extends Component<any, IState> {
   render() {
     const { data, loading, visible, tableData } = this.state;
     return (
-      <div>
+      <div style={{ padding: '0 10px' }}>
         <h3>{this.context.address ? 'Your Active Liquidity Rewards' : 'Active Liquidity Reward Today'}</h3>
         <p className={styles.coins}>
           <Placeholder loading={loading} width={'10em'}>
@@ -135,9 +134,9 @@ export default class LiquiditorReward extends Component<any, IState> {
           <div>
             <Placeholder loading={loading} width={'10em'}>
               {/* <Visible when={isGreaterZero(data)}> */}
-                <Button type="primary" className={[styles.btn, styles.cliamBtn].join(' ')} onClick={this.cofirmClaim}>
-                  CLAIM
-                </Button>
+              <Button type="primary" className={[styles.btn, styles.cliamBtn].join(' ')} onClick={this.cofirmClaim}>
+                CLAIM
+              </Button>
               {/* </Visible> */}
             </Placeholder>
             {/* <div>

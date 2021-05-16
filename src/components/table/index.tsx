@@ -134,29 +134,41 @@ export default class Balance extends PureComponent<IProps, IState> {
                     columns={columns}
                     pagination={false}
                     dataSource={data}
-                    scroll={isMobile ? { x: 800 } : undefined}
+                    scroll={isMobile ? { x: 'max-content' } : undefined}
                   />
                   {hasMore ? (
-                    <p
-                      style={{
-                        textAlign: 'center',
-                        margin: 0,
-                        padding: '0 0 2em',
-                        background: '#FFF',
-                        position: 'relative',
-                      }}
-                    >
+                    <>
                       {loading ? (
-                        <Icon type="loading" />
+                        <p
+                          style={{
+                            textAlign: 'center',
+                            margin: 0,
+                            padding: '0 0 2em',
+                            background: '#FFF',
+                            position: 'relative',
+                          }}
+                        >
+                          <Icon type="loading" />
+                        </p>
                       ) : end ? null : data && data.length < PageSize ? null : (
-                        <Button type="link" onClick={this.nextPage}>
-                          <span>
-                            More&nbsp;
-                            <Icon type="down" />
-                          </span>
-                        </Button>
+                        <p
+                          style={{
+                            textAlign: 'center',
+                            margin: 0,
+                            padding: '0 0 2em',
+                            background: '#FFF',
+                            position: 'relative',
+                          }}
+                        >
+                          <Button type="link" onClick={this.nextPage}>
+                            <span>
+                              More&nbsp;
+                              <Icon type="down" />
+                            </span>
+                          </Button>
+                        </p>
                       )}
-                    </p>
+                    </>
                   ) : null}
                 </>
               )}

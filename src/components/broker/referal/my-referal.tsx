@@ -57,7 +57,7 @@ export default class Broker extends Component<any, IState> {
             <span className={styles.ads}>{formatInt(ranking)}</span>
             <span>Ranking</span>
           </Col> */}
-          <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
+          <Col xs={12} sm={12} md={12} lg={12} className={styles.col}>
             <span className={styles.ads}>
               <Placeholder width={'50%'} loading={loading}>
                 {formatInt(referals)}
@@ -65,7 +65,7 @@ export default class Broker extends Component<any, IState> {
             </span>
             <span>Referrals</span>
           </Col>
-          <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
+          <Col xs={12} sm={12} md={12} lg={12} className={styles.col}>
             <span className={styles.ads}>
               <Placeholder width={'50%'} loading={loading}>
                 {format(bonus)}

@@ -39,7 +39,7 @@ export default class LiquiditorReward extends Component<any, IState> {
     const { data, loading } = this.state;
     const { campaign, compensate } = data || {};
     return (
-      <div className={styles.liquiditorWpr}>
+      <div className={styles.liquiditorWpr} style={{ padding: '0 10px' }}>
         <h3>{this.context.address ? 'Your Liquiditor Mining Rewards' : 'Liquiditor Mining Rewards'}</h3>
         <p>Get compensated when insurance fund is empty</p>
         <Row>
@@ -49,9 +49,7 @@ export default class LiquiditorReward extends Component<any, IState> {
             </Col> */}
           <Col xs={24} sm={24} md={24} lg={24} className={styles.col}>
             <span className={styles.ads}>
-              <Placeholder loading={loading} width={'10em'}>
-                {format(compensate)} SLD
-              </Placeholder>
+              <Placeholder loading={loading}>{format(compensate)} SLD</Placeholder>
             </span>
             <span>Compensate Rewards</span>
           </Col>
@@ -60,7 +58,7 @@ export default class LiquiditorReward extends Component<any, IState> {
           <p className={styles.wantoBe}>Want to become a liquiditor?</p>
           <Button
             type="primary"
-            style={{ width: '40%', fontSize: '18px' }}
+            className={styles.redBtn}
             onClick={() => {
               message.info('coming soon');
             }}

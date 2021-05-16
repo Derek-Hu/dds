@@ -336,7 +336,7 @@ export default class PoolBalance extends Component<{ isPrivate: boolean }, IStat
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => (
-          <div>
+          <div className={isMobile ? styles.mobile : ''}>
             <CardInfo isNumber={true} loading={loading} title="Liquidity Balance" theme="inner" items={cardData}>
               <Placeholder loading={loading} style={{ margin: '22px 0' }}>
                 {/* <Visible when={withdrawBtnEnable}> */}
