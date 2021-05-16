@@ -157,7 +157,8 @@ export class MetamaskWallet implements WalletInterface {
     this.updateAccount(accounts);
   };
 
-  private networkChangeCallback = (network: EthNetwork) => {
+  private networkChangeCallback = (chainId: string) => {
+    const network: EthNetwork = parseInt(chainId, 16).toString() as EthNetwork;
     this.updateNetwork(network);
   };
 
@@ -179,7 +180,7 @@ export class MetamaskWallet implements WalletInterface {
 
   private watchNetworkChange() {
     if (isMetaMaskInstalled()) {
-      window.ethereum.on('networkChanged', this.networkChangeCallback);
+      window.ethereum.on('chainChanged', this.networkChangeCallback);
     }
   }
 }
