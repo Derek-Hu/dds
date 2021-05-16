@@ -16,6 +16,7 @@ export default class Broker extends Component<any, IState> {
   state: IState = {
     loading: false,
   };
+
   async componentDidMount() {
     this.loadData();
   }
