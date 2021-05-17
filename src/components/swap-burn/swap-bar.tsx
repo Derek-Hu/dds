@@ -39,11 +39,19 @@ export default ({
             <div className={styles.leftBar}>
               <div className={styles.bar} style={{ height: height + 'px' }}>
                 <div className={styles.percentBar} style={{ height: 100 - left.percentage + '%' }}></div>
-                <p>Shield Net Income</p>
+                <p>
+                  Shield
+                  <br /> Net <br />
+                  Income
+                </p>
                 <span>{left.percentage}%</span>
               </div>
               <div className={styles.amount}>
-                <Placeholder loading={loading}>{leftAmount}<br/>USD</Placeholder>
+                <Placeholder loading={loading}>
+                  {leftAmount}
+                  <br />
+                  USD
+                </Placeholder>
               </div>
             </div>
             <div className={styles.shadow} style={{ width: width + 'px', height: height + 'px' }}>
@@ -54,11 +62,19 @@ export default ({
             <div className={styles.rightBar}>
               <div className={styles.bar} style={{ height: height + 'px' }}>
                 <div className={styles.percentBar} style={{ height: right.percentage + '%' }}></div>
-                <p>SLD Circulating Supply ×{right.percentage}%</p>
+                <p>
+                  SLD <br />
+                  Circulating <br />
+                  Supply
+                </p>
                 <span className={styles.rightPecentage}>{right.percentage}%</span>
               </div>
               <div className={styles.amount}>
-                <Placeholder loading={loading}>{rightAmount}<br/>SLD</Placeholder>
+                <Placeholder loading={loading}>
+                  {rightAmount}
+                  <br />
+                  SLD
+                </Placeholder>
               </div>
             </div>
           </div>

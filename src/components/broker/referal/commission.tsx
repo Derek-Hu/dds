@@ -125,10 +125,10 @@ export default class CommissionPool extends Component<any, IState> {
           </Button>
         </CardInfo> */}
         <h3>Commission(Total)</h3>
-        <div style={{ marginTop: '40px' }}>
+        <div>
           {Array.isArray(data)
             ? data.map(({ label, value }, index) => (
-                <Col xs={8} sm={8} md={8} lg={8}>
+                <Col xs={24} sm={8} md={8} lg={8} style={{ marginTop: '40px' }}>
                   <span className={styles.ads}>
                     <Placeholder width={'50%'} loading={loading}>
                       {format(value)}
@@ -139,7 +139,7 @@ export default class CommissionPool extends Component<any, IState> {
               ))
             : data
             ? Object.keys(data).map(key => (
-                <Col xs={8} sm={8} md={8} lg={8}>
+                <Col xs={24} sm={8} md={8} lg={8} style={{ marginTop: '40px' }}>
                   <span className={styles.ads}>
                     <Placeholder width={'50%'} loading={loading}>
                       {format(data[key])}

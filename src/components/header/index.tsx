@@ -5,6 +5,7 @@ import { NavLink as Link, Link as LLink } from 'react-router-dom';
 import SiteContext, { ISiteContextProps } from '../../layouts/SiteContext';
 import ConnectWallet from '../connect-wallet/index';
 import Logo from '~/assets/imgs/logo.png';
+import LogoMobile from '~/assets/imgs/logo-mobile.png';
 import LogoWhite from '~/assets/imgs/logo-white.png';
 import { homeBasePath, ddsBasePath, DefaultKeNetwork } from '../../constant/index';
 import { isNumberLike } from '../../util/math';
@@ -116,10 +117,10 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
             ) : (
               <div className={[styles.root, darkMode ? '' : styles.light, styles.mobileLight].join(' ')}>
                 <Row type="flex" justify="space-between" align="middle">
-                  <Col span={2} style={{ textAlign: 'center' }}>
-                    D
+                  <Col span={4} style={{ textAlign: 'center' }}>
+                    <img alt="" src={LogoMobile} width="30px" />
                   </Col>
-                  <Col span={22} style={{ textAlign: 'right' }}>
+                  <Col span={20} style={{ textAlign: 'right' }}>
                     <Menu onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal">
                       <Menu.Item key="trade">
                         <a href={`${ddsBasePath}/trade`}>Trade</a>

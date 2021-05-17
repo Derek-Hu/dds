@@ -42,15 +42,15 @@ export default class BecomeSpark extends Component<any, IState> {
           </div>
           <p className={styles.descTwo}>Commission Rate</p>
           <Row className={styles.tabSpark}>
-            <Col xs={24} sm={12} md={12} lg={12} className={styles.col}>
+            <Col xs={12} sm={12} md={12} lg={12} className={styles.col}>
               <span className={styles.ads}>20+</span>
               <span>Countries</span>
             </Col>
-            <Col xs={24} sm={12} md={12} lg={12} className={styles.col}>
+            <Col xs={12} sm={12} md={12} lg={12} className={styles.col}>
               <span className={styles.ads}>{formatInt(124)}</span>
               <span>Sparks</span>
             </Col>
-            <Col xs={24} sm={12} md={12} lg={12} className={styles.col}>
+            <Col xs={12} sm={12} md={12} lg={12} className={styles.col}>
               <span className={styles.ads}>
                 <Placeholder width={'50%'} loading={loading}>
                   {formatInt(data?.referals)}
@@ -58,7 +58,7 @@ export default class BecomeSpark extends Component<any, IState> {
               </span>
               <span>Referals</span>
             </Col>
-            <Col xs={24} sm={12} md={12} lg={12} className={styles.col}>
+            <Col xs={12} sm={12} md={12} lg={12} className={styles.col}>
               <span className={styles.ads}>
                 <Placeholder width={'50%'} loading={loading}>
                   {formatInt(data?.bonus)}

@@ -177,7 +177,7 @@ export default class MainLayout extends Component {
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => {
-          const width = isMobile ? window.innerWidth - 32 : '100%';
+          const width = '100%';
           return (
             <div className={[styles.root, isMobile ? styles.mobile : ''].join(' ')}>
               <div className={styles.headArea}>
@@ -215,7 +215,7 @@ export default class MainLayout extends Component {
                 </Col>
               </Row>
 
-              <div id="k-line" style={{ width: width, margin: '0', height: '400px' }}></div>
+              <div id="k-line" style={{ width: width, margin: '0 auto', height: '400px' }}></div>
             </div>
           );
         }}
