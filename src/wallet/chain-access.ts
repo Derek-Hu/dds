@@ -1903,8 +1903,3 @@ export class ContractAccessor implements ContractProxy {
 }
 
 export const contractAccessor = new ContractAccessor();
-
-contractAccessor.getPriceByETHDAI('DAI').subscribe(
-  price => console.log('price', price),
-  error => console.warn('price error ==== ', error)
-);

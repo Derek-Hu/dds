@@ -9,7 +9,7 @@ import { EthNetwork } from '../../constant/address';
 import { switchNetwork } from '../../services/account';
 
 const Nets: Record<INetworkKey, string> = {
-  kovan: 'Ethereum Kovan Testnet',
+  kovan: 'Kovan',
   bsctest: 'BSC Testnet',
   bscmain: 'BSC Mainnet',
 };

@@ -150,6 +150,8 @@ export default class PoolBalance extends Component<{ isPrivate: boolean }, IStat
 
   static contextType = SiteContext;
 
+  private withdrawInputNum: InputNumber | null = null;
+
   onAmountChange = (amount: number) => {
     this.setState({
       amount,
@@ -158,8 +160,6 @@ export default class PoolBalance extends Component<{ isPrivate: boolean }, IStat
   };
 
   calculateRe = async (newVal: { amount?: number | string; selectCoin?: IUSDCoins }) => {
-    console.log('...doCalculate');
-
     if (this.props.isPrivate) {
       return;
     }
@@ -189,7 +189,7 @@ export default class PoolBalance extends Component<{ isPrivate: boolean }, IStat
         reAmount: Number(format(reAmount)),
       });
     } catch (e) {
-      console.log(e);
+      console.warn(e);
     }
   };
 
@@ -230,6 +230,7 @@ export default class PoolBalance extends Component<{ isPrivate: boolean }, IStat
       return all;
     }, {});
   };
+
   async init() {
     const { isPrivate } = this.props;
     this.setState({ loading: true });
@@ -302,10 +303,9 @@ export default class PoolBalance extends Component<{ isPrivate: boolean }, IStat
   };
 
   onMaxOpenClick = () => {
-    const { coins, selectCoin } = this.state;
-    this.setState({
-      amount: coins[selectCoin!].maxWithdraw,
-    });
+    if (this.withdrawInputNum) {
+      this.withdrawInputNum.onMaxOpenClick();
+    }
   };
 
   onWithDrawClick = () => {
@@ -316,6 +316,7 @@ export default class PoolBalance extends Component<{ isPrivate: boolean }, IStat
     }
     this.withDrawVisible.show();
   };
+
   render() {
     const {
       data,
@@ -407,6 +408,7 @@ export default class PoolBalance extends Component<{ isPrivate: boolean }, IStat
                       onChange={this.onAmountChange}
                       placeholder={isLocked ? `Unlock until ${unlockInfos[selectCoin!]}` : 'Withdraw amount'}
                       max={coins[selectCoin!]?.maxWithdraw}
+                      ref={numComp => (this.withdrawInputNum = numComp)}
                     />
                     {isPrivate ? null : (
                       <>
