@@ -7,7 +7,7 @@ import {
   PrivateLockLiquidity,
   UserAccountInfo,
 } from '../wallet/contract-interface';
-import { BehaviorSubject, from, interval, merge, NEVER, Observable, of, zip } from 'rxjs';
+import { BehaviorSubject, EMPTY, from, interval, merge, NEVER, Observable, of, zip } from 'rxjs';
 import * as ethers from 'ethers';
 import { catchError, concatMap, filter, map, mapTo, reduce, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { BigNumber } from '@ethersproject/bignumber';
@@ -82,7 +82,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       }),
       catchError(e => {
         console.warn('error', e);
-        return NEVER;
+        return EMPTY;
       })
     );
   }
@@ -133,15 +133,12 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     type: ITradeType,
     availableUsdAmount: number
   ): Observable<BigNumber> {
-    return this.confirmChainExchangePair(exchange).pipe(
-      switchMap((newExchange: ExchangeCoinPair) => {
-        exchange = newExchange;
-        return this.getContract(exchange.USD);
-      }),
+    return this.getContract(exchange.USD).pipe(
       switchMap((contract: ethers.Contract) => {
         const exStr: IExchangeStr = fromExchangePair(exchange);
         const amount: BigNumber = tokenBigNumber(availableUsdAmount, exchange.USD);
         const contractType = type === 'LONG' ? 1 : 2;
+
         return from(contract.getMaxOpenAmount(exStr, amount, contractType));
       }),
       map((rs: any) => {
@@ -232,16 +229,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   }
 
   public confirmContract(exchangeStr: IExchangeStr, count: number, type: ITradeType): Observable<ConfirmInfo> {
-    let exchange: ExchangeCoinPair = toExchangePair(exchangeStr);
+    const exchange: ExchangeCoinPair = toExchangePair(exchangeStr);
     const contractType = type === 'LONG' ? 1 : 2;
 
-    return this.confirmChainExchangePair(exchange).pipe(
-      switchMap((newExchange: ExchangeCoinPair) => {
-        exchange = newExchange;
-        exchangeStr = fromExchangePair(exchange);
-
-        return this.getContract(exchange.USD);
-      }),
+    return this.getContract(exchange.USD).pipe(
       switchMap((contract: ethers.Contract) => {
         const amount: BigNumber = tokenBigNumber(count, exchange.USD);
         return from(contract.fees(exchangeStr, amount, contractType));
@@ -256,7 +247,9 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     coin: IUSDCoins,
     orderType: ITradeType,
     amount: number,
-    inviter: string | null = ''
+    inviter: string | null = '',
+    slider: number = 0,
+    timeout: number = 0
   ): Observable<string> {
     return this.getContract(coin).pipe(
       switchMap((tradeContract: ethers.Contract) => {
@@ -264,14 +257,27 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         const contractType = orderType === 'LONG' ? 1 : 2;
         const userInviter = inviter && inviter.length === 42 ? inviter : '0x0000000000000000000000000000000000000000';
 
-        return this.getExchangeStr(coin).pipe(
-          switchMap((exchange: IExchangeStr) => {
-            return this.increaseGasLimit(tradeContract, 'creatContract', [
-              exchange,
-              bigAmount,
-              contractType,
-              userInviter,
-            ]);
+        return zip(this.getExchangeStr(coin), this.getNetwork()).pipe(
+          switchMap(([exchange, network]) => {
+            if (network === EthNetwork.bianTest) {
+              return this.getPriceByETHDAI(coin).pipe(
+                map((price: BigNumber) => {
+                  return price.mul(slider + 100).div(100);
+                }),
+                map((sliderPrice: BigNumber) => {
+                  const now: number = Math.floor(new Date().getTime() / 1000);
+                  const deadline: number = Math.floor(now + timeout);
+                  return [exchange, bigAmount, contractType, userInviter, sliderPrice, deadline];
+                }),
+                switchMap(args => {
+                  console.log('args ==== ', args);
+                  return this.increaseGasLimit(tradeContract, 'creatContract', args);
+                })
+              );
+            } else {
+              const args = [exchange, bigAmount, contractType, userInviter];
+              return this.increaseGasLimit(tradeContract, 'creatContract', args);
+            }
           })
         );
       }),
@@ -1288,6 +1294,8 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   protected abstract getProvider(): ethers.providers.BaseProvider;
 
   protected abstract getSigner(): ethers.Signer | undefined;
+
+  protected abstract getNetwork(): Observable<EthNetwork>;
 }
 
 /**
@@ -1403,11 +1411,6 @@ class MetamaskContractAccessor extends BaseTradeContractAccessor {
   protected confirmChainExchangePair(pair: ExchangeCoinPair): Observable<ExchangeCoinPair> {
     return this.getNetwork().pipe(
       map(network => {
-        if (network === EthNetwork.bianTest) {
-          if (pair.ETH === 'ETH') {
-            return Object.assign({}, pair, { ETH: 'BNB' });
-          }
-        }
         return pair;
       })
     );
@@ -1415,21 +1418,10 @@ class MetamaskContractAccessor extends BaseTradeContractAccessor {
 
   // TODO 只处理当前链Token与USD的交易，未来引入BTC后再调整
   protected getExchangeStr(coin: IUSDCoins): Observable<IExchangeStr> {
-    return this.getNetwork().pipe(
-      map((network: EthNetwork) => {
-        switch (network) {
-          case EthNetwork.bianTest: {
-            return ('BNB' + coin) as IExchangeStr;
-          }
-          default: {
-            return ('ETH' + coin) as IExchangeStr;
-          }
-        }
-      })
-    );
+    return of(('ETH' + coin) as IExchangeStr);
   }
 
-  private getNetwork(): Observable<EthNetwork> {
+  protected getNetwork(): Observable<EthNetwork> {
     return walletManager
       .getMetamaskIns()
       .watchNetwork()
@@ -1590,7 +1582,9 @@ export class ContractAccessor implements ContractProxy {
     coin: IUSDCoins,
     orderType: ITradeType,
     amount: number,
-    inviter: string | null = ''
+    inviter: string | null = '',
+    slider: number = 0,
+    timeout: number = 0
   ): Observable<string> {
     return this.accessor.pipe(switchMap(accessor => accessor.createContract(coin, orderType, amount, inviter)));
   }
@@ -1909,3 +1903,8 @@ export class ContractAccessor implements ContractProxy {
 }
 
 export const contractAccessor = new ContractAccessor();
+
+contractAccessor.getPriceByETHDAI('DAI').subscribe(
+  price => console.log('price', price),
+  error => console.warn('price error ==== ', error)
+);

@@ -18,6 +18,7 @@ interface IState {
   tradeInfos?: ITradeInfo[];
   curPrice?: number;
 }
+
 export default class TradePage extends Component {
   state: IState = {
     from: NetWork2Coin[DefaultKeNetwork],
@@ -58,6 +59,7 @@ export default class TradePage extends Component {
     });
     // }
   };
+
   render() {
     const { curPrice, coin, from } = this.state;
     return (
@@ -72,7 +74,7 @@ export default class TradePage extends Component {
                   <KLine updatePrice={this.updatePrice} curPrice={curPrice} from={fromCoin} to={coin} />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={8}>
-                  <FundingBalance timestamp={timestamp} curPrice={curPrice} coins={{ from: fromCoin, to: coin }} />
+                  <FundingBalance timestamp={timestamp} coins={{ from: fromCoin, to: coin }} />
                 </Col>
               </Row>
               <div>

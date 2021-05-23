@@ -71,9 +71,6 @@ export function toExchangePair(pair: IExchangeStr): ExchangeCoinPair {
     case 'ETHDAI': {
       return { USD: 'DAI', ETH: 'ETH' };
     }
-    case 'BNBDAI': {
-      return { USD: 'DAI', ETH: 'BNB' };
-    }
     case 'BTCDAI': {
       return { USD: 'DAI', ETH: 'BTC' };
     }

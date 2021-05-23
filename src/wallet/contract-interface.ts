@@ -4940,7 +4940,23 @@ export interface ContractProxy {
 
   confirmContract(exchangeStr: IExchangeStr, count: number, type: ITradeType): Observable<ConfirmInfo>;
 
-  createContract(coin: IUSDCoins, orderType: ITradeType, amount: number, inviter: string): Observable<string>;
+  /**
+   *
+   * @param coin
+   * @param orderType
+   * @param amount
+   * @param inviter
+   * @param slider - 滑点价格百分比 8 === 8%
+   * @param timeout - 超时时常 1分钟 === 60
+   */
+  createContract(
+    coin: IUSDCoins,
+    orderType: ITradeType,
+    amount: number,
+    inviter: string,
+    slider: number,
+    timeout: number
+  ): Observable<string>;
 
   closeContract(orderId: ITradeRecord): Observable<boolean>;
 
