@@ -2,7 +2,7 @@ import { infoItems } from './mock/trade.mock';
 import { walletManager } from '../wallet/wallet-manager';
 import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
-import { AsyncSubject, from, of, zip } from 'rxjs';
+import { AsyncSubject, from, Observable, of, zip } from 'rxjs';
 import { contractAccessor } from '../wallet/chain-access';
 import { ConfirmInfo, UserAccountInfo } from '../wallet/contract-interface';
 import { BigNumber } from 'ethers';
@@ -283,11 +283,13 @@ export const openOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: 
  */
 export const createOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: number): Promise<string> => {
   const inviteAddress: string | null = localStorage.getItem('referalCode');
+  const slider = 1;
+  const timeout = 15 * 60;
   // if(process.env.NODE_ENV === 'development'){
   //   return Promise.resolve(`${Math.random()}`);
   // }
   const res: Promise<string> = contractAccessor
-    .createContract(coin, tradeType, amount, inviteAddress)
+    .createContract(coin, tradeType, amount, inviteAddress, slider, timeout)
     .pipe(take(1))
     .toPromise();
 
@@ -362,4 +364,48 @@ export const confirmOrder = async (amount: number, coin: IUSDCoins, type: ITrade
       take(1)
     )
     .toPromise();
+};
+
+const getOrderStatusFun = (hash: string): Observable<IOrderPendingResult> => {
+  return from(getNetworkAndAccount()).pipe(
+    switchMap(({ account, network }) => {
+      const baseHost: string =
+        CentralProto === 'https:'
+          ? CentralHost + '/' + CentralPath[network]
+          : CentralHost + ':' + CentralPort[network] + '/' + CentralPath[network];
+      const url: string = baseHost + '/transactions/getTxState';
+
+      return from(request.post(url).send({ txHash: hash })).pipe(
+        map(res => {
+          return 'pending' as IOrderPendingResult;
+        })
+      );
+    }),
+    take(1)
+  );
+};
+
+/**
+ * 获取pending状态的变化
+ */
+export const getOrderStatus = async (hash: string): Promise<IOrderPendingResult> => {
+  return getOrderStatusFun(hash).toPromise();
+};
+
+/**
+ *
+ * @param hashArr
+ */
+export const getOrderListStatus = (hashArr: string[]): Observable<{ hash: string; status: IOrderPendingResult }[]> => {
+  const obs = (one: string) =>
+    getOrderStatusFun(one).pipe(
+      map((status): { hash: string; status: IOrderPendingResult } => {
+        return {
+          hash: one,
+          status,
+        };
+      })
+    );
+
+  return zip(hashArr.map(obs)).pipe(take(1));
 };

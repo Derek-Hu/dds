@@ -30,7 +30,7 @@ declare type IFromCoins = 'ETH' | 'BTC' | 'BNB';
 declare type ISLD = 'SLD';
 declare type IUSDCoins = 'DAI' | 'USDT' | 'USDC';
 declare type IReUSDCoins = 'reDAI' | 'reUSDT' | 'reUSDC';
-declare type IExchangeStr = 'ETHDAI' | 'EHTUSDT' | 'ETHUSDC' | 'BTCDAI' | 'BTCUSDT' | 'BTCUSDC' | 'BNBDAI';
+declare type IExchangeStr = 'ETHDAI' | 'EHTUSDT' | 'ETHUSDC' | 'BTCDAI' | 'BTCUSDT' | 'BTCUSDC';
 
 declare interface ExchangeCoinPair {
   USD: IUSDCoins;
@@ -53,6 +53,7 @@ declare interface IRecord {
  * Trade Order Status
  */
 declare type IOrderStatus = 'ACTIVE' | 'CLOSED';
+declare type IOrderPendingResult = 'success' | 'pending' | 'fail';
 
 /**
  * Trade Order 记录

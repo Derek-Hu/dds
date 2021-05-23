@@ -20,6 +20,7 @@ import { format, isGreaterZero, truncated, isNumberLike, divide } from '../../ut
 import InputNumber from '../input/index';
 import Placeholder from '../placeholder/index';
 import { setPendingOrders } from '../../util/order-cache';
+import { Setting } from './dropdown/setting';
 
 interface IState {
   depositVisible: boolean;
@@ -30,6 +31,7 @@ interface IState {
   openAmount: number | undefined;
   maxNumber?: number;
   available?: number;
+  curPrice?: number; // 从链上读取的price
   loading: boolean;
   feeQuery: boolean;
   fees?: IOpenFee;
@@ -38,9 +40,9 @@ interface IState {
 
 interface IProps {
   coins: { from: IFromCoins; to: IUSDCoins };
-  curPrice?: number;
   timestamp: any;
 }
+
 type TModalKeys = Pick<IState, 'withdrawVisible' | 'depositVisible' | 'orderConfirmVisible'>;
 
 export default class Balance extends Component<IProps, IState> {
@@ -51,6 +53,7 @@ export default class Balance extends Component<IProps, IState> {
     openAmount: undefined,
     tradeType: 'LONG',
     available: undefined,
+    curPrice: 0,
     setFeeQuery: false,
     loading: false,
     feeQuery: false,
@@ -59,12 +62,10 @@ export default class Balance extends Component<IProps, IState> {
   static contextType = SiteContext;
 
   componentDidMount = () => {
-    console.log('funding balance componentDidMount...');
     this.loadBalanceInfo();
   };
 
   UNSAFE_componentWillReceiveProps(nextProps: IProps) {
-    console.log('funding balance refresh...');
     if (this.props.timestamp !== nextProps.timestamp) {
       this.loadBalanceInfo();
     }
@@ -78,7 +79,7 @@ export default class Balance extends Component<IProps, IState> {
         this.setState({ loading: true });
       }
       const balanceInfo = await getFundingBalanceInfo(to);
-
+      const curPrice = await getCurPrice(to);
       const available = getMaxFromCoin(balanceInfo);
       const maxNumber = await getMaxOpenAmount(
         (coins.from + coins.to) as IExchangeStr,
@@ -89,6 +90,7 @@ export default class Balance extends Component<IProps, IState> {
         balanceInfo,
         available: truncated(available),
         maxNumber,
+        curPrice,
         loading: false,
       });
     } catch (e) {
@@ -245,10 +247,10 @@ export default class Balance extends Component<IProps, IState> {
       maxNumber,
       setFeeQuery,
       feeQuery,
-      // curPrice,
+      curPrice, // 必须使用从链上读取的price
       available,
     } = this.state;
-    const { coins, curPrice } = this.props;
+    const { coins } = this.props;
     const { from, to } = coins;
 
     const address = this.context.address;
@@ -264,6 +266,7 @@ export default class Balance extends Component<IProps, IState> {
           <div className={styles.root}>
             <h2>
               Funding Balance<span>({to})</span>
+              {/*<Setting></Setting>*/}
             </h2>
             <p className={styles.balanceVal}>
               <Placeholder loading={loading}>{format(balanceInfo?.balance)}</Placeholder>
