@@ -44,7 +44,7 @@ export default class CoinProgress extends Component<IProps, IState> {
             percentage: dividedPecent(amount, total),
             val: (
               <span>
-                {amount} / {format(total)}
+                {format(amount)} / {format(total)}
               </span>
             ),
           }))

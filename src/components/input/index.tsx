@@ -54,7 +54,6 @@ export default class InputNumberComp extends Component<
         return;
       }
     }
-
     this.setState({
       amount: val,
     });
@@ -75,6 +74,7 @@ export default class InputNumberComp extends Component<
       },
     });
   };
+
   render() {
     const { placeholder, className, disabled, suffix, max, showTag, tagClassName } = this.props;
     const { amount } = this.state;

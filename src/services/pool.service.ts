@@ -380,7 +380,7 @@ export const getPrivateLiquidityBalance = async (): Promise<
         });
         allBalances.available.forEach(balance => {
           const coin: IUSDCoins = balance.coin as IUSDCoins;
-          res[coin]['maxWithdraw'] = Number(toEthers(balance.balance, 4));
+          res[coin]['maxWithdraw'] = Number(toEthers(balance.balance, 2));
         });
 
         return res;
