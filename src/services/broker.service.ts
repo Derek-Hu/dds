@@ -98,7 +98,7 @@ export const getBrokerCampaignRewardData = async (): Promise<ICoinItem[]> => {
         return balances.map(one => {
           return {
             coin: one.coin,
-            amount: Number(toEthers(one.balance, 4, one.coin)),
+            amount: Number(toEthers(one.balance, 2, one.coin)),
           } as ICoinItem;
         });
       }),
@@ -120,11 +120,10 @@ export const getBrokerCampaignPool = async (): Promise<{ nextDistribution: strin
       switchMap(([total, rank]) => {
         const data = total.map(balance => {
           const selfReward: BigNumber = confirmLevelReward(balance.balance, confirmLevel(rank.toNumber()));
-          console.log('self', selfReward.toNumber());
           return {
             coin: balance.coin,
-            amount: Number(toEthers(selfReward, 4, balance.coin)),
-            total: Number(toEthers(balance.balance, 4, balance.coin)),
+            amount: Number(toEthers(selfReward, 2, balance.coin)),
+            total: Number(toEthers(balance.balance, 2, balance.coin)),
           } as ICoinItem;
         });
 
