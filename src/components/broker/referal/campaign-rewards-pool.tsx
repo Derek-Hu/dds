@@ -1,80 +1,118 @@
 import { Component } from 'react';
-import { Icon, Tabs, Row, Col, Input, Button, Table } from 'antd';
-import CardInfo from '../../card-info/index';
-import { getBrokerCampaignPool, getBrokerCampaignRewardsPool } from '../../../services/broker.service';
-import ModalRender from '../../modal-render/index';
-import ColumnConvert from '../../column-convert/index';
-import dayjs from 'dayjs';
-import styles from '../campion-pool.module.less';
-import PoolProgress, { IMiningShare } from '../../progress-bar/pool-progress';
-import WithIndicator, { IIndicatorProgress } from '../../progress-bar/with-indicator';
-import { dividedPecent } from '../../../util/math';
+import { getBrokerCampaignPool } from '../../../services/broker.service';
+import styles from './campaign-rewards-pool.module.less';
+import { format } from '../../../util/math';
+import Placeholder from '../../placeholder';
+import SiteContext, { ISiteContextProps } from '../../../layouts/SiteContext';
+
+type PoolData = {
+  DAI: { share: string; total: string };
+  USDT: { share: string; total: string };
+  USDC: { share: string; total: string };
+};
 
 interface IState {
-  data: Array<IIndicatorProgress>;
   loading: boolean;
   nextDistribution?: string;
+  poolData: PoolData;
 }
 
 export default class CampaignRewardsPool extends Component<any, IState> {
   state: IState = {
-    data: [],
-    loading: false,
+    loading: true,
+    poolData: {
+      DAI: { share: '0.00', total: '0.00' },
+      USDT: { share: '0.00', total: '0.00' },
+      USDC: { share: '0.00', total: '0.00' },
+    },
   };
 
   async componentDidMount() {
-    this.setState({ loading: true });
+    //this.setState({ loading: true });
 
     const { data, nextDistribution } = await getBrokerCampaignPool();
-    this.setState({
-      data: data
-        ? data.map(({ amount, total, coin }) => ({
-            label: coin,
-            percentage: dividedPecent(amount, total),
-            val: (
-              <span>
-                {amount}/{total}
-              </span>
-            ),
-          }))
-        : [],
-      nextDistribution,
-    });
-    this.setState({ loading: false });
+    const pool: PoolData = data.reduce((acc: any, cur: ICoinItem) => {
+      acc[cur.coin] = { share: format(cur.amount), total: format(cur.total) };
+      return acc;
+    }, {});
+
+    this.setState({ poolData: pool, loading: false, nextDistribution });
   }
 
   render() {
-    const { data, loading, nextDistribution } = this.state;
-    return loading ? null : (
-      <div>
-        <PoolProgress
-          loading={false}
-          totalMode={true}
-          title="Campaign Rewards Pool"
-          coins={data}
-          desc={
-            <div>
-              <p className="text-center">
-                Next distribution time
-                <br />
-                <span>{nextDistribution}</span>
-              </p>
-              <p className={styles.shareTotalTip}>
-                <span>
-                  Your
-                  <br />
-                  share
-                </span>
-                <span>
-                  Total
-                  <br />
-                  Locked
-                </span>
-              </p>
+    const { loading, nextDistribution } = this.state;
+
+    const rs = (
+      <SiteContext.Consumer>
+        {({ isMobile }: ISiteContextProps) => {
+          const rootClassName = [styles.root, isMobile ? styles.mobile : ''].join(' ');
+
+          const card = (
+            <div className={rootClassName}>
+              <h2 className={styles.title}>Campaign Rewards Pool</h2>
+              <div className={styles.distribution}>
+                <Placeholder width={'90%'} loading={loading}>
+                  Next distribution time: <span className={styles.time}>{nextDistribution}</span>
+                </Placeholder>
+              </div>
+
+              <div className={styles.coinTable}>
+                <div className={[styles.coinValueItem, styles.colTitle].join(' ')}>
+                  <div className={styles.coinName}>&nbsp;</div>
+                  <div className={styles.coinShare}>Your Share</div>
+                  <div className={styles.coinTotal}>Total</div>
+                </div>
+
+                <div className={styles.coinValueItem}>
+                  <div className={styles.coinName}>DAI</div>
+                  <div className={styles.coinShare}>
+                    <Placeholder width={'90%'} loading={loading}>
+                      {this.state.poolData.DAI.share}
+                    </Placeholder>
+                  </div>
+                  <div className={styles.coinTotal}>
+                    <Placeholder width={'100%'} loading={loading}>
+                      {this.state.poolData.DAI.total}
+                    </Placeholder>
+                  </div>
+                </div>
+
+                <div className={styles.coinValueItem}>
+                  <div className={styles.coinName}>USDT</div>
+                  <div className={styles.coinShare}>
+                    <Placeholder width={'90%'} loading={loading}>
+                      {this.state.poolData.USDT.share}
+                    </Placeholder>
+                  </div>
+                  <div className={styles.coinTotal}>
+                    <Placeholder width={'100%'} loading={loading}>
+                      {this.state.poolData.USDT.total}
+                    </Placeholder>
+                  </div>
+                </div>
+
+                <div className={styles.coinValueItem}>
+                  <div className={styles.coinName}>USDC</div>
+                  <div className={styles.coinShare}>
+                    <Placeholder width={'90%'} loading={loading}>
+                      {this.state.poolData.USDC.share}
+                    </Placeholder>
+                  </div>
+                  <div className={styles.coinTotal}>
+                    <Placeholder width={'100%'} loading={loading}>
+                      {this.state.poolData.USDC.total}
+                    </Placeholder>
+                  </div>
+                </div>
+              </div>
             </div>
-          }
-        />
-      </div>
+          );
+
+          return card;
+        }}
+      </SiteContext.Consumer>
     );
+
+    return rs;
   }
 }

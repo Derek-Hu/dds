@@ -44,7 +44,7 @@ export default () => {
               <Col xs={24} sm={24} md={8} lg={8}>
                 <img src={BrokerIcon2} alt="" width="36px" />
                 <p>2. Your Friends Open First Order</p>
-                <div>Invite friends to Shield through the referral link or invitation code</div>
+                <div>Friends accept the invitation and open first order</div>
               </Col>
               <Col xs={24} sm={24} md={8} lg={8}>
                 <img src={BrokerIcon3} alt="" width="36px" />
@@ -102,7 +102,7 @@ export default () => {
                 >
                   Different levels of Brokers have different commission rates. Brokers who have level C and D will
                   inject 10% and 20% of the transaction fee into the Reward Pool. Every 30 day, 60% of fee in Reward
-                  pool will be distributed to level A, and 40 % of fee will go to level B. After the distribution, the
+                  pool will be distributed to level A, and 40% of fee will go to level B. After the distribution, the
                   level will be reset for all brokers.
                 </p>
                 <div>

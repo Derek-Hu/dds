@@ -4,7 +4,6 @@ import CardInfo from '../../card-info/index';
 import { getBrokerCampaignRewardData, getBrokerCampaignRewardsPool } from '../../../services/broker.service';
 import ModalRender from '../../modal-render/index';
 import ColumnConvert from '../../column-convert/index';
-import dayjs from 'dayjs';
 import styles from '../style.module.less';
 import { format } from '../../../util/math';
 import { formatTime } from '../../../util/time';
