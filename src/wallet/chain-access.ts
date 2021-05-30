@@ -270,7 +270,6 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
                   return [exchange, bigAmount, contractType, userInviter, sliderPrice, deadline];
                 }),
                 switchMap(args => {
-                  console.log('args ==== ', args);
                   return this.increaseGasLimit(tradeContract, 'creatContract', args);
                 })
               );

@@ -127,6 +127,7 @@ export class MetamaskWallet implements WalletInterface {
   private syncAccount(init = false): void {
     if (isMetaMaskInstalled()) {
       this.doRequest(init).subscribe((rsAccounts: string[]) => {
+        console.log('get cur account', rsAccounts);
         this.updateAccount(rsAccounts);
         if (rsAccounts && rsAccounts.length > 0) {
           this.watchAccountChange();

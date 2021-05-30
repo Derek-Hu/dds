@@ -266,7 +266,7 @@ export default class Balance extends Component<IProps, IState> {
           <div className={styles.root}>
             <h2>
               Funding Balance<span>({to})</span>
-              {/*<Setting></Setting>*/}
+              <Setting></Setting>
             </h2>
             <p className={styles.balanceVal}>
               <Placeholder loading={loading}>{format(balanceInfo?.balance)}</Placeholder>

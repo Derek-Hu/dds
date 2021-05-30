@@ -3,57 +3,52 @@ import { Dropdown } from 'antd';
 import SettingIcon from '~/assets/imgs/setting.svg';
 import styles from './setting.style.module.less';
 import InputNumber from '../../input/index';
+import SiteContext, { ISiteContextProps } from '../../../layouts/SiteContext';
 
 type IState = {
   visible: boolean;
+  tolerance: number;
+  deadline: number;
 };
 
-const settingOverlay = (
-  <div style={{ width: '400px', transform: 'translate(20px, 0)' }}>
-    <div className={[styles.box2, styles['flex-col']].join(' ')}>
-      <div className={[styles.group1, styles['flex-row']].join(' ')}>
-        <span className={styles.info4}>Trade&nbsp;Settings</span>
-      </div>
+type IProperty = {};
 
-      <div className={[styles.group2, styles['flex-row']].join(' ')}>
-        <span className={styles.word6}>Slippage&nbsp;Tolerance</span>
-      </div>
+export class Setting extends Component<IProperty, IState> {
+  static contextType = SiteContext;
+  public readonly defaultTolerance = 1; // 默认1%
+  public readonly defaultDeadline = 20; // default to 20 minutes
 
-      <div className={[styles.group3, styles['flex-row']].join(' ')}>
-        <div className={styles.wrap}>
-          <span className={styles.info}>0.5%</span>
-        </div>
-        <div className={styles.wrap}>
-          <span className={styles.info}>1%</span>
-        </div>
-        <div className={styles.wrap}>
-          <span className={styles.info}>3%</span>
-        </div>
+  state: IState = {
+    visible: false,
+    tolerance: this.defaultTolerance,
+    deadline: this.defaultDeadline,
+  };
 
-        <InputNumber className={styles.wrap} onChange={() => ({})} />
-        <span className={styles.txt5}>%</span>
-      </div>
+  componentWillUpdate() {
+    this.readSetting();
+  }
 
-      <div className={[styles.group5, styles['flex-row']].join(' ')}>
-        <span className="word9">Transaction&nbsp;Deadline</span>
-      </div>
+  private readSetting() {
+    const key: string = this.storageKey();
+    const settingStr: string | null = localStorage.getItem(key);
 
-      <div className={[styles.group1, styles['flex-row']].join(' ')}>
-        <div className={[styles.layer2, styles['flex-col']].join(' ')}>
-          <span className={styles.word10}>20</span>
-        </div>
-        <span className={styles.txt6}>min</span>
-      </div>
-      {/*<div className="group7 flex-row">*/}
-      {/*  <span className="word11">Expert&nbsp;Mode</span>*/}
-      {/*  <div className="main1 flex-col"/>*/}
-      {/*</div>*/}
-    </div>
-  </div>
-);
+    if (!settingStr) {
+      return;
+    }
 
-export class Setting extends Component<{}, IState> {
-  state: IState = { visible: false };
+    let setting: { tolerance: number; deadline: number } | null = null;
+
+    try {
+      setting = JSON.parse(settingStr);
+    } catch (err) {}
+
+    if (setting) {
+      const eq: boolean = this.state.deadline === setting.deadline && this.state.tolerance === setting.tolerance;
+      if (!eq) {
+        this.updateSetting(setting);
+      }
+    }
+  }
 
   private clickIcon() {
     this.setState({
@@ -61,11 +56,95 @@ export class Setting extends Component<{}, IState> {
     });
   }
 
+  private clickTolerance(num: number) {
+    if (!num) {
+      num = this.defaultTolerance;
+    }
+
+    this.saveSetting({ tolerance: num, deadline: this.state.deadline });
+  }
+
+  private changeDeadline(minute: number) {
+    if (!minute || isNaN(minute)) {
+      return;
+    }
+
+    this.saveSetting({ deadline: minute, tolerance: this.state.tolerance });
+  }
+
+  private saveSetting(setting: { deadline: number; tolerance: number }) {
+    localStorage.setItem(this.storageKey(), JSON.stringify(setting));
+    this.updateSetting(setting);
+  }
+
+  private updateSetting(setting: { deadline: number; tolerance: number }) {
+    this.setState(setting);
+  }
+
+  private storageKey() {
+    const ctx = this.context as ISiteContextProps;
+    const storageKey: string = 'ShieldTradeSetting-' + ctx.account?.address + '-' + ctx.currentNetwork;
+
+    return storageKey;
+  }
+
   render() {
-    return (
+    const settingOverlay = (
+      <div className={styles.wrapper}>
+        <div className={[styles.box2, styles['flex-col']].join(' ')}>
+          <div className={styles.title}>
+            <span>Trade Settings</span>
+          </div>
+
+          <div className={styles.title2}>
+            <span>Slippage Tolerance</span>
+          </div>
+
+          <div className={styles.tolerance}>
+            <div
+              className={`${styles.item} ${this.state.tolerance === 0.5 ? styles.active : ''}`}
+              onClick={() => this.clickTolerance(0.5)}
+            >
+              <span>0.5%</span>
+            </div>
+            <div
+              className={`${styles.item} ${this.state.tolerance === 1 ? styles.active : ''}`}
+              onClick={() => this.clickTolerance(1)}
+            >
+              <span>1%</span>
+            </div>
+            <div
+              className={`${styles.item} ${this.state.tolerance === 3 ? styles.active : ''}`}
+              onClick={() => this.clickTolerance(3)}
+            >
+              <span>3%</span>
+            </div>
+
+            <InputNumber className={styles.item} onChange={(val: number) => this.clickTolerance(val)} />
+            <span className={styles.text}>%</span>
+          </div>
+
+          <div className={styles.title2}>
+            <span>Transaction Deadline</span>
+          </div>
+
+          <div className={styles.deadline}>
+            <InputNumber
+              className={styles.input}
+              value={this.state.deadline}
+              onChange={(val: number) => this.changeDeadline(val)}
+            />
+            <span className={styles.unit}>min</span>
+          </div>
+        </div>
+      </div>
+    );
+    const rs = (
       <Dropdown overlay={settingOverlay} placement="bottomLeft" visible={this.state.visible} trigger={[]}>
-        <img src={SettingIcon} onClick={() => this.clickIcon()} style={{ width: '1.4em', float: 'right' }} />
+        <img className={styles.settingIcon} src={SettingIcon} onClick={() => this.clickIcon()} />
       </Dropdown>
     );
+
+    return rs;
   }
 }

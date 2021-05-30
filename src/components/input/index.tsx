@@ -21,6 +21,7 @@ export default class InputNumberComp extends Component<
     tagClassName?: string;
     showTag?: boolean;
     skip?: boolean;
+    value?: number;
   },
   IState
 > {
@@ -74,6 +75,13 @@ export default class InputNumberComp extends Component<
       },
     });
   };
+
+  componentWillReceiveProps(nextProp: any) {
+    const newVal: number = Number(nextProp.value);
+    if (newVal && !isNaN(newVal) && this.state.amount !== newVal.toString()) {
+      this.setState({ amount: newVal.toString() });
+    }
+  }
 
   render() {
     const { placeholder, className, disabled, suffix, max, showTag, tagClassName } = this.props;
