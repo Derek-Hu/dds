@@ -21,3 +21,7 @@ export const getQueryStringParameters = (url?: string) => {
     return params;
   }, {});
 };
+
+export const getLocalStorageKey = (prefix: string, address: string, network: string): string => {
+  return prefix + '-' + address + '-' + network;
+};

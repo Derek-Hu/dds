@@ -101,3 +101,9 @@ export const CoinBTCExchange = new Map<IUSDCoins, IExchangeStr>([
 
 export type ISupporttedUSD = keyof typeof SupporttedUSD;
 export type ICoins = keyof typeof SupporttedCoins;
+
+// 本地存储的key前缀
+export enum LocalStorageKeyPrefix {
+  TradeSetting = 'ShieldTradeSetting',
+  PendingOrdersHash = 'PendingOrdersHash',
+}

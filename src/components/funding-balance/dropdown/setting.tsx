@@ -4,6 +4,8 @@ import SettingIcon from '~/assets/imgs/setting.svg';
 import styles from './setting.style.module.less';
 import InputNumber from '../../input/index';
 import SiteContext, { ISiteContextProps } from '../../../layouts/SiteContext';
+import { LocalStorageKeyPrefix } from '../../../constant';
+import { getLocalStorageKey } from '../../../util/string';
 
 type IState = {
   visible: boolean;
@@ -41,7 +43,7 @@ export class Setting extends Component<IProperty, IState> {
     try {
       setting = JSON.parse(settingStr);
     } catch (err) {}
-
+    console.log('read setting', setting);
     if (setting) {
       const eq: boolean = this.state.deadline === setting.deadline && this.state.tolerance === setting.tolerance;
       if (!eq) {
@@ -83,7 +85,8 @@ export class Setting extends Component<IProperty, IState> {
 
   private storageKey() {
     const ctx = this.context as ISiteContextProps;
-    const storageKey: string = 'ShieldTradeSetting-' + ctx.account?.address + '-' + ctx.currentNetwork;
+    const address = ctx.account?.address || '';
+    const storageKey: string = getLocalStorageKey(LocalStorageKeyPrefix.TradeSetting, address, ctx.currentNetwork);
 
     return storageKey;
   }

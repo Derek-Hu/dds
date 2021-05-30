@@ -76,11 +76,13 @@ export default class InputNumberComp extends Component<
     });
   };
 
-  componentWillReceiveProps(nextProp: any) {
-    const newVal: number = Number(nextProp.value);
-    if (newVal && !isNaN(newVal) && this.state.amount !== newVal.toString()) {
-      this.setState({ amount: newVal.toString() });
+  static getDerivedStateFromProps(nextProps: any, prevState: IState) {
+    const newVal: number = Number(nextProps.value);
+    if (newVal && !isNaN(newVal) && prevState.amount !== newVal.toString()) {
+      return { amount: newVal.toString() };
     }
+
+    return null;
   }
 
   render() {
