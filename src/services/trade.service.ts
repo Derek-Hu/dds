@@ -357,8 +357,8 @@ export const confirmOrder = async (amount: number, coin: IUSDCoins, type: ITrade
       map((info: ConfirmInfo) => {
         return {
           curPrice: Number(toEthers(info.currentPrice, 4, coin)),
-          settlementFee: Number(toEthers(info.exchgFee, 6, coin)),
-          fundingFeeLocked: Number(toEthers(info.openFee, 6, coin)),
+          settlementFee: Number(toEthers(info.exchgFee, 3, coin)),
+          fundingFeeLocked: Number(toEthers(info.openFee, 3, coin)),
         };
       }),
       take(1)

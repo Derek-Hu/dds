@@ -316,7 +316,8 @@ export default class Balance extends Component<IProps, IState> {
             />
             <p className={styles.settlement}>
               Settlement Fee :{' '}
-              {setFeeQuery ? <Icon type="loading" /> : isNumberLike(fees?.settlementFee) ? fees?.settlementFee : 0} {to}
+              {setFeeQuery ? <Icon type="loading" /> : isNumberLike(fees?.settlementFee) ? fees?.settlementFee : 0}
+              {to}
             </p>
             {/* <Progress strokeColor="#1346FF" showInfo={false} percent={30} strokeWidth={20} /> */}
             <Button
