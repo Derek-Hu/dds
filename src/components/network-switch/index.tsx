@@ -40,11 +40,11 @@ export default class NetworkSwitch extends Component<any, IState> {
   };
 
   componentDidMount() {
-    console.log('NetworkSwitch componentDidMount');
+    // console.log('NetworkSwitch componentDidMount');
   }
 
   componentWillUnmount() {
-    console.log('NetworkSwitch componentWillUnmount');
+    // console.log('NetworkSwitch componentWillUnmount');
   }
 
   setType = (selectedNetwork: INetworkKey) => {

@@ -262,11 +262,11 @@ export default class Balance extends Component<IProps, IState> {
     };
     return (
       <SiteContext.Consumer>
-        {({ account }) => (
+        {({ account, isBSC }) => (
           <div className={styles.root}>
             <h2>
               Funding Balance<span>({to})</span>
-              {/*<Setting></Setting>*/}
+              {isBSC ? <Setting /> : null}
             </h2>
             <p className={styles.balanceVal}>
               <Placeholder loading={loading}>{format(balanceInfo?.balance)}</Placeholder>

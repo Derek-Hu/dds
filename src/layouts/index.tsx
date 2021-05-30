@@ -5,10 +5,11 @@ import { RouteComponentProps } from 'react-router-dom';
 import SiteContext from './SiteContext';
 import { ddsBasePath, DefaultKeNetwork } from '../constant/index';
 import { userAccountInfo, initTryConnect, getNetworkAndAccount } from '../services/account';
-import { walletManager } from '../wallet/wallet-manager';
 import { CentralPath, EthNetwork } from '../constant/address';
+import { LocalStorageKeyPrefix } from '../constant/index';
 import { accountEvents } from '../services/global-event.service';
 import { Subscription } from 'rxjs';
+import { getLocalStorageKey } from '../util/string';
 
 const RESPONSIVE_MOBILE = 768;
 
@@ -171,7 +172,11 @@ export default class Layout extends Component<RouteComponentProps, IState> {
       address: account && account.address ? account.address : '',
     });
     // @ts-ignore
-    window.PendingOrderCacheKey = `PendingOrdersHash-${account?.address}-${network}`;
+    window.PendingOrderCacheKey = getLocalStorageKey(
+      LocalStorageKeyPrefix.PendingOrdersHash,
+      account?.address || '',
+      network
+    );
   };
 
   refreshPage = () => {
