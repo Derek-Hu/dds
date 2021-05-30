@@ -27,6 +27,7 @@ interface IState {
   initLoad: boolean;
   end: boolean;
 }
+
 export default class Balance extends Component<any, IState> {
   state: IState = {
     data: [],
