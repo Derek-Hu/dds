@@ -254,15 +254,19 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     return this.getContract(coin).pipe(
       switchMap((tradeContract: ethers.Contract) => {
         const bigAmount = tokenBigNumber(amount, coin);
-        const contractType = orderType === 'LONG' ? 1 : 2;
+        const contractType: number = orderType === 'LONG' ? 1 : 2;
         const userInviter = inviter && inviter.length === 42 ? inviter : '0x0000000000000000000000000000000000000000';
 
         return zip(this.getExchangeStr(coin), this.getNetwork()).pipe(
           switchMap(([exchange, network]) => {
-            if (network === EthNetwork.bianTest) {
+            const isBsc: boolean = network === EthNetwork.bianTest;
+
+            if (isBsc) {
               return this.getPriceByETHDAI(coin).pipe(
                 map((price: BigNumber) => {
-                  return price.mul(slider + 100).div(100);
+                  const sliderPrice: BigNumber =
+                    contractType === 1 ? price.mul(100 + slider).div(100) : price.mul(100 - slider).div(100);
+                  return sliderPrice;
                 }),
                 map((sliderPrice: BigNumber) => {
                   const now: number = Math.floor(new Date().getTime() / 1000);
