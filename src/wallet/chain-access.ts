@@ -1585,7 +1585,9 @@ export class ContractAccessor implements ContractProxy {
     slider: number = 0,
     timeout: number = 0
   ): Observable<string> {
-    return this.accessor.pipe(switchMap(accessor => accessor.createContract(coin, orderType, amount, inviter)));
+    return this.accessor.pipe(
+      switchMap(accessor => accessor.createContract(coin, orderType, amount, inviter, slider, timeout))
+    );
   }
 
   public closeContract(orderId: ITradeRecord): Observable<boolean> {
