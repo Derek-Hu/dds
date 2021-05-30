@@ -19,6 +19,7 @@ import { isMetaMaskInstalled } from './metamask';
 import { getPageListRange } from '../util/page';
 import { ContractAddress, EthNetwork } from '../constant/address';
 import { getContractAddress, getContractInfo } from './contract-info';
+import { bigNumMultiple } from '../util/math';
 
 declare const window: Window & { ethereum: any };
 
@@ -264,8 +265,11 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
             if (isBsc) {
               return this.getPriceByETHDAI(coin).pipe(
                 map((price: BigNumber) => {
+                  // TODO price should be the user confirmed price
                   const sliderPrice: BigNumber =
-                    contractType === 1 ? price.mul(100 + slider).div(100) : price.mul(100 - slider).div(100);
+                    contractType === 1
+                      ? bigNumMultiple(price, 100 + slider).div(100)
+                      : bigNumMultiple(price, 100 - slider).div(100);
                   return sliderPrice;
                 }),
                 map((sliderPrice: BigNumber) => {

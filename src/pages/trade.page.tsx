@@ -6,7 +6,6 @@ import styles from './style.module.less';
 import KLine from '../components/k-line/index';
 import FundingBalance from '../components/funding-balance/index';
 import SiteContext, { ISiteContextProps } from '../layouts/SiteContext';
-import { getCurPrice } from '../services/trade.service';
 import Auth from '../components/builtin/auth';
 import { SupporttedUSD, SupporttedCoins, NetWork2Coin, DefaultKeNetwork, ISupporttedUSD } from '../constant/index';
 import TradeInfo from '../components/trade-info/index';
@@ -40,7 +39,6 @@ export default class TradePage extends Component {
     }
 
     const coin = isValid ? to : this.state.coin;
-    console.log('dataFrom getCurPrice start, componentDidMount', coin);
     // const curPrice = await getCurPrice(coin);
     // console.log('dataFrom getCurPrice end', coin, curPrice);
     this.setState({
@@ -49,7 +47,7 @@ export default class TradePage extends Component {
   }
 
   updatePrice = (val: any) => {
-    console.log('dataFrom getCurPrice updatePrice', val);
+    //console.log('dataFrom getCurPrice updatePrice', val);
     // const { coin } = this.state;
     // const currentNetwork = (this.context as ISiteContextProps) .currentNetwork;
     // const fromCoin = NetWork2Coin[currentNetwork];
@@ -66,7 +64,7 @@ export default class TradePage extends Component {
       <SiteContext.Consumer>
         {({ isMobile, currentNetwork, timestamp }) => {
           const fromCoin = NetWork2Coin[currentNetwork] || from;
-          console.log('trade currentNetwork', currentNetwork, fromCoin);
+          //console.log('trade currentNetwork', currentNetwork, fromCoin);
           return (
             <div className={[styles.tradeInfoPool, isMobile ? styles.mobile : ''].join(' ')}>
               <Row className={styles.chartBalance}>

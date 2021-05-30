@@ -106,4 +106,5 @@ export type ICoins = keyof typeof SupporttedCoins;
 export enum LocalStorageKeyPrefix {
   TradeSetting = 'ShieldTradeSetting',
   PendingOrdersHash = 'PendingOrdersHash',
+  ReferalCode = 'referalCode',
 }

@@ -15,7 +15,7 @@ export const { isMetaMaskInstalled } = MetaMaskOnboarding;
 export class MetamaskWallet implements WalletInterface {
   public readonly walletType: Wallet = Wallet.Metamask;
   private curSelectedAccount: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
-  private curNetwork: BehaviorSubject<EthNetwork | undefined> = new BehaviorSubject<EthNetwork | undefined>(undefined);
+  private curNetwork: BehaviorSubject<EthNetwork | null> = new BehaviorSubject<EthNetwork | null>(null);
 
   constructor() {
     // 初始化时自动尝试连接
@@ -46,12 +46,12 @@ export class MetamaskWallet implements WalletInterface {
 
   public watchNetwork(): Observable<EthNetwork> {
     return this.curNetwork.pipe(
-      filter(net => net !== undefined),
+      filter(net => net !== null),
       map(net => net as EthNetwork)
     );
   }
 
-  public getNetwork(): EthNetwork | undefined {
+  public getNetwork(): EthNetwork | null {
     return this.curNetwork.getValue();
   }
 
@@ -127,7 +127,6 @@ export class MetamaskWallet implements WalletInterface {
   private syncAccount(init = false): void {
     if (isMetaMaskInstalled()) {
       this.doRequest(init).subscribe((rsAccounts: string[]) => {
-        console.log('get cur account', rsAccounts);
         this.updateAccount(rsAccounts);
         if (rsAccounts && rsAccounts.length > 0) {
           this.watchAccountChange();

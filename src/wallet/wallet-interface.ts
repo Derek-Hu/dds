@@ -16,7 +16,7 @@ export interface WalletInterface {
 
   getAccount(): string | null;
 
-  getNetwork(): EthNetwork | undefined;
+  getNetwork(): EthNetwork | null;
 
   watchNetwork(): Observable<EthNetwork>;
 

@@ -265,3 +265,8 @@ declare interface IRankings {
   top: Array<string>;
   current: number;
 }
+
+declare type TradeSetting = {
+  tolerance: number; // percent
+  deadline: number; // minute
+};

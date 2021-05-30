@@ -9,9 +9,21 @@
 }
 
 .settingIcon {
-  width: 1.4em;
-  float: right;
-  margin-top: -3px;
+  display: block;
+  position: absolute;
+
+  right: 17px;
+  top: 27px;
+
+  font-size: 22px;
+  line-height: 0;
+  cursor: pointer;
+
+  color: #333333;
+
+  &:hover {
+    color: #666666;
+  }
 }
 
 .wrapper {
@@ -21,23 +33,47 @@
   border-radius: 4px;
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.2);
   background-color: #ffffff;
+
+  .close {
+    display: block;
+    position: absolute;
+    z-index: 31;
+    right: 8px;
+    top: 8px;
+    width: 32px;
+    height: 32px;
+    padding-top: 8px;
+    padding-left: 8px;
+    line-height: 0px;
+    cursor: pointer;
+    color: #333333;
+    font-size: 16px;
+
+    &:hover {
+      color: #666666;
+    }
+
+    img {
+      width: 1em;
+    }
+  }
 }
 
 .box2 {
   display: block;
   position: relative;
   z-index: 30;
-  height: 293px;
+  height: 240px;
   border-radius: 8px;
   background-color: rgba(255, 255, 255, 1);
   width: 398px;
+  padding-top: 30px;
 
   .title {
     display: block;
     position: relative;
     width: 100%;
     height: 16px;
-    margin-top: 30px;
     padding-left: 30px;
 
     color: rgba(51, 51, 51, 1);
@@ -90,6 +126,18 @@
         background-color: rgba(19, 70, 255, 1);
         border: 1px solid transparent;
         color: #ffffff;
+      }
+    }
+
+    .toleranceItem {
+      width: 70px;
+      height: 36px;
+      border-radius: 4px;
+      align-items: center;
+      border: 1px solid rgb(210, 210, 210);
+
+      &.active {
+        border: 1px solid rgba(19, 70, 255, 1);
       }
     }
 

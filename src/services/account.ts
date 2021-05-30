@@ -45,10 +45,6 @@ export const initTryConnect = async (): Promise<boolean> => {
     .toPromise();
 };
 
-export const curUserAccount = async (): Promise<string | null> => {
-  return loginUserAccount();
-};
-
 /**
  * 登陆后得到用户地址，连接前阻塞不返回
  */
@@ -154,4 +150,24 @@ export const switchNetwork = async (id: EthNetwork): Promise<boolean> => {
       take(1)
     )
     .toPromise();
+};
+
+// 获取此刻用户账户地址
+export const getCurUserAccount = function (): string | null {
+  const wallet: WalletInterface | null = walletManager.getCurWalletInstance();
+  if (wallet === null) {
+    return null;
+  }
+
+  return wallet.getAccount();
+};
+
+// 获取此刻的网络类型
+export const getCurNetwork = function (): EthNetwork | null {
+  const wallet: WalletInterface | null = walletManager.getCurWalletInstance();
+  if (wallet === null) {
+    return null;
+  }
+
+  return wallet.getNetwork();
 };

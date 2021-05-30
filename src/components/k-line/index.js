@@ -69,7 +69,7 @@ export default class MainLayout extends Component {
       this.chartInstance.setOption(option);
     }
     const consistent = pFrom === this.props.from && pTo === this.props.to;
-    console.log('consistent', this.props.from, this.props.to);
+    //console.log('consistent', this.props.from, this.props.to);
 
     const { xData, yData } = consistent
       ? data.reduce(

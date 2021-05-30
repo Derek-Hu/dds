@@ -3,7 +3,7 @@ import { contractAccessor } from '../wallet/chain-access';
 import { toEthers } from '../util/ethers';
 import { BigNumber } from 'ethers';
 import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
-import { curUserAccount, getNetworkAndAccount, loginUserAccount } from './account';
+import { getNetworkAndAccount, loginUserAccount } from './account';
 import { from, Observable, of, zip } from 'rxjs';
 import { withLoading } from './utils';
 import { defaultCoinDatas, defaultPoolData } from './mock/unlogin-default';
@@ -121,7 +121,7 @@ export const getPrivateSharePool = async (): Promise<ICoinItem[]> => {
     );
   };
 
-  return from(curUserAccount())
+  return from(loginUserAccount())
     .pipe(
       switchMap((account: string | null) => {
         return account === null ? of(defaultPoolData) : getSharePool(account);

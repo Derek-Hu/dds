@@ -1,6 +1,5 @@
 import Mask from '../components/mask';
 import { contractAccessor } from '../wallet/chain-access';
-import { curUserAccount } from './account';
 import { from, Observable, of, zip } from 'rxjs';
 import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { BigNumber } from 'ethers';
@@ -53,7 +52,7 @@ export const getLiquidityMiningReward = (
   amount: number;
   refactor: number;
 }> => {
-  const reward$: Observable<number> = from(curUserAccount()).pipe(
+  const reward$: Observable<number> = from(loginUserAccount()).pipe(
     filter(account => account !== null),
     map(account => account as string),
     switchMap((account: string) => {
@@ -200,7 +199,7 @@ export const getLiquidityReTokenBalance = (): Promise<ICoinValue[]> => {
     );
   };
 
-  return from(curUserAccount())
+  return from(loginUserAccount())
     .pipe(
       switchMap((account: string | null) => {
         return account === null ? of(defaultReTokenData) : getReTokenBalance(account);
@@ -251,7 +250,7 @@ export const getLiquidityMiningShare = (): Promise<ICoinItem[]> => {
     );
   };
 
-  return from(curUserAccount())
+  return from(loginUserAccount())
     .pipe(
       switchMap((account: string | null) => {
         return account === null ? of(defaultPoolData) : getMiningShare(account);

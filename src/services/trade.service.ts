@@ -9,9 +9,12 @@ import { BigNumber } from 'ethers';
 import { ETH_WEI, toEthers, toExchangePair } from '../util/ethers';
 import * as request from 'superagent';
 import { withLoading } from './utils';
-import { getNetworkAndAccount, loginUserAccount } from './account';
+import { getCurNetwork, getCurUserAccount, getNetworkAndAccount, loginUserAccount } from './account';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
 import { CentralHost, CentralPath, CentralPort, CentralProto, EthNetwork } from '../constant/address';
+import { LocalStorageKeyPrefix } from '../constant';
+import { getLocalStorageKey } from '../util/string';
+import { readTradeSetting } from './local-storage.service';
 
 /**
  * Trade Page
@@ -282,12 +285,17 @@ export const openOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: 
  * @returns - 交易hash，如果下单失败，将返回空字符串 ''
  */
 export const createOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: number): Promise<string> => {
-  const inviteAddress: string | null = localStorage.getItem('referalCode');
-  const slider = 1;
-  const timeout = 15 * 60;
-  // if(process.env.NODE_ENV === 'development'){
-  //   return Promise.resolve(`${Math.random()}`);
-  // }
+  const inviteAddress: string | null = localStorage.getItem(LocalStorageKeyPrefix.ReferalCode);
+  const setting: TradeSetting | null = readTradeSetting();
+
+  let slider = 1;
+  let timeout = 20 * 60;
+
+  if (setting) {
+    slider = setting.tolerance;
+    timeout = setting.deadline * 60;
+  }
+
   const res: Promise<string> = contractAccessor
     .createContract(coin, tradeType, amount, inviteAddress, slider, timeout)
     .pipe(take(1))

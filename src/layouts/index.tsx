@@ -174,7 +174,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
     // @ts-ignore
     window.PendingOrderCacheKey = getLocalStorageKey(
       LocalStorageKeyPrefix.PendingOrdersHash,
-      account?.address,
+      account?.address || '',
       network
     );
   };
