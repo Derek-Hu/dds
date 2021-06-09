@@ -829,6 +829,22 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
+  public setPriPoolRejectOrder(isReject: boolean): Observable<boolean> {
+    return this.getPriPoolContract('DAI').pipe(
+      switchMap((contract: ethers.Contract) => {
+        return from(contract.setIsRejectOrder(isReject) as Promise<any>);
+      }),
+      switchMap((rs: any) => {
+        return rs.wait();
+      }),
+      mapTo(true),
+      catchError(err => {
+        console.warn('error:', err);
+        return of(false);
+      })
+    );
+  }
+
   public priPoolUserBalance(
     address: string
   ): Observable<{ total: CoinBalance[]; available: CoinBalance[]; locked: CoinBalance[] }> {
@@ -1735,6 +1751,14 @@ export class ContractAccessor implements ContractProxy {
     return this.accessor.pipe(
       switchMap(accessor => {
         return accessor.priPoolBalanceOf(address);
+      })
+    );
+  }
+
+  public setPriPoolRejectOrder(isReject: boolean): Observable<boolean> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.setPriPoolRejectOrder(isReject);
       })
     );
   }

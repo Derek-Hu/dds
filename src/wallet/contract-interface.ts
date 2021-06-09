@@ -5009,6 +5009,11 @@ export interface ContractProxy {
 
   priPoolBalanceWhole(): Observable<Map<IUSDCoins, BigNumber>>;
 
+  /**
+   * @param isReject - 是否停止接单。true：停止接单；false：继续接单
+   */
+  setPriPoolRejectOrder(isReject: boolean): Observable<boolean>;
+
   //
 
   getLiquidityMiningReward(address: string): Observable<BigNumber>;
