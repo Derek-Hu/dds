@@ -70,7 +70,7 @@ export default class Ranking extends Component<any, IState> {
           <Row gutter={address ? 0 : 12}>
             <Col xs={24} sm={24} md={24} lg={24}>
               <div className={styles.rankings}>
-                <h4>Liquiditor Ranking</h4>
+                <h3>Liquiditor Ranking</h3>
                 <div className={styles.blocks}>
                   {[0, 1, 2].map(idx => (
                     <div key={idx}>

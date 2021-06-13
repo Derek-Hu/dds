@@ -57,28 +57,28 @@ export default () => {
                 <h4>Level & Commission</h4>
                 <p>due to the ranking of the network we have 4 level for broker</p>
                 <Row>
-                  <Col xs={24} sm={24} md={6} lg={6}>
+                  <Col xs={12} sm={12} md={6} lg={6}>
                     <p className={styles.themeColor}>A</p>
                     <div>
                       Top 20
                       <br /> 40%
                     </div>
                   </Col>
-                  <Col xs={24} sm={24} md={6} lg={6}>
+                  <Col xs={12} sm={12} md={6} lg={6}>
                     <p className={styles.themeColor}>B</p>
                     <div>
                       Top 21 - 50
                       <br /> 40%
                     </div>
                   </Col>
-                  <Col xs={24} sm={24} md={6} lg={6}>
+                  <Col xs={12} sm={12} md={6} lg={6}>
                     <p className={styles.themeColor}>C</p>
                     <div>
                       Top 50 - 100
                       <br /> 30%
                     </div>
                   </Col>
-                  <Col xs={24} sm={24} md={6} lg={6}>
+                  <Col xs={12} sm={12} md={6} lg={6}>
                     <p className={styles.themeColor}>D</p>
                     <div>
                       &gt;100
