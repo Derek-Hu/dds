@@ -8372,34 +8372,15 @@ export const BN_Pl1_ABI = [
 ];
 export const BN_Pl2_ABI = [
   {
-    inputs: [],
-    stateMutability: 'nonpayable',
-    type: 'constructor',
-  },
-  {
-    anonymous: false,
     inputs: [
       {
-        indexed: true,
-        internalType: 'address',
-        name: 'owner',
+        internalType: 'contract PublicDAIPool',
+        name: '_lp1',
         type: 'address',
-      },
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'spender',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'value',
-        type: 'uint256',
       },
     ],
-    name: 'Approval',
-    type: 'event',
+    stateMutability: 'nonpayable',
+    type: 'constructor',
   },
   {
     anonymous: false,
@@ -8470,31 +8451,6 @@ export const BN_Pl2_ABI = [
       {
         indexed: true,
         internalType: 'address',
-        name: 'from',
-        type: 'address',
-      },
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'to',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'value',
-        type: 'uint256',
-      },
-    ],
-    name: 'Transfer',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
         name: 'account',
         type: 'address',
       },
@@ -8507,6 +8463,50 @@ export const BN_Pl2_ABI = [
     ],
     name: 'Withdraw',
     type: 'event',
+  },
+  {
+    inputs: [],
+    name: 'DDSRewardsAddr',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'accIndex',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'orderID',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'addMarginAmount',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
     inputs: [
@@ -8530,100 +8530,9 @@ export const BN_Pl2_ABI = [
   {
     inputs: [
       {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    name: 'addressIndex',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'owner',
-        type: 'address',
-      },
-      {
-        internalType: 'address',
-        name: 'spender',
-        type: 'address',
-      },
-    ],
-    name: 'allowance',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'spender',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-    ],
-    name: 'approve',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-    ],
-    name: 'balanceOf',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
         internalType: 'uint256',
         name: 'id',
         type: 'uint256',
-      },
-      {
-        internalType: 'address',
-        name: 'holder',
-        type: 'address',
       },
       {
         internalType: 'uint256',
@@ -8645,56 +8554,6 @@ export const BN_Pl2_ABI = [
       },
     ],
     stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'decimals',
-    outputs: [
-      {
-        internalType: 'uint8',
-        name: '',
-        type: 'uint8',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'spender',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'subtractedValue',
-        type: 'uint256',
-      },
-    ],
-    name: 'decreaseAllowance',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'formular',
-    outputs: [
-      {
-        internalType: 'contract Formular',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -8745,38 +8604,12 @@ export const BN_Pl2_ABI = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'currentPrice',
-        type: 'uint256',
-      },
-      {
-        internalType: 'string',
-        name: 'exchangeType',
-        type: 'string',
-      },
-      {
-        internalType: 'uint256',
-        name: 'poolType',
-        type: 'uint256',
-      },
-    ],
-    name: 'getLockedAmount',
+    inputs: [],
+    name: 'getLPLocked',
     outputs: [
       {
         internalType: 'uint256',
-        name: 'marginFee',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'forceFee',
+        name: 'locked',
         type: 'uint256',
       },
     ],
@@ -8798,11 +8631,6 @@ export const BN_Pl2_ABI = [
         name: 'lpID',
         type: 'uint256',
       },
-      {
-        internalType: 'uint256',
-        name: 'lpFlag',
-        type: 'uint256',
-      },
     ],
     stateMutability: 'view',
     type: 'function',
@@ -8811,35 +8639,16 @@ export const BN_Pl2_ABI = [
     inputs: [
       {
         internalType: 'uint256',
-        name: 'mintAmount',
+        name: 'amount',
         type: 'uint256',
       },
     ],
-    name: 'getMintReDaiAmount',
+    name: 'getMatchLp2Object',
     outputs: [
       {
-        internalType: 'uint256',
-        name: 'mintOtoken',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'tokenAmount',
-        type: 'uint256',
-      },
-    ],
-    name: 'getReTokenAmountByToken',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'retokenAmount',
-        type: 'uint256',
+        internalType: 'address',
+        name: '',
+        type: 'address',
       },
     ],
     stateMutability: 'view',
@@ -8859,62 +8668,6 @@ export const BN_Pl2_ABI = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'reTokenAmount',
-        type: 'uint256',
-      },
-    ],
-    name: 'getTokenAmountByreToken',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'tokenAmount',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'getTotalSupply',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'addr',
-        type: 'address',
-      },
-    ],
-    name: 'getUserReToeknInfo',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'selfReToken',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'total',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
     inputs: [],
     name: 'getlockedLiquidityLen',
     outputs: [
@@ -8925,54 +8678,6 @@ export const BN_Pl2_ABI = [
       },
     ],
     stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'spender',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'addedValue',
-        type: 'uint256',
-      },
-    ],
-    name: 'increaseAllowance',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'string',
-        name: 'a',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: 'b',
-        type: 'string',
-      },
-    ],
-    name: 'isEqual',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
-    stateMutability: 'pure',
     type: 'function',
   },
   {
@@ -9024,6 +8729,11 @@ export const BN_Pl2_ABI = [
         name: 'marginFee',
         type: 'uint256',
       },
+      {
+        internalType: 'uint256',
+        name: 'exchgFee',
+        type: 'uint256',
+      },
     ],
     name: 'lock',
     outputs: [
@@ -9062,11 +8772,6 @@ export const BN_Pl2_ABI = [
         type: 'uint256',
       },
       {
-        internalType: 'uint256',
-        name: 'pubOrPrivate',
-        type: 'uint256',
-      },
-      {
         internalType: 'address',
         name: 'makerAddr',
         type: 'address',
@@ -9095,10 +8800,10 @@ export const BN_Pl2_ABI = [
   },
   {
     inputs: [],
-    name: 'lp2Keeper',
+    name: 'lp1',
     outputs: [
       {
-        internalType: 'address',
+        internalType: 'contract PublicDAIPool',
         name: '',
         type: 'address',
       },
@@ -9117,9 +8822,48 @@ export const BN_Pl2_ABI = [
     name: 'lpAccount',
     outputs: [
       {
+        internalType: 'address payable',
+        name: 'holder',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'availableAmount',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'lockedAmount',
+        type: 'uint256',
+      },
+      {
+        internalType: 'bool',
+        name: 'isRejectOrder',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
         internalType: 'uint256',
         name: '',
         type: 'uint256',
+      },
+    ],
+    name: 'lpAddrs',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
       },
     ],
     stateMutability: 'view',
@@ -9145,63 +8889,6 @@ export const BN_Pl2_ABI = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'orderID',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'profit',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'moveProfit',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'number',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'movePrice',
-        type: 'uint256',
-      },
-      {
-        internalType: 'string',
-        name: 'exchangeType',
-        type: 'string',
-      },
-    ],
-    name: 'moveLp1Fund',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'name',
-    outputs: [
-      {
-        internalType: 'string',
-        name: '',
-        type: 'string',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
     inputs: [],
     name: 'owner',
     outputs: [
@@ -9209,45 +8896,6 @@ export const BN_Pl2_ABI = [
         internalType: 'address',
         name: '',
         type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'pl1AvailAmount',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'pl1lockedAmount',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'plDepositTotal',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
       },
     ],
     stateMutability: 'view',
@@ -9277,7 +8925,7 @@ export const BN_Pl2_ABI = [
     inputs: [
       {
         internalType: 'uint256',
-        name: 'id',
+        name: 'orderID',
         type: 'uint256',
       },
       {
@@ -9287,12 +8935,12 @@ export const BN_Pl2_ABI = [
       },
       {
         internalType: 'uint256',
-        name: 'profit',
+        name: 'holdFee',
         type: 'uint256',
       },
       {
         internalType: 'uint256',
-        name: 'holdFee',
+        name: 'profit',
         type: 'uint256',
       },
       {
@@ -9333,12 +8981,25 @@ export const BN_Pl2_ABI = [
   {
     inputs: [
       {
-        internalType: 'contract Formular',
-        name: '_formular',
+        internalType: 'address',
+        name: '_DDSRewardsAddr',
         type: 'address',
       },
     ],
-    name: 'setFormular',
+    name: 'setDDSRewardsAddr',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bool',
+        name: 'flag',
+        type: 'bool',
+      },
+    ],
+    name: 'setIsRejectOrder',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -9352,19 +9013,6 @@ export const BN_Pl2_ABI = [
       },
     ],
     name: 'setKeeper',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '_lp2KeeperAddr',
-        type: 'address',
-      },
-    ],
-    name: 'setLP2Keeper',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -9398,6 +9046,19 @@ export const BN_Pl2_ABI = [
   {
     inputs: [
       {
+        internalType: 'contract PublicDAIPool',
+        name: '_lp1',
+        type: 'address',
+      },
+    ],
+    name: 'setPublicPoolAddr',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
         internalType: 'address',
         name: '_riskFundAddr',
         type: 'address',
@@ -9406,19 +9067,6 @@ export const BN_Pl2_ABI = [
     name: 'setRiskFundAddr',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'symbol',
-    outputs: [
-      {
-        internalType: 'string',
-        name: '',
-        type: 'string',
-      },
-    ],
-    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -9448,72 +9096,6 @@ export const BN_Pl2_ABI = [
     type: 'function',
   },
   {
-    inputs: [],
-    name: 'totalSupply',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'recipient',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-    ],
-    name: 'transfer',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'sender',
-        type: 'address',
-      },
-      {
-        internalType: 'address',
-        name: 'recipient',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-    ],
-    name: 'transferFrom',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
     inputs: [
       {
         internalType: 'address',
@@ -9530,18 +9112,12 @@ export const BN_Pl2_ABI = [
     inputs: [
       {
         internalType: 'uint256',
-        name: 'reTokenAmount',
+        name: 'amount',
         type: 'uint256',
       },
     ],
     name: 'withdraw',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'reAmount',
-        type: 'uint256',
-      },
-    ],
+    outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },

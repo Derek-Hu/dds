@@ -4910,10 +4910,14 @@ export const ERC20 = [
   },
 ];
 
+export interface ContractRead {
+  priPoolUserBalance(address: string): Observable<PrivatePoolAccountInfo>;
+}
+
 /**
  * 合约接口
  */
-export interface ContractProxy {
+export interface ContractProxy extends ContractRead {
   getUserSelfWalletBalance(address: string): Observable<CoinBalance[]>;
 
   //
@@ -5003,11 +5007,12 @@ export interface ContractProxy {
 
   priPoolBalanceOf(address: string): Observable<Map<IUSDCoins, BigNumber>>;
 
-  priPoolUserBalance(
-    address: string
-  ): Observable<{ total: CoinBalance[]; available: CoinBalance[]; locked: CoinBalance[] }>;
+  // priPoolBalanceWhole(): Observable<Map<IUSDCoins, BigNumber>>;
 
-  priPoolBalanceWhole(): Observable<Map<IUSDCoins, BigNumber>>;
+  /**
+   * @param isReject - 是否停止接单。true：停止接单；false：继续接单
+   */
+  setPriPoolRejectOrder(isReject: boolean): Observable<boolean>;
 
   //
 
@@ -5105,3 +5110,10 @@ export type LiquditorRewardsResult = {
   compensate: BigNumber;
   rank: BigNumber;
 };
+
+export interface PrivatePoolAccountInfo {
+  total: CoinBalance[];
+  available: CoinBalance[];
+  locked: CoinBalance[];
+  isRejectOrder: { coin: IUSDCoins; reject: boolean }[];
+}

@@ -9,8 +9,9 @@ import { withLoading } from './utils';
 import { defaultCoinDatas, defaultPoolData } from './mock/unlogin-default';
 import * as request from 'superagent';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
-import { CoinBalance } from '../wallet/contract-interface';
+import { CoinBalance, PrivatePoolAccountInfo } from '../wallet/contract-interface';
 import { CentralHost, CentralPath, CentralPort, CentralProto } from '../constant/address';
+import { queryMan } from '../wallet/state-manager';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   if (process.env.NODE_ENV === 'development') {
@@ -107,7 +108,7 @@ export const getCollaborativeShareInPool = async (): Promise<IPoolShareInPool[]>
 /** Done */
 export const getPrivateSharePool = async (): Promise<ICoinItem[]> => {
   const getSharePool = (account: string): Observable<ICoinItem[]> => {
-    return contractAccessor.priPoolUserBalance(account).pipe(
+    return queryMan.priPoolUserBalance(account).pipe(
       map(rs => {
         return rs.total.map(one => {
           const availableNum: BigNumber = rs.available.filter(c => c.coin === one.coin)[0].balance;
@@ -125,6 +126,22 @@ export const getPrivateSharePool = async (): Promise<ICoinItem[]> => {
     .pipe(
       switchMap((account: string | null) => {
         return account === null ? of(defaultPoolData) : getSharePool(account);
+      }),
+      take(1)
+    )
+    .toPromise();
+};
+
+// 获取私池是否接单的状态
+export const getIsUserRejectPrivateOrder = async (): Promise<boolean> => {
+  return from(loginUserAccount())
+    .pipe(
+      switchMap((account: string) => {
+        return queryMan.priPoolUserBalance(account);
+      }),
+      map((info: PrivatePoolAccountInfo) => {
+        const rejectInfo = info.isRejectOrder.filter(one => one.coin === 'DAI');
+        return rejectInfo[0].reject;
       }),
       take(1)
     )
@@ -367,7 +384,7 @@ export const getPrivateLiquidityBalance = async (): Promise<
   return from(loginUserAccount())
     .pipe(
       switchMap(account => {
-        return contractAccessor.priPoolUserBalance(account);
+        return queryMan.priPoolUserBalance(account);
       }),
       map(allBalances => {
         const res = {
