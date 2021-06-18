@@ -3,15 +3,12 @@ import { Icon, Modal, Button, Checkbox } from 'antd';
 import LiquidityPool from '../components/liquidity-pool/index';
 import styles from './style.module.less';
 import SiteContext from '../layouts/SiteContext';
+import { formatMessage } from '../util/i18n';
 
 const cacheKey = 'dontShowAgain';
 const cacheVal = 'Y';
 
 export default class PoolPage extends Component {
-  componentDidMount() {
-    console.log('mount');
-  }
-
   state = {
     visible: localStorage.getItem(cacheKey) !== cacheVal,
     agreed: false,
@@ -47,7 +44,7 @@ export default class PoolPage extends Component {
                 title={
                   <span style={{ color: '#F55858' }}>
                     <Icon type="warning" />
-                    &nbsp;RISK WARNING
+                    &nbsp;{formatMessage({ id: 'risk-warning' })}
                   </span>
                 }
                 closable={false}
@@ -55,17 +52,14 @@ export default class PoolPage extends Component {
                 onCancel={this.closeAgree}
                 footer={[
                   <Button type="danger" onClick={this.closeAgree}>
-                    I understand and agree
+                    {formatMessage({ id: 'understand-and-agree' })}
                   </Button>,
                   <Checkbox checked={agreed} onChange={this.onCheckChange} className={styles.agree}>
-                    Don't show it again
+                    {formatMessage({ id: 'dnot-show-again' })}
                   </Checkbox>,
                 ]}
               >
-                <p>
-                  Shield protocol is under audit. Your funds still might be at risk and you can lose up to 100% of the
-                  amount provided. This is BETA version and use at your own risk.
-                </p>
+                <p>{formatMessage({ id: 'shield-private-warning' })}</p>
               </Modal>
             </div>
           );

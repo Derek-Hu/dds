@@ -4,7 +4,7 @@ import styles from '../style.module.less';
 import { formatInt, format, isGreaterZero } from '../../../util/math';
 import { getMyReferalInfo, claimReferalInfo } from '../../../services/broker.service';
 import Placeholder from '../../placeholder/index';
-import { Visible } from '../../builtin/hidden';
+import { formatMessage } from '~/util/i18n';
 
 interface IState {
   loading: boolean;
@@ -33,7 +33,7 @@ export default class Broker extends Component<any, IState> {
     const { referalInfo } = this.state;
     const { bonus } = referalInfo || {};
     if (!isGreaterZero(bonus)) {
-      message.warn('No available to claim!');
+      message.warn(formatMessage({ id: 'no-available-to-claim' }));
       return;
     }
     const success = await claimReferalInfo();
@@ -47,7 +47,7 @@ export default class Broker extends Component<any, IState> {
     const { level, ranking, referals, bonus } = referalInfo || {};
     return (
       <div>
-        <h3>Summary</h3>
+        <h3>{formatMessage({ id: 'summary' })}</h3>
         <Row className="padding-bottom-60">
           {/* <Col xs={24} sm={24} md={8} lg={8} className={styles.col}>
             <span className={styles.ads}>{level}</span>
@@ -63,7 +63,7 @@ export default class Broker extends Component<any, IState> {
                 {formatInt(referals)}
               </Placeholder>
             </span>
-            <span>Referrals</span>
+            <span>{formatMessage({ id: 'referrals' })}</span>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
             <span className={styles.ads}>
@@ -71,14 +71,14 @@ export default class Broker extends Component<any, IState> {
                 {format(bonus)}
               </Placeholder>
             </span>
-            <span>Commission Balance(USD)</span>
+            <span>{formatMessage({ id: 'commission-balance-usd' })}</span>
           </Col>
         </Row>
         <div style={{ marginTop: '48px', paddingBottom: '20px' }}>
           <div>
             {/* <Visible when={isGreaterZero(bonus)}> */}
             <Button onClick={this.onClaim} style={{ width: '50%', margin: '20px' }} type="primary">
-              CLAIM
+              {formatMessage({ id: 'claim' })}
             </Button>
             {/* </Visible> */}
           </div>

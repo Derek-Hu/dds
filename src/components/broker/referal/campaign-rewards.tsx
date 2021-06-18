@@ -1,13 +1,13 @@
 import { Component } from 'react';
-import { Icon, Tabs, Row, Col, Input, Button, Table } from 'antd';
+import { Button, Table } from 'antd';
 import CardInfo from '../../card-info/index';
 import { getBrokerCampaignRewardData, getBrokerCampaignRewardsPool } from '../../../services/broker.service';
 import ModalRender from '../../modal-render/index';
 import ColumnConvert from '../../column-convert/index';
-import dayjs from 'dayjs';
 import styles from '../style.module.less';
 import { format } from '../../../util/math';
 import { formatTime } from '../../../util/time';
+import { formatMessage } from '~/util/i18n';
 
 interface IState {
   data: Array<{ label: string; value: number }>;
@@ -19,11 +19,11 @@ interface IState {
 
 const CommissionColumns = ColumnConvert<IBrokerCampaignRecord, {}>({
   column: {
-    time: 'Time',
-    pair: 'Friend Address',
-    amount: 'Amount',
-    price: 'Settlement Fee',
-    reward: 'Commission',
+    time: formatMessage({ id: 'time' }),
+    pair: formatMessage({ id: 'friend-address' }),
+    amount: formatMessage({ id: 'amount' }),
+    price: formatMessage({ id: 'settlement-fee' }),
+    reward: formatMessage({ id: 'commission' }),
   },
   render(value, key, record) {
     switch (key) {
@@ -97,15 +97,21 @@ export default class CampaignRewards extends Component<any, IState> {
     const { data, loading, visible, tableData } = this.state;
     return loading ? null : (
       <div>
-        <CardInfo isNumber={true} loading={false} theme="inner" title="Campaign Rewards" items={data}>
+        <CardInfo
+          isNumber={true}
+          loading={false}
+          theme="inner"
+          title={formatMessage({ id: 'campaign-rewards' })}
+          items={data}
+        >
           <Button type="link" onClick={this.visible.show}>
-            Rewards Record
+            {formatMessage({ id: 'rewards-record' })}
           </Button>
         </CardInfo>
 
         <ModalRender
           visible={visible}
-          title="Rewards Record"
+          title={formatMessage({ id: 'rewards-record' })}
           className={styles.modal}
           height={420}
           onCancel={this.visible.hide}

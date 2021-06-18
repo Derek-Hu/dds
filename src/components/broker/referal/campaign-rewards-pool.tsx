@@ -1,14 +1,10 @@
 import { Component } from 'react';
-import { Icon, Tabs, Row, Col, Input, Button, Table } from 'antd';
-import CardInfo from '../../card-info/index';
-import { getBrokerCampaignPool, getBrokerCampaignRewardsPool } from '../../../services/broker.service';
-import ModalRender from '../../modal-render/index';
-import ColumnConvert from '../../column-convert/index';
-import dayjs from 'dayjs';
+import { getBrokerCampaignPool } from '../../../services/broker.service';
 import styles from '../campion-pool.module.less';
-import PoolProgress, { IMiningShare } from '../../progress-bar/pool-progress';
-import WithIndicator, { IIndicatorProgress } from '../../progress-bar/with-indicator';
+import PoolProgress from '../../progress-bar/pool-progress';
+import { IIndicatorProgress } from '../../progress-bar/with-indicator';
 import { dividedPecent } from '../../../util/math';
+import { formatMessage } from '~/util/i18n';
 
 interface IState {
   data: Array<IIndicatorProgress>;
@@ -50,27 +46,19 @@ export default class CampaignRewardsPool extends Component<any, IState> {
         <PoolProgress
           loading={false}
           totalMode={true}
-          title="Campaign Rewards Pool"
+          title={formatMessage({ id: 'campaign-rewards-pool' })}
           coins={data}
           desc={
             <div>
               <p className="text-center">
-                Next distribution time
+                {formatMessage({ id: 'next-distribution-time' })}
                 <br />
                 <span>{nextDistribution}</span>
               </p>
               ,
               <p className={styles.shareTotalTip}>
-                <span>
-                  Your
-                  <br />
-                  share
-                </span>
-                <span>
-                  Total
-                  <br />
-                  Locked
-                </span>
+                <span>{formatMessage({ id: 'your-share' }, true)}</span>
+                <span>{formatMessage({ id: 'total-locked' }, true)}</span>
               </p>
             </div>
           }

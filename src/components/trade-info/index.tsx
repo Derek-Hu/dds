@@ -1,5 +1,4 @@
 import { Component } from 'react';
-import { getTradeInfo } from '../../services/trade.service';
 import CardInfo from '../card-info/index';
 
 // interface IState {
@@ -12,22 +11,6 @@ export default class TradeInfo extends Component<{ from: string; coin: IUSDCoins
   state = {
     loading: false,
   };
-
-  //   async componentDidMount() {
-  //     const { coin } = this.props;
-  //     this.setState({
-  //       loading: true,
-  //     });
-  //     try {
-  //       const info = await getTradeInfo(coin);
-  //       this.setState({
-  //         info,
-  //       });
-  //     } catch {}
-  //     this.setState({
-  //       loading: false,
-  //     });
-  //   }
 
   render() {
     const { from, coin } = this.props;

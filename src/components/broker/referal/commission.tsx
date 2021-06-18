@@ -1,15 +1,14 @@
 import { Component } from 'react';
-import { Icon, Tabs, Row, Col, Input, Button, Table, Descriptions } from 'antd';
-import CardInfo from '../../card-info/index';
+import { Col, Table } from 'antd';
 import { getBrokerCommissionData, getBrokerCommissionRecords } from '../../../services/broker.service';
 import ModalRender from '../../modal-render/index';
 import ColumnConvert from '../../column-convert/index';
-import dayjs from 'dayjs';
 import styles from '../style.module.less';
 import { format } from '../../../util/math';
 import { DefaultCoinDatas } from '../../../constant/index';
 import { formatTime } from '../../../util/time';
 import Placeholder from '../../placeholder/index';
+import { formatMessage } from '~/util/i18n';
 
 interface IState {
   data: Array<{ label: string; value: any }> | { [key: string]: number };
@@ -21,11 +20,11 @@ interface IState {
 
 const CommissionColumns = ColumnConvert<IBrokerCommissionRecord, {}>({
   column: {
-    time: 'Time',
-    pair: 'Friend Address',
-    amount: 'Amount',
-    price: 'Settlement Fee',
-    reward: 'Commission',
+    time: formatMessage({ id: 'time' }),
+    pair: formatMessage({ id: 'friend-address' }),
+    amount: formatMessage({ id: 'amount' }),
+    price: formatMessage({ id: 'settlement-fee' }),
+    reward: formatMessage({ id: 'commission' }),
   },
   render(value, key, record) {
     switch (key) {
@@ -124,7 +123,7 @@ export default class CommissionPool extends Component<any, IState> {
             Commission History
           </Button>
         </CardInfo> */}
-        <h3>Commission(Total)</h3>
+        <h3>{formatMessage({ id: 'commission-total' })}</h3>
         <div style={{ marginTop: '40px' }}>
           {Array.isArray(data)
             ? data.map(({ label, value }, index) => (
@@ -153,7 +152,7 @@ export default class CommissionPool extends Component<any, IState> {
 
         <ModalRender
           visible={visible}
-          title="Commission History"
+          title={formatMessage({ id: 'commission-history' })}
           className={styles.modal}
           height={420}
           onCancel={this.visible.hide}

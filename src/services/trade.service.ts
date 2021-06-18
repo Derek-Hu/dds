@@ -1,6 +1,5 @@
-import { orders, balance, infoItems, curPrice, poolInfo } from './mock/trade.mock';
 import { walletManager } from '../wallet/wallet-manager';
-import { catchError, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
 import { AsyncSubject, from, of, zip } from 'rxjs';
 import { contractAccessor } from '../wallet/chain-access';
@@ -174,10 +173,6 @@ export const getTradeOrders = async (page: number, pageSize = 5, isActive = true
       take(1)
     )
     .toPromise();
-};
-
-export const getTradeInfo = async (coin: IUSDCoins): Promise<ITradeInfo[]> => {
-  return returnVal(infoItems);
 };
 
 export const getTradeLiquidityPoolInfo = async (coin: IUSDCoins): Promise<ITradePoolInfo> => {
