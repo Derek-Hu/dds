@@ -1,12 +1,13 @@
-import { Tag, Button, Row, Col, message, Input } from 'antd';
+import { Button, Row, Col, message } from 'antd';
 import ModalRender from '../../modal-render/index';
 import styles from './style.module.less';
 import SiteContext from '../../../layouts/SiteContext';
 import { Component } from 'react';
-import { format, isGreaterZero, isNumberLike } from '../../../util/math';
+import { isGreaterZero, isNumberLike } from '../../../util/math';
 import InputNumber from '../../input/index';
+import { formatMessage } from '~/util/i18n';
 
-const title = 'Funding Fee Deposit';
+const title = formatMessage({ id: 'funding-fee-deposit' });
 
 interface IProps {
   visible: boolean;
@@ -48,7 +49,7 @@ export default class Balance extends Component<IProps, IState> {
                   <InputNumber
                     className={styles.orderInput}
                     onChange={this.onAmountChange}
-                    placeholder={max ? `Max ${max}` : '0.00'}
+                    placeholder={max ? `${formatMessage({ id: 'max' })} ${max}` : '0.00'}
                     max={max}
                     showTag={true}
                     skip={true}
@@ -67,7 +68,7 @@ export default class Balance extends Component<IProps, IState> {
             </Row> */}
               <Row className={styles.actionBtns} gutter={[16, 16]}>
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                  <Button onClick={onCancel}>CANCEL</Button>
+                  <Button onClick={onCancel}>{formatMessage({ id: 'cancel' })}</Button>
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                   <Button
@@ -76,14 +77,14 @@ export default class Balance extends Component<IProps, IState> {
                         return;
                       }
                       if (isNumberLike(max) && depositAmount! > max!) {
-                        message.warning('More account balance required');
+                        message.warning(formatMessage({ id: 'more-balance-required' }));
                         return;
                       }
                       onConfirm(depositAmount);
                     }}
                     type="primary"
                   >
-                    DEPOSIT
+                    {formatMessage({ id: 'deposit' })}
                   </Button>
                 </Col>
               </Row>

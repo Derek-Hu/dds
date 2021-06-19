@@ -1,4 +1,5 @@
 import styles from './bar.module.less';
+import { formatMessage } from '~/util/i18n';
 
 interface IProps {
   vertical?: boolean;
@@ -37,7 +38,7 @@ export default ({ vertical, right, style, className, percentage, width, height =
             <span>{percentage}%</span>
           ) : (
             <span>
-              Basic
+              {formatMessage({ id: 'basic' })}
               <br />
               {percentage}%
             </span>

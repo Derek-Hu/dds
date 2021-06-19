@@ -3,10 +3,11 @@ import { formatTime } from '../../util/time';
 import styles from './style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import { format } from '../../util/math';
+import { formatMessage } from '~/util/i18n';
 
 const columns = [
   {
-    title: 'Time',
+    title: formatMessage({ id: 'time' }),
     dataIndex: 'time',
     key: 'time',
     render: (time: string) => {
@@ -14,12 +15,12 @@ const columns = [
     },
   },
   {
-    title: 'Friend Address',
+    title: formatMessage({ id: 'friend-address' }),
     dataIndex: 'address',
     key: 'address',
   },
   {
-    title: 'Settlement Fee ($)',
+    title: formatMessage({ id: 'settlement-fee-dollar' }),
     dataIndex: 'fee',
     key: 'fee',
     render: (time: string) => {
@@ -27,7 +28,7 @@ const columns = [
     },
   },
   {
-    title: 'Bonus Received(SLD)',
+    title: formatMessage({ id: 'bonus-recieved-sld' }),
     dataIndex: 'bonus',
     key: 'bonus',
     render: (time: string) => {
@@ -47,7 +48,7 @@ export default ({ data }: { data: IData[] }) => {
     <SiteContext.Consumer>
       {({ isMobile }) => (
         <div className={styles.tableList}>
-          <h4>refeerals details</h4>
+          <h4>{formatMessage({ id: 'refeerals-details' })}</h4>
           <Table
             rowKey="coin"
             columns={columns}
@@ -56,7 +57,7 @@ export default ({ data }: { data: IData[] }) => {
             scroll={isMobile ? { x: 600 } : undefined}
           />
           <Button type="link" className={styles.more}>
-            More&nbsp;
+            {formatMessage({ id: 'more' })}&nbsp;
             <Icon type="down" />
           </Button>
         </div>

@@ -13,6 +13,7 @@ import Commission from './referal/commission';
 import SiteContext from '../../layouts/SiteContext';
 import { account2ReferalCode } from '../../services/broker.service';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { formatMessage } from '~/util/i18n';
 
 const { TabPane } = Tabs;
 
@@ -35,7 +36,7 @@ export default class Broker extends Component<any, any> {
   };
 
   onCopy = () => {
-    message.success('copied');
+    message.success(formatMessage({ id: 'copied' }));
     this.setState({ copied: true });
   };
 
@@ -44,19 +45,19 @@ export default class Broker extends Component<any, any> {
     const url = referalCode ? `${ddsBasePath}/referal?code=${referalCode}` : '';
     return (
       <div className={styles.root}>
-        <h2>Broker</h2>
+        <h2>{formatMessage({ id: 'broker' })}</h2>
         <Auth>
           <div className={styles.referalInfo}>
             <Input value={url} disabled={true} className={styles.input} />
             {referalCode ? (
               <CopyToClipboard text={url} onCopy={this.onCopy}>
                 <Button type="primary" className={styles.btn}>
-                  Copy referral link
+                  {formatMessage({ id: 'copy-referral-link' })}
                 </Button>
               </CopyToClipboard>
             ) : (
               <Button type="primary" className={styles.btn}>
-                Copy referral link
+                {formatMessage({ id: 'copy-referral-link' })}
               </Button>
             )}
             {/* <div className={styles.qrcode}>
@@ -65,10 +66,16 @@ export default class Broker extends Component<any, any> {
           </div>
           <div className={styles.tabContainer}>
             <Tabs animated={false} activeKey={this.state.selectedTab} className={CustomTabKey} onChange={this.callback}>
-              <TabPane tab={<span className={styles.uppercase}>spark program</span>} key={tabName.spark}>
+              <TabPane
+                tab={<span className={styles.uppercase}>{formatMessage({ id: 'spark-program' })}</span>}
+                key={tabName.spark}
+              >
                 <BecomeSpark />
               </TabPane>
-              <TabPane tab={<span className={styles.uppercase}>My referral</span>} key={tabName.referal}>
+              <TabPane
+                tab={<span className={styles.uppercase}>{formatMessage({ id: 'my-referral' })}</span>}
+                key={tabName.referal}
+              >
                 <MyReferal />
                 <Row style={{ paddingBottom: '100px' }}>
                   <Col xs={24} sm={24} md={24} lg={24}>

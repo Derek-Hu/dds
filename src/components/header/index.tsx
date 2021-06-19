@@ -8,6 +8,7 @@ import Logo from '~/assets/imgs/logo.png';
 import LogoWhite from '~/assets/imgs/logo-white.png';
 import { homeBasePath, ddsBasePath } from '../../constant/index';
 import { isNumberLike } from '../../util/math';
+import { formatMessage } from '~/util/i18n';
 
 const { SubMenu } = Menu;
 
@@ -118,10 +119,10 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                   <Col span={22} style={{ textAlign: 'right' }}>
                     <Menu onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal">
                       <Menu.Item key="trade">
-                        <a href={`${ddsBasePath}/trade`}>Trade</a>
+                        <a href={`${ddsBasePath}/trade`}>{formatMessage({ id: 'menu-trade' })}</a>
                       </Menu.Item>
                       <Menu.Item key="pool">
-                        <a href={`${ddsBasePath}/pool`}>Pool</a>
+                        <a href={`${ddsBasePath}/pool`}>{formatMessage({ id: 'menu-pool' })}</a>
                       </Menu.Item>
                       <SubMenu
                         title={
@@ -132,14 +133,14 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                         }
                       >
                         <Menu.Item key="setting:1">
-                          <a href={`${ddsBasePath}/mining`}>Mining</a>
+                          <a href={`${ddsBasePath}/mining`}>{formatMessage({ id: 'menu-mining' })}</a>
                         </Menu.Item>
                         <Menu.Item key="setting:2">
-                          <a href={`${ddsBasePath}/swap-burn`}>Swap & Burn</a>
+                          <a href={`${ddsBasePath}/swap-burn`}>{formatMessage({ id: 'menu-swap-burn' })}</a>
                         </Menu.Item>
                       </SubMenu>
                       <Menu.Item key="broker">
-                        <a href={`${ddsBasePath}/broker`}>Broker</a>
+                        <a href={`${ddsBasePath}/broker`}>{formatMessage({ id: 'menu-broker' })}</a>
                       </Menu.Item>
                     </Menu>
                   </Col>
@@ -157,10 +158,10 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                       </a>
                     </Menu.Item>
                     <Menu.Item key="trade">
-                      <a href={`${ddsBasePath}/trade`}>Trade</a>
+                      <a href={`${ddsBasePath}/trade`}>{formatMessage({ id: 'menu-trade' })}</a>
                     </Menu.Item>
                     <Menu.Item key="pool">
-                      <a href={`${ddsBasePath}/pool`}>Pool</a>
+                      <a href={`${ddsBasePath}/pool`}>{formatMessage({ id: 'menu-pool' })}</a>
                     </Menu.Item>
                     <SubMenu
                       title={
@@ -172,27 +173,24 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                     >
                       <div className="submenu-dialog">
                         <div className="top">
-                          <div className="title">Token Economics</div>
-                          <div className="content">
-                            SLD is a utility token for community governance and fuels further Shield ecosystem
-                            development.
-                          </div>
+                          <div className="title">{formatMessage({ id: 'token-economics' })}</div>
+                          <div className="content">{formatMessage({ id: 'token-economics-description' })}</div>
                           {/* <Link to="/" className="link" style={{ color: '#1346FF' }}>
                             Learn more
                           </Link> */}
                         </div>
                         <div className="bottom">
                           <a href={`${ddsBasePath}/mining`} className="link">
-                            Mining
+                            {formatMessage({ id: 'menu-mining' })}
                           </a>
                           <a href={`${ddsBasePath}/swap-burn`} className="link">
-                            Swap & Burn
+                            {formatMessage({ id: 'menu-swap-burn' })}
                           </a>
                         </div>
                       </div>
                     </SubMenu>
                     <Menu.Item key="broker">
-                      <a href={`${ddsBasePath}/broker`}>Broker</a>
+                      <a href={`${ddsBasePath}/broker`}>{formatMessage({ id: 'menu-broker' })}</a>
                     </Menu.Item>
                     {/* <Menu.Item key="analytics">
                       <Link to="/analytics" activeClassName="ant-menu-item-selected">
@@ -208,12 +206,13 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                 <Col span={12} className={styles.connectWpr}>
                   {window.location.hash === '#/home' ? (
                     <Button className={styles.connectBtn}>
-                      <a href={`${ddsBasePath}/trade`}>Trade</a>
+                      <a href={`${ddsBasePath}/trade`}>{formatMessage({ id: 'trade' })}</a>
                     </Button>
                   ) : (
                     <div className={styles.rightContent}>
                       <div className={styles.network}>
-                        <span className={styles.icon}></span>Kovan
+                        <span className={styles.icon}></span>
+                        {formatMessage({ id: 'network-kovan' })}
                       </div>
                       <ConnectWallet>
                         {account ? (
@@ -232,7 +231,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                             <span>{account.address.replace(/^(.{6})(.*)(.{4})/, '$1...$3')}</span>
                           </div>
                         ) : (
-                          <Button className={styles.connectBtn}>Connect Wallet</Button>
+                          <Button className={styles.connectBtn}>{formatMessage({ id: 'connect-wallet' })}</Button>
                         )}
                       </ConnectWallet>
                     </div>

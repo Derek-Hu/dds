@@ -6,52 +6,53 @@ import SiteContext from '../../layouts/SiteContext';
 import BrokerIcon1 from '~/assets/imgs/broker-icon1.png';
 import BrokerIcon2 from '~/assets/imgs/broker-icon2.png';
 import BrokerIcon3 from '~/assets/imgs/broker-icon3.png';
+import { formatMessage } from '~/util/i18n';
 
 // const percentages = {
 //   center: 30,
 // };
 export default () => {
   // return (
-    // <SiteContext.Consumer>
-    //   {({ isMobile }) => {
-        // const rect = isMobile
-        //   ? {
-        //       width: 350,
-        //       height: 200,
-        //       barHeight: 80,
-        //       bar: 100,
-        //       center: 80,
-        //     }
-        //   : {
-        //       width: 750,
-        //       height: 200,
-        //       barHeight: 80,
-        //       bar: 200,
-        //       center: 140,
-        //     };
-        // const leftCenter = (rect.width - 2 * rect.bar - rect.center) / 2 + rect.bar;
-        // const gap = (rect.width - 2 * rect.bar - rect.center) / 2;
-        return (
-          <div className={styles.steps}>
-            <h4>Only 3 Steps</h4>
-            <Row>
-              <Col xs={24} sm={24} md={8} lg={8}>
-                <img src={BrokerIcon1} alt="" width="36px" />
-                <p>1. Invite Friends</p>
-                <div>Invite friends to Shield through the referral link or invitation code</div>
-              </Col>
-              <Col xs={24} sm={24} md={8} lg={8}>
-                <img src={BrokerIcon2} alt="" width="36px" />
-                <p>2. Your Friends Open First Order</p>
-                <div>Invite friends to Shield through the referral link or invitation code</div>
-              </Col>
-              <Col xs={24} sm={24} md={8} lg={8}>
-                <img src={BrokerIcon3} alt="" width="36px" />
-                <p>3. Receive Your Commission</p>
-                <div>Instantly get your commission and claim anytime</div>
-              </Col>
-            </Row>
-            {/* <div>
+  // <SiteContext.Consumer>
+  //   {({ isMobile }) => {
+  // const rect = isMobile
+  //   ? {
+  //       width: 350,
+  //       height: 200,
+  //       barHeight: 80,
+  //       bar: 100,
+  //       center: 80,
+  //     }
+  //   : {
+  //       width: 750,
+  //       height: 200,
+  //       barHeight: 80,
+  //       bar: 200,
+  //       center: 140,
+  //     };
+  // const leftCenter = (rect.width - 2 * rect.bar - rect.center) / 2 + rect.bar;
+  // const gap = (rect.width - 2 * rect.bar - rect.center) / 2;
+  return (
+    <div className={styles.steps}>
+      <h4>{formatMessage({ id: 'only-3-steps' })}</h4>
+      <Row>
+        <Col xs={24} sm={24} md={8} lg={8}>
+          <img src={BrokerIcon1} alt="" width="36px" />
+          <p>{formatMessage({ id: 'step-invite-friends' })}</p>
+          <div>{formatMessage({ id: 'step-desc-one-invite-friends' })}</div>
+        </Col>
+        <Col xs={24} sm={24} md={8} lg={8}>
+          <img src={BrokerIcon2} alt="" width="36px" />
+          <p>{formatMessage({ id: 'step-your-friends-open-first-order' })}</p>
+          <div>{formatMessage({ id: 'step-desc-two-your-friends-open-first-order' })}</div>
+        </Col>
+        <Col xs={24} sm={24} md={8} lg={8}>
+          <img src={BrokerIcon3} alt="" width="36px" />
+          <p>{formatMessage({ id: 'step-receive-your-commission' })}</p>
+          <div>{formatMessage({ id: 'step-desc-three-receive-your-commission' })}</div>
+        </Col>
+      </Row>
+      {/* <div>
               <h4>Level & Commission</h4>
               <p>due to the ranking of the network we have 4 level for broker</p>
               <Row>
@@ -85,7 +86,7 @@ export default () => {
                 </Col>
               </Row>
             </div> */}
-            {/* <div className={styles.campionLevels}>
+      {/* <div className={styles.campionLevels}>
               <h4>Campaign</h4>
               <p>
                 不同等级的返佣率不同，C、D等级将分别拿出10%和20%的手续费注入奖励池。
@@ -101,8 +102,8 @@ export default () => {
               </div>
               <p>Rewards distribute every 30 days</p>
             </div> */}
-          </div>
-        );
+    </div>
+  );
   //     }}
   //   </SiteContext.Consumer>
   // );

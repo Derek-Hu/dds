@@ -2,8 +2,7 @@ import { Component } from 'react';
 import { Menu, Icon, Row, Col, Button, Dropdown } from 'antd';
 import styles from './style.module.less';
 import ConnectWallet from '../connect-wallet/index';
-import { Link, Redirect } from 'react-router-dom';
-import { link } from 'fs';
+import { formatMessage } from '~/util/i18n';
 
 const rightMenus: { [key: string]: string } = {
   Analytics: '/home',
@@ -34,7 +33,7 @@ export default () => {
       <Row type="flex" justify="space-between" align="middle">
         <Col span={12}>
           <ConnectWallet>
-            <Button type="link">Connect Wallet</Button>
+            <Button type="link">{formatMessage({ id: 'connect-wallet' })}</Button>
           </ConnectWallet>
         </Col>
         <Col span={12} style={{ textAlign: 'right' }}>

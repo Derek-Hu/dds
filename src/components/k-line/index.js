@@ -10,6 +10,7 @@ import { getPriceGraphData } from '../../services/trade.service';
 import { format, isNumberLike } from '../../util/math';
 import Coin1 from '~/assets/imgs/coin1.png';
 import Coin2 from '~/assets/imgs/coin2.png';
+import { formatMessage } from '~/util/i18n';
 
 const { Option } = Select;
 
@@ -22,9 +23,9 @@ const Rule = {
 };
 
 const Durations = {
-  day: '24 Hours',
-  week: '1W',
-  month: '1M',
+  day: formatMessage({ id: 'duration-one-day' }),
+  week: formatMessage({ id: 'duration-one-week' }),
+  month: formatMessage({ id: 'duration-one-month' }),
 };
 
 const sig = value => {
