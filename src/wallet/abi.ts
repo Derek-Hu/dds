@@ -4699,1252 +4699,6 @@ export const BrokerABI = [
   },
 ];
 
-export const BN_TRADE_ABI0 = [
-  {
-    inputs: [
-      {
-        internalType: 'contract PublicDAIPool',
-        name: '_pubPool',
-        type: 'address',
-      },
-      {
-        internalType: 'contract PrivateDAIPool',
-        name: '_priPool',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'nonpayable',
-    type: 'constructor',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'uint256',
-        name: 'orderId',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'currentPrice',
-        type: 'uint256',
-      },
-    ],
-    name: 'DDSCloseContract',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'sender',
-        type: 'address',
-      },
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'toAddr',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'motageAmount',
-        type: 'uint256',
-      },
-    ],
-    name: 'DDSDeposit',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'uint256',
-        name: 'orderID',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'currentPrice',
-        type: 'uint256',
-      },
-    ],
-    name: 'DDSMigrationContract',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'uint256',
-        name: 'orderId',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'currentPrice',
-        type: 'uint256',
-      },
-    ],
-    name: 'DDSOpenContract',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'uint256',
-        name: 'orderID',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'currentPrice',
-        type: 'uint256',
-      },
-    ],
-    name: 'DDSRiskHandler',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'sender',
-        type: 'address',
-      },
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'toAddr',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'motageAmount',
-        type: 'uint256',
-      },
-    ],
-    name: 'DDSWithdraw',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'previousOwner',
-        type: 'address',
-      },
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'newOwner',
-        type: 'address',
-      },
-    ],
-    name: 'OwnershipTransferred',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'addr',
-        type: 'address',
-      },
-    ],
-    name: 'SetFormular',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'addr',
-        type: 'address',
-      },
-    ],
-    name: 'SetrepayFudAddr',
-    type: 'event',
-  },
-  {
-    inputs: [],
-    name: 'DDSBrokerAddr',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'DDSLiquidorAddr',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'orderID',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'currentPrice',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'intervalDay',
-        type: 'uint256',
-      },
-    ],
-    name: 'addFeesForUser',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: 'succ',
-        type: 'bool',
-      },
-      {
-        internalType: 'uint256',
-        name: 'newHoldFee',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'startTime',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'endTime',
-        type: 'uint256',
-      },
-    ],
-    name: 'calculatIntervalDay',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'pure',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'openTime',
-        type: 'uint256',
-      },
-    ],
-    name: 'calculatPeriods',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'periods',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'orderID',
-        type: 'uint256',
-      },
-    ],
-    name: 'checkOrder',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'lpFlag',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'orderID',
-        type: 'uint256',
-      },
-    ],
-    name: 'checkOrderIsAtRisk',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'orderID',
-        type: 'uint256',
-      },
-    ],
-    name: 'closecontract',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'string',
-        name: 'exchangeType',
-        type: 'string',
-      },
-      {
-        internalType: 'uint256',
-        name: 'number',
-        type: 'uint256',
-      },
-      {
-        internalType: 'enum IDDSCommon.ContractType',
-        name: 'contractType',
-        type: 'uint8',
-      },
-      {
-        internalType: 'address',
-        name: 'inviter',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'slidePrice',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'deadline',
-        type: 'uint256',
-      },
-    ],
-    name: 'creatContract',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-    ],
-    name: 'deposit',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'string',
-        name: 'exchangeType',
-        type: 'string',
-      },
-      {
-        internalType: 'uint256',
-        name: 'number',
-        type: 'uint256',
-      },
-      {
-        internalType: 'enum IDDSCommon.ContractType',
-        name: 'contractType',
-        type: 'uint8',
-      },
-    ],
-    name: 'fees',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'total',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'exchgFee',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'openFee',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'currentPrice',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'formular',
-    outputs: [
-      {
-        internalType: 'contract Formular',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'getBalanceByAddr',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'balance',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'orderID',
-        type: 'uint256',
-      },
-    ],
-    name: 'getCloseHoldFee',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'holdFee',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'string',
-        name: 'exchangeType',
-        type: 'string',
-      },
-    ],
-    name: 'getCurrPriceByEx',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'exchangeType',
-        type: 'uint256',
-      },
-    ],
-    name: 'getExchageName',
-    outputs: [
-      {
-        internalType: 'string',
-        name: 'strExchgName',
-        type: 'string',
-      },
-    ],
-    stateMutability: 'pure',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'string',
-        name: 'exchangeName',
-        type: 'string',
-      },
-    ],
-    name: 'getExchangeType',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'pure',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'orderID',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'currentPrice',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'intervalDay',
-        type: 'uint256',
-      },
-    ],
-    name: 'getHoldFeeByOrderID',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'holdFee',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'orderID',
-        type: 'uint256',
-      },
-    ],
-    name: 'getLastMigrationTime',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'currentPrice',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'poolType',
-        type: 'uint256',
-      },
-    ],
-    name: 'getLockedAmount',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'marginFee',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'forceFee',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'orderID',
-        type: 'uint256',
-      },
-    ],
-    name: 'getLpMarginAmount',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'marginAmount',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'orderID',
-        type: 'uint256',
-      },
-    ],
-    name: 'getLpMarginAmountAndMarginFee',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'marginAmount',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'marginFee',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'string',
-        name: 'exchangeEx',
-        type: 'string',
-      },
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-      {
-        internalType: 'enum IDDSCommon.ContractType',
-        name: 'contractType',
-        type: 'uint8',
-      },
-    ],
-    name: 'getMaxOpenAmount',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'string',
-        name: 'exchangeType',
-        type: 'string',
-      },
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'openPrice',
-        type: 'uint256',
-      },
-      {
-        internalType: 'enum IDDSCommon.ContractType',
-        name: 'contractType',
-        type: 'uint8',
-      },
-    ],
-    name: 'getOpenPositionFee',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'fee',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'orderID',
-        type: 'uint256',
-      },
-    ],
-    name: 'getOrderInfo',
-    outputs: [
-      {
-        internalType: 'string',
-        name: 'exType',
-        type: 'string',
-      },
-      {
-        internalType: 'address',
-        name: 'holder',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'number',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'exFee',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'lockFee',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'newLockFee',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'openPrice',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'marginAmount',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'marginFee',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'startTime',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'closePrice',
-        type: 'uint256',
-      },
-      {
-        internalType: 'enum IDDSCommon.ContractType',
-        name: 'contractType',
-        type: 'uint8',
-      },
-      {
-        internalType: 'enum IDDSContract.State',
-        name: 'state',
-        type: 'uint8',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'getOrdersLen',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'ordersLen',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'getPriceByBNBDAI',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'getPriceByBTCDAI',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256[]',
-        name: 'orderIDs',
-        type: 'uint256[]',
-      },
-    ],
-    name: 'migrationContract',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    name: 'migrationInfo',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    name: 'orders',
-    outputs: [
-      {
-        internalType: 'address payable',
-        name: 'holder',
-        type: 'address',
-      },
-      {
-        internalType: 'enum IDDSCommon.ContractType',
-        name: 'contractType',
-        type: 'uint8',
-      },
-      {
-        internalType: 'enum IDDSContract.State',
-        name: 'state',
-        type: 'uint8',
-      },
-      {
-        internalType: 'string',
-        name: 'exchangeType',
-        type: 'string',
-      },
-      {
-        internalType: 'uint256',
-        name: 'number',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'exFee',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'lockFee',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'newLockFee',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'openPrice',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'startTime',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'closePrice',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'owner',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'currentPrice',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'orderID',
-        type: 'uint256',
-      },
-    ],
-    name: 'payProfit',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'profit',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'privPool',
-    outputs: [
-      {
-        internalType: 'contract PrivateDAIPool',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'pubPool',
-    outputs: [
-      {
-        internalType: 'contract PublicDAIPool',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'renounceOwnership',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'repayFudAddr',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256[]',
-        name: 'orderIDs',
-        type: 'uint256[]',
-      },
-    ],
-    name: 'riskControl',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'riskFundAddr',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '_DDSLiquidorAddr',
-        type: 'address',
-      },
-    ],
-    name: 'setDDSLiquidorAddr',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '_DDSBrokerAddr',
-        type: 'address',
-      },
-    ],
-    name: 'setDDSbrokerAddr',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint8',
-        name: 'exchageType',
-        type: 'uint8',
-      },
-      {
-        internalType: 'address',
-        name: 'addr',
-        type: 'address',
-      },
-    ],
-    name: 'setExchageAddress',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'contract Formular',
-        name: '_formular',
-        type: 'address',
-      },
-    ],
-    name: 'setFormular',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '_tokenAddr',
-        type: 'address',
-      },
-    ],
-    name: 'setPoolTokenAddr',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'contract PrivateDAIPool',
-        name: '_priPool',
-        type: 'address',
-      },
-    ],
-    name: 'setPrivatePool',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'contract PublicDAIPool',
-        name: '_pubPool',
-        type: 'address',
-      },
-    ],
-    name: 'setPublicPool',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '_repayFudAddr',
-        type: 'address',
-      },
-    ],
-    name: 'setRepayFudAddr',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '_riskFundAddr',
-        type: 'address',
-      },
-    ],
-    name: 'setRiskFundAddr',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'tokenAddr',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'newOwner',
-        type: 'address',
-      },
-    ],
-    name: 'transferOwnership',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    name: 'userAccount',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'depositAmount',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'availableAmount',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-    ],
-    name: 'withdraw',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-];
 export const BN_TRADE_ABI = [
   {
     inputs: [
@@ -6311,7 +5065,12 @@ export const BN_TRADE_ABI = [
       },
       {
         internalType: 'uint256',
-        name: 'slidePrice',
+        name: 'slideDownPrice',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'slideUpPrice',
         type: 'uint256',
       },
       {
@@ -6336,6 +5095,19 @@ export const BN_TRADE_ABI = [
     name: 'deposit',
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'exchgFeeRate',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -6452,33 +5224,8 @@ export const BN_TRADE_ABI = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'exchangeType',
-        type: 'uint256',
-      },
-    ],
-    name: 'getExchageName',
-    outputs: [
-      {
-        internalType: 'string',
-        name: 'strExchgName',
-        type: 'string',
-      },
-    ],
-    stateMutability: 'pure',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'string',
-        name: 'exchangeName',
-        type: 'string',
-      },
-    ],
-    name: 'getExchangeType',
+    inputs: [],
+    name: 'getCurrentBlockTime',
     outputs: [
       {
         internalType: 'uint256',
@@ -6486,7 +5233,7 @@ export const BN_TRADE_ABI = [
         type: 'uint256',
       },
     ],
-    stateMutability: 'pure',
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -6796,6 +5543,37 @@ export const BN_TRADE_ABI = [
     type: 'function',
   },
   {
+    inputs: [],
+    name: 'getThirdPriceAndFlag',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'liquidorFeeRate',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [
       {
         internalType: 'uint256[]',
@@ -6806,6 +5584,19 @@ export const BN_TRADE_ABI = [
     name: 'migrationContract',
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'migrationHour',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -7062,6 +5853,19 @@ export const BN_TRADE_ABI = [
   {
     inputs: [
       {
+        internalType: 'uint256',
+        name: '_exchgFeeRate',
+        type: 'uint256',
+      },
+    ],
+    name: 'setExchageFeeRate',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
         internalType: 'contract Formular',
         name: '_formular',
         type: 'address',
@@ -7075,12 +5879,56 @@ export const BN_TRADE_ABI = [
   {
     inputs: [
       {
+        internalType: 'uint256',
+        name: '_liquidorFeeRate',
+        type: 'uint256',
+      },
+    ],
+    name: 'setLiquidorFeeRate',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_migrationHour',
+        type: 'uint256',
+      },
+    ],
+    name: 'setMigrationHour',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
         internalType: 'address',
         name: '_tokenAddr',
         type: 'address',
       },
     ],
     name: 'setPoolTokenAddr',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bool',
+        name: '_priceThirdFlag',
+        type: 'bool',
+      },
+      {
+        internalType: 'uint256',
+        name: '_thirdProxyPrice',
+        type: 'uint256',
+      },
+    ],
+    name: 'setPriceThirdProxy',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -11398,6 +10246,1293 @@ export const BN_Liquidator_ABI = [
     type: 'function',
   },
 ];
+export const BN_Rewards_ABI = [
+  {
+    inputs: [
+      {
+        internalType: 'contract IERC20',
+        name: 'token',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: '_reDAI',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: '_reUSDT',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: '_reUSDC',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'CalcAndSendRewardsForLiquidor',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'CalcRewardsForLP2',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'ClaimRewardsForLP1',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'ClaimRewardsForLP2',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'GetAndSetLockedRewards',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'previousOwner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
+    ],
+    name: 'OwnershipTransferred',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'SetParmsAfterHalving',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'StakeForLP1',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'WithdrawForLP1',
+    type: 'event',
+  },
+  {
+    inputs: [],
+    name: 'LOCKPERIOD',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'TOTAL_REWARDS',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'lp',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'orderFee',
+        type: 'uint256',
+      },
+    ],
+    name: 'calcAndSendRewardsForLP2',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'liquidor',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'gasUsedByStable',
+        type: 'uint256',
+      },
+    ],
+    name: 'calcAndSendRewardsForLiquidor',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'claimRewardsForLP1',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'reToken',
+        type: 'address',
+      },
+    ],
+    name: 'claimRewardsForLP1EveryTokenType',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'claimRewardsForLP2',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ddsLocked',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ddsPriceForRewardsDenominator',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ddsPriceForRewardsNumerator',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ddsRewardsDenominatorForLP2',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ddsRewardsNumeratorForLP2',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ddsShareForRewardsDenominator',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ddsShareForRewardsNumerator',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ddsThreshold',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ddsUnlocked',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ddsUnlockedForLP2',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ddsUnlockedForLp1',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address[]',
+        name: '_addresses',
+        type: 'address[]',
+      },
+    ],
+    name: 'disableContractAddressesForLP1',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address[]',
+        name: '_addresses',
+        type: 'address[]',
+      },
+    ],
+    name: 'disableContractAddressesForLP2',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address[]',
+        name: '_addresses',
+        type: 'address[]',
+      },
+    ],
+    name: 'enableContractAddressesForLP1',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address[]',
+        name: '_addresses',
+        type: 'address[]',
+      },
+    ],
+    name: 'enableContractAddressesForLP2',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getDate',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'today',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'blocktime',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'lp',
+        type: 'address',
+      },
+    ],
+    name: 'getLockedRewardsInfoForLP1',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'lp',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'tokenType',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'today',
+        type: 'uint256',
+      },
+    ],
+    name: 'getLockedRewardsInfoForLP1EveryTokenType',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getParmsAfterHalving',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getTotalCouldClaimed',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getTotalMinted',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getUnlockInfo',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'halveTime',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'lpsInfo',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'oriTokenAmount',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'share',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'owner',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'lp',
+        type: 'address',
+      },
+    ],
+    name: 'queryRewardsForLP1',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'lp',
+        type: 'address',
+      },
+    ],
+    name: 'queryRewardsForLP2',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'lp',
+        type: 'address',
+      },
+    ],
+    name: 'queryStakeInfoForLP1',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'oriTokenAmount',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'share',
+            type: 'uint256',
+          },
+        ],
+        internalType: 'struct DDSRewards.LpInfo',
+        name: '',
+        type: 'tuple',
+      },
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'oriTokenAmount',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'share',
+            type: 'uint256',
+          },
+        ],
+        internalType: 'struct DDSRewards.LpInfo',
+        name: '',
+        type: 'tuple',
+      },
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'oriTokenAmount',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'share',
+            type: 'uint256',
+          },
+        ],
+        internalType: 'struct DDSRewards.LpInfo',
+        name: '',
+        type: 'tuple',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'lp',
+        type: 'address',
+      },
+    ],
+    name: 'queryStakeShareInfoForLP1',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'shareDAI',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'shareUSDT',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'shareUSDC',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'reDAI',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'reUSDT',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'reUSDC',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'totalShareDAI',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'totalShareUSDT',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'totalShareUSDC',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'totalReDAI',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'totalReUSDT',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'totalReUSDC',
+            type: 'uint256',
+          },
+        ],
+        internalType: 'struct DDSRewards.LP1Info',
+        name: '',
+        type: 'tuple',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'queryTotalRewardsForLP2',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'reTokenAddrs',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    name: 'reTokens',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'renounceOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'rewardsPerBlockForLP1',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'rewardsToken',
+    outputs: [
+      {
+        internalType: 'contract IERC20',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_address',
+        type: 'address',
+      },
+    ],
+    name: 'setContractAddressesForLiquidor',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_ddsRewardsNumeratorForLP2',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '_ddsRewardsDenominatorForLP2',
+        type: 'uint256',
+      },
+    ],
+    name: 'setDDSRewardsParamatersForLP2',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_ddsPriceForRewardsNumerator',
+        type: 'uint256',
+      },
+    ],
+    name: 'setParmsAfterHalving',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_reToken',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: '_index',
+        type: 'uint256',
+      },
+    ],
+    name: 'setReTokens',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_rewardsPerBlockForLP1',
+        type: 'uint256',
+      },
+    ],
+    name: 'setRewardsPerBlockForLP1',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'reToken',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'tokenAmount',
+        type: 'uint256',
+      },
+    ],
+    name: 'stakeForLP1',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'totalShared',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'totalStaked',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
+    ],
+    name: 'transferOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'reToken',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'reTokenAmount',
+        type: 'uint256',
+      },
+    ],
+    name: 'withdrawForLP1',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+];
 
 export const ERC20 = [
   {
@@ -11655,7 +11790,7 @@ export const BN_ABI: { [p in keyof ContractAddress]: any[] } = {
   Lp2DAIContract: Pl2ABI,
   Lp2USDTContract: Pl2ABI,
   Lp2USDCContract: Pl2ABI,
-  MiningRewardContract: RewardsABI,
+  MiningRewardContract: BN_Rewards_ABI,
   LiquidatorContract: BN_Liquidator_ABI,
   SwapBurnContract: SwapBurnABI,
   BrokerContract: BN_Broker_ABI,

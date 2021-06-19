@@ -25,6 +25,7 @@ interface IState {
   initLoad: boolean;
   end: boolean;
   isTakeOrder: boolean;
+  isTakeOrderChangeable: boolean;
   isLoadingTakeOrder: boolean;
 }
 
@@ -40,6 +41,7 @@ export default class Balance extends Component<any, IState> {
     initLoad: true,
     end: false,
     isTakeOrder: true,
+    isTakeOrderChangeable: true,
     isLoadingTakeOrder: true,
   };
 
@@ -51,10 +53,11 @@ export default class Balance extends Component<any, IState> {
   }
 
   getIsTakingOrder = async () => {
-    const reject: boolean = await getIsUserRejectPrivateOrder();
+    const { isReject, isChangeable } = await getIsUserRejectPrivateOrder();
     this.setState({
-      isTakeOrder: !reject,
+      isTakeOrder: !isReject,
       isLoadingTakeOrder: false,
+      isTakeOrderChangeable: isChangeable,
     });
   };
 
@@ -169,9 +172,11 @@ export default class Balance extends Component<any, IState> {
               <h4>
                 Liquidity Locked Detail
                 <div className={styles.orderSwitch}>
+                  <span className={styles.state}>
+                    {isTakeOrder ? 'Is taking orders now' : 'Has rejected new orders'}
+                  </span>
                   <Switch
-                    checkedChildren="Taking Orders"
-                    unCheckedChildren="Reject Orders"
+                    disabled={!this.state.isTakeOrderChangeable}
                     defaultChecked={true}
                     checked={isTakeOrder}
                     onChange={this.onRejectOrderChange}
