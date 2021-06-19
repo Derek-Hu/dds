@@ -3,11 +3,12 @@ import styles from './style.module.less';
 import SectionTitle from '../section-title/index';
 import { Row, Col } from 'antd';
 import links from './links';
+import { formatMessage } from '~/util/i18n';
 
 export default () => (
   <div className={styles.root}>
-    <SectionTitle title="Contact us" noMarginBottom>
-      Join the community to build the future derivatives.
+    <SectionTitle title={formatMessage({ id: 'contact us' })} noMarginBottom>
+      {formatMessage({ id: 'join-shield-community' })}
     </SectionTitle>
     <Row type="flex" justify="center">
       {links.map(({ icon, url }, index) => (

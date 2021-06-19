@@ -1,8 +1,10 @@
+import { formatMessage } from '~/util/i18n';
+
 export default [
   {
     name: 'Ruby',
     avatar: '/ruby.png',
-    description: 'Opened my long ETH position and deposit my dai for gain interest, smooth and simple',
+    description: formatMessage({ id: 'people-says-ruby' }),
   },
   // {
   // name: 'Roger Spears2',

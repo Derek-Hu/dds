@@ -149,4 +149,39 @@ export default {
   'available-liquidity': 'Available Liquidity',
   'private-pool': 'Private Pool',
   'liquidity-pool': 'Liquidity Pool',
+
+  'shield-community-oriented': 'Community-oriented and governed by DAO',
+  'shield-community-oriented-advantage': ' Our community are the builders of decentralized finance across the global.',
+
+  'people-says-ruby': 'Opened my long ETH position and deposit my dai for gain interest, smooth and simple',
+  'join-shield-community': 'Join the community to build the future derivatives.',
+  'contact us': 'Contact us',
+
+  'how-to-trade-risk-free-perpetual': 'How to Trade Risk-free Perpetual',
+  'try-this-demo': 'Try this demo',
+
+  'why-trade-with-shield': 'Why Trade with Shield',
+  'trade-with-shield-reason': 'Redefine Decentralized Derivatives Trading on Shield.',
+  'what-is-shield': 'What is Shield',
+  'shield-brief-intro': 'A decentralized exchange for trading perpetual without position loss.',
+  'shield-detail-intro':
+    'Shield devotes to developing a trustless, censorship-resistant and accessible protocol based on a fully non-cooperative game—the next generation of global derivative infrastructure.',
+
+  'shield-ads-section1-1': '0 position loss',
+  'shield-ads-section1-1-desc': '100% cover from position loss due to latency price feed',
+
+  'shield-ads-section1-2': 'No expiration date',
+  'shield-ads-section1-2-desc': 'Flexible funding rate without fix delivery date',
+
+  'shield-ads-section1-3': 'Dual Liquidity Pools',
+  'shield-ads-section1-3-desc': 'Strong liquidity and low LP mining risk',
+
+  'shield-ads-section2-1': 'Secure',
+  'shield-ads-section2-1-desc': 'Non-custodial and transparent transactions',
+
+  'shield-ads-section2-2': 'Trustless',
+  'shield-ads-section2-2-desc': 'Verified on-chain settlement and fully-decentralized',
+
+  'shield-ads-section2-3': 'Privacy',
+  'shield-ads-section2-3-desc': 'No registration, KYC or email required.',
 };
