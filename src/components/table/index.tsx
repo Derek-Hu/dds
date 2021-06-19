@@ -2,6 +2,7 @@ import { PureComponent } from 'react';
 import { Table, Icon, Button } from 'antd';
 import Placeholder from '../placeholder/index';
 import SiteContext from '../../layouts/SiteContext';
+import { formatMessage } from '~/util/i18n';
 
 interface IState {
   data: PrivatePoolOrder[];
@@ -162,7 +163,7 @@ export default class Balance extends PureComponent<IProps, IState> {
                       ) : end ? null : data && data.length < PageSize ? null : (
                         <Button type="link" onClick={this.nextPage}>
                           <span>
-                            More&nbsp;
+                            {formatMessage({ id: 'more' })}&nbsp;
                             <Icon type="down" />
                           </span>
                         </Button>

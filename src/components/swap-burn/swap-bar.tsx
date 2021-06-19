@@ -1,6 +1,7 @@
 import styles from './swap-bar.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import Placeholder from '../placeholder/index';
+import { formatMessage } from '~/util/i18n';
 
 const datas = {
   left: { percentage: 100 },
@@ -39,11 +40,15 @@ export default ({
             <div className={styles.leftBar}>
               <div className={styles.bar} style={{ height: height + 'px' }}>
                 <div className={styles.percentBar} style={{ height: 100 - left.percentage + '%' }}></div>
-                <p>Shield Net Income</p>
+                <p>{formatMessage({ id: 'shield-net-income' })}</p>
                 <span>{left.percentage}%</span>
               </div>
               <div className={styles.amount}>
-                <Placeholder loading={loading}>{leftAmount}<br/>USD</Placeholder>
+                <Placeholder loading={loading}>
+                  {leftAmount}
+                  <br />
+                  USD
+                </Placeholder>
               </div>
             </div>
             <div className={styles.shadow} style={{ width: width + 'px', height: height + 'px' }}>
@@ -54,11 +59,17 @@ export default ({
             <div className={styles.rightBar}>
               <div className={styles.bar} style={{ height: height + 'px' }}>
                 <div className={styles.percentBar} style={{ height: right.percentage + '%' }}></div>
-                <p>SLD Circulating Supply ×{right.percentage}%</p>
+                <p>
+                  {formatMessage({ id: 'sld-circulating-supply' })} ×{right.percentage}%
+                </p>
                 <span className={styles.rightPecentage}>{right.percentage}%</span>
               </div>
               <div className={styles.amount}>
-                <Placeholder loading={loading}>{rightAmount}<br/>SLD</Placeholder>
+                <Placeholder loading={loading}>
+                  {rightAmount}
+                  <br />
+                  SLD
+                </Placeholder>
               </div>
             </div>
           </div>

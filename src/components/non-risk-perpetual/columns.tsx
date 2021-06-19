@@ -1,14 +1,15 @@
 import ColumnConvert from '../column-convert/index';
 import styles from './style.module.less';
 import { ICoins, ddsBasePath } from '../../constant';
+import { formatMessage } from '~/util/i18n';
 
 export default ColumnConvert<INonRiskPerpetual, { coin: any; action: any }>({
   column: {
-    coin: 'Coin',
-    price: <span className={styles.price}>Last Price</span>,
-    change: <span className={styles.change}>24h Change</span>,
+    coin: formatMessage({ id: 'coin' }),
+    price: <span className={styles.price}>{formatMessage({ id: 'last-price' })}</span>,
+    change: <span className={styles.change}>{formatMessage({ id: '24h-change' })}</span>,
     // chart: "Chart",
-    action: 'Action',
+    action: formatMessage({ id: 'action' }),
   },
   render(value, key, record) {
     switch (key) {
@@ -31,7 +32,9 @@ export default ColumnConvert<INonRiskPerpetual, { coin: any; action: any }>({
       case 'action':
         return (
           <span className={styles.tradeBtn}>
-            <a href={`${ddsBasePath}/trade?fromCoin=${record.fromCoin}&toCoin=${record.toCoin}`}>Trade</a>
+            <a href={`${ddsBasePath}/trade?fromCoin=${record.fromCoin}&toCoin=${record.toCoin}`}>
+              {formatMessage({ id: 'trade' })}
+            </a>
           </span>
         );
       default:

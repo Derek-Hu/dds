@@ -4,6 +4,7 @@ import success from '../../assets/images/success.png';
 import pending from '../../assets/images/pending.png';
 import fail from '../../assets/images/fail.png';
 import ReactDOM from 'react-dom';
+import { formatMessage } from '~/util/i18n';
 
 export default {
   dom: null,
@@ -31,10 +32,16 @@ export default {
             <div className={styles.imgContent}>
               <img src={url} alt="" className={url === pending ? styles.loading : ''} />
             </div>
-            <p>{url === fail ? 'Failed' : url === success ? 'Succeed' : 'Pending'}</p>
+            <p>
+              {url === fail
+                ? formatMessage({ id: 'failed' })
+                : url === success
+                ? formatMessage({ id: 'succeed' })
+                : formatMessage({ id: 'pending' })}
+            </p>
             {url === pending ? null : (
               <Button type="primary" onClick={() => this.hide()} className={styles.btn}>
-                OK
+                {formatMessage({ id: 'ok' })}
               </Button>
             )}
           </div>
