@@ -5,6 +5,7 @@ import SiteContext from '../../../layouts/SiteContext';
 import Auth, { Public } from '../../builtin/auth';
 import { format } from '../../../util/math';
 import Placeholder from '../../placeholder/index';
+import { formatMessage } from '~/util/i18n';
 
 interface IState {
   loading: boolean;
@@ -43,10 +44,10 @@ export default class LiquidityMiningReward extends Component<any, IState> {
     return (
       <div>
         <Auth>
-          <h3>Rewards</h3>
+          <h3>{formatMessage({ id: 'rewards' })}</h3>
         </Auth>
         <Public>
-          <h3>Liquidity Reward Today</h3>
+          <h3>{formatMessage({ id: 'liquidity-reward-today' })}</h3>
         </Public>
         <p className={styles.coins}>
           <Placeholder loading={loading} width={'10em'}>
@@ -54,7 +55,7 @@ export default class LiquidityMiningReward extends Component<any, IState> {
           </Placeholder>
         </p>
         <p className={styles.dynamic}>
-          <span>Current reward factor </span>
+          <span>{formatMessage({ id: 'current-reward-factor' })}</span>
           <br />
           {32} <span>SLD/Block</span>
         </p>

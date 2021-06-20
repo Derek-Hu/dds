@@ -7,6 +7,7 @@ import { Hidden } from '../../builtin/hidden';
 import SiteContext from '../../../layouts/SiteContext';
 import Auth, { Public } from '../../builtin/auth';
 import Placeholder from '../../placeholder/index';
+import { formatMessage } from '~/util/i18n';
 
 interface IState {
   loading: boolean;
@@ -40,8 +41,12 @@ export default class LiquiditorReward extends Component<any, IState> {
     const { campaign, compensate } = data || {};
     return (
       <div className={styles.liquiditorWpr}>
-        <h3>{this.context.address ? 'Your Liquiditor Mining Rewards' : 'Liquiditor Mining Rewards'}</h3>
-        <p>Get compensated when insurance fund is empty</p>
+        <h3>
+          {this.context.address
+            ? formatMessage({ id: 'your-liquiditor-mining-rewards' })
+            : formatMessage({ id: 'liquiditor-mining-rewards' })}
+        </h3>
+        <p>{formatMessage({ id: 'get-compensated-when-insurance-fund-is-empty' })}</p>
         <Row>
           {/* <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
               <span className={styles.ads}>{campaign} SLD</span>
@@ -53,19 +58,19 @@ export default class LiquiditorReward extends Component<any, IState> {
                 {format(compensate)} SLD
               </Placeholder>
             </span>
-            <span>Compensate Rewards</span>
+            <span>{formatMessage({ id: 'compensate-rewards' })}</span>
           </Col>
         </Row>
         <Auth>
-          <p className={styles.wantoBe}>Want to become a liquiditor?</p>
+          <p className={styles.wantoBe}>{formatMessage({ id: 'want-to-become-liquiditor' })}</p>
           <Button
             type="primary"
             style={{ width: '40%', fontSize: '18px' }}
             onClick={() => {
-              message.info('coming soon');
+              message.info(formatMessage({ id: 'coming-soon' }));
             }}
           >
-            READ DOCS
+            {formatMessage({ id: 'read-docs' })}
           </Button>
         </Auth>
       </div>

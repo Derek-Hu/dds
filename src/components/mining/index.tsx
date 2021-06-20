@@ -19,14 +19,15 @@ import ReTokenBalance from './liquidity/re-token-balance';
 // import SystemFundBalance from './liquiditor/system-fund-balance';
 import YourMiningShare from './liquidity/your-mining-share';
 import { formatTime } from '../../util/time';
+import { formatMessage } from '~/util/i18n';
 
 // const { Option } = Select;
 const { TabPane } = Tabs;
 
 const TabName = {
-  Liquidity: 'liquidity',
-  Utilization: 'active liquidity',
-  Liquiditor: 'liquiditor',
+  Liquidity: formatMessage({ id: 'mining-tab-liquidity' }),
+  Utilization: formatMessage({ id: 'mining-tab-active-liquidity' }),
+  Liquiditor: formatMessage({ id: 'mining-tab-liquiditor' }),
 };
 
 interface IReward {
@@ -41,11 +42,11 @@ interface IReward {
 }
 const columns = ColumnConvert<IReward, {}>({
   column: {
-    time: 'Time',
-    pair: 'Coin Pair',
-    amount: 'Amount',
-    price: 'Open Price',
-    reward: 'Reward(SLD)',
+    time: formatMessage({ id: 'time' }),
+    pair: formatMessage({ id: 'coin-pair' }),
+    amount: formatMessage({ id: 'amount' }),
+    price: formatMessage({ id: 'open-price' }),
+    reward: `${formatMessage({ id: 'reward' })}(SLD)`,
   },
   render(value, key, record) {
     switch (key) {
@@ -131,7 +132,7 @@ export default class Mining extends Component {
       <SiteContext.Consumer>
         {({ isMobile }) => (
           <div className={[styles.root, isMobile ? styles.mobile : ''].join(' ')}>
-            <h2>Mining</h2>
+            <h2>{formatMessage({ id: 'menu-mining' })}</h2>
             <div className={styles.tabContainer}>
               <Tabs
                 defaultActiveKey={selectedTab}

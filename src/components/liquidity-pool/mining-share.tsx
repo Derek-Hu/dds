@@ -1,7 +1,8 @@
 import PoolProgress, { IMiningShare } from '../progress-bar/pool-progress';
+import { formatMessage } from '~/util/i18n';
 
 const data: IMiningShare = {
-  title: 'Your Liauidity Mining share',
+  title: formatMessage({ id: 'your-liquidity-mining-share' }),
   coins: [
     {
       label: 'DAI',

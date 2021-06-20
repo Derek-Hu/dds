@@ -14,6 +14,7 @@ import InputNumber from '../input/index';
 import { formatTime } from '../../util/time';
 import DTable from '../table/index';
 import settings from '../../constant/settings';
+import { formatMessage } from '~/util/i18n';
 
 interface IState {
   data: PrivatePoolOrder[];
@@ -83,14 +84,14 @@ export default class Balance extends Component<any, IState> {
 
   columns = ColumnConvert<PrivatePoolOrder, { operation: any }>({
     column: {
-      orderId: 'Order Id',
-      time: 'Time',
-      amount: 'Amount',
-      lockedAmount: 'Locked Amount',
-      openPrice: 'Open Price',
-      status: 'Status',
-      coin: 'Coins',
-      operation: 'Action',
+      orderId: formatMessage({ id: 'order-id' }),
+      time: formatMessage({ id: 'time' }),
+      amount: formatMessage({ id: 'amount' }),
+      lockedAmount: formatMessage({ id: 'locked-amount' }),
+      openPrice: formatMessage({ id: 'open-price' }),
+      status: formatMessage({ id: 'status' }),
+      coin: formatMessage({ id: 'coins' }),
+      operation: formatMessage({ id: 'action' }),
     },
     attributes: {},
     render: (value, key, record) => {
@@ -103,8 +104,12 @@ export default class Balance extends Component<any, IState> {
           return format(value);
         case 'operation':
           return record.status === 'ACTIVE' ? (
-            <Button type="link" onClick={() => this.orderModalVisible.show(record)}>
-              ADD MARGIN
+            <Button
+              type="link"
+              style={{ textTransform: 'uppercase' }}
+              onClick={() => this.orderModalVisible.show(record)}
+            >
+              {formatMessage({ id: 'add-margin' })}
             </Button>
           ) : null;
         default:
@@ -145,7 +150,7 @@ export default class Balance extends Component<any, IState> {
           const marginTxt = isNaN(marginRate) ? '-' : marginRate + '%';
           return (
             <div className={styles.tableList}>
-              <h4>Liquidity Locked Detail</h4>
+              <h4>{formatMessage({ id: 'liquidity-locked-detail' })}</h4>
               <DTable hasMore={true} columns={this.columns} rowKey="orderId" loadPage={this.loadPage} />
               {/* {initLoad ? (
                 <>
@@ -181,14 +186,14 @@ export default class Balance extends Component<any, IState> {
                 onCancel={this.orderModalVisible.hide}
                 height={320}
                 footer={null}
-                title="Add Margin"
+                title={formatMessage({ id: 'add-margin' })}
                 className={modalStyles.commonModal}
               >
                 <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
-                  <Descriptions.Item label="Order Id" span={24}>
+                  <Descriptions.Item label={formatMessage({ id: 'order-id' })} span={24}>
                     {selectedItem?.orderId}
                   </Descriptions.Item>
-                  <Descriptions.Item label="Current margin rate" span={24}>
+                  <Descriptions.Item label={formatMessage({ id: 'current-margin-rate' })} span={24}>
                     {/* // @ts-ignore */}
                     {marginTxt}
                   </Descriptions.Item>
@@ -213,7 +218,7 @@ export default class Balance extends Component<any, IState> {
                     <InputNumber
                       className={styles.orderInput}
                       onChange={this.onOpenAmountChange}
-                      placeholder={max ? `Max ${max}` : '0.00'}
+                      placeholder={max ? `${formatMessage({ id: 'max' })} ${max}` : '0.00'}
                       max={truncated(max)}
                       showTag={true}
                       tagClassName={styles.utilMax}
@@ -223,11 +228,11 @@ export default class Balance extends Component<any, IState> {
                 </Row>
                 <Row className={modalStyles.actionBtns} gutter={16} type="flex">
                   <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                    <Button onClick={this.orderModalVisible.hide}>CANCEL</Button>
+                    <Button onClick={this.orderModalVisible.hide}>{formatMessage({ id: 'cancel' })}</Button>
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                     <Button onClick={this.confirmAddMargin} type="primary">
-                      CONFIRM
+                      {formatMessage({ id: 'confirm' })}
                     </Button>
                   </Col>
                 </Row>
