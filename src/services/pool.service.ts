@@ -133,15 +133,20 @@ export const getPrivateSharePool = async (): Promise<ICoinItem[]> => {
 };
 
 // 获取私池是否接单的状态
-export const getIsUserRejectPrivateOrder = async (): Promise<boolean> => {
+export const getIsUserRejectPrivateOrder = async (): Promise<{ isReject: boolean; isChangeable: boolean }> => {
   return from(loginUserAccount())
     .pipe(
       switchMap((account: string) => {
         return queryMan.priPoolUserBalance(account);
       }),
       map((info: PrivatePoolAccountInfo) => {
+        const daiBalanceInfo = info.total.filter(one => one.coin === 'DAI');
+        const daiAmount: number = Number(toEthers(daiBalanceInfo[0].balance, 6, 'DAI'));
+        const isChangeable: boolean = daiAmount > 0;
         const rejectInfo = info.isRejectOrder.filter(one => one.coin === 'DAI');
-        return rejectInfo[0].reject;
+        const isReject = rejectInfo[0].reject;
+
+        return { isReject, isChangeable };
       }),
       take(1)
     )

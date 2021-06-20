@@ -262,8 +262,13 @@ export const getCurPrice = async (coin: IUSDCoins): Promise<number> => {
  * @param tradeType
  * @param amount - eth的数量
  */
-export const openOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: number): Promise<boolean> => {
-  const res: Promise<string> = createOrder(coin, tradeType, amount);
+export const openOrder = async (
+  coin: IUSDCoins,
+  tradeType: ITradeType,
+  amount: number,
+  curPrice: number
+): Promise<boolean> => {
+  const res: Promise<string> = createOrder(coin, tradeType, amount, curPrice);
 
   const toBoolean = (a: Promise<string>) =>
     from(a)
@@ -282,9 +287,15 @@ export const openOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: 
  * @param coin - 交易对
  * @param tradeType - 下单类型
  * @param amount  - eth的数量
+ * @param curPrice - 用户认可的当前价格
  * @returns - 交易hash，如果下单失败，将返回空字符串 ''
  */
-export const createOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: number): Promise<string> => {
+export const createOrder = async (
+  coin: IUSDCoins,
+  tradeType: ITradeType,
+  amount: number,
+  curPrice: number
+): Promise<string> => {
   const inviteAddress: string | null = localStorage.getItem(LocalStorageKeyPrefix.ReferalCode);
   const setting: TradeSetting | null = readTradeSetting();
 
@@ -297,7 +308,7 @@ export const createOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount
   }
 
   const res: Promise<string> = contractAccessor
-    .createContract(coin, tradeType, amount, inviteAddress, slider, timeout)
+    .createContract(coin, tradeType, amount, curPrice, inviteAddress, slider, timeout)
     .pipe(take(1))
     .toPromise();
 

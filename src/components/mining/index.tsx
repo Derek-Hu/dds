@@ -246,7 +246,7 @@ export default class Mining extends Component {
                         {/* <Button type="primary" className={styles.lock} onClick={() => this.showLockModal(false)}>
                           Lock reTokens
                         </Button>
-                        <p>Lock reTokens to start receving rewards inDDS tokens</p> 
+                        <p>Lock reTokens to start receving rewards inDDS tokens</p>
                       </Pool>*/}
                       </Col>
                       {/* <Col xs={24} sm={24} md={8} lg={8}>

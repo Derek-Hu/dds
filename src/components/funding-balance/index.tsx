@@ -175,9 +175,17 @@ export default class Balance extends Component<IProps, IState> {
     const { coins } = this.props;
     const { to } = coins;
     const { tradeType, openAmount, fees } = this.state;
+    const curPrice = fees?.curPrice;
+
+    if (!curPrice) {
+      return;
+    }
+
     this.orderConfirmVisible.hide();
+
     const openTime = new Date().getTime();
-    const orderId = await createOrder(to, tradeType, openAmount!);
+    const orderId = await createOrder(to, tradeType, openAmount!, curPrice);
+
     if (orderId) {
       setPendingOrders({
         hash: orderId,

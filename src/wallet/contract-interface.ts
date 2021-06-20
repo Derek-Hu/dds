@@ -4911,15 +4911,35 @@ export const ERC20 = [
 ];
 
 export interface ContractRead {
+  getUserSelfWalletBalance(address: string): Observable<CoinBalance[]>;
+
+  getUserSelfReTokenBalance(address: string): Observable<CoinBalance[]>;
+
   priPoolUserBalance(address: string): Observable<PrivatePoolAccountInfo>;
+
+  /**
+   * 获取公池流动性质押的奖励（质押reToken）
+   *
+   * @param address
+   */
+  getReTokenLiquidityReward(address: string): Observable<PubPoolRewards>;
+
+  /**
+   * 公池流动性挖矿的质押信息
+   */
+  getPubPoolLiquidityShareInfo(address: string): Observable<PubPoolLockInfo>;
+}
+
+export interface ApprovalAction {
+  approveReToken(reToken: IReUSDCoins): Observable<boolean>;
+
+  needApproveReToken(amount: number, address: string, reToken: IReUSDCoins): Observable<boolean>;
 }
 
 /**
  * 合约接口
  */
-export interface ContractProxy extends ContractRead {
-  getUserSelfWalletBalance(address: string): Observable<CoinBalance[]>;
-
+export interface ContractProxy extends ContractRead, ApprovalAction {
   //
 
   getPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber>;
@@ -4949,6 +4969,7 @@ export interface ContractProxy extends ContractRead {
    * @param coin
    * @param orderType
    * @param amount
+   * @param userPrice - 用户认可的价格
    * @param inviter
    * @param slider - 滑点价格百分比 8 === 8%
    * @param timeout - 超时时常 1分钟 === 60
@@ -4957,6 +4978,7 @@ export interface ContractProxy extends ContractRead {
     coin: IUSDCoins,
     orderType: ITradeType,
     amount: number,
+    userPrice: number,
     inviter: string,
     slider: number,
     timeout: number
@@ -5020,7 +5042,23 @@ export interface ContractProxy extends ContractRead {
 
   getLiquidityMiningShare(address: string): Observable<CoinShare[]>;
 
+  /**
+   * @Deprecated
+   */
   getActiveLiquidityRewards(address: string): Observable<BigNumber>;
+
+  /**
+   * 质押reToken，储备流动性挖矿
+   * @param reToken
+   * @param reTokenAmount
+   */
+  lockReTokenForLiquidity(reToken: IReUSDCoins, reTokenAmount: number): Observable<boolean>;
+
+  unLockReTokenFromLiquidity(reToken: IReUSDCoins, reTokenAmount: number): Observable<boolean>;
+
+  claimRewardsForLP1(): Observable<boolean>;
+
+  //queryLockedReTokenAmount(): Observable<any>;
 
   claimRewardsForLP2(): Observable<boolean>;
 
@@ -5116,4 +5154,29 @@ export interface PrivatePoolAccountInfo {
   available: CoinBalance[];
   locked: CoinBalance[];
   isRejectOrder: { coin: IUSDCoins; reject: boolean }[];
+}
+
+export interface PubPoolRewards {
+  available: BigNumber;
+  vesting: BigNumber;
+  unactivated: BigNumber;
+}
+
+export interface ReTokenAmountNum {
+  reDAI: BigNumber;
+  reUSDT: BigNumber;
+  reUSDC: BigNumber;
+}
+
+export interface LpTokenAmountNum {
+  lpDAI: BigNumber;
+  lpUSDT: BigNumber;
+  lpUSDC: BigNumber;
+}
+
+export interface PubPoolLockInfo {
+  lockedReToken: ReTokenAmountNum;
+  totalLockedReToken: ReTokenAmountNum;
+  lpToken: LpTokenAmountNum;
+  totalLpToken: LpTokenAmountNum;
 }

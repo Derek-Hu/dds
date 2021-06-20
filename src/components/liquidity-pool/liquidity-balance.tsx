@@ -15,7 +15,6 @@ import {
   getPubPoolWithdrawDeadline,
   getCollaborativeWithdrawRe,
 } from '../../services/pool.service';
-import { Visible } from '../builtin/hidden';
 import { isNumberLike, isNotZeroLike, format, isGreaterZero } from '../../util/math';
 import Placeholder from '../placeholder/index';
 import InputNumber from '../input/index';
