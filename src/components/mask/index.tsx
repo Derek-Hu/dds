@@ -57,7 +57,7 @@ export default {
     this.$run(success);
   },
   showFail(failText: string | null = null) {
-    if (failText) {
+    if (failText && failText.trim().length > 0) {
       this.$run(fail, '', failText);
     } else {
       this.$run(fail);

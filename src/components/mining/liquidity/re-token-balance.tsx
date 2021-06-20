@@ -143,7 +143,7 @@ export default class ReTokenBalance extends Component<{}, IState> {
               </NormalButton>
             </Col>
             <Col xs={24} sm={24} md={24} lg={24}>
-              <NormalButton type="primary" onClick={this.openUnLockModal.bind(this)}>
+              <NormalButton type="primary" marginTop={'5px'} onClick={this.openUnLockModal.bind(this)}>
                 UNLOCK TOKENS
               </NormalButton>
             </Col>

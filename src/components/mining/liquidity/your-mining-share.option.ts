@@ -22,7 +22,7 @@ export function shareOption(yourShare: number): EChartOption {
         }
       }) as EChartOption.Tooltip.Formatter,
     },
-    color: ['#1346FF', '#839fe3'],
+    color: ['#1346FF', '#aaaaaa'],
     legend: {
       top: '5%',
       left: 'center',

@@ -12,12 +12,17 @@ import { queryLiquidityLockedReTokenShare } from '../../../services/mining.servi
 export default class PoolArea extends Component {
   private containerId = 'share-pie';
   private pieInstance: ECharts | null = null;
+  private pieContainer: HTMLDivElement | null = null;
+  private sizeObserver: ResizeObserver | null = null;
 
   updateShareData(percent: number) {
-    const container: HTMLElement | null = document.getElementById(this.containerId);
-    if (container !== null) {
-      this.pieInstance = echarts.init(container as HTMLDivElement);
+    this.pieContainer = document.getElementById(this.containerId) as HTMLDivElement;
+
+    if (this.pieContainer !== null) {
+      this.pieInstance = echarts.init(this.pieContainer);
+      this.listenContainerSize();
     }
+
     if (this.pieInstance) {
       this.pieInstance.setOption(shareOption(percent));
     }
@@ -25,6 +30,13 @@ export default class PoolArea extends Component {
 
   componentDidMount() {
     this.loadPercentage();
+  }
+
+  componentWillUnmount() {
+    if (this.sizeObserver) {
+      this.sizeObserver.disconnect();
+      this.sizeObserver = null;
+    }
   }
 
   loadPercentage() {
@@ -35,6 +47,18 @@ export default class PoolArea extends Component {
       .catch(err => {
         console.warn('error', err);
       });
+  }
+
+  private listenContainerSize() {
+    if (this.pieContainer && !this.sizeObserver) {
+      this.sizeObserver = new ResizeObserver(entries => {
+        if (this.pieInstance) {
+          this.pieInstance.resize();
+        }
+      });
+
+      this.sizeObserver.observe(this.pieContainer);
+    }
   }
 
   render() {
