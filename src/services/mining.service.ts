@@ -1,7 +1,7 @@
 import Mask from '../components/mask';
 import { contractAccessor } from '../wallet/chain-access';
 import { from, Observable, of, zip } from 'rxjs';
-import { catchError, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, filter, finalize, map, switchMap, take, tap } from 'rxjs/operators';
 import { BigNumber } from 'ethers';
 import { toEthers } from '../util/ethers';
 import { getCurNetwork, loginUserAccount } from './account';
@@ -18,7 +18,6 @@ import { MyTokenSymbol } from '../constant';
 import { ContractAddressByNetwork, EthNetwork } from '../constant/address';
 import { PublicPoolLiquidityRewards, ReTokenAmounts } from './mining.service.interface';
 import { queryMan } from '../wallet/state-manager';
-import { log } from 'util';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   return new Promise(resolve => {
@@ -89,17 +88,44 @@ export const getLiquidityMiningReward = (
 };
 
 /**
+ * Do Approve for locking reToken.
+ * @param reToken
+ * @param amount
+ */
+export const approveReTokenForLocking = async (reToken: IReUSDCoins, amount: number): Promise<boolean> => {
+  return from(loginUserAccount())
+    .pipe(
+      switchMap(account => {
+        return contractAccessor.needApproveReToken(amount, account, reToken);
+      }),
+      switchMap((need: boolean) => {
+        if (need) {
+          Mask.showLoading('Approving...');
+          return contractAccessor.approveReToken(reToken).pipe(
+            tap((rs: boolean) => {
+              if (!rs) {
+                Mask.showFail('Approve Failed!');
+              } else {
+                Mask.hide();
+              }
+            })
+          );
+        } else {
+          return of(true);
+        }
+      }),
+      take(1)
+    )
+    .toPromise();
+};
+
+/**
  * Lock reToken
  * @param reToken - reToken type
  * @param amount - reToken amount to be locked.
  */
 export const lockReTokenForLiquidity = async (reToken: IReUSDCoins, amount: number): Promise<boolean> => {
-  const reTokenAddress: string | null = getReTokenContractAddress(reToken);
-  if (!reTokenAddress) {
-    return Promise.resolve(false);
-  }
-
-  return contractAccessor.lockReTokenForLiquidity(reTokenAddress, amount).pipe(take(1)).toPromise();
+  return contractAccessor.lockReTokenForLiquidity(reToken, amount).pipe(take(1)).toPromise();
 };
 
 /**
@@ -108,12 +134,7 @@ export const lockReTokenForLiquidity = async (reToken: IReUSDCoins, amount: numb
  * @param amount - unlock amount
  */
 export const unLockReTokenForLiquidity = async (reToken: IReUSDCoins, amount: number) => {
-  const reTokenAddress: string | null = getReTokenContractAddress(reToken);
-  if (!reTokenAddress) {
-    return Promise.resolve(false);
-  }
-
-  return contractAccessor.unLockReTokenFromLiquidity(reTokenAddress, amount).pipe(take(1)).toPromise();
+  return contractAccessor.unLockReTokenFromLiquidity(reToken, amount).pipe(take(1)).toPromise();
 };
 
 /**
@@ -147,11 +168,14 @@ export const queryLiquidityLockedReTokenShare = async (): Promise<number> => {
         return queryMan.getPubPoolLiquidityShareInfo(account);
       }),
       map((info: PubPoolLockInfo) => {
+        console.log('info=', info);
         const lpToken: BigNumber = info.lpToken.lpDAI.add(info.lpToken.lpUSDT).add(info.lpToken.lpUSDC);
         const lpTotal: BigNumber = info.totalLpToken.lpDAI.add(info.totalLpToken.lpUSDT).add(info.totalLpToken.lpUSDC);
 
         const lpNum: number = Number(toEthers(lpToken, 8));
         const lpAll: number = Number(toEthers(lpTotal, 8));
+
+        console.log('lp = ', lpNum, lpAll);
 
         if (lpAll === 0) {
           return 0;

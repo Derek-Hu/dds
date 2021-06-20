@@ -12,6 +12,10 @@ export default class ReTokenUnlock extends Component<IProps, IState> {
   inputNum: InputNumber | null = null;
 
   componentDidMount() {
+    this.loadLockedAmount();
+  }
+
+  loadLockedAmount() {
     queryLiquidityLockedReTokenAmount().then(amount => {
       this.setState({
         availableReTokensAmount: amount,

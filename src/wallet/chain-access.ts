@@ -4,12 +4,10 @@ import {
   ConfirmInfo,
   ContractProxy,
   LiquditorRewardsResult,
-  LpTokenAmountNum,
   PrivateLockLiquidity,
   PrivatePoolAccountInfo,
   PubPoolLockInfo,
   PubPoolRewards,
-  ReTokenAmountNum,
   UserAccountInfo,
 } from '../wallet/contract-interface';
 import { BehaviorSubject, EMPTY, from, interval, merge, NEVER, Observable, of, zip } from 'rxjs';
@@ -34,9 +32,10 @@ import { WalletInterface } from './wallet-interface';
 import { fromExchangePair, toEthers, toExchangePair, tokenBigNumber } from '../util/ethers';
 import { isMetaMaskInstalled } from './metamask';
 import { getPageListRange } from '../util/page';
-import { ContractAddress, EthNetwork } from '../constant/address';
+import { ContractAddress, ContractAddressByNetwork, EthNetwork } from '../constant/address';
 import { getContractAddress, getContractInfo } from './contract-info';
 import { bigNumMultiple } from '../util/math';
+import { ReTokenMapping } from '../constant/tokens';
 
 declare const window: Window & { ethereum: any };
 
@@ -46,6 +45,59 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   protected timer = interval(DataRefreshInterval).pipe(startWith(0));
 
   constructor() {}
+
+  public needApprove(
+    amount: BigNumber,
+    userAddr: string,
+    contractAddr: string,
+    erc20: ethers.Contract
+  ): Observable<boolean> {
+    return from(erc20.allowance(userAddr, contractAddr)).pipe(
+      map((rs: any) => {
+        const allowance = rs as BigNumber;
+        return amount.gt(allowance);
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of(true);
+      })
+    );
+  }
+
+  public approve(contractAddr: string, erc20: ethers.Contract): Observable<boolean> {
+    const maxApprove: string = '0x' + new Array(64).fill('f').join('');
+
+    return from(erc20.approve(contractAddr, maxApprove)).pipe(
+      switchMap((rs: any) => {
+        return from(rs.wait());
+      }),
+      mapTo(true),
+      catchError(err => {
+        console.warn('error', err);
+        return of(false);
+      })
+    );
+  }
+
+  public needApproveReToken(amount: number, address: string, reToken: IReUSDCoins): Observable<boolean> {
+    const usdToken: IUSDCoins = ReTokenMapping[reToken];
+    return zip(this.getMiningRewardContract(), this.getPubPoolContract(usdToken)).pipe(
+      switchMap(([rewards, erc20]) => {
+        const amountNum: BigNumber = tokenBigNumber(amount, reToken);
+        return this.needApprove(amountNum, address, rewards.address, erc20);
+      }),
+      take(1)
+    );
+  }
+
+  public approveReToken(reToken: IReUSDCoins): Observable<boolean> {
+    const usdToken: IUSDCoins = ReTokenMapping[reToken];
+    return zip(this.getMiningRewardContract(), this.getPubPoolContract(usdToken)).pipe(
+      switchMap(([rewards, erc20]) => {
+        return this.approve(rewards.address, erc20);
+      })
+    );
+  }
 
   public getUserSelfWalletBalance(address: string): Observable<CoinBalance[]> {
     const dds$: Observable<CoinBalance> = this.getERC20DDSContract().pipe(
@@ -1047,16 +1099,24 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
-  public lockReTokenForLiquidity(reTokenAddr: string, reTokenAmount: number): Observable<boolean> {
+  public lockReTokenForLiquidity(reToken: IReUSDCoins, reTokenAmount: number): Observable<boolean> {
     return this.getMiningRewardContract().pipe(
       switchMap(rewardContract => {
-        return from(rewardContract.stakeForLP1(reTokenAddr, reTokenAmount));
+        return this.getReTokenContractAddress(reToken).pipe(
+          switchMap((reTokenAddr: string | null) => {
+            if (reTokenAddr) {
+              const reTokenNum: BigNumber = tokenBigNumber(reTokenAmount);
+              return from(rewardContract.stakeForLP1(reTokenAddr, reTokenNum));
+            } else {
+              throw new Error('Can not get reToken contract address.');
+            }
+          })
+        );
       }),
       switchMap((rs: any) => {
         return rs.wait();
       }),
       map(rs => {
-        console.log('rs = ', rs);
         return true;
       }),
       catchError(err => {
@@ -1066,10 +1126,19 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
-  public unLockReTokenFromLiquidity(reTokenAddr: string, reTokenAmount: number): Observable<boolean> {
+  public unLockReTokenFromLiquidity(reToken: IReUSDCoins, reTokenAmount: number): Observable<boolean> {
     return this.getMiningRewardContract().pipe(
-      switchMap(rewardContract => {
-        return from(rewardContract.withdrawForLP1(reTokenAddr, reTokenAmount));
+      switchMap((rewardContract: ethers.Contract) => {
+        return this.getReTokenContractAddress(reToken).pipe(
+          switchMap((reTokenAddr: string | null) => {
+            if (reTokenAddr) {
+              const reTokenNum: BigNumber = tokenBigNumber(reTokenAmount, reToken);
+              return from(rewardContract.withdrawForLP1(reTokenAddr, reTokenNum));
+            } else {
+              throw new Error('Can not get reToken contract address.');
+            }
+          })
+        );
       }),
       switchMap((rs: any) => {
         return rs.wait();
@@ -1088,13 +1157,13 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   public getReTokenLiquidityReward(address: string): Observable<PubPoolRewards> {
     return this.getMiningRewardContract().pipe(
       switchMap(rewardContract => {
-        return from(rewardContract.queryRewardsForLP1(address));
+        return from(rewardContract.queryRewardsForLP1(address) as Promise<BigNumber[]>);
       }),
-      map(rs => {
+      map((rs: BigNumber[]) => {
         return {
-          available: BigNumber.from(0),
-          vesting: BigNumber.from(0),
-          unactivated: BigNumber.from(0),
+          available: rs[0] as BigNumber,
+          vesting: rs[1] as BigNumber,
+          unactivated: rs[2] as BigNumber,
         };
       }),
       catchError(err => {
@@ -1110,10 +1179,12 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
 
   public claimRewardsForLP1(): Observable<boolean> {
     return this.getMiningRewardContract().pipe(
-      switchMap(rewardContract => {
+      switchMap((rewardContract: ethers.Contract) => {
+        console.log('claim for lp1', 'claimRewardsForLP1');
         return from(rewardContract.claimRewardsForLP1());
       }),
       switchMap((rs: any) => {
+        console.log('get wait ', rs);
         return from(rs.wait());
       }),
       mapTo(true),
@@ -1456,6 +1527,27 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
+  protected getReTokenContractAddress(reToken: IReUSDCoins): Observable<string | null> {
+    return this.getNetwork().pipe(
+      map((network: EthNetwork) => {
+        switch (reToken) {
+          case 'reDAI': {
+            return ContractAddressByNetwork[network].Lp1DAIContract;
+          }
+          case 'reUSDC': {
+            return ContractAddressByNetwork[network].Lp1USDCContract;
+          }
+          case 'reUSDT': {
+            return ContractAddressByNetwork[network].Lp1USDTContract;
+          }
+          default: {
+            return null;
+          }
+        }
+      })
+    );
+  }
+
   protected abstract getERC20DDSContract(): Observable<ethers.Contract>;
 
   protected abstract getErc20USDContract(coin: IUSDCoins): Observable<ethers.Contract>;
@@ -1677,6 +1769,22 @@ export class ContractAccessor implements ContractProxy {
 
   public watchContractAccessor(): Observable<BaseTradeContractAccessor> {
     return this.curAccessor.pipe(filter(a => a !== null)) as Observable<BaseTradeContractAccessor>;
+  }
+
+  public needApproveReToken(amount: number, address: string, reToken: IReUSDCoins): Observable<boolean> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.needApproveReToken(amount, address, reToken);
+      })
+    );
+  }
+
+  public approveReToken(reToken: IReUSDCoins): Observable<boolean> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.approveReToken(reToken);
+      })
+    );
   }
 
   public getUserSelfWalletBalance(address: string): Observable<CoinBalance[]> {
@@ -2026,18 +2134,18 @@ export class ContractAccessor implements ContractProxy {
     );
   }
 
-  public lockReTokenForLiquidity(reTokenAddr: string, reTokenAmount: number): Observable<boolean> {
+  public lockReTokenForLiquidity(reToken: IReUSDCoins, reTokenAmount: number): Observable<boolean> {
     return this.accessor.pipe(
       switchMap(accessor => {
-        return accessor.lockReTokenForLiquidity(reTokenAddr, reTokenAmount);
+        return accessor.lockReTokenForLiquidity(reToken, reTokenAmount);
       })
     );
   }
 
-  public unLockReTokenFromLiquidity(reTokenAddr: string, reTokenAmount: number): Observable<boolean> {
+  public unLockReTokenFromLiquidity(reToken: IReUSDCoins, reTokenAmount: number): Observable<boolean> {
     return this.accessor.pipe(
       switchMap(accessor => {
-        return accessor.unLockReTokenFromLiquidity(reTokenAddr, reTokenAmount);
+        return accessor.unLockReTokenFromLiquidity(reToken, reTokenAmount);
       })
     );
   }

@@ -4,24 +4,28 @@ import NormalSelect, { SelectOption } from '../../common/selects/normal-select';
 import InputNumber from '../../input';
 import NormalButton from '../../common/buttons/normal-btn';
 import MaxValTag from '../../common/tags/max-val';
-import { getLiquidityReTokenBalance, lockReTokenForLiquidity } from '../../../services/mining.service';
-import { AvailableReTokens, defaultState, IProps, IState, reTokenOptions } from './re-token-common';
+import {
+  approveReTokenForLocking,
+  lockReTokenForLiquidity,
+  queryUserReTokenBalance,
+} from '../../../services/mining.service';
+import { defaultState, IProps, IState, reTokenOptions } from './re-token-common';
+import { ReTokenAmounts } from '../../../services/mining.service.interface';
 
 export default class ReTokenLock extends Component<IProps, IState> {
   state: IState = defaultState();
   inputNum: InputNumber | null = null;
 
   componentDidMount() {
-    getLiquidityReTokenBalance()
-      .then((balances: ICoinValue[]) => {
-        const available: AvailableReTokens = balances.reduce((acc: AvailableReTokens, balance: ICoinValue) => {
-          acc[balance.coin as IReUSDCoins] = balance.value;
-          return acc;
-        }, {} as AvailableReTokens);
+    this.loadBalances();
+  }
 
+  loadBalances() {
+    queryUserReTokenBalance()
+      .then((reTokenBalance: ReTokenAmounts) => {
         this.setState({
-          availableReTokensAmount: available,
-          maxReTokenAmount: available[this.state.curReToken],
+          availableReTokensAmount: reTokenBalance,
+          maxReTokenAmount: reTokenBalance[this.state.curReToken],
         });
       })
       .catch(err => {
@@ -35,6 +39,10 @@ export default class ReTokenLock extends Component<IProps, IState> {
       curReToken: option.value,
       maxReTokenAmount: this.state.availableReTokensAmount[curTokenType],
     });
+  }
+
+  onSuccessLock() {
+    this.loadBalances();
   }
 
   onSelectMax(max: number) {
@@ -53,10 +61,18 @@ export default class ReTokenLock extends Component<IProps, IState> {
 
   onLock() {
     this.setState({ isPending: true }, () => {
-      lockReTokenForLiquidity(this.state.curReToken, this.state.curReTokenAmount)
-        .then((done: boolean) => {
+      approveReTokenForLocking(this.state.curReToken, this.state.curReTokenAmount)
+        .then(done => {
+          if (done) {
+            return lockReTokenForLiquidity(this.state.curReToken, this.state.curReTokenAmount);
+          } else {
+            this.setState({ isPending: false });
+          }
+        })
+        .then(done => {
           this.setState({ isPending: false });
           if (done) {
+            this.onSuccessLock();
             this.onCancel();
           }
         })

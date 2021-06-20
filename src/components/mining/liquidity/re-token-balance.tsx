@@ -43,6 +43,10 @@ export default class ReTokenBalance extends Component<{}, IState> {
   ];
 
   componentDidMount() {
+    this.loadBalances();
+  }
+
+  loadBalances() {
     queryUserReTokenBalance()
       .then((reTokenBalance: ReTokenAmounts) => {
         this.setState({ reTokenBalance: reTokenBalance });
@@ -62,6 +66,7 @@ export default class ReTokenBalance extends Component<{}, IState> {
 
   closeLockModal() {
     this.setState({ showLockModal: false });
+    this.loadBalances();
   }
 
   openUnLockModal() {
@@ -132,12 +137,12 @@ export default class ReTokenBalance extends Component<{}, IState> {
           </Row>
 
           <Row gutter={[8, 8]}>
-            <Col xs={24} sm={24} md={12} lg={12}>
+            <Col xs={24} sm={24} md={24} lg={24}>
               <NormalButton type="primary" onClick={this.openLockModal.bind(this)}>
                 LOCK TOKENS
               </NormalButton>
             </Col>
-            <Col xs={24} sm={24} md={12} lg={12}>
+            <Col xs={24} sm={24} md={24} lg={24}>
               <NormalButton type="primary" onClick={this.openUnLockModal.bind(this)}>
                 UNLOCK TOKENS
               </NormalButton>

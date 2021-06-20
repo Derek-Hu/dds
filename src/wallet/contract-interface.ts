@@ -4930,10 +4930,16 @@ export interface ContractRead {
   getPubPoolLiquidityShareInfo(address: string): Observable<PubPoolLockInfo>;
 }
 
+export interface ApprovalAction {
+  approveReToken(reToken: IReUSDCoins): Observable<boolean>;
+
+  needApproveReToken(amount: number, address: string, reToken: IReUSDCoins): Observable<boolean>;
+}
+
 /**
  * 合约接口
  */
-export interface ContractProxy extends ContractRead {
+export interface ContractProxy extends ContractRead, ApprovalAction {
   //
 
   getPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber>;
@@ -5043,12 +5049,12 @@ export interface ContractProxy extends ContractRead {
 
   /**
    * 质押reToken，储备流动性挖矿
-   * @param reTokenAddr
+   * @param reToken
    * @param reTokenAmount
    */
-  lockReTokenForLiquidity(reTokenAddr: string, reTokenAmount: number): Observable<boolean>;
+  lockReTokenForLiquidity(reToken: IReUSDCoins, reTokenAmount: number): Observable<boolean>;
 
-  unLockReTokenFromLiquidity(reTokenAddr: string, reTokenAmount: number): Observable<boolean>;
+  unLockReTokenFromLiquidity(reToken: IReUSDCoins, reTokenAmount: number): Observable<boolean>;
 
   claimRewardsForLP1(): Observable<boolean>;
 
