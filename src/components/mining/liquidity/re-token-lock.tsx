@@ -113,7 +113,7 @@ export default class ReTokenLock extends Component<IProps, IState> {
 
           <Col span={24}>
             <InputNumber
-              min={0}
+              min={1}
               max={this.state.maxReTokenAmount}
               ref={n => (this.inputNum = n)}
               placeholder={'Locked Token Amount'}

@@ -99,6 +99,23 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
+  public needApproveUSDFunding(amount: number, address: string, usdToken: IUSDCoins): Observable<boolean> {
+    return zip(this.getContract(usdToken), this.getErc20USDContract(usdToken)).pipe(
+      switchMap(([trade, erc20]) => {
+        const amountNum: BigNumber = tokenBigNumber(amount, usdToken);
+        return this.needApprove(amountNum, address, trade.address, erc20);
+      })
+    );
+  }
+
+  public approveUSDFunding(usdToken: IUSDCoins): Observable<boolean> {
+    return zip(this.getContract(usdToken), this.getErc20USDContract(usdToken)).pipe(
+      switchMap(([trade, erc20]) => {
+        return this.approve(trade.address, erc20);
+      })
+    );
+  }
+
   public getUserSelfWalletBalance(address: string): Observable<CoinBalance[]> {
     const dds$: Observable<CoinBalance> = this.getERC20DDSContract().pipe(
       switchMap((ddsContract: ethers.Contract) => {
@@ -1783,6 +1800,22 @@ export class ContractAccessor implements ContractProxy {
     return this.accessor.pipe(
       switchMap(accessor => {
         return accessor.approveReToken(reToken);
+      })
+    );
+  }
+
+  public needApproveUSDFunding(amount: number, address: string, usdToken: IUSDCoins): Observable<boolean> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.needApproveUSDFunding(amount, address, usdToken);
+      })
+    );
+  }
+
+  public approveUSDFunding(usdToken: IUSDCoins): Observable<boolean> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.approveUSDFunding(usdToken);
       })
     );
   }

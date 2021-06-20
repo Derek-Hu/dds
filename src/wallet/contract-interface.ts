@@ -4934,6 +4934,10 @@ export interface ApprovalAction {
   approveReToken(reToken: IReUSDCoins): Observable<boolean>;
 
   needApproveReToken(amount: number, address: string, reToken: IReUSDCoins): Observable<boolean>;
+
+  approveUSDFunding(usdToken: IUSDCoins): Observable<boolean>;
+
+  needApproveUSDFunding(amount: number, address: string, usdToken: IUSDCoins): Observable<boolean>;
 }
 
 /**

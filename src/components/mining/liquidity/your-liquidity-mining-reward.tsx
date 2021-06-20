@@ -79,7 +79,7 @@ export default class LiquidityMiningReward extends Component<any, IState> {
                         {format(rewards.available)} SLD
                       </Placeholder>
                     </span>
-                    <span className={rewardStyles.desc}>Available Balance</span>
+                    <span className={rewardStyles.desc}>Available</span>
                   </Col>
                   <Col xs={24} sm={24} md={8} lg={8} className={rewardStyles.rewardCol}>
                     <span className={rewardStyles.sld}>
@@ -87,7 +87,7 @@ export default class LiquidityMiningReward extends Component<any, IState> {
                         {format(rewards.vesting)} SLD
                       </Placeholder>
                     </span>
-                    <span className={rewardStyles.desc}>Vesting Balance</span>
+                    <span className={rewardStyles.desc}>Vesting</span>
                   </Col>
                   <Col xs={24} sm={24} md={8} lg={8} className={rewardStyles.rewardCol}>
                     <span className={rewardStyles.sld}>
@@ -95,7 +95,7 @@ export default class LiquidityMiningReward extends Component<any, IState> {
                         {format(rewards.unactivated)} SLD
                       </Placeholder>
                     </span>
-                    <span className={rewardStyles.desc}>Unactivated Balance</span>
+                    <span className={rewardStyles.desc}>Unactivated</span>
                   </Col>
                 </div>
 
