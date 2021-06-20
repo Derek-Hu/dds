@@ -168,14 +168,12 @@ export const queryLiquidityLockedReTokenShare = async (): Promise<number> => {
         return queryMan.getPubPoolLiquidityShareInfo(account);
       }),
       map((info: PubPoolLockInfo) => {
-        console.log('info=', info);
+        // TODO 不同的代币精度可能不同，需要单独转换后相加
         const lpToken: BigNumber = info.lpToken.lpDAI.add(info.lpToken.lpUSDT).add(info.lpToken.lpUSDC);
         const lpTotal: BigNumber = info.totalLpToken.lpDAI.add(info.totalLpToken.lpUSDT).add(info.totalLpToken.lpUSDC);
 
-        const lpNum: number = Number(toEthers(lpToken, 8));
-        const lpAll: number = Number(toEthers(lpTotal, 8));
-
-        console.log('lp = ', lpNum, lpAll);
+        const lpNum: number = Number(toEthers(lpToken, 18));
+        const lpAll: number = Number(toEthers(lpTotal, 18));
 
         if (lpAll === 0) {
           return 0;

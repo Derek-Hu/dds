@@ -11,6 +11,7 @@ type IProps = {
   disabled?: boolean;
   onClick?: React.MouseEventHandler;
   inModal?: boolean;
+  marginTop?: string;
 };
 
 export default class NormalButton extends Component<IProps, IState> {
@@ -25,6 +26,7 @@ export default class NormalButton extends Component<IProps, IState> {
         type={this.props.type}
         loading={this.props.loading}
         className={classNames.join(' ')}
+        style={{ marginTop: this.props.marginTop }}
         disabled={this.props.disabled}
         onClick={this.props.onClick}
       >

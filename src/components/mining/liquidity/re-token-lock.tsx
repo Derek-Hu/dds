@@ -11,6 +11,7 @@ import {
 } from '../../../services/mining.service';
 import { defaultState, IProps, IState, reTokenOptions } from './re-token-common';
 import { ReTokenAmounts } from '../../../services/mining.service.interface';
+import Mask from '../../../components/mask';
 
 export default class ReTokenLock extends Component<IProps, IState> {
   state: IState = defaultState();
@@ -60,26 +61,38 @@ export default class ReTokenLock extends Component<IProps, IState> {
   }
 
   onLock() {
-    this.setState({ isPending: true }, () => {
-      approveReTokenForLocking(this.state.curReToken, this.state.curReTokenAmount)
-        .then(done => {
-          if (done) {
-            return lockReTokenForLiquidity(this.state.curReToken, this.state.curReTokenAmount);
-          } else {
-            this.setState({ isPending: false });
-          }
-        })
-        .then(done => {
-          this.setState({ isPending: false });
-          if (done) {
-            this.onSuccessLock();
-            this.onCancel();
-          }
-        })
-        .catch(() => {
-          this.setState({ isPending: false });
-        });
-    });
+    this.startPending();
+    approveReTokenForLocking(this.state.curReToken, this.state.curReTokenAmount)
+      .then(done => {
+        if (done) {
+          return lockReTokenForLiquidity(this.state.curReToken, this.state.curReTokenAmount);
+        } else {
+          this.endPending();
+        }
+      })
+      .then(done => {
+        if (done) {
+          this.onSuccessLock();
+          this.onCancel();
+          this.endPending();
+        } else {
+          this.endPending(true, 'Lock reTokens Failed.');
+        }
+      })
+      .catch(() => {
+        this.endPending(true);
+      });
+  }
+
+  startPending() {
+    this.setState({ isPending: true });
+  }
+
+  endPending(isFail: boolean = false, failText: string = '') {
+    this.setState({ isPending: false });
+    if (isFail) {
+      Mask.showFail(failText || undefined);
+    }
   }
 
   render() {

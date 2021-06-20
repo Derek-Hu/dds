@@ -3,6 +3,7 @@ import { Col, Row } from 'antd';
 import NormalSelect, { SelectOption } from '../../common/selects/normal-select';
 import { defaultState, IProps, IState, reTokenOptions } from './re-token-common';
 import MaxValTag from '../../common/tags/max-val';
+import Mask from '../../../components/mask';
 import InputNumber from '../../input';
 import NormalButton from '../../common/buttons/normal-btn';
 import { queryLiquidityLockedReTokenAmount, unLockReTokenForLiquidity } from '../../../services/mining.service';
@@ -55,19 +56,26 @@ export default class ReTokenUnlock extends Component<IProps, IState> {
       return;
     }
 
-    this.setState({ isPending: true }, () => {
-      unLockReTokenForLiquidity(this.state.curReToken, this.state.curReTokenAmount)
-        .then((done: boolean) => {
-          this.setState({ isPending: false });
-          if (done) {
-            this.onCancel();
-          }
-        })
-        .catch(err => {
-          console.warn('error', err);
-          this.setState({ isPending: false });
-        });
+    this.startPending();
+    unLockReTokenForLiquidity(this.state.curReToken, this.state.curReTokenAmount).then((done: boolean) => {
+      if (done) {
+        this.onCancel();
+        this.endPending();
+      } else {
+        this.endPending(true, 'Unlock ReTokens Failed.');
+      }
     });
+  }
+
+  private startPending() {
+    this.setState({ isPending: true });
+  }
+
+  private endPending(isFail = false, failText: string = '') {
+    if (isFail) {
+      Mask.showFail(failText);
+    }
+    this.setState({ isPending: false });
   }
 
   render() {
