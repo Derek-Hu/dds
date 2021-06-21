@@ -75,6 +75,7 @@ export default class ReTokenBalance extends Component<{}, IState> {
 
   closeUnLockModal() {
     this.setState({ showUnLockModal: false });
+    this.loadBalances();
   }
 
   render() {

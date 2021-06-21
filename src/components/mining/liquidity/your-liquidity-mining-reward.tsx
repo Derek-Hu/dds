@@ -38,12 +38,19 @@ export default class LiquidityMiningReward extends Component<any, IState> {
 
   async init() {
     this.setState({ loading: true });
-    const rewards: PublicPoolLiquidityRewards = await queryReTokenLiquidityRewards();
-    this.setState({ rewards, loading: false });
+    this.loadRewards();
+  }
+
+  loadRewards() {
+    queryReTokenLiquidityRewards().then((rewards: PublicPoolLiquidityRewards) => {
+      this.setState({ rewards, loading: false });
+    });
   }
 
   public doClaim() {
-    claimPubPoolReTokenRewards();
+    claimPubPoolReTokenRewards().then(() => {
+      this.loadRewards();
+    });
   }
 
   render() {

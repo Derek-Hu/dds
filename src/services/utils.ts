@@ -1,4 +1,6 @@
 import Mask from '../components/mask/index';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 export const withLoading = <T = boolean>(promiseInstance: Promise<T>, fallback?: T): Promise<T> => {
   Mask.showLoading();
@@ -16,4 +18,21 @@ export const withLoading = <T = boolean>(promiseInstance: Promise<T>, fallback?:
       Mask.showFail();
       return (fallback === undefined ? false : fallback) as T;
     });
+};
+
+export const loadingObs = (
+  obs: Observable<boolean>,
+  failText: string | null = null,
+  pendingText: string | null = null
+): Observable<boolean> => {
+  Mask.showLoading(pendingText);
+  return obs.pipe(
+    tap((done: boolean) => {
+      if (done) {
+        Mask.showSuccess();
+      } else {
+        Mask.showFail(failText);
+      }
+    })
+  );
 };

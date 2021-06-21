@@ -1,7 +1,7 @@
 import Mask from '../components/mask';
 import { contractAccessor } from '../wallet/chain-access';
 import { from, Observable, of, zip } from 'rxjs';
-import { catchError, filter, finalize, map, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { BigNumber } from 'ethers';
 import { toEthers } from '../util/ethers';
 import { getCurNetwork, loginUserAccount } from './account';
@@ -13,11 +13,12 @@ import {
   PubPoolRewards,
 } from '../wallet/contract-interface';
 import { defaultPoolData, defaultReTokenData } from './mock/unlogin-default';
-import { withLoading } from './utils';
+import { loadingObs, withLoading } from './utils';
 import { MyTokenSymbol } from '../constant';
 import { ContractAddressByNetwork, EthNetwork } from '../constant/address';
 import { PublicPoolLiquidityRewards, ReTokenAmounts } from './mining.service.interface';
 import { queryMan } from '../wallet/state-manager';
+import { dividedPecent, percentage } from '../util/math';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   return new Promise(resolve => {
@@ -178,7 +179,7 @@ export const queryLiquidityLockedReTokenShare = async (): Promise<number> => {
         if (lpAll === 0) {
           return 0;
         } else {
-          return (lpNum * 100) / lpAll;
+          return dividedPecent(lpNum, lpAll);
         }
       }),
       take(1)
@@ -271,8 +272,8 @@ function getReTokenContractAddress(reToken: IReUSDCoins): string | null {
 /**
  * Claim liquidity rewards for public pool
  */
-export const claimPubPoolReTokenRewards = async () => {
-  return await withLoading(contractAccessor.claimRewardsForLP1().toPromise());
+export const claimPubPoolReTokenRewards = async (): Promise<boolean> => {
+  return loadingObs(contractAccessor.claimRewardsForLP1()).toPromise();
 };
 
 export const claimLiquidityLocked = async () => {

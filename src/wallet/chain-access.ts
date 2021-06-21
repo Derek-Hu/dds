@@ -1197,7 +1197,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   public claimRewardsForLP1(): Observable<boolean> {
     return this.getMiningRewardContract().pipe(
       switchMap((rewardContract: ethers.Contract) => {
-        console.log('claim for lp1', 'claimRewardsForLP1');
+        console.log(rewardContract.address, 'claimRewardsForLP1');
         return from(rewardContract.claimRewardsForLP1());
       }),
       switchMap((rs: any) => {
@@ -1206,7 +1206,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       }),
       mapTo(true),
       catchError(err => {
-        console.warn('error', err);
+        console.warn('claimRewardsForLP1 error', err);
         return of(false);
       })
     );

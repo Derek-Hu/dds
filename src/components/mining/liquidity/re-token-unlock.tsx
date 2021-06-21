@@ -61,6 +61,7 @@ export default class ReTokenUnlock extends Component<IProps, IState> {
       if (done) {
         this.onCancel();
         this.endPending();
+        this.loadLockedAmount();
       } else {
         this.endPending(true, 'Unlock ReTokens Failed.');
       }

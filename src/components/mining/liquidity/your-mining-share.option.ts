@@ -16,13 +16,13 @@ export function shareOption(yourShare: number): EChartOption {
         callback: (ticket: string, html: string) => void
       ) => {
         if (data?.name === yourShareName) {
-          return `Your Share is ${yourShare}%`;
+          return `Your Share is ${yourShare.toFixed(2)}%`;
         } else {
           return `Other Users' Share`;
         }
       }) as EChartOption.Tooltip.Formatter,
     },
-    color: ['#1346FF', '#eeeeee'],
+    color: ['#1346FF', '#dddddd'],
     legend: {
       top: '5%',
       left: 'center',
