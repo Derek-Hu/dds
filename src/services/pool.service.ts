@@ -5,7 +5,7 @@ import { BigNumber } from 'ethers';
 import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 import { getNetworkAndAccount, loginUserAccount } from './account';
 import { from, Observable, of, zip } from 'rxjs';
-import { withLoading } from './utils';
+import { loadingObs, withLoading } from './utils';
 import { defaultCoinDatas, defaultPoolData } from './mock/unlogin-default';
 import * as request from 'superagent';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
@@ -202,15 +202,33 @@ export const doCollaborativeDeposit = async ({
   coin: IUSDCoins;
   amount: number;
 }): Promise<boolean> => {
-  const result: Promise<boolean> = from(loginUserAccount())
+  let userAccount: string | null = null;
+
+  return from(loginUserAccount())
     .pipe(
-      switchMap(account => {
-        return contractAccessor.provideToPubPool(account, coin, amount);
+      switchMap((account: string) => {
+        userAccount = account;
+        return contractAccessor.needApprovePubPool(amount, account, coin);
+      }),
+      switchMap((need: boolean) => {
+        if (need) {
+          const doApprove: Observable<boolean> = contractAccessor.approvePubPool(coin);
+          return loadingObs(doApprove, 'Approve Failed!', 'Approving...', true);
+        } else {
+          return of(true);
+        }
+      }),
+      switchMap((approved: boolean) => {
+        if (userAccount && approved) {
+          const depositObs: Observable<boolean> = contractAccessor.provideToPubPool(userAccount, coin, amount);
+          return loadingObs(depositObs, 'Deposit Failed!', 'Depositing...');
+        } else {
+          return of(false);
+        }
       }),
       take(1)
     )
     .toPromise();
-  return await withLoading(result);
 };
 
 export const doPoolWithdraw = async ({
@@ -251,16 +269,32 @@ export const doCollaborativeWithdraw = async ({
  * @param amount - DAI的数量
  */
 export const doPrivateDeposit = async ({ coin, amount }: { coin: IUSDCoins; amount: number }): Promise<boolean> => {
-  const result: Promise<boolean> = from(loginUserAccount())
+  let userAccount: string | null = null;
+
+  return from(loginUserAccount())
     .pipe(
       switchMap(account => {
-        return contractAccessor.provideToPrivatePool(account, coin, amount);
+        userAccount = account;
+        return contractAccessor.needApprovePrivatePool(amount, account, coin);
       }),
-      take(1)
+      switchMap((need: boolean) => {
+        if (need) {
+          const approveObs = contractAccessor.approvePrivatePool(coin);
+          return loadingObs(approveObs, 'Approve Failed!', 'Approving...', true);
+        } else {
+          return of(true);
+        }
+      }),
+      switchMap((approved: boolean) => {
+        if (userAccount && approved) {
+          const depositObs = contractAccessor.provideToPrivatePool(userAccount, coin, amount);
+          return loadingObs(depositObs, 'Deposit Failed!', 'Depositing...');
+        } else {
+          return of(false);
+        }
+      })
     )
     .toPromise();
-
-  return withLoading(result);
 };
 
 /**

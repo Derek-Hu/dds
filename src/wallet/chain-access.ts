@@ -116,6 +116,40 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
+  public needApprovePubPool(amount: number, address: string, usdToken: IUSDCoins): Observable<boolean> {
+    return zip(this.getPubPoolContract(usdToken), this.getErc20USDContract(usdToken)).pipe(
+      switchMap(([pubPool, erc20]) => {
+        const amountNum: BigNumber = tokenBigNumber(amount, usdToken);
+        return this.needApprove(amountNum, address, pubPool.address, erc20);
+      })
+    );
+  }
+
+  public approvePubPool(usdToken: IUSDCoins): Observable<boolean> {
+    return zip(this.getPubPoolContract(usdToken), this.getErc20USDContract(usdToken)).pipe(
+      switchMap(([pubPool, erc20]) => {
+        return this.approve(pubPool.address, erc20);
+      })
+    );
+  }
+
+  public needApprovePrivatePool(amount: number, address: string, usdToken: IUSDCoins): Observable<boolean> {
+    return zip(this.getPriPoolContract(usdToken), this.getErc20USDContract(usdToken)).pipe(
+      switchMap(([priPool, erc20]) => {
+        const amountNum: BigNumber = tokenBigNumber(amount, usdToken);
+        return this.needApprove(amountNum, address, priPool.address, erc20);
+      })
+    );
+  }
+
+  public approvePrivatePool(usdToken: IUSDCoins): Observable<boolean> {
+    return zip(this.getPriPoolContract(usdToken), this.getErc20USDContract(usdToken)).pipe(
+      switchMap(([priPool, erc20]) => {
+        return this.approve(priPool.address, erc20);
+      })
+    );
+  }
+
   public getUserSelfWalletBalance(address: string): Observable<CoinBalance[]> {
     const dds$: Observable<CoinBalance> = this.getERC20DDSContract().pipe(
       switchMap((ddsContract: ethers.Contract) => {
@@ -279,41 +313,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     return this.getContract(coin).pipe(
       switchMap((tradeContract: ethers.Contract) => {
         const countNum: BigNumber = tokenBigNumber(count, coin);
-        const max: string = '0x' + new Array(64).fill('f').join('');
-
-        const allow$ = this.getErc20USDContract(coin).pipe(
-          switchMap((usdContract: ethers.Contract) => {
-            return from(usdContract.allowance(address, tradeContract.address));
-          }),
-          map((rs: any) => {
-            return rs as BigNumber;
-          })
-        );
-
-        const approve$ = this.getErc20USDContract(coin).pipe(
-          switchMap((usdContract: ethers.Contract) => {
-            return usdContract.approve(tradeContract.address, max);
-          }),
-          switchMap((rs: any) => {
-            return from(rs.wait());
-          })
-        );
-
-        const deposit$ = from(tradeContract.deposit(countNum)).pipe(
-          switchMap((rs: any) => {
-            return from(rs.wait()).pipe(
-              tap(rs => {
-                console.log('dep rs is', rs);
-              })
-            );
-          })
-        );
-
-        return allow$.pipe(
-          switchMap((allow: BigNumber) => {
-            return allow.gte(countNum) ? deposit$ : approve$.pipe(switchMap(() => deposit$));
-          })
-        );
+        return from(tradeContract.deposit(countNum));
+      }),
+      switchMap((rs: any) => {
+        return from(rs.wait());
       }),
       mapTo(true),
       catchError(err => {
@@ -1820,6 +1823,38 @@ export class ContractAccessor implements ContractProxy {
     );
   }
 
+  public needApprovePubPool(amount: number, address: string, usdToken: IUSDCoins): Observable<boolean> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.needApprovePubPool(amount, address, usdToken);
+      })
+    );
+  }
+
+  public approvePubPool(usdToken: IUSDCoins): Observable<boolean> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.approvePubPool(usdToken);
+      })
+    );
+  }
+
+  public needApprovePrivatePool(amount: number, address: string, usdToken: IUSDCoins): Observable<boolean> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.needApprovePrivatePool(amount, address, usdToken);
+      })
+    );
+  }
+
+  public approvePrivatePool(usdToken: IUSDCoins): Observable<boolean> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.approvePrivatePool(usdToken);
+      })
+    );
+  }
+
   public getUserSelfWalletBalance(address: string): Observable<CoinBalance[]> {
     return this.accessor.pipe(
       switchMap(accessor => {
@@ -1875,14 +1910,9 @@ export class ContractAccessor implements ContractProxy {
   }
 
   public depositToken(address: string, count: number, coin: IUSDCoins): Observable<boolean> {
-    return this.watchContractAccessor().pipe(
-      filter((accessor: BaseTradeContractAccessor) => accessor.transferable),
-      switchMap((accessor: BaseTradeContractAccessor) => {
+    return this.accessor.pipe(
+      switchMap(accessor => {
         return accessor.depositToken(address, count, coin);
-      }),
-      catchError(err => {
-        console.warn('error', err);
-        return of(false);
       })
     );
   }

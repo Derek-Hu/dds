@@ -23,13 +23,18 @@ export const withLoading = <T = boolean>(promiseInstance: Promise<T>, fallback?:
 export const loadingObs = (
   obs: Observable<boolean>,
   failText: string | null = null,
-  pendingText: string | null = null
+  pendingText: string | null = null,
+  sucHide: boolean = false
 ): Observable<boolean> => {
   Mask.showLoading(pendingText);
   return obs.pipe(
     tap((done: boolean) => {
       if (done) {
-        Mask.showSuccess();
+        if (sucHide) {
+          Mask.hide();
+        } else {
+          Mask.showSuccess();
+        }
       } else {
         Mask.showFail(failText);
       }

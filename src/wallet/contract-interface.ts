@@ -4938,6 +4938,14 @@ export interface ApprovalAction {
   approveUSDFunding(usdToken: IUSDCoins): Observable<boolean>;
 
   needApproveUSDFunding(amount: number, address: string, usdToken: IUSDCoins): Observable<boolean>;
+
+  needApprovePubPool(amount: number, address: string, usdToken: IUSDCoins): Observable<boolean>;
+
+  approvePubPool(usdToken: IUSDCoins): Observable<boolean>;
+
+  needApprovePrivatePool(amount: number, address: string, usdToken: IUSDCoins): Observable<boolean>;
+
+  approvePrivatePool(usdToken: IUSDCoins): Observable<boolean>;
 }
 
 /**

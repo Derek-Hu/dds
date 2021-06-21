@@ -8,7 +8,7 @@ import { ConfirmInfo, UserAccountInfo } from '../wallet/contract-interface';
 import { BigNumber } from 'ethers';
 import { ETH_WEI, toEthers, toExchangePair } from '../util/ethers';
 import * as request from 'superagent';
-import { withLoading } from './utils';
+import { loadingObs, withLoading } from './utils';
 import { getCurNetwork, getCurUserAccount, getNetworkAndAccount, loginUserAccount } from './account';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
 import { CentralHost, CentralPath, CentralPort, CentralProto, EthNetwork } from '../constant/address';
@@ -229,16 +229,44 @@ export const getTradeLiquidityPoolInfo = async (coin: IUSDCoins): Promise<ITrade
 };
 
 export const deposit = async (amount: IRecord): Promise<boolean> => {
-  const result: Promise<boolean> = from(loginUserAccount())
+  let userAccount: string | null = null;
+
+  return from(loginUserAccount())
     .pipe(
-      switchMap(account => {
-        return contractAccessor.depositToken(account, amount.amount, amount.coin);
+      switchMap((account: string) => {
+        userAccount = account;
+        return contractAccessor.needApproveUSDFunding(amount.amount, account, amount.coin);
+      }),
+      switchMap((needApprove: boolean) => {
+        if (needApprove) {
+          const doApprove: Observable<boolean> = contractAccessor.approveUSDFunding(amount.coin);
+          return loadingObs(doApprove, 'Approve Failed!', 'Approving...', true);
+        } else {
+          return of(true);
+        }
+      }),
+      switchMap((approved: boolean) => {
+        if (userAccount && approved) {
+          const depObs: Observable<boolean> = contractAccessor.depositToken(userAccount, amount.amount, amount.coin);
+          return loadingObs(depObs, 'Deposit Failed!', 'Depositing');
+        } else {
+          return of(false);
+        }
       }),
       take(1)
     )
     .toPromise();
 
-  return withLoading(result);
+  // const result: Promise<boolean> = from(loginUserAccount())
+  //   .pipe(
+  //     switchMap(account => {
+  //       return contractAccessor.depositToken(account, amount.amount, amount.coin);
+  //     }),
+  //     take(1)
+  //   )
+  //   .toPromise();
+  //
+  // return withLoading(result);
 };
 
 export const withdraw = async (amount: IRecord): Promise<boolean> => {
