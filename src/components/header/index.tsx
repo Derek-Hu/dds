@@ -12,6 +12,8 @@ import { isNumberLike } from '../../util/math';
 import { shortAddress } from '../../util/index';
 import NetworkSwitch from '../network-switch/index';
 import { RouteKey } from '../../constant/routes';
+import ModalRender from '../modal-render';
+import { ClaimTestToken } from '../activities/claim-test/claim-test-token';
 
 const { SubMenu } = Menu;
 
@@ -266,6 +268,12 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                           </a>
                         )}
                       </div>
+
+                      {currentNetwork === 'bsctest' ? (
+                        <div style={{ marginRight: '20px' }}>
+                          <ClaimTestToken />
+                        </div>
+                      ) : null}
 
                       {account && account.address ? <NetworkSwitch></NetworkSwitch> : null}
 

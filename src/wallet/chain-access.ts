@@ -46,6 +46,35 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
 
   constructor() {}
 
+  public claimTestToken(token: IUSDCoins): Observable<boolean> {
+    return this.getTestTokenClaimContract().pipe(
+      switchMap(contract => {
+        const tokenType = token === 'DAI' ? 1 : token === 'USDT' ? 2 : 3;
+        return contract.claimTestToken(tokenType);
+      }),
+      switchMap((rs: any) => {
+        return from(rs.wait());
+      }),
+      mapTo(true),
+      catchError(err => {
+        console.warn('error', err);
+        return of(false);
+      })
+    );
+  }
+
+  public isTestTokenClaimed(userAddr: string, token: IUSDCoins): Observable<boolean> {
+    return this.getTestTokenClaimContract().pipe(
+      switchMap(contract => {
+        const tokenType = token === 'DAI' ? 1 : token === 'USDT' ? 2 : 3;
+        return from(contract.claimAdd(userAddr, tokenType) as Promise<BigNumber>);
+      }),
+      map((rs: BigNumber) => {
+        return rs.gt(0);
+      })
+    );
+  }
+
   public needApprove(
     amount: BigNumber,
     userAddr: string,
@@ -1586,6 +1615,8 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
 
   protected abstract getBrokerContract(): Observable<ethers.Contract>;
 
+  protected abstract getTestTokenClaimContract(): Observable<ethers.Contract>;
+
   protected abstract getContractAddress(contract: keyof ContractAddress): Observable<string>;
 
   protected abstract confirmChainExchangePair(pair: ExchangeCoinPair): Observable<ExchangeCoinPair>;
@@ -1693,6 +1724,10 @@ class MetamaskContractAccessor extends BaseTradeContractAccessor {
     return this.getAContract('SwapBurnContract');
   }
 
+  protected getTestTokenClaimContract(): Observable<ethers.Contract> {
+    return this.getAContract('ReceiveTestTokenContract');
+  }
+
   protected getContractAddress(contract: keyof ContractAddress): Observable<string> {
     return this.getNetwork().pipe(
       map((network: EthNetwork) => {
@@ -1789,6 +1824,22 @@ export class ContractAccessor implements ContractProxy {
 
   public watchContractAccessor(): Observable<BaseTradeContractAccessor> {
     return this.curAccessor.pipe(filter(a => a !== null)) as Observable<BaseTradeContractAccessor>;
+  }
+
+  public claimTestToken(token: IUSDCoins): Observable<boolean> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.claimTestToken(token);
+      })
+    );
+  }
+
+  public isTestTokenClaimed(userAddr: string, token: IUSDCoins): Observable<boolean> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.isTestTokenClaimed(userAddr, token);
+      })
+    );
   }
 
   public needApproveReToken(amount: number, address: string, reToken: IReUSDCoins): Observable<boolean> {

@@ -19,6 +19,8 @@ export type ContractAddress = {
   ERC20DAI: string;
   ERC20USDT: string;
   ERC20USDC: string;
+
+  ReceiveTestTokenContract: string;
 };
 
 export const KOVAN_ADDRESS: ContractAddress = {
@@ -40,6 +42,8 @@ export const KOVAN_ADDRESS: ContractAddress = {
   ERC20DAI: '0x113587939c8967e61aa2360613951b23ab2af49a',
   ERC20USDT: '0x97862b9ac658d800710a43286e076eac5e01a228',
   ERC20USDC: '0xc8c0278b371316fb3629a7c2c4e003cc296b5925',
+
+  ReceiveTestTokenContract: '',
 };
 
 export const BIAN_TEST_ADDRESS: ContractAddress = {
@@ -61,6 +65,8 @@ export const BIAN_TEST_ADDRESS: ContractAddress = {
   ERC20DAI: '0x21160DcCF818c5D8df20AbfA1B937ea3Ba1bD451', //
   ERC20USDT: '0x18104cfA6C4d9257040F542D93750b553a102d45',
   ERC20USDC: '0x9E404218898Fb63Cac611D02BAF508A61215B2FE',
+
+  ReceiveTestTokenContract: '0x69FA54869e95f67A9b36f4aFF808B45De6347DE7',
 };
 
 export enum EthNetwork {

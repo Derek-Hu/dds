@@ -4948,10 +4948,16 @@ export interface ApprovalAction {
   approvePrivatePool(usdToken: IUSDCoins): Observable<boolean>;
 }
 
+export interface ActivityItems {
+  claimTestToken(token: IUSDCoins): Observable<boolean>;
+
+  isTestTokenClaimed(userAddr: string, token: IUSDCoins): Observable<boolean>;
+}
+
 /**
  * 合约接口
  */
-export interface ContractProxy extends ContractRead, ApprovalAction {
+export interface ContractProxy extends ContractRead, ApprovalAction, ActivityItems {
   //
 
   getPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber>;
