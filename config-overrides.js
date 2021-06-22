@@ -51,6 +51,7 @@ module.exports = {
     addWebpackAlias({
       "~": path.resolve(__dirname, "src/"),
       src: path.resolve(__dirname, "src/"),
+      util: path.resolve(__dirname, "src/util"),
       root: path.resolve(__dirname, "src/"),
     }),
     // addBundleVisualizer(),
