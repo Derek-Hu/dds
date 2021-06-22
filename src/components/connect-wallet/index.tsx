@@ -14,7 +14,7 @@ import MetaMaskOnboarding from '@metamask/onboarding';
 // import { CoinBalance } from '../../wallet/contract-interface';
 // import { toEthers } from '../../util/ethers';
 import { userAccountInfo, initTryConnect } from '../../services/account';
-import { formatMessage } from '~/util/i18n';
+import { formatMessage } from 'util/i18n';
 
 const { Option } = Select;
 const { isMetaMaskInstalled } = MetaMaskOnboarding;

@@ -4,7 +4,7 @@ import styles from './style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import { getTradeLiquidityPoolInfo } from '../../services/trade.service';
 import { dividedPecent, format, formatInt } from '../../util/math';
-import { formatMessage } from '~/util/i18n';
+import { formatMessage } from 'util/i18n';
 
 interface IState {
   poolInfo?: ITradePoolInfo;

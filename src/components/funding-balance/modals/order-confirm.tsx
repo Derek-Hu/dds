@@ -2,7 +2,7 @@ import { Descriptions, Row, Col, Button } from 'antd';
 import styles from './style.module.less';
 import ModalRender from '../../modal-render/index';
 import SiteContext from '../../../layouts/SiteContext';
-import { formatMessage } from '~/util/i18n';
+import { formatMessage } from 'util/i18n';
 
 const title = formatMessage({ id: 'order-confirm' });
 

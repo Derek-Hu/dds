@@ -3,7 +3,7 @@ import { formatTime } from '../../util/time';
 import styles from './style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import { format } from '../../util/math';
-import { formatMessage } from '~/util/i18n';
+import { formatMessage } from 'util/i18n';
 
 const columns = [
   {

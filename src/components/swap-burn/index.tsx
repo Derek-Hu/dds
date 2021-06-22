@@ -12,7 +12,7 @@ import { getSwapPrice, conformSwap } from '../../services/swap-burn.service';
 import { format, multiple, formatInt, isGreaterZero } from '../../util/math';
 import Placeholder from '../placeholder/index';
 import InputNumber from '../input/index';
-import { formatMessage } from '~/util/i18n';
+import { formatMessage } from 'util/i18n';
 
 const { Option } = Select;
 interface IState {

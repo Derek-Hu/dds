@@ -2,10 +2,11 @@ import { Tabs, Button, Row, Col, Select, Input } from 'antd';
 import { CustomTabKey, SupportedCoins } from '../../../constant/index';
 import styles from './style.module.less';
 import ModalRender from '../../modal-render/index';
+import { formatMessage } from 'util/i18n';
 
 const { Option } = Select;
 
-const title = 'Unlock reTokens';
+const title = formatMessage({ id: 'unlock-retokens' });
 
 export default (props: any) => {
   const { visible, onCancel } = props;
@@ -21,7 +22,7 @@ export default (props: any) => {
         </Col>
         <Col>
           <span className={styles.maxWithdraw}>
-            Maximum Amount: <span>3278392</span> reDAI
+            {formatMessage({ id: 'maximum-amount-amount-redai', amount: 3278392 })}
           </span>
         </Col>
       </Row>
@@ -32,10 +33,10 @@ export default (props: any) => {
       </Row>
       <Row>
         <Col>
-          <Button>CANCEL</Button>
+          <Button>{formatMessage({ id: 'cancel' })}</Button>
         </Col>
         <Col>
-          <Button type="primary">CONFIRM</Button>
+          <Button type="primary">{formatMessage({ id: 'confirm' })}</Button>
         </Col>
       </Row>
     </ModalRender>

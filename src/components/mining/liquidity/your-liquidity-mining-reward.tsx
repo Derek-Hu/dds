@@ -5,7 +5,7 @@ import SiteContext from '../../../layouts/SiteContext';
 import Auth, { Public } from '../../builtin/auth';
 import { format } from '../../../util/math';
 import Placeholder from '../../placeholder/index';
-import { formatMessage } from '~/util/i18n';
+import { formatMessage } from 'util/i18n';
 
 interface IState {
   loading: boolean;

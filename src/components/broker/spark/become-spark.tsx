@@ -5,7 +5,7 @@ import mainStyles from '../style.module.less';
 import { formatInt } from '../../../util/math';
 import { getSparkData } from '../../../services/broker.service';
 import Placeholder from '../../placeholder/index';
-import { formatMessage } from '~/util/i18n';
+import { formatMessage } from 'util/i18n';
 
 interface IState {
   loading: boolean;

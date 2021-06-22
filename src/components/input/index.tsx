@@ -3,7 +3,7 @@ import { Input, Row, Col, Tag } from 'antd';
 import { debounce } from '../../util/debounce';
 import { isNumberLike } from '../../util/math';
 import styles from './style.module.less';
-import { formatMessage } from '~/util/i18n';
+import { formatMessage } from 'util/i18n';
 
 interface IState {
   amount: string;

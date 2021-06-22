@@ -4,7 +4,7 @@ import styles from '../style.module.less';
 import { formatInt, format, isGreaterZero } from '../../../util/math';
 import { getMyReferalInfo, claimReferalInfo } from '../../../services/broker.service';
 import Placeholder from '../../placeholder/index';
-import { formatMessage } from '~/util/i18n';
+import { formatMessage } from 'util/i18n';
 
 interface IState {
   loading: boolean;

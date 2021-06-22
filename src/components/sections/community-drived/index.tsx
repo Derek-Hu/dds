@@ -3,7 +3,7 @@ import { Carousel, Avatar } from 'antd';
 import styles from './style.module.less';
 import SectionTitle from '../section-title/index';
 import Datasource from './says';
-import { formatMessage } from '~/util/i18n';
+import { formatMessage } from 'util/i18n';
 
 export default () => {
   return (

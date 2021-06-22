@@ -1,5 +1,5 @@
 import styles from './bar.module.less';
-import { formatMessage } from '~/util/i18n';
+import { formatMessage } from 'util/i18n';
 
 interface IProps {
   vertical?: boolean;

@@ -2,7 +2,7 @@ import { Row, Col, Table, Icon, Button } from 'antd';
 import styles from './system-ranking.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import Pool, { IPool } from '../liquidity-pool/pool';
-import { formatMessage } from '~/util/i18n';
+import { formatMessage } from 'util/i18n';
 
 const PublicProvidedPool: IPool = {
   title: formatMessage({ id: 'system-fund-balance' }),

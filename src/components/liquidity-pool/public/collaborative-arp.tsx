@@ -12,6 +12,7 @@ import Auth from '../../builtin/auth';
 import { Hidden } from '../../builtin/hidden';
 import Placeholder from '../../placeholder/index';
 import InputNumber from '../../input/index';
+import { formatMessage } from 'util/i18n';
 
 const { Option } = Select;
 
@@ -129,7 +130,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
         {({ isMobile }) => (
           <div>
             <div style={{ paddingTop: '10px' }}>
-              <h3>ARP</h3>
+              <h3>{formatMessage({ id: 'arp' })}</h3>
               <p className={styles.coins}>
                 <Placeholder loading={false} width={'5em'}>
                   {isNumberLike(data) ? `${data}%` : 'N/A'}
@@ -150,45 +151,54 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                       </Select>
                     </Col>
                     <Col xs={24} sm={24} md={16} lg={18}>
-                      <InputNumber min={1} onChange={this.onAmountChange} placeholder="Min amount: 1 DAI" />
+                      <InputNumber
+                        min={1}
+                        onChange={this.onAmountChange}
+                        placeholder={formatMessage({ id: 'min-amount-one-dai' })}
+                      />
                     </Col>
                   </Row>
                   {/* {isNotZeroLike(amount) ? ( */}
                   <p className={styles.cal}>
-                    You Will Receive: {calculating ? <Icon type="loading" /> : <span>{format(reAmount)}</span>} re
-                    {selectedCoin}
+                    {calculating ? (
+                      <>
+                        {formatMessage({ id: 'you-will-receive' })} <Icon type="loading" />
+                      </>
+                    ) : (
+                      <>{formatMessage({ id: 'you-will-receive', amount: format(reAmount), coin: selectedCoin })}</>
+                    )}
                   </p>
                   {/* ) : null} */}
                   <Button type="primary" className={styles.btn} onClick={this.modalVisible.show}>
-                    DEPOSIT
+                    {formatMessage({ id: 'deposit' })}
                   </Button>
                 </div>
               </Auth>
 
               <ModalRender
                 visible={modalVisible}
-                title="Comfirm Deposit"
+                title={formatMessage({ id: 'comfirm-deposit' })}
                 className={commonStyles.commonModal}
                 onCancel={this.modalVisible.hide}
                 height={300}
                 footer={null}
               >
                 <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
-                  <Descriptions.Item label="Amount" span={24}>
+                  <Descriptions.Item label={formatMessage({ id: 'amount' })} span={24}>
                     {amount} {selectedCoin}
                   </Descriptions.Item>
-                  <Descriptions.Item label="Receive" span={24}>
+                  <Descriptions.Item label={formatMessage({ id: 'receive' })} span={24}>
                     {reAmount} re{selectedCoin}
                   </Descriptions.Item>
                 </Descriptions>
-                <p>Tips: 14 Days Locked Required</p>
+                <p>{formatMessage({ id: 'tips-14-days-locked-required' })}</p>
                 <Row className={commonStyles.actionBtns} gutter={[16, 16]} type="flex">
                   <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                    <Button onClick={this.modalVisible.hide}>CANCEL</Button>
+                    <Button onClick={this.modalVisible.hide}>{formatMessage({ id: 'cancel' })}</Button>
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                     <Button onClick={this.confirmDeposit} type="primary">
-                      CONFIRM
+                      {formatMessage({ id: 'confirm' })}
                     </Button>
                   </Col>
                 </Row>

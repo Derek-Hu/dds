@@ -15,7 +15,7 @@ import { formatTime } from '../../util/time';
 import DTable from '../table/index';
 import { Visible, Hidden } from '../builtin/hidden';
 import { getPendingOrders } from '../../util/order-cache';
-import { formatMessage } from '~/util/i18n';
+import { formatMessage } from 'util/i18n';
 
 const { TabPane } = Tabs;
 

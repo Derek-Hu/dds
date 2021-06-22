@@ -5,7 +5,7 @@ import SiteContext from '../../../layouts/SiteContext';
 import { Component } from 'react';
 import { isGreaterZero, isNumberLike } from '../../../util/math';
 import InputNumber from '../../input/index';
-import { formatMessage } from '~/util/i18n';
+import { formatMessage } from 'util/i18n';
 
 const title = formatMessage({ id: 'funding-fee-deposit' });
 

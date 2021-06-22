@@ -10,6 +10,7 @@ import { doPrivateDeposit } from '../../../services/pool.service';
 import Auth, { Public } from '../../builtin/auth';
 import InputNumber from '../../input/index';
 import SiteContext from '../../../layouts/SiteContext';
+import { formatMessage } from 'util/i18n';
 
 const { Option } = Select;
 interface IState {
@@ -62,7 +63,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
     const { amount, selectedCoin } = this.state;
     // @ts-ignore
     const success = await doPrivateDeposit({ amount: parseFloat(amount), coin: selectedCoin });
-    if(success){
+    if (success) {
       this.context.refreshPage && this.context.refreshPage();
     }
   };
@@ -79,11 +80,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
       <SiteContext.Consumer>
         {({ isMobile }) => (
           <Auth>
-            <Alert
-              className={styles.poolMsg}
-              message="Note: private pool is targeting professional investor and market maker, please be aware of risk before you proceed."
-              type="warning"
-            />
+            <Alert className={styles.poolMsg} message={formatMessage({ id: 'pool-warning-message' })} type="warning" />
             <div className={[styles.actionArea, styles.privateArea].join(' ')}>
               <Row gutter={[isMobile ? 0 : 12, isMobile ? 15 : 0]}>
                 <Col xs={24} sm={24} md={8} lg={6}>
@@ -98,34 +95,38 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                   </Select>
                 </Col>
                 <Col xs={24} sm={24} md={16} lg={18}>
-                  <InputNumber min={1} onChange={this.onAmountChange} placeholder="Min amount: 1 DAI" />
+                  <InputNumber
+                    min={1}
+                    onChange={this.onAmountChange}
+                    placeholder={formatMessage({ id: 'min-amount-one-dai' })}
+                  />
                 </Col>
               </Row>
               <Button type="primary" className={styles.btn} onClick={this.modalVisible.show}>
-                DEPOSIT
+                {formatMessage({ id: 'deposit' })}
               </Button>
             </div>
 
             <ModalRender
               visible={this.state.modalVisible}
-              title="Comfirm Deposit"
+              title={formatMessage({ id: 'comfirm-deposit' })}
               className={commonStyles.commonModal}
               onCancel={this.modalVisible.hide}
               height={300}
               footer={null}
             >
               <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
-                <Descriptions.Item label="Amount" span={24}>
+                <Descriptions.Item label={formatMessage({ id: 'amount' })} span={24}>
                   {amount} {selectedCoin}
                 </Descriptions.Item>
               </Descriptions>
               <Row className={commonStyles.actionBtns} gutter={[16, 16]} type="flex">
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                  <Button onClick={this.modalVisible.hide}>CANCEL</Button>
+                  <Button onClick={this.modalVisible.hide}>{formatMessage({ id: 'cancel' })}</Button>
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                   <Button onClick={this.confirmPrivateDeposit} type="primary">
-                    CONFIRM
+                    {formatMessage({ id: 'confirm' })}
                   </Button>
                 </Col>
               </Row>

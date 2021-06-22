@@ -2,7 +2,7 @@ import { Row, Col } from 'antd';
 import styles from './style.module.less';
 import SiteContext from '../../../layouts/SiteContext';
 import AdsImage from '../../../assets/imgs/adsImage.png';
-import { formatMessage } from '~/util/i18n';
+import { formatMessage } from 'util/i18n';
 
 const adsImage = (
   <Col xs={24} sm={24} md={24} lg={10} className={styles.imgContainer}>

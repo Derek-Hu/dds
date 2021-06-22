@@ -1,7 +1,7 @@
 import styles from './style.module.less';
 import SectionTitle from '../section-title/index';
 import { Icon } from 'antd';
-import { formatMessage } from '~/util/i18n';
+import { formatMessage } from 'util/i18n';
 
 export default () => {
   return (
