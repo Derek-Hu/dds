@@ -26,12 +26,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "noFallthroughCasesInSwitch": true,
-    "baseUrl": "src",
-    "paths": {
-      "~/*": [
-        "src/*"
-      ]
-    }
+    "baseUrl": "src"
   },
   "linterOptions": {
     "exclude": [
