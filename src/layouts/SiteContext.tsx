@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { EthNetwork } from '../constant/network';
 
 export interface ISiteContextProps {
   isMobile: boolean;
@@ -9,6 +10,7 @@ export interface ISiteContextProps {
   isBSC: boolean;
   timestamp?: number;
   currentNetwork: INetworkKey;
+  network: EthNetwork;
   updateAccount?: (account: IAccount) => any;
   switNetwork?: (network: INetworkKey) => any;
   refreshPage?: () => void;
@@ -20,6 +22,7 @@ const SiteContext = React.createContext<ISiteContextProps>({
   address: '',
   isBSC: false,
   currentNetwork: 'kovan',
+  network: EthNetwork.kovan,
   connected: null,
   account: null,
 });

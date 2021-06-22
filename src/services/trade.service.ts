@@ -11,10 +11,11 @@ import * as request from 'superagent';
 import { loadingObs, withLoading } from './utils';
 import { getCurNetwork, getCurUserAccount, getNetworkAndAccount, loginUserAccount } from './account';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
-import { CentralHost, CentralPath, CentralPort, CentralProto, EthNetwork } from '../constant/address';
+import { CentralHost, CentralPath, CentralPort, CentralProto } from '../constant/address';
 import { LocalStorageKeyPrefix } from '../constant';
 import { getLocalStorageKey } from '../util/string';
 import { readTradeSetting } from './local-storage.service';
+import { EthNetwork } from '../constant/network';
 
 /**
  * Trade Page

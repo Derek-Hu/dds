@@ -32,10 +32,11 @@ import { WalletInterface } from './wallet-interface';
 import { fromExchangePair, toEthers, toExchangePair, tokenBigNumber } from '../util/ethers';
 import { isMetaMaskInstalled } from './metamask';
 import { getPageListRange } from '../util/page';
-import { ContractAddress, ContractAddressByNetwork, EthNetwork } from '../constant/address';
+import { ContractAddress, ContractAddressByNetwork } from '../constant/address';
 import { getContractAddress, getContractInfo } from './contract-info';
 import { bigNumMultiple } from '../util/math';
 import { ReTokenMapping } from '../constant/tokens';
+import { EthNetwork } from '../constant/network';
 
 declare const window: Window & { ethereum: any };
 

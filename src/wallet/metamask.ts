@@ -3,7 +3,7 @@ import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { Wallet } from '../constant';
 import { WalletInterface } from '../wallet/wallet-interface';
 import { catchError, filter, map, mapTo, take } from 'rxjs/operators';
-import { EthNetwork, NetworkParam } from '../constant/address';
+import { EthNetwork, NetworkParam } from '../constant/network';
 
 declare const window: Window & { ethereum: any };
 

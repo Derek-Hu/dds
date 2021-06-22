@@ -3,13 +3,13 @@ import HomeLayout from '../layouts/home.layout';
 import TradeLayout from '../layouts/trade.layout';
 import { RouteComponentProps } from 'react-router-dom';
 import SiteContext from './SiteContext';
-import { ddsBasePath, DefaultKeNetwork } from '../constant/index';
-import { userAccountInfo, initTryConnect, getNetworkAndAccount } from '../services/account';
-import { CentralPath, EthNetwork } from '../constant/address';
-import { LocalStorageKeyPrefix } from '../constant/index';
+import { ddsBasePath, DefaultKeNetwork, LocalStorageKeyPrefix } from '../constant/index';
+import { getNetworkAndAccount, initTryConnect, userAccountInfo } from '../services/account';
+import { CentralPath } from '../constant/address';
 import { accountEvents } from '../services/global-event.service';
 import { Subscription } from 'rxjs';
 import { getLocalStorageKey } from '../util/string';
+import { EthNetwork, NetworkKey } from '../constant/network';
 
 const RESPONSIVE_MOBILE = 768;
 
@@ -19,6 +19,7 @@ interface IState {
   address: string;
   connected: boolean | null;
   timestamp: number | null;
+  network: EthNetwork;
   currentNetwork: INetworkKey;
 }
 
@@ -31,6 +32,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
 
   state: IState = {
     currentNetwork: DefaultKeNetwork,
+    network: EthNetwork.kovan,
     connected: null,
     timestamp: null,
     isMobile: false,
@@ -162,20 +164,21 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   };
 
   updateAccount = (account: IAccount) => {
-    const networkCode = account?.network;
+    const networkCode: EthNetwork = account?.network as EthNetwork;
     // @ts-ignore
-    const network = CentralPath[networkCode] || DefaultKeNetwork;
+    const networkKey = NetworkKey[networkCode] || DefaultKeNetwork;
     this.setState({
       account,
       // @ts-ignore
-      currentNetwork: network,
+      currentNetwork: networkKey,
+      network: networkCode || EthNetwork.kovan,
       address: account && account.address ? account.address : '',
     });
     // @ts-ignore
     window.PendingOrderCacheKey = getLocalStorageKey(
       LocalStorageKeyPrefix.PendingOrdersHash,
       account?.address || '',
-      network
+      networkKey
     );
   };
 
@@ -188,7 +191,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
 
   render() {
     const { children, location } = this.props;
-    const { isMobile, account, address, currentNetwork, timestamp, connected } = this.state;
+    const { isMobile, account, address, currentNetwork, network, timestamp, connected } = this.state;
     const LayoutComp = location.pathname === '/home' ? HomeLayout : TradeLayout;
 
     return (
@@ -199,6 +202,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
           switNetwork: this.switNetwork,
           isMobile,
           connected,
+          network,
           currentNetwork,
           isBSC: currentNetwork === 'bscmain' || currentNetwork === 'bsctest',
           // isBSC: process.env.NODE_ENV === 'development' ? true: currentNetwork === 'bscmain' || currentNetwork === 'bsctest',

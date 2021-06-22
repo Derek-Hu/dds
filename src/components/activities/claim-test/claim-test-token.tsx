@@ -1,18 +1,21 @@
 import { Component } from 'react';
 import ModalRender from '../../modal-render/index';
-import { CircleBorderBtn } from '../../common/buttons/circle-border-btn';
 import NormalButton from '../../common/buttons/normal-btn';
 import { contractAccessor } from '../../../wallet/chain-access';
 import { loginUserAccount } from '../../../services/account';
 import { from } from 'rxjs';
 import { finalize, switchMap } from 'rxjs/operators';
 import { Col, message, Row } from 'antd';
+import styles from './claim-test-token.module.less';
 
-type IProps = {};
+type IProps = {
+  visibleChange?: (visible: boolean) => void;
+};
 type IState = {
   isPopUp: boolean;
   isClaimed: boolean;
   isPending: boolean;
+  curAddress: string;
 };
 
 export class ClaimTestToken extends Component<IProps, IState> {
@@ -20,9 +23,11 @@ export class ClaimTestToken extends Component<IProps, IState> {
     isPopUp: false,
     isClaimed: false,
     isPending: false,
+    curAddress: '',
   };
 
   componentDidMount() {
+    this.loadUserAddress();
     this.loadIsClaimed();
   }
 
@@ -36,6 +41,10 @@ export class ClaimTestToken extends Component<IProps, IState> {
       .subscribe(isClaimed => {
         this.setState({ isClaimed: isClaimed });
       });
+  }
+
+  loadUserAddress() {
+    loginUserAccount().then(addr => this.setState({ curAddress: addr }));
   }
 
   onClaim() {
@@ -57,22 +66,36 @@ export class ClaimTestToken extends Component<IProps, IState> {
       });
   }
 
+  changePopUp(isVisible: boolean) {
+    this.setState({ isPopUp: isVisible }, () => {
+      if (this.props.visibleChange) {
+        this.props.visibleChange(this.state.isPopUp);
+      }
+    });
+  }
+
   render() {
     return (
       <>
-        <CircleBorderBtn onClick={() => this.setState({ isPopUp: true })}>
-          <a>Claim Test Token</a>
-        </CircleBorderBtn>
+        <div onClick={() => this.changePopUp(true)}>{this.props.children}</div>
         <ModalRender
           visible={this.state.isPopUp}
-          title="Claim Test Token"
+          title="5000 Test ShieldDAI Claim"
           footer={null}
-          onCancel={() => this.setState({ isPopUp: false })}
+          onCancel={() => this.changePopUp(false)}
         >
           <div>
+            <Row>
+              <Col xs={24} sm={24} md={24} lg={24}>
+                <span className={styles.address}>Address:</span>
+                <br />
+                <span className={styles.addressHex}>{this.state.curAddress}</span>
+              </Col>
+            </Row>
+
             <Row gutter={[8, 8]}>
               <Col xs={24} sm={24} md={12} lg={12}>
-                <NormalButton type={'default'} onClick={() => this.setState({ isPopUp: false })}>
+                <NormalButton type={'default'} onClick={() => this.changePopUp(false)}>
                   CANCEL
                 </NormalButton>
               </Col>

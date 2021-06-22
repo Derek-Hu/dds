@@ -15,10 +15,11 @@ import {
 import { defaultPoolData, defaultReTokenData } from './mock/unlogin-default';
 import { loadingObs, withLoading } from './utils';
 import { MyTokenSymbol } from '../constant';
-import { ContractAddressByNetwork, EthNetwork } from '../constant/address';
+import { ContractAddressByNetwork } from '../constant/address';
 import { PublicPoolLiquidityRewards, ReTokenAmounts } from './mining.service.interface';
 import { queryMan } from '../wallet/state-manager';
 import { dividedPecent, percentage } from '../util/math';
+import { EthNetwork } from '../constant/network';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   return new Promise(resolve => {

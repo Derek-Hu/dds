@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { Wallet } from '../constant';
-import { EthNetwork } from '../constant/address';
+import { EthNetwork } from '../constant/network';
 
 /**
  * 一个钱包实例要实现的接口

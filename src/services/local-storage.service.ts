@@ -1,7 +1,8 @@
 import { getLocalStorageKey } from '../util/string';
 import { LocalStorageKeyPrefix } from '../constant';
 import { getCurNetwork, getCurUserAccount } from './account';
-import { CentralPath, EthNetwork } from '../constant/address';
+import { CentralPath } from '../constant/address';
+import { EthNetwork } from '../constant/network';
 
 function settingStoragekey(): string {
   const address: string = getCurUserAccount() || '';

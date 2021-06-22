@@ -1,6 +1,7 @@
-import { BIAN_TEST_ADDRESS, ContractAddress, EthNetwork, KOVAN_ADDRESS } from '../constant/address';
+import { BIAN_TEST_ADDRESS, ContractAddress, KOVAN_ADDRESS } from '../constant/address';
 import { ContractInfo } from './contract-interface';
 import { BN_ABI, ETH_ABI } from './abi';
+import { EthNetwork } from '../constant/network';
 
 export function getContractInfo(network: EthNetwork, contract: keyof ContractAddress): ContractInfo {
   const abi = getContractABI(network, contract);

@@ -1,5 +1,7 @@
 // kovan
 
+import { EthNetwork } from './network';
+
 export type ContractAddress = {
   TradeDAIContract: string;
   TradeUSDTContract: string;
@@ -69,28 +71,9 @@ export const BIAN_TEST_ADDRESS: ContractAddress = {
   ReceiveTestTokenContract: '0x69FA54869e95f67A9b36f4aFF808B45De6347DE7',
 };
 
-export enum EthNetwork {
-  kovan = '42',
-  bianTest = '97',
-}
-
 export const ContractAddressByNetwork = {
   [EthNetwork.bianTest]: BIAN_TEST_ADDRESS,
   [EthNetwork.kovan]: KOVAN_ADDRESS,
-};
-
-export const NetworkParam = {
-  [EthNetwork.bianTest]: {
-    chainId: '0x61',
-    chainName: 'BSC Test Network',
-    nativeCurrency: {
-      name: 'BNB',
-      symbol: 'BNB',
-      decimals: 18,
-    },
-    rpcUrls: ['https://data-seed-prebsc-2-s3.binance.org:8545'],
-    blockExplorerUrls: ['https://testnet.bscscan.com/'],
-  },
 };
 
 export const CentralProto = window.location.protocol;

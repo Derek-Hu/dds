@@ -1,6 +1,6 @@
 import { getTokenWei, keepDecimal, toDisplayNum, toExchangePair } from '../util/ethers';
 import { BigNumber } from 'ethers';
-import { EthNetwork } from '../constant/address';
+import { EthNetwork } from '../constant/network';
 
 export interface IOrderInfoData {
   closePrice: string;

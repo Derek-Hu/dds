@@ -6,7 +6,7 @@ import { contractAccessor } from '../wallet/chain-access';
 import { CoinBalance } from '../wallet/contract-interface';
 import { toEthers } from '../util/ethers';
 import { Wallet } from '../constant';
-import { EthNetwork } from '../constant/address';
+import { EthNetwork } from '../constant/network';
 
 /**
  * 用户是否已经连接账户地址

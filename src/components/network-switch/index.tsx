@@ -5,8 +5,8 @@ import { Button, Col, Icon, Row } from 'antd';
 import commonStyles from '../funding-balance/modals/style.module.less';
 import SiteContext, { ISiteContextProps } from '../../layouts/SiteContext';
 import { DefaultKeNetwork } from '../../constant/index';
-import { EthNetwork } from '../../constant/address';
 import { switchNetwork } from '../../services/account';
+import { EthNetwork } from '../../constant/network';
 
 const Nets: Record<INetworkKey, string> = {
   kovan: 'Kovan',

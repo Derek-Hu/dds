@@ -12,8 +12,7 @@ import { isNumberLike } from '../../util/math';
 import { shortAddress } from '../../util/index';
 import NetworkSwitch from '../network-switch/index';
 import { RouteKey } from '../../constant/routes';
-import ModalRender from '../modal-render';
-import { ClaimTestToken } from '../activities/claim-test/claim-test-token';
+import { TokenFaucet } from './token-faucet';
 
 const { SubMenu } = Menu;
 
@@ -120,7 +119,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
     // const { currentNetwork } = this.context;
     return (
       <SiteContext.Consumer>
-        {({ isMobile, account, currentNetwork }) =>
+        {({ isMobile, account, currentNetwork, network }) =>
           isMobile ? (
             darkMode ? (
               <div className={styles.homeHeader}>
@@ -257,25 +256,11 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                     </Button>
                   ) : (
                     <div className={styles.rightContent}>
-                      <div className={styles.network}>
-                        {currentNetwork === 'kovan' ? (
-                          <a href="https://faucet.kovan.network/" rel="noreferrer" target="_blank">
-                            Kovan-Faucet
-                          </a>
-                        ) : (
-                          <a href="https://testnet.binance.org/faucet-smart" rel="noreferrer" target="_blank">
-                            BSC-faucet
-                          </a>
-                        )}
+                      <div style={{ marginRight: '20px' }}>
+                        <TokenFaucet network={network} />
                       </div>
 
-                      {currentNetwork === 'bsctest' ? (
-                        <div style={{ marginRight: '20px' }}>
-                          <ClaimTestToken />
-                        </div>
-                      ) : null}
-
-                      {account && account.address ? <NetworkSwitch></NetworkSwitch> : null}
+                      {account && account.address ? <NetworkSwitch /> : null}
 
                       <ConnectWallet>
                         {account ? (

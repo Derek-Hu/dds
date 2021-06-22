@@ -1,0 +1,47 @@
+@down-background-color: #ffffff;
+@down-drop-border: #eeeeee;
+@down-item-border: #f1f1f1;
+@down-link-color: #1346ff;
+
+.dropdownWrapper {
+  cursor: pointer;
+  display: inline-block;
+  white-space: nowrap;
+
+  .downText {
+    display: inline-block;
+  }
+
+  .downIcon {
+    display: inline-block;
+    margin-left: 3px;
+  }
+}
+
+.overlayWrapper {
+  .dropList {
+    display: block;
+    margin: 0;
+    padding: 2px 0;
+    border-radius: 4px;
+
+    border: 1px solid @down-drop-border;
+    background-color: @down-background-color;
+
+    .dropItem {
+      list-style: none;
+      display: block;
+      line-height: 26px;
+      height: 27px;
+      font-size: 12px;
+      padding: 0 8px;
+      cursor: pointer;
+      border-bottom: 1px solid @down-item-border;
+      color: @down-link-color;
+
+      &:hover {
+        background-color: #f8f8f8;
+      }
+    }
+  }
+}
