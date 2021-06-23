@@ -31,12 +31,12 @@ export class TokenFaucet extends Component<IProps, IState> {
       <ul className={styles.dropList}>
         <li className={styles.dropItem}>
           <a href="https://testnet.binance.org/faucet-smart" rel="noreferrer" target="_blank">
-            BSC-faucet
+            BNB-Faucet
           </a>
         </li>
         <li className={styles.dropItem}>
           <ClaimTestToken>
-            <span>5000 Test ShieldDAI</span>
+            <span>Test ShieldDAI</span>
           </ClaimTestToken>
         </li>
       </ul>
@@ -60,8 +60,8 @@ export class TokenFaucet extends Component<IProps, IState> {
         return (
           <Dropdown overlay={this.bscList} trigger={['hover']} placement={'bottomCenter'}>
             <div className={styles.dropdownWrapper}>
-              <span className={styles.downText}>Claim</span>
-              <Icon className={styles.downIcon} type="down" />
+              <span className={styles.downText}>Test Token</span>
+              <Icon className={styles.downIcon} type="down" style={{ fontSize: '14px' }} />
             </div>
           </Dropdown>
         );

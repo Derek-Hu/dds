@@ -2,19 +2,23 @@
 @down-drop-border: #eeeeee;
 @down-item-border: #f1f1f1;
 @down-link-color: #1346ff;
+@trigger-color: #6a737d;
 
 .dropdownWrapper {
   cursor: pointer;
-  display: inline-block;
-  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: @trigger-color;
 
   .downText {
-    display: inline-block;
+    display: block;
+    line-height: 18px;
   }
 
   .downIcon {
-    display: inline-block;
-    margin-left: 3px;
+    display: block;
+    margin-left: 0.3em;
   }
 }
 
@@ -31,10 +35,10 @@
     .dropItem {
       list-style: none;
       display: block;
-      line-height: 26px;
-      height: 27px;
+      line-height: 28px;
+      height: 30px;
       font-size: 12px;
-      padding: 0 8px;
+      padding: 0 15px;
       cursor: pointer;
       border-bottom: 1px solid @down-item-border;
       color: @down-link-color;

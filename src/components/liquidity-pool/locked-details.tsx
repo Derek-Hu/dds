@@ -172,9 +172,7 @@ export default class Balance extends Component<any, IState> {
               <h4>
                 Liquidity Locked Detail
                 <div className={styles.orderSwitch}>
-                  <span className={styles.state}>
-                    {isTakeOrder ? 'Is taking orders now' : 'Has rejected new orders'}
-                  </span>
+                  <span className={styles.state}>{isTakeOrder ? 'ON' : 'OFF'}</span>
                   <Switch
                     disabled={!this.state.isTakeOrderChangeable}
                     defaultChecked={true}

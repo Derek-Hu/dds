@@ -95,7 +95,7 @@ export default class NetworkSwitch extends Component<any, IState> {
         {({ currentNetwork }) => (
           <>
             <div className={styles.network} onClick={this.openModal}>
-              <span className={styles.icon}></span>
+              <span className={styles.icon} />
               <span>{Nets[currentNetwork]}</span>
               <Icon className={styles.switch} type="down" />
             </div>

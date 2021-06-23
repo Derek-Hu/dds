@@ -80,15 +80,17 @@ export class ClaimTestToken extends Component<IProps, IState> {
         <div onClick={() => this.changePopUp(true)}>{this.props.children}</div>
         <ModalRender
           visible={this.state.isPopUp}
-          title="5000 Test ShieldDAI Claim"
+          title="Claim Test ShieldDAI"
           footer={null}
           onCancel={() => this.changePopUp(false)}
         >
           <div>
             <Row>
               <Col xs={24} sm={24} md={24} lg={24}>
-                <span className={styles.address}>Address:</span>
+                <span className={styles.address}>Acount:</span>
+                <span className={styles.addressHex}>5000</span>
                 <br />
+                <span className={styles.address}>Address:</span>
                 <span className={styles.addressHex}>{this.state.curAddress}</span>
               </Col>
             </Row>
@@ -107,7 +109,7 @@ export class ClaimTestToken extends Component<IProps, IState> {
                   loading={this.state.isPending}
                   disabled={this.state.isClaimed}
                 >
-                  {this.state.isClaimed ? <span>You Has Claimed</span> : <span>CLAIM</span>}
+                  {this.state.isClaimed ? <span>Claimed</span> : <span>CLAIM</span>}
                 </NormalButton>
               </Col>
             </Row>
