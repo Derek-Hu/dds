@@ -9,13 +9,18 @@ import Placeholder from '../../placeholder/index';
 import { Button, Col } from 'antd';
 import { PublicPoolLiquidityRewards } from '../../../services/mining.service.interface';
 import NormalButton from '../../common/buttons/normal-btn';
+import { Subject, Subscription } from 'rxjs';
 
 interface IState {
   loading: boolean;
   rewards: PublicPoolLiquidityRewards;
 }
 
-export default class LiquidityMiningReward extends Component<any, IState> {
+type IProps = {
+  refreshEvent: Subject<boolean>;
+};
+
+export default class LiquidityMiningReward extends Component<IProps, IState> {
   state: IState = {
     loading: false,
     rewards: {
@@ -26,6 +31,7 @@ export default class LiquidityMiningReward extends Component<any, IState> {
     },
   };
 
+  sub: Subscription | null = null;
   static contextType = SiteContext;
 
   UNSAFE_componentWillReceiveProps() {
@@ -34,6 +40,15 @@ export default class LiquidityMiningReward extends Component<any, IState> {
 
   async componentDidMount() {
     this.init();
+    this.sub = this.props.refreshEvent.subscribe(() => {
+      this.loadRewards();
+    });
+  }
+
+  componentWillUnmount() {
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
   }
 
   async init() {

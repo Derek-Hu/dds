@@ -3,15 +3,15 @@ import { Button, Row, Col, message } from 'antd';
 import styles from '../style.module.less';
 import { format } from '../../../util/math';
 import { getLiquiditorReward } from '../../../services/mining.service';
-import { Hidden } from '../../builtin/hidden';
 import SiteContext from '../../../layouts/SiteContext';
-import Auth, { Public } from '../../builtin/auth';
+import Auth from '../../builtin/auth';
 import Placeholder from '../../placeholder/index';
 
 interface IState {
   loading: boolean;
   data?: { campaign: number; compensate: number };
 }
+
 export default class LiquiditorReward extends Component<{ isBSC: boolean }, IState> {
   state: IState = {
     loading: false,
@@ -26,6 +26,7 @@ export default class LiquiditorReward extends Component<{ isBSC: boolean }, ISta
   async componentDidMount() {
     this.loadData();
   }
+
   async loadData() {
     this.setState({ loading: true });
     const data = await getLiquiditorReward(this.context.address ? 'private' : 'public');

@@ -7,13 +7,25 @@ import Mask from '../../../components/mask';
 import InputNumber from '../../input';
 import NormalButton from '../../common/buttons/normal-btn';
 import { queryLiquidityLockedReTokenAmount, unLockReTokenForLiquidity } from '../../../services/mining.service';
+import { Subscription } from 'rxjs';
 
 export default class ReTokenUnlock extends Component<IProps, IState> {
   state: IState = defaultState();
   inputNum: InputNumber | null = null;
 
+  sub: Subscription | null = null;
+
   componentDidMount() {
     this.loadLockedAmount();
+    this.sub = this.props.refreshEvent.subscribe(() => {
+      this.loadLockedAmount();
+    });
+  }
+
+  componentWillUnmount() {
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
   }
 
   loadLockedAmount() {
@@ -51,11 +63,7 @@ export default class ReTokenUnlock extends Component<IProps, IState> {
     }
   }
 
-  onUnlock() {
-    if (this.state.curReTokenAmount === 0 || this.state.curReTokenAmount > this.state.maxReTokenAmount) {
-      return;
-    }
-
+  doUnlock() {
     this.startPending();
     unLockReTokenForLiquidity(this.state.curReToken, this.state.curReTokenAmount).then((done: boolean) => {
       if (done) {
@@ -66,6 +74,16 @@ export default class ReTokenUnlock extends Component<IProps, IState> {
         this.endPending(true, 'Unlock ReTokens Failed.');
       }
     });
+  }
+
+  onUnlock() {
+    if (this.state.curReTokenAmount === 0 || this.state.curReTokenAmount > this.state.maxReTokenAmount) {
+      return;
+    }
+
+    if (this.props.doAction) {
+      this.props.doAction(this.state.curReToken, this.state.curReTokenAmount);
+    }
   }
 
   private startPending() {

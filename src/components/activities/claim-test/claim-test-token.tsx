@@ -87,7 +87,7 @@ export class ClaimTestToken extends Component<IProps, IState> {
           <div>
             <Row>
               <Col xs={24} sm={24} md={24} lg={24}>
-                <span className={styles.address}>Acount:</span>
+                <span className={styles.address}>Amount:</span>
                 <span className={styles.addressHex}>5000</span>
                 <br />
                 <span className={styles.address}>Address:</span>
@@ -109,7 +109,7 @@ export class ClaimTestToken extends Component<IProps, IState> {
                   loading={this.state.isPending}
                   disabled={this.state.isClaimed}
                 >
-                  {this.state.isClaimed ? <span>Claimed</span> : <span>CLAIM</span>}
+                  {this.state.isClaimed ? <span>CLAIMED</span> : <span>CLAIM</span>}
                 </NormalButton>
               </Col>
             </Row>

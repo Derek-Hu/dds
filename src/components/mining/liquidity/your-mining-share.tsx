@@ -8,12 +8,19 @@ import 'echarts/lib/component/tooltip';
 import { shareOption } from './your-mining-share.option';
 import styles from './your-mining-share.module.less';
 import { queryLiquidityLockedReTokenShare } from '../../../services/mining.service';
+import { Subject, Subscription } from 'rxjs';
 
-export default class PoolArea extends Component {
+type IProps = {
+  refreshEvent: Subject<boolean>;
+};
+
+export default class PoolArea extends Component<IProps> {
   private containerId = 'share-pie';
   private pieInstance: ECharts | null = null;
   private pieContainer: HTMLDivElement | null = null;
   private sizeObserver: ResizeObserver | null = null;
+
+  private sub: Subscription | null = null;
 
   updateShareData(percent: number) {
     this.pieContainer = document.getElementById(this.containerId) as HTMLDivElement;
@@ -28,14 +35,25 @@ export default class PoolArea extends Component {
     }
   }
 
+  UNSAFE_componentWillReceiveProps(nextProps: Readonly<{}>, nextContext: any) {
+    this.loadPercentage();
+  }
+
   componentDidMount() {
     this.loadPercentage();
+
+    this.sub = this.props.refreshEvent.subscribe(() => {
+      this.loadPercentage();
+    });
   }
 
   componentWillUnmount() {
     if (this.sizeObserver) {
       this.sizeObserver.disconnect();
       this.sizeObserver = null;
+    }
+    if (this.sub) {
+      this.sub.unsubscribe();
     }
   }
 

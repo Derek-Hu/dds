@@ -1,7 +1,7 @@
 import Mask from '../components/mask';
 import { contractAccessor } from '../wallet/chain-access';
 import { from, Observable, of, zip } from 'rxjs';
-import { catchError, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, filter, finalize, map, switchMap, take, tap } from 'rxjs/operators';
 import { BigNumber } from 'ethers';
 import { toEthers } from '../util/ethers';
 import { getCurNetwork, loginUserAccount } from './account';
@@ -130,13 +130,49 @@ export const lockReTokenForLiquidity = async (reToken: IReUSDCoins, amount: numb
   return contractAccessor.lockReTokenForLiquidity(reToken, amount).pipe(take(1)).toPromise();
 };
 
+export const lockReTokenForLiquidity1 = async (reToken: IReUSDCoins, amount: number): Promise<boolean> => {
+  return from(approveReTokenForLocking(reToken, amount))
+    .pipe(
+      switchMap((approved: boolean) => {
+        if (!approved) {
+          return of(false);
+        } else {
+          Mask.showLoading('Locking reTokens...');
+          return contractAccessor.lockReTokenForLiquidity(reToken, amount).pipe(
+            tap((isOK: boolean) => {
+              if (isOK) {
+                Mask.showSuccess();
+              } else {
+                Mask.showFail('Lock reTokens Failed!');
+              }
+            })
+          );
+        }
+      })
+    )
+    .toPromise();
+};
+
 /**
  *
  * @param reToken - reTokenType
  * @param amount - unlock amount
  */
 export const unLockReTokenForLiquidity = async (reToken: IReUSDCoins, amount: number) => {
-  return contractAccessor.unLockReTokenFromLiquidity(reToken, amount).pipe(take(1)).toPromise();
+  Mask.showLoading('Unlocking reTokens...');
+  return contractAccessor
+    .unLockReTokenFromLiquidity(reToken, amount)
+    .pipe(
+      tap((done: boolean) => {
+        if (done) {
+          Mask.showSuccess();
+        } else {
+          Mask.showFail('Unlock reTokens Failed!');
+        }
+      }),
+      take(1)
+    )
+    .toPromise();
 };
 
 /**

@@ -1,5 +1,10 @@
 import { Component } from 'react';
-import { queryLiquidityLockedReTokenAmount, queryUserReTokenBalance } from '../../../services/mining.service';
+import {
+  lockReTokenForLiquidity1,
+  queryLiquidityLockedReTokenAmount,
+  queryUserReTokenBalance,
+  unLockReTokenForLiquidity,
+} from '../../../services/mining.service';
 import { Col, Row } from 'antd';
 import commonStyles from '../../funding-balance/modals/style.module.less';
 import ModalRender from '../../modal-render';
@@ -11,7 +16,11 @@ import styles from './re-token-balance.module.less';
 import NormalButton from '../../common/buttons/normal-btn';
 import { ReTokenAmounts } from '../../../services/mining.service.interface';
 import { format } from '../../../util/math';
+import { Subject, Subscription } from 'rxjs';
 
+type IProps = {
+  refreshEvent: Subject<boolean>;
+};
 type IState = {
   showLockModal: boolean;
   showUnLockModal: boolean;
@@ -19,7 +28,7 @@ type IState = {
   lockedReTokenAmounts: ReTokenAmounts;
 };
 
-export default class ReTokenBalance extends Component<{}, IState> {
+export default class ReTokenBalance extends Component<IProps, IState> {
   state = {
     showLockModal: false,
     showUnLockModal: false,
@@ -34,7 +43,7 @@ export default class ReTokenBalance extends Component<{}, IState> {
       reUSDC: 0,
     },
   };
-
+  sub: Subscription | null = null;
   reTokenOptions: SelectOption[] = [
     {
       label: 'reDAI',
@@ -43,6 +52,19 @@ export default class ReTokenBalance extends Component<{}, IState> {
   ];
 
   componentDidMount() {
+    this.loadBalances();
+    this.sub = this.props.refreshEvent.subscribe(() => {
+      this.loadBalances();
+    });
+  }
+
+  componentWillUnmount() {
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps: Readonly<{}>, nextContext: any) {
     this.loadBalances();
   }
 
@@ -66,7 +88,16 @@ export default class ReTokenBalance extends Component<{}, IState> {
 
   closeLockModal() {
     this.setState({ showLockModal: false });
-    this.loadBalances();
+  }
+
+  doLockTokens(reToken: IReUSDCoins, amount: number) {
+    this.closeLockModal();
+    lockReTokenForLiquidity1(reToken, amount)
+      .then(() => {
+        this.props.refreshEvent.next(true);
+        this.loadBalances();
+      })
+      .catch();
   }
 
   openUnLockModal() {
@@ -78,14 +109,19 @@ export default class ReTokenBalance extends Component<{}, IState> {
     this.loadBalances();
   }
 
+  doUnlockTokens(reToken: IReUSDCoins, amount: number) {
+    this.closeUnLockModal();
+    unLockReTokenForLiquidity(reToken, amount)
+      .then(() => {
+        this.props.refreshEvent.next(true);
+        this.loadBalances();
+      })
+      .catch();
+  }
+
   render() {
     return (
       <>
-        {/*<CoinCard title="Your reToken Balance" theme="inner" service={queryUserReTokenBalance}>*/}
-        {/*  <Placeholder loading={false} style={{ margin: '22px 0' }}>*/}
-        {/*    */}
-        {/*  </Placeholder>*/}
-        {/*</CoinCard>*/}
         <SecondaryCard title="Your reToken Balance">
           <Row>
             <Col lg={8} md={8} sm={8} xs={8} className={styles.balanceCol}>
@@ -160,7 +196,11 @@ export default class ReTokenBalance extends Component<{}, IState> {
           height={420}
           footer={null}
         >
-          <ReTokenLock onCancel={this.closeLockModal.bind(this)} />
+          <ReTokenLock
+            onCancel={this.closeLockModal.bind(this)}
+            doAction={this.doLockTokens.bind(this)}
+            refreshEvent={this.props.refreshEvent}
+          />
         </ModalRender>
 
         <ModalRender
@@ -172,7 +212,11 @@ export default class ReTokenBalance extends Component<{}, IState> {
           height={420}
           footer={null}
         >
-          <ReTokenUnlock onCancel={this.closeUnLockModal.bind(this)} />
+          <ReTokenUnlock
+            onCancel={this.closeUnLockModal.bind(this)}
+            doAction={this.doUnlockTokens.bind(this)}
+            refreshEvent={this.props.refreshEvent}
+          />
         </ModalRender>
       </>
     );

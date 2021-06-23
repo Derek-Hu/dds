@@ -1,4 +1,5 @@
 import { SelectOption } from '../../common/selects/normal-select';
+import { Subject } from 'rxjs';
 
 export const reTokenOptions: SelectOption[] = [
   { label: 'reDAI', value: 'reDAI' },
@@ -13,7 +14,9 @@ export type AvailableReTokens = {
 };
 
 export type IProps = {
+  refreshEvent: Subject<boolean>;
   onCancel?: () => void;
+  doAction?: (reToken: IReUSDCoins, amount: number) => void;
 };
 
 export type IState = {

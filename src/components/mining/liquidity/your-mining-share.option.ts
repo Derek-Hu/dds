@@ -1,7 +1,7 @@
 import { EChartOption } from 'echarts';
 
 export function shareOption(yourShare: number): EChartOption {
-  const displayYourShare = yourShare > 0 && yourShare < 1 ? 1 : yourShare;
+  const displayYourShare = yourShare;
   const displayOtherShare = 100 - displayYourShare;
   const yourShareName = 'Your Share';
   const otherUserName = 'Other Users';
@@ -9,28 +9,20 @@ export function shareOption(yourShare: number): EChartOption {
   return {
     tooltip: {
       show: true,
-      trigger: 'item',
-      formatter: ((
-        data: EChartOption.Tooltip.Format,
-        ticket: string,
-        callback: (ticket: string, html: string) => void
-      ) => {
-        if (data?.name === yourShareName) {
-          return `Your Share is ${yourShare.toFixed(2)}%`;
-        } else {
-          return `Other Users' Share`;
-        }
-      }) as EChartOption.Tooltip.Formatter,
     },
     color: ['#1346FF', '#dddddd'],
     legend: {
       top: '5%',
       left: 'center',
     },
+
     series: [
       {
-        name: 'your share in pool',
+        name: '',
         type: 'pie',
+        selectedMode: false,
+        minAngle: 1,
+        animation: false,
         radius: ['50%', '80%'],
         avoidLabelOverlap: false,
         itemStyle: {
@@ -53,9 +45,41 @@ export function shareOption(yourShare: number): EChartOption {
           show: true,
         },
         data: [
-          { value: displayYourShare, name: yourShareName, color: ['#ff0000'] },
-          { value: displayOtherShare, name: otherUserName, color: ['#ff0000'] },
-        ],
+          {
+            value: displayYourShare,
+            name: yourShareName,
+            tooltip: {
+              formatter: (params, ticket, callback) => {
+                return 'Your Share: ' + (params as EChartOption.Tooltip.Format).percent + '%';
+              },
+            },
+            emphasis: {
+              label: {
+                show: false,
+              },
+            },
+          },
+          {
+            value: displayOtherShare,
+            name: otherUserName,
+            selected: false,
+            tooltip: {
+              formatter: (params, ticket, callback) => {
+                const percent: number | undefined = (params as EChartOption.Tooltip.Format).percent;
+                return percent && percent < 100 ? percent + '%' : 'None Liquidity Mining Share';
+              },
+            },
+            emphasis: {
+              label: {
+                show: false,
+              },
+              itemStyle: {
+                opacity: 1,
+                borderWidth: 0,
+              },
+            },
+          },
+        ] as EChartOption.SeriesPie.DataObject[],
       },
     ],
   };

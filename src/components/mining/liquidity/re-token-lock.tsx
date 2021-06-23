@@ -12,13 +12,25 @@ import {
 import { defaultState, IProps, IState, reTokenOptions } from './re-token-common';
 import { ReTokenAmounts } from '../../../services/mining.service.interface';
 import Mask from '../../../components/mask';
+import { Subscription } from 'rxjs';
 
 export default class ReTokenLock extends Component<IProps, IState> {
   state: IState = defaultState();
   inputNum: InputNumber | null = null;
 
+  sub: Subscription | null = null;
+
   componentDidMount() {
     this.loadBalances();
+    this.sub = this.props.refreshEvent.subscribe(() => {
+      this.loadBalances();
+    });
+  }
+
+  componentWillUnmount() {
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
   }
 
   loadBalances() {
@@ -60,7 +72,8 @@ export default class ReTokenLock extends Component<IProps, IState> {
     this.setState({ curReTokenAmount: count });
   }
 
-  onLock() {
+  // do lock in this modal.
+  doLock() {
     this.startPending();
     approveReTokenForLocking(this.state.curReToken, this.state.curReTokenAmount)
       .then(done => {
@@ -82,6 +95,12 @@ export default class ReTokenLock extends Component<IProps, IState> {
       .catch(() => {
         this.endPending(true);
       });
+  }
+
+  onLock() {
+    if (this.props.doAction) {
+      this.props.doAction(this.state.curReToken, this.state.curReTokenAmount);
+    }
   }
 
   startPending() {
