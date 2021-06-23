@@ -79,7 +79,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
   static contextType = SiteContext;
 
   UNSAFE_componentWillReceiveProps() {
-    console.log('trade orders refresh...');
+    // console.log('trade orders refresh...');
   }
 
   loadActiveData = async (page: number, pageSize: number) => {

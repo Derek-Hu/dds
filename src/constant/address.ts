@@ -1,5 +1,7 @@
 // kovan
 
+import { EthNetwork } from './network';
+
 export type ContractAddress = {
   TradeDAIContract: string;
   TradeUSDTContract: string;
@@ -19,6 +21,8 @@ export type ContractAddress = {
   ERC20DAI: string;
   ERC20USDT: string;
   ERC20USDC: string;
+
+  ReceiveTestTokenContract: string;
 };
 
 export const KOVAN_ADDRESS: ContractAddress = {
@@ -40,33 +44,37 @@ export const KOVAN_ADDRESS: ContractAddress = {
   ERC20DAI: '0x113587939c8967e61aa2360613951b23ab2af49a',
   ERC20USDT: '0x97862b9ac658d800710a43286e076eac5e01a228',
   ERC20USDC: '0xc8c0278b371316fb3629a7c2c4e003cc296b5925',
+
+  ReceiveTestTokenContract: '',
 };
 
 export const BIAN_TEST_ADDRESS: ContractAddress = {
-  TradeDAIContract: '0x4b8a33Af1668cBAB99C4cF1401bf75e690A5C0ea', //
-  TradeUSDTContract: '',
-  TradeUSDCContract: '',
-  Lp1DAIContract: '0x1064cDe0B7B0B71dabdddCD57acAe3442FEF7539', //
-  Lp1USDTContract: '',
-  Lp1USDCContract: '',
-  Lp2DAIContract: '0xC51B9bcf391B8e3D5cf85AE56C3fc7C2D0297342', //
-  Lp2USDTContract: '',
-  Lp2USDCContract: '',
-  MiningRewardContract: '0xd3aC30353330FA928Aa2926310BB77fE6D21e11D', //
-  LiquidatorContract: '0xa2A3F80F0dbA70743cc57031990c9A0CfB7681A8', //
-  SwapBurnContract: '0x2B704446AF5aB018115Cb27250170a2dD8409Af0', //
-  BrokerContract: '0x8f14Be330aCB4227dcf80236A3842d3aC09A3672', //
+  TradeDAIContract: '0x7125E80fF9c5ae3073bf30769d0963B6d0B57515', //
+  TradeUSDTContract: '0x088EF7a6a8ff54898586cDF0C4098b3c4D5A5Fc7',
+  TradeUSDCContract: '0x6A0C9Ded5380f2Ab70A4dAE6152b3949102894a5',
+  Lp1DAIContract: '0xb3F55De3a56F15d6C94cF74753F52e447519E563', //
+  Lp1USDTContract: '0xd1F2fE3A94400493ab42C7E0b569f6100311e69c',
+  Lp1USDCContract: '0x8f662D0d0e1B58242C7a595D5645dF6bb0896A9f',
+  Lp2DAIContract: '0xaDea523A790b34CF6D0989a803262b2A38FD7cdA', //
+  Lp2USDTContract: '0x0DEc025B86aCd5307FE598495b084FcB5ab7871e',
+  Lp2USDCContract: '0xf4551686C5AD07FC955e3150099fB94CA2F883C5',
+  MiningRewardContract: '0x225CC02e4bCe7f6C40A2A1Bc8d30931C9D3d9E8b', //'0xb995604ded854D2068D57898e157675732C7B378', ////
+  LiquidatorContract: '0x223B7E1d8B671ef8E32452821c6FdbA63E766926', //
+  SwapBurnContract: '0xa4c039D6e22aE06373CAE3C1e652D4f36cd654C6', //
+  BrokerContract: '0x51dB4Ee3B8eB198968ef05D08211eBBE282be3F6', //
 
   ERC20DDS: '0xcD1ad28e73d8b37866d02Bc2217b86Eb0da34EaC', //
   ERC20DAI: '0x21160DcCF818c5D8df20AbfA1B937ea3Ba1bD451', //
-  ERC20USDT: '',
-  ERC20USDC: '',
+  ERC20USDT: '0x18104cfA6C4d9257040F542D93750b553a102d45',
+  ERC20USDC: '0x9E404218898Fb63Cac611D02BAF508A61215B2FE',
+
+  ReceiveTestTokenContract: '0x69FA54869e95f67A9b36f4aFF808B45De6347DE7',
 };
 
-export enum EthNetwork {
-  kovan = '42',
-  bianTest = '97',
-}
+export const ContractAddressByNetwork = {
+  [EthNetwork.bianTest]: BIAN_TEST_ADDRESS,
+  [EthNetwork.kovan]: KOVAN_ADDRESS,
+};
 
 export const CentralProto = window.location.protocol;
 export const CentralHost = CentralProto + '//shieldex.io';
@@ -74,7 +82,7 @@ export const CentralPort = {
   [EthNetwork.kovan]: '8090',
   [EthNetwork.bianTest]: '8095',
 };
-export const CentralPath = {
+export const CentralPath: Record<EthNetwork, INetworkKey> = {
   [EthNetwork.kovan]: 'kovan',
   [EthNetwork.bianTest]: 'bsctest',
 };

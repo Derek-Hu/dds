@@ -1,19 +1,17 @@
-import { Icon, Button } from 'antd';
+import { Icon, Button, Switch } from 'antd';
 import { Form, Row, Col, Select, Descriptions } from 'antd';
-import dayjs from 'dayjs';
 import styles from './locked.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import { percentage, multiple, isGreaterZero, format, truncated } from '../../util/math';
 import { Component } from 'react';
-import { getCurPrice } from '../../services/trade.service';
-import { getPrivateOrders, addPrivateOrderMargin } from '../../services/pool.service';
+import { getPrivateOrders, addPrivateOrderMargin, getIsUserRejectPrivateOrder } from '../../services/pool.service';
 import ColumnConvert from '../column-convert/index';
 import ModalRender from '../modal-render/index';
 import modalStyles from '../funding-balance/modals/style.module.less';
 import InputNumber from '../input/index';
 import { formatTime } from '../../util/time';
 import DTable from '../table/index';
-import settings from '../../constant/settings';
+import { contractAccessor } from '../../wallet/chain-access';
 
 interface IState {
   data: PrivatePoolOrder[];
@@ -26,7 +24,11 @@ interface IState {
   pageSize: number;
   initLoad: boolean;
   end: boolean;
+  isTakeOrder: boolean;
+  isTakeOrderChangeable: boolean;
+  isLoadingTakeOrder: boolean;
 }
+
 export default class Balance extends Component<any, IState> {
   state: IState = {
     data: [],
@@ -38,13 +40,26 @@ export default class Balance extends Component<any, IState> {
     pageSize: 50,
     initLoad: true,
     end: false,
+    isTakeOrder: true,
+    isTakeOrderChangeable: true,
+    isLoadingTakeOrder: true,
   };
 
   static contextType = SiteContext;
 
   async componentDidMount() {
     // this.loadData();
+    this.getIsTakingOrder();
   }
+
+  getIsTakingOrder = async () => {
+    const { isReject, isChangeable } = await getIsUserRejectPrivateOrder();
+    this.setState({
+      isTakeOrder: !isReject,
+      isLoadingTakeOrder: false,
+      isTakeOrderChangeable: isChangeable,
+    });
+  };
 
   loadPage = async (page: number, pageSize: number) => {
     return await getPrivateOrders(page, pageSize, true);
@@ -85,7 +100,7 @@ export default class Balance extends Component<any, IState> {
     column: {
       orderId: 'Order Id',
       time: 'Time',
-      coin: 'Type',
+      type: 'Type',
       amount: 'Amount',
       lockedAmount: 'Locked Amount',
       openPrice: 'Open Price',
@@ -101,7 +116,7 @@ export default class Balance extends Component<any, IState> {
         case 'openPrice':
           return format(value);
         case 'lockedAmount':
-          return `${format(value)} DAI`;
+          return `${format(value)} ${record.coin}`;
         case 'operation':
           return record.status === 'ACTIVE' ? (
             <Button type="link" onClick={() => this.orderModalVisible.show(record)}>
@@ -133,8 +148,16 @@ export default class Balance extends Component<any, IState> {
     });
   };
 
+  // checked === true: takingOrders; checked===false: rejectOrders;
+  onRejectOrderChange = (checked: boolean) => {
+    this.setState({ isLoadingTakeOrder: true });
+    contractAccessor.setPriPoolRejectOrder(!checked).subscribe(() => {
+      this.getIsTakingOrder();
+    });
+  };
+
   render() {
-    const { loading, end, initLoad, curPrice, data, modalVisible, addAmount, selectedItem } = this.state;
+    const { loading, end, initLoad, curPrice, data, modalVisible, addAmount, selectedItem, isTakeOrder } = this.state;
     return (
       <SiteContext.Consumer>
         {({ isMobile, account }) => {
@@ -146,7 +169,22 @@ export default class Balance extends Component<any, IState> {
           const marginTxt = isNaN(marginRate) ? '-' : marginRate + '%';
           return (
             <div className={styles.tableList}>
-              <h4>Liquidity Locked Detail</h4>
+              <h4>
+                Liquidity Locked Detail
+                <div className={styles.orderSwitch}>
+                  <span className={styles.stateTitle}>Taking Orders: </span>
+                  <span className={this.state.isTakeOrder ? styles.stateOff : styles.state}>OFF</span>
+                  <Switch
+                    disabled={!this.state.isTakeOrderChangeable}
+                    defaultChecked={true}
+                    checked={isTakeOrder}
+                    onChange={this.onRejectOrderChange}
+                    loading={this.state.isLoadingTakeOrder}
+                  />
+                  <span className={this.state.isTakeOrder ? styles.state : styles.stateOff}>ON</span>
+                </div>
+              </h4>
+
               <DTable hasMore={true} columns={this.columns} rowKey="orderId" loadPage={this.loadPage} />
               {/* {initLoad ? (
                 <>

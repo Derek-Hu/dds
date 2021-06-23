@@ -47,7 +47,7 @@ export default class TradeInfo extends Component<{ from: string; coin: IUSDCoins
       },
       liquidityRate: {
         label: 'Forced Liquidation Rate',
-        value: '2%',
+        value: '1%',
       },
       type: {
         label: 'Type',

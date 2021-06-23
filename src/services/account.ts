@@ -1,12 +1,12 @@
 import { walletManager } from '../wallet/wallet-manager';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
-import { combineLatest, NEVER, Observable, of, zip } from 'rxjs';
+import { combineLatest, NEVER, Observable, of, Subject, zip } from 'rxjs';
 import { contractAccessor } from '../wallet/chain-access';
 import { CoinBalance } from '../wallet/contract-interface';
 import { toEthers } from '../util/ethers';
 import { Wallet } from '../constant';
-import { EthNetwork } from '../constant/address';
+import { EthNetwork } from '../constant/network';
 
 /**
  * 用户是否已经连接账户地址
@@ -45,19 +45,6 @@ export const initTryConnect = async (): Promise<boolean> => {
     .toPromise();
 };
 
-export const curUserAccount = async (): Promise<string | null> => {
-  // return walletManager
-  //   .watchWalletInstance()
-  //   .pipe(
-  //     switchMap((wallet: WalletInterface | null) => {
-  //       return wallet === null ? of(null) : wallet.watchAccount();
-  //     }),
-  //     take(1)
-  //   )
-  //   .toPromise();
-  return loginUserAccount();
-};
-
 /**
  * 登陆后得到用户地址，连接前阻塞不返回
  */
@@ -86,6 +73,7 @@ export const userAccountInfo = async (): Promise<IAccount> => {
         return wallet === null ? NEVER : combineLatest([wallet.watchAccount(), wallet.watchNetwork()]);
       }),
       switchMap(([account, network]: [string, EthNetwork]) => {
+        //console.log("account or network", account, network);
         return contractAccessor.getUserSelfWalletBalance(account).pipe(
           map((balances: CoinBalance[]) => {
             return {
@@ -148,13 +136,38 @@ export const getNetworkAndAccount = async (old?: {
     .toPromise();
 };
 
-// 循环等待账号或连接网络变化
+/**
+ * 切换网络
+ * @param id - chain id
+ */
+export const switchNetwork = async (id: EthNetwork): Promise<boolean> => {
+  return walletManager
+    .watchWalletInstance()
+    .pipe(
+      switchMap(wallet => {
+        return wallet === null ? of(false) : wallet.switchNetwork(id);
+      }),
+      take(1)
+    )
+    .toPromise();
+};
 
-// let old: { network: EthNetwork, account: string } | undefined = undefined;
-// const callback = (info: { network: EthNetwork, account: string }) => {
-//   old = info;
-//   console.log("get acc info", info);
-//   getNetworkAndAccount(old).then(callback);
-// }
-//
-// getNetworkAndAccount(old).then(callback);
+// 获取此刻用户账户地址
+export const getCurUserAccount = function (): string | null {
+  const wallet: WalletInterface | null = walletManager.getCurWalletInstance();
+  if (wallet === null) {
+    return null;
+  }
+
+  return wallet.getAccount();
+};
+
+// 获取此刻的网络类型
+export const getCurNetwork = function (): EthNetwork | null {
+  const wallet: WalletInterface | null = walletManager.getCurWalletInstance();
+  if (wallet === null) {
+    return null;
+  }
+
+  return wallet.getNetwork();
+};

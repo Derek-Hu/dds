@@ -2,16 +2,20 @@ import { infoItems } from './mock/trade.mock';
 import { walletManager } from '../wallet/wallet-manager';
 import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
-import { AsyncSubject, from, of, zip } from 'rxjs';
+import { AsyncSubject, from, Observable, of, zip } from 'rxjs';
 import { contractAccessor } from '../wallet/chain-access';
 import { ConfirmInfo, UserAccountInfo } from '../wallet/contract-interface';
 import { BigNumber } from 'ethers';
 import { ETH_WEI, toEthers, toExchangePair } from '../util/ethers';
 import * as request from 'superagent';
-import { withLoading } from './utils';
-import { getNetworkAndAccount, loginUserAccount } from './account';
+import { loadingObs, withLoading } from './utils';
+import { getCurNetwork, getCurUserAccount, getNetworkAndAccount, loginUserAccount } from './account';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
-import { CentralHost, CentralPath, CentralPort, CentralProto, EthNetwork } from '../constant/address';
+import { CentralHost, CentralPath, CentralPort, CentralProto } from '../constant/address';
+import { LocalStorageKeyPrefix } from '../constant';
+import { getLocalStorageKey } from '../util/string';
+import { readTradeSetting } from './local-storage.service';
+import { EthNetwork } from '../constant/network';
 
 /**
  * Trade Page
@@ -199,18 +203,18 @@ export const getTradeInfo = async (coin: IUSDCoins): Promise<ITradeInfo[]> => {
 };
 
 export const getTradeLiquidityPoolInfo = async (coin: IUSDCoins): Promise<ITradePoolInfo> => {
-  // if(process.env.NODE_ENV === 'development'){
-  //   return returnVal({
-  //     public: {
-  //       value: 100000000.12,
-  //       total: 1234567890.1235,
-  //     },
-  //     private: {
-  //       value: 10232003222,
-  //       total: 30232003222,
-  //     }
-  //   })
-  // }
+  if (process.env.NODE_ENV === 'development') {
+    return returnVal({
+      public: {
+        value: 100000000.12,
+        total: 1234567890.1235,
+      },
+      private: {
+        value: 10232003222,
+        total: 30232003222,
+      },
+    });
+  }
   const obs = [contractAccessor.getPubPoolInfo(coin), contractAccessor.getPrivatePoolInfo(coin)];
   return zip(...obs)
     .pipe(
@@ -226,16 +230,44 @@ export const getTradeLiquidityPoolInfo = async (coin: IUSDCoins): Promise<ITrade
 };
 
 export const deposit = async (amount: IRecord): Promise<boolean> => {
-  const result: Promise<boolean> = from(loginUserAccount())
+  let userAccount: string | null = null;
+
+  return from(loginUserAccount())
     .pipe(
-      switchMap(account => {
-        return contractAccessor.depositToken(account, amount.amount, amount.coin);
+      switchMap((account: string) => {
+        userAccount = account;
+        return contractAccessor.needApproveUSDFunding(amount.amount, account, amount.coin);
+      }),
+      switchMap((needApprove: boolean) => {
+        if (needApprove) {
+          const doApprove: Observable<boolean> = contractAccessor.approveUSDFunding(amount.coin);
+          return loadingObs(doApprove, 'Approve Failed!', 'Approving...', true);
+        } else {
+          return of(true);
+        }
+      }),
+      switchMap((approved: boolean) => {
+        if (userAccount && approved) {
+          const depObs: Observable<boolean> = contractAccessor.depositToken(userAccount, amount.amount, amount.coin);
+          return loadingObs(depObs, 'Deposit Failed!', 'Depositing');
+        } else {
+          return of(false);
+        }
       }),
       take(1)
     )
     .toPromise();
 
-  return withLoading(result);
+  // const result: Promise<boolean> = from(loginUserAccount())
+  //   .pipe(
+  //     switchMap(account => {
+  //       return contractAccessor.depositToken(account, amount.amount, amount.coin);
+  //     }),
+  //     take(1)
+  //   )
+  //   .toPromise();
+  //
+  // return withLoading(result);
 };
 
 export const withdraw = async (amount: IRecord): Promise<boolean> => {
@@ -259,8 +291,13 @@ export const getCurPrice = async (coin: IUSDCoins): Promise<number> => {
  * @param tradeType
  * @param amount - eth的数量
  */
-export const openOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: number): Promise<boolean> => {
-  const res: Promise<string> = createOrder(coin, tradeType, amount);
+export const openOrder = async (
+  coin: IUSDCoins,
+  tradeType: ITradeType,
+  amount: number,
+  curPrice: number
+): Promise<boolean> => {
+  const res: Promise<string> = createOrder(coin, tradeType, amount, curPrice);
 
   const toBoolean = (a: Promise<string>) =>
     from(a)
@@ -279,15 +316,28 @@ export const openOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: 
  * @param coin - 交易对
  * @param tradeType - 下单类型
  * @param amount  - eth的数量
+ * @param curPrice - 用户认可的当前价格
  * @returns - 交易hash，如果下单失败，将返回空字符串 ''
  */
-export const createOrder = async (coin: IUSDCoins, tradeType: ITradeType, amount: number): Promise<string> => {
-  const inviteAddress: string | null = localStorage.getItem('referalCode');
-  // if(process.env.NODE_ENV === 'development'){
-  //   return Promise.resolve(`${Math.random()}`);
-  // }
+export const createOrder = async (
+  coin: IUSDCoins,
+  tradeType: ITradeType,
+  amount: number,
+  curPrice: number
+): Promise<string> => {
+  const inviteAddress: string | null = localStorage.getItem(LocalStorageKeyPrefix.ReferalCode);
+  const setting: TradeSetting | null = readTradeSetting();
+
+  let slider = 1;
+  let timeout = 20 * 60;
+
+  if (setting) {
+    slider = setting.tolerance;
+    timeout = setting.deadline * 60;
+  }
+
   const res: Promise<string> = contractAccessor
-    .createContract(coin, tradeType, amount, inviteAddress)
+    .createContract(coin, tradeType, amount, curPrice, inviteAddress, slider, timeout)
     .pipe(take(1))
     .toPromise();
 
@@ -302,11 +352,16 @@ export const closeOrder = async (order: ITradeRecord, closePrice: number): Promi
   return withLoading(contractAccessor.closeContract(order).pipe(take(1)).toPromise());
 };
 
+const NetworkChains: Partial<Record<IFromCoins, INetworkChain>> = {
+  BNB: 'binancecoin',
+  ETH: 'ethereum',
+};
+
 export const getPriceGraphData = (
   coins: { from: IFromCoins; to: IUSDCoins },
-  duration: IGraphDuration,
-  network: 'binancecoin' | 'ethereum' = 'ethereum'
+  duration: IGraphDuration
 ): Promise<IPriceGraph> => {
+  const network = NetworkChains[coins.from];
   const days = duration === 'day' ? 1 : duration === 'week' ? 7 : 30;
   const url = `https://api.coingecko.com/api/v3/coins/${network}/market_chart?vs_currency=USD&days=` + days;
   const rs = new AsyncSubject<IPriceGraph>();
@@ -326,6 +381,8 @@ export const getPriceGraphData = (
       };
       rs.next(dataRs);
       rs.complete();
+    } else {
+      rs.error(err);
     }
   });
   return rs.toPromise();
@@ -348,11 +405,55 @@ export const confirmOrder = async (amount: number, coin: IUSDCoins, type: ITrade
       map((info: ConfirmInfo) => {
         return {
           curPrice: Number(toEthers(info.currentPrice, 4, coin)),
-          settlementFee: Number(toEthers(info.exchgFee, 6, coin)),
-          fundingFeeLocked: Number(toEthers(info.openFee, 6, coin)),
+          settlementFee: Number(toEthers(info.exchgFee, 3, coin)),
+          fundingFeeLocked: Number(toEthers(info.openFee, 3, coin)),
         };
       }),
       take(1)
     )
     .toPromise();
+};
+
+const getOrderStatusFun = (hash: string): Observable<IOrderPendingResult> => {
+  return from(getNetworkAndAccount()).pipe(
+    switchMap(({ account, network }) => {
+      const baseHost: string =
+        CentralProto === 'https:'
+          ? CentralHost + '/' + CentralPath[network]
+          : CentralHost + ':' + CentralPort[network] + '/' + CentralPath[network];
+      const url: string = baseHost + '/transactions/getTxState';
+
+      return from(request.post(url).send({ txHash: hash })).pipe(
+        map(res => {
+          return 'pending' as IOrderPendingResult;
+        })
+      );
+    }),
+    take(1)
+  );
+};
+
+/**
+ * 获取pending状态的变化
+ */
+export const getOrderStatus = async (hash: string): Promise<IOrderPendingResult> => {
+  return getOrderStatusFun(hash).toPromise();
+};
+
+/**
+ *
+ * @param hashArr
+ */
+export const getOrderListStatus = (hashArr: string[]): Observable<{ hash: string; status: IOrderPendingResult }[]> => {
+  const obs = (one: string) =>
+    getOrderStatusFun(one).pipe(
+      map((status): { hash: string; status: IOrderPendingResult } => {
+        return {
+          hash: one,
+          status,
+        };
+      })
+    );
+
+  return zip(hashArr.map(obs)).pipe(take(1));
 };

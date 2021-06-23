@@ -92,7 +92,7 @@ export default class PoolArea extends Component<any, IState> {
         {({ isMobile }) => {
           return (
             <div className={styles.root}>
-              <h1>Swap & burn</h1>
+              <h2>SWAP & BURN</h2>
               <div className={styles.card}>
                 <div className={styles.imgBar}>
                   <SwapBar

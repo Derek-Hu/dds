@@ -30,7 +30,7 @@ declare type IFromCoins = 'ETH' | 'BTC' | 'BNB';
 declare type ISLD = 'SLD';
 declare type IUSDCoins = 'DAI' | 'USDT' | 'USDC';
 declare type IReUSDCoins = 'reDAI' | 'reUSDT' | 'reUSDC';
-declare type IExchangeStr = 'ETHDAI' | 'EHTUSDT' | 'ETHUSDC' | 'BTCDAI' | 'BTCUSDT' | 'BTCUSDC' | 'BNBDAI';
+declare type IExchangeStr = 'ETHDAI' | 'EHTUSDT' | 'ETHUSDC' | 'BTCDAI' | 'BTCUSDT' | 'BTCUSDC';
 
 declare interface ExchangeCoinPair {
   USD: IUSDCoins;
@@ -53,6 +53,7 @@ declare interface IRecord {
  * Trade Order Status
  */
 declare type IOrderStatus = 'ACTIVE' | 'CLOSED';
+declare type IOrderPendingResult = 'success' | 'pending' | 'fail';
 
 /**
  * Trade Order 记录
@@ -168,7 +169,7 @@ declare interface IBrokerSpark {
 declare interface IBrokerReferal {
   bonus: number;
   level: string;
-  ranking: number;
+  ranking: string;
   referals: number;
 }
 
@@ -247,14 +248,25 @@ declare interface PrivatePoolOrder {
   userAddress: string;
   orderId: string;
   time: number;
+  type: ITradeType;
   amount: number;
   lockedAmount: number;
   status: IOrderStatus;
   openPrice: number;
   coin: IUSDCoins;
+  type?: string;
 }
+
+declare type INetworkKey = 'kovan' | 'bsctest' | 'bscmain';
+
+declare type INetworkChain = 'binancecoin' | 'ethereum';
 
 declare interface IRankings {
   top: Array<string>;
   current: number;
 }
+
+declare type TradeSetting = {
+  tolerance: number; // percent
+  deadline: number; // minute
+};

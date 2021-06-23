@@ -3,10 +3,13 @@ import HomeLayout from '../layouts/home.layout';
 import TradeLayout from '../layouts/trade.layout';
 import { RouteComponentProps } from 'react-router-dom';
 import SiteContext from './SiteContext';
-import { ddsBasePath } from '../constant/index';
-import { userAccountInfo, initTryConnect } from '../services/account';
-import { from, of, Subscription } from 'rxjs';
-import { reject } from 'lodash';
+import { ddsBasePath, DefaultKeNetwork, LocalStorageKeyPrefix } from '../constant/index';
+import { getNetworkAndAccount, initTryConnect, userAccountInfo } from '../services/account';
+import { CentralPath } from '../constant/address';
+import { accountEvents } from '../services/global-event.service';
+import { Subscription } from 'rxjs';
+import { getLocalStorageKey } from '../util/string';
+import { EthNetwork, NetworkKey } from '../constant/network';
 
 const RESPONSIVE_MOBILE = 768;
 
@@ -16,8 +19,10 @@ interface IState {
   address: string;
   connected: boolean | null;
   timestamp: number | null;
-  network: 'kovan' | 'main';
+  network: EthNetwork;
+  currentNetwork: INetworkKey;
 }
+
 // @ts-ignore
 let timer = null;
 
@@ -25,13 +30,24 @@ const isDDSPage = window.location.href.indexOf(ddsBasePath) === 0;
 export default class Layout extends Component<RouteComponentProps, IState> {
   static contextType = SiteContext;
 
-  state: IState = { network: 'kovan', connected: null, timestamp: null, isMobile: false, address: '', account: null };
+  state: IState = {
+    currentNetwork: DefaultKeNetwork,
+    network: EthNetwork.kovan,
+    connected: null,
+    timestamp: null,
+    isMobile: false,
+    address: '',
+    account: null,
+  };
+
+  private eventSub: Subscription | undefined;
 
   constructor(props: any) {
     super(props);
     // @ts-ignore
     window.globalRefresh = this.refreshPage;
   }
+
   componentDidMount() {
     if (isDDSPage) {
       this.tick();
@@ -39,6 +55,12 @@ export default class Layout extends Component<RouteComponentProps, IState> {
     }
     this.updateMobileMode();
     window.addEventListener('resize', this.updateMobileMode);
+
+    this.eventSub = accountEvents.watchAccountEvent().subscribe(() => {
+      if (this.state.connected) {
+        this.refreshPage();
+      }
+    });
   }
 
   connectTimeout = () => {
@@ -60,24 +82,36 @@ export default class Layout extends Component<RouteComponentProps, IState> {
         new Promise(resolve => {
           setTimeout(() => {
             resolve(null);
-          }, 1000);
+          }, 2000);
         }),
       ]);
       if (account) {
         this.updateAccount(account);
       }
     } catch (error) {
-      console.log(error);
+      console.warn(error);
     }
   };
 
+  switNetwork = async (currentNetwork: INetworkKey) => {
+    const { address } = this.state;
+    // @ts-ignore
+    const networkCode: EthNetwork = Object.keys(CentralPath).find(v => CentralPath[v as EthNetwork] === currentNetwork);
+    const switched = await getNetworkAndAccount({
+      network: networkCode,
+      account: address,
+    });
+    this.setState({
+      currentNetwork,
+    });
+    await this.refreshPage();
+  };
   tick = async () => {
     // let isConnected = null;
     // let hasError = false;
     try {
       const isConnected = await initTryConnect();
       const { connected, account } = this.state;
-
       if (isConnected !== connected || (connected === true && !account)) {
         this.setState({
           connected: isConnected,
@@ -104,6 +138,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
       this.tick();
     }, 5000);
   };
+
   componentWillUnmount() {
     // @ts-ignore
     if (timer) {
@@ -111,10 +146,15 @@ export default class Layout extends Component<RouteComponentProps, IState> {
       clearTimeout(timer);
     }
     window.removeEventListener('resize', this.updateMobileMode);
+
+    if (this.eventSub) {
+      this.eventSub.unsubscribe();
+      this.eventSub = undefined;
+    }
   }
 
   updateMobileMode = () => {
-    const { isMobile, network } = this.state;
+    const { isMobile } = this.state;
     const newIsMobile = window.innerWidth < RESPONSIVE_MOBILE;
     if (isMobile !== newIsMobile) {
       this.setState({
@@ -124,13 +164,22 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   };
 
   updateAccount = (account: IAccount) => {
-    const { network } = this.state;
+    const networkCode: EthNetwork = account?.network as EthNetwork;
+    // @ts-ignore
+    const networkKey = NetworkKey[networkCode] || DefaultKeNetwork;
     this.setState({
       account,
+      // @ts-ignore
+      currentNetwork: networkKey,
+      network: networkCode || EthNetwork.kovan,
       address: account && account.address ? account.address : '',
     });
     // @ts-ignore
-    window.PendingOrderCacheKey = `PendingOrdersHash-${account?.address}-${network}`;
+    window.PendingOrderCacheKey = getLocalStorageKey(
+      LocalStorageKeyPrefix.PendingOrdersHash,
+      account?.address || '',
+      networkKey
+    );
   };
 
   refreshPage = () => {
@@ -139,9 +188,10 @@ export default class Layout extends Component<RouteComponentProps, IState> {
       timestamp: new Date().getTime(),
     });
   };
+
   render() {
     const { children, location } = this.props;
-    const { isMobile, account, address, timestamp, connected } = this.state;
+    const { isMobile, account, address, currentNetwork, network, timestamp, connected } = this.state;
     const LayoutComp = location.pathname === '/home' ? HomeLayout : TradeLayout;
 
     return (
@@ -149,8 +199,13 @@ export default class Layout extends Component<RouteComponentProps, IState> {
         value={{
           updateAccount: this.updateAccount,
           refreshPage: this.refreshPage,
+          switNetwork: this.switNetwork,
           isMobile,
           connected,
+          network,
+          currentNetwork,
+          isBSC: currentNetwork === 'bscmain' || currentNetwork === 'bsctest',
+          // isBSC: process.env.NODE_ENV === 'development' ? true: currentNetwork === 'bscmain' || currentNetwork === 'bsctest',
           direction: 'ltr',
           // @ts-ignore
           timestamp,

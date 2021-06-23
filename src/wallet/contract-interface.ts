@@ -4910,12 +4910,54 @@ export const ERC20 = [
   },
 ];
 
+export interface ContractRead {
+  getUserSelfWalletBalance(address: string): Observable<CoinBalance[]>;
+
+  getUserSelfReTokenBalance(address: string): Observable<CoinBalance[]>;
+
+  priPoolUserBalance(address: string): Observable<PrivatePoolAccountInfo>;
+
+  /**
+   * 获取公池流动性质押的奖励（质押reToken）
+   *
+   * @param address
+   */
+  getReTokenLiquidityReward(address: string): Observable<PubPoolRewards>;
+
+  /**
+   * 公池流动性挖矿的质押信息
+   */
+  getPubPoolLiquidityShareInfo(address: string): Observable<PubPoolLockInfo>;
+}
+
+export interface ApprovalAction {
+  approveReToken(reToken: IReUSDCoins): Observable<boolean>;
+
+  needApproveReToken(amount: number, address: string, reToken: IReUSDCoins): Observable<boolean>;
+
+  approveUSDFunding(usdToken: IUSDCoins): Observable<boolean>;
+
+  needApproveUSDFunding(amount: number, address: string, usdToken: IUSDCoins): Observable<boolean>;
+
+  needApprovePubPool(amount: number, address: string, usdToken: IUSDCoins): Observable<boolean>;
+
+  approvePubPool(usdToken: IUSDCoins): Observable<boolean>;
+
+  needApprovePrivatePool(amount: number, address: string, usdToken: IUSDCoins): Observable<boolean>;
+
+  approvePrivatePool(usdToken: IUSDCoins): Observable<boolean>;
+}
+
+export interface ActivityItems {
+  claimTestToken(token: IUSDCoins): Observable<boolean>;
+
+  isTestTokenClaimed(userAddr: string, token: IUSDCoins): Observable<boolean>;
+}
+
 /**
  * 合约接口
  */
-export interface ContractProxy {
-  getUserSelfWalletBalance(address: string): Observable<CoinBalance[]>;
-
+export interface ContractProxy extends ContractRead, ApprovalAction, ActivityItems {
   //
 
   getPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber>;
@@ -4940,7 +4982,25 @@ export interface ContractProxy {
 
   confirmContract(exchangeStr: IExchangeStr, count: number, type: ITradeType): Observable<ConfirmInfo>;
 
-  createContract(coin: IUSDCoins, orderType: ITradeType, amount: number, inviter: string): Observable<string>;
+  /**
+   *
+   * @param coin
+   * @param orderType
+   * @param amount
+   * @param userPrice - 用户认可的价格
+   * @param inviter
+   * @param slider - 滑点价格百分比 8 === 8%
+   * @param timeout - 超时时常 1分钟 === 60
+   */
+  createContract(
+    coin: IUSDCoins,
+    orderType: ITradeType,
+    amount: number,
+    userPrice: number,
+    inviter: string,
+    slider: number,
+    timeout: number
+  ): Observable<string>;
 
   closeContract(orderId: ITradeRecord): Observable<boolean>;
 
@@ -4987,11 +5047,12 @@ export interface ContractProxy {
 
   priPoolBalanceOf(address: string): Observable<Map<IUSDCoins, BigNumber>>;
 
-  priPoolUserBalance(
-    address: string
-  ): Observable<{ total: CoinBalance[]; available: CoinBalance[]; locked: CoinBalance[] }>;
+  // priPoolBalanceWhole(): Observable<Map<IUSDCoins, BigNumber>>;
 
-  priPoolBalanceWhole(): Observable<Map<IUSDCoins, BigNumber>>;
+  /**
+   * @param isReject - 是否停止接单。true：停止接单；false：继续接单
+   */
+  setPriPoolRejectOrder(isReject: boolean): Observable<boolean>;
 
   //
 
@@ -4999,22 +5060,41 @@ export interface ContractProxy {
 
   getLiquidityMiningShare(address: string): Observable<CoinShare[]>;
 
+  /**
+   * @Deprecated
+   */
   getActiveLiquidityRewards(address: string): Observable<BigNumber>;
+
+  /**
+   * 质押reToken，储备流动性挖矿
+   * @param reToken
+   * @param reTokenAmount
+   */
+  lockReTokenForLiquidity(reToken: IReUSDCoins, reTokenAmount: number): Observable<boolean>;
+
+  unLockReTokenFromLiquidity(reToken: IReUSDCoins, reTokenAmount: number): Observable<boolean>;
+
+  claimRewardsForLP1(): Observable<boolean>;
+
+  //queryLockedReTokenAmount(): Observable<any>;
 
   claimRewardsForLP2(): Observable<boolean>;
 
   getSystemFundingBalance(): Observable<CoinBalance[]>;
 
-  getLiquiditorRewards(address: string): Observable<CoinBalance[]>;
+  getLiquiditorRewards(address: string): Observable<LiquditorRewardsResult>;
 
   getLiquiditorPeriod(): Observable<{ startTime: BigNumber; period: BigNumber }>;
 
   getLiquiditorRewardsOfPeriod(
-    address: string
+    address: string,
+    period: number
   ): Observable<{
     rewards: CoinBalance[];
     info: { extSLD: BigNumber; rank: BigNumber };
   }>;
+
+  getLiquiditorRatingList(period: number): Observable<string[]>;
 
   //
 
@@ -5029,6 +5109,8 @@ export interface ContractProxy {
   getBrokerMonthlyAwardsInfo(address: string): Observable<CoinBalance[]>;
 
   getBrokerMonthlyStartTime(): Observable<number>;
+
+  getBrokerMonthlyRewardPool(): Observable<CoinBalance[]>;
 
   doBrokerClaim(): Observable<boolean>;
 }
@@ -5076,4 +5158,43 @@ export interface ConfirmInfo {
 export interface ContractInfo {
   abi: any[];
   address: string;
+}
+
+export type LiquditorRewardsResult = {
+  usdRewards: CoinBalance[];
+  campaign: BigNumber;
+  compensate: BigNumber;
+  rank: BigNumber;
+};
+
+export interface PrivatePoolAccountInfo {
+  total: CoinBalance[];
+  available: CoinBalance[];
+  locked: CoinBalance[];
+  isRejectOrder: { coin: IUSDCoins; reject: boolean }[];
+}
+
+export interface PubPoolRewards {
+  available: BigNumber;
+  vesting: BigNumber;
+  unactivated: BigNumber;
+}
+
+export interface ReTokenAmountNum {
+  reDAI: BigNumber;
+  reUSDT: BigNumber;
+  reUSDC: BigNumber;
+}
+
+export interface LpTokenAmountNum {
+  lpDAI: BigNumber;
+  lpUSDT: BigNumber;
+  lpUSDC: BigNumber;
+}
+
+export interface PubPoolLockInfo {
+  lockedReToken: ReTokenAmountNum;
+  totalLockedReToken: ReTokenAmountNum;
+  lpToken: LpTokenAmountNum;
+  totalLpToken: LpTokenAmountNum;
 }

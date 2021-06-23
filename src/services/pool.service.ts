@@ -2,15 +2,16 @@ import { liquidityProvided } from './mock/pool.mock';
 import { contractAccessor } from '../wallet/chain-access';
 import { toEthers } from '../util/ethers';
 import { BigNumber } from 'ethers';
-import { catchError, map, switchMap, take } from 'rxjs/operators';
-import { curUserAccount, getNetworkAndAccount, loginUserAccount } from './account';
+import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
+import { getNetworkAndAccount, loginUserAccount } from './account';
 import { from, Observable, of, zip } from 'rxjs';
-import { withLoading } from './utils';
+import { loadingObs, withLoading } from './utils';
 import { defaultCoinDatas, defaultPoolData } from './mock/unlogin-default';
 import * as request from 'superagent';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
-import { CoinBalance } from '../wallet/contract-interface';
+import { CoinBalance, PrivatePoolAccountInfo } from '../wallet/contract-interface';
 import { CentralHost, CentralPath, CentralPort, CentralProto } from '../constant/address';
+import { queryMan } from '../wallet/state-manager';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   if (process.env.NODE_ENV === 'development') {
@@ -107,7 +108,7 @@ export const getCollaborativeShareInPool = async (): Promise<IPoolShareInPool[]>
 /** Done */
 export const getPrivateSharePool = async (): Promise<ICoinItem[]> => {
   const getSharePool = (account: string): Observable<ICoinItem[]> => {
-    return contractAccessor.priPoolUserBalance(account).pipe(
+    return queryMan.priPoolUserBalance(account).pipe(
       map(rs => {
         return rs.total.map(one => {
           const availableNum: BigNumber = rs.available.filter(c => c.coin === one.coin)[0].balance;
@@ -121,10 +122,31 @@ export const getPrivateSharePool = async (): Promise<ICoinItem[]> => {
     );
   };
 
-  return from(curUserAccount())
+  return from(loginUserAccount())
     .pipe(
       switchMap((account: string | null) => {
         return account === null ? of(defaultPoolData) : getSharePool(account);
+      }),
+      take(1)
+    )
+    .toPromise();
+};
+
+// 获取私池是否接单的状态
+export const getIsUserRejectPrivateOrder = async (): Promise<{ isReject: boolean; isChangeable: boolean }> => {
+  return from(loginUserAccount())
+    .pipe(
+      switchMap((account: string) => {
+        return queryMan.priPoolUserBalance(account);
+      }),
+      map((info: PrivatePoolAccountInfo) => {
+        const daiBalanceInfo = info.total.filter(one => one.coin === 'DAI');
+        const daiAmount: number = Number(toEthers(daiBalanceInfo[0].balance, 6, 'DAI'));
+        const isChangeable: boolean = daiAmount > 0;
+        const rejectInfo = info.isRejectOrder.filter(one => one.coin === 'DAI');
+        const isReject = rejectInfo[0].reject;
+
+        return { isReject, isChangeable };
       }),
       take(1)
     )
@@ -180,15 +202,33 @@ export const doCollaborativeDeposit = async ({
   coin: IUSDCoins;
   amount: number;
 }): Promise<boolean> => {
-  const result: Promise<boolean> = from(loginUserAccount())
+  let userAccount: string | null = null;
+
+  return from(loginUserAccount())
     .pipe(
-      switchMap(account => {
-        return contractAccessor.provideToPubPool(account, coin, amount);
+      switchMap((account: string) => {
+        userAccount = account;
+        return contractAccessor.needApprovePubPool(amount, account, coin);
+      }),
+      switchMap((need: boolean) => {
+        if (need) {
+          const doApprove: Observable<boolean> = contractAccessor.approvePubPool(coin);
+          return loadingObs(doApprove, 'Approve Failed!', 'Approving...', true);
+        } else {
+          return of(true);
+        }
+      }),
+      switchMap((approved: boolean) => {
+        if (userAccount && approved) {
+          const depositObs: Observable<boolean> = contractAccessor.provideToPubPool(userAccount, coin, amount);
+          return loadingObs(depositObs, 'Deposit Failed!', 'Depositing...');
+        } else {
+          return of(false);
+        }
       }),
       take(1)
     )
     .toPromise();
-  return await withLoading(result);
 };
 
 export const doPoolWithdraw = async ({
@@ -229,16 +269,32 @@ export const doCollaborativeWithdraw = async ({
  * @param amount - DAI的数量
  */
 export const doPrivateDeposit = async ({ coin, amount }: { coin: IUSDCoins; amount: number }): Promise<boolean> => {
-  const result: Promise<boolean> = from(loginUserAccount())
+  let userAccount: string | null = null;
+
+  return from(loginUserAccount())
     .pipe(
       switchMap(account => {
-        return contractAccessor.provideToPrivatePool(account, coin, amount);
+        userAccount = account;
+        return contractAccessor.needApprovePrivatePool(amount, account, coin);
       }),
-      take(1)
+      switchMap((need: boolean) => {
+        if (need) {
+          const approveObs = contractAccessor.approvePrivatePool(coin);
+          return loadingObs(approveObs, 'Approve Failed!', 'Approving...', true);
+        } else {
+          return of(true);
+        }
+      }),
+      switchMap((approved: boolean) => {
+        if (userAccount && approved) {
+          const depositObs = contractAccessor.provideToPrivatePool(userAccount, coin, amount);
+          return loadingObs(depositObs, 'Deposit Failed!', 'Depositing...');
+        } else {
+          return of(false);
+        }
+      })
     )
     .toPromise();
-
-  return withLoading(result);
 };
 
 /**
@@ -304,6 +360,7 @@ export const getPrivateOrders = async (
         }
       }),
       catchError(err => {
+        console.warn('error when get private orders', err);
         return of([]);
       }),
       take(1)
@@ -366,7 +423,7 @@ export const getPrivateLiquidityBalance = async (): Promise<
   return from(loginUserAccount())
     .pipe(
       switchMap(account => {
-        return contractAccessor.priPoolUserBalance(account);
+        return queryMan.priPoolUserBalance(account);
       }),
       map(allBalances => {
         const res = {
@@ -380,7 +437,7 @@ export const getPrivateLiquidityBalance = async (): Promise<
         });
         allBalances.available.forEach(balance => {
           const coin: IUSDCoins = balance.coin as IUSDCoins;
-          res[coin]['maxWithdraw'] = Number(toEthers(balance.balance, 4));
+          res[coin]['maxWithdraw'] = Number(toEthers(balance.balance, 2));
         });
 
         return res;

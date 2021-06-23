@@ -6,13 +6,11 @@ import {
   getLiquiditorBalanceRecord,
   claimLiquidityLocked,
 } from '../../../services/mining.service';
-import { Visible } from '../../builtin/hidden';
 import SiteContext from '../../../layouts/SiteContext';
 import Auth, { Public } from '../../builtin/auth';
 import { format, isGreaterZero } from '../../../util/math';
 import ModalRender from '../../modal-render/index';
 import ColumnConvert from '../../column-convert/index';
-import dayjs from 'dayjs';
 import Placeholder from '../../placeholder/index';
 import { formatTime } from '../../../util/time';
 

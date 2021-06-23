@@ -8,6 +8,14 @@ export enum Wallet {
   WalletConnect = 'Wallet Connect',
 }
 
+export const DefaultKeNetwork: INetworkKey = 'kovan';
+
+export const NetWork2Coin: Record<INetworkKey, IFromCoins> = {
+  bscmain: 'ETH',
+  bsctest: 'ETH',
+  kovan: 'ETH',
+};
+
 export const ddsBasePath = `${window.location.origin}${settings.pathname}/dds.html#`;
 export const homeBasePath = `${window.location.origin}${settings.pathname}/index.html#`;
 
@@ -93,3 +101,10 @@ export const CoinBTCExchange = new Map<IUSDCoins, IExchangeStr>([
 
 export type ISupporttedUSD = keyof typeof SupporttedUSD;
 export type ICoins = keyof typeof SupporttedCoins;
+
+// 本地存储的key前缀
+export enum LocalStorageKeyPrefix {
+  TradeSetting = 'ShieldTradeSetting',
+  PendingOrdersHash = 'PendingOrdersHash',
+  ReferalCode = 'referalCode',
+}

@@ -1,21 +1,13 @@
 import { Component } from 'react';
-import { Icon, Tabs, Row, Col, Input, Button, Table } from 'antd';
-import CardInfo from '../../card-info/index';
-import { getBrokerCampaignRewardData, getBrokerCampaignRewardsPool } from '../../../services/broker.service';
-import ModalRender from '../../modal-render/index';
-import ColumnConvert from '../../column-convert/index';
-import dayjs from 'dayjs';
-import styles from '../style.module.less';
 import { format } from '../../../util/math';
+import SiteContext, { ISiteContextProps } from '../../../layouts/SiteContext';
+import { getBrokerCampaignRewardData } from '../../../services/broker.service';
+import styles from './campaign-rewards.module.less';
+import Placeholder from '../../placeholder';
+import { Table } from 'antd';
+import ModalRender from '../../modal-render';
+import ColumnConvert from '../../column-convert';
 import { formatTime } from '../../../util/time';
-
-interface IState {
-  data: Array<{ label: string; value: number }>;
-  loading: boolean;
-  visible: boolean;
-  tableLoading: boolean;
-  tableData: Array<IBrokerCampaignRecord>;
-}
 
 const CommissionColumns = ColumnConvert<IBrokerCampaignRecord, {}>({
   column: {
@@ -42,78 +34,99 @@ const CommissionColumns = ColumnConvert<IBrokerCampaignRecord, {}>({
   },
 });
 
-export default class CampaignRewards extends Component<any, IState> {
-  state: IState = {
-    data: [],
-    loading: false,
-    visible: false,
-    tableLoading: false,
-    tableData: [],
+export default class CampaignRewards extends Component {
+  state = {
+    isLoading: true,
+    rewardAmount: {
+      DAI: 0,
+      USDT: 0,
+      USDC: 0,
+    },
+    recordsVisible: false,
   };
 
-  setModalVisible = (key: 'visible') => {
-    return {
-      show: () =>
-        this.setState({
-          [key]: true,
-        }),
-      hide: () =>
-        this.setState({
-          [key]: false,
-        }),
-    };
+  public componentDidMount = () => {
+    this.loadRewardAmount();
   };
 
-  visible = this.setModalVisible('visible');
+  private loadRewardAmount() {
+    getBrokerCampaignRewardData().then((coinItems: ICoinItem[]) => {
+      const reducer = (amount: any, item: ICoinItem) => {
+        amount[item.coin] = item.amount;
+        return amount;
+      };
+      const rewardAmount = coinItems.reduce(reducer, {});
 
-  async componentDidMount() {
-    this.setState({ loading: true });
-
-    const data = await getBrokerCampaignRewardData();
-    this.setState({
-      data: data
-        ? data.map(({ value, coin }) => ({
-            label: coin,
-            value,
-          }))
-        : [],
+      this.setState({ rewardAmount, isLoading: false });
     });
-    this.setState({ loading: false });
-
-    this.tableLoad();
   }
 
-  tableLoad = async (page = 1) => {
-    this.setState({ tableLoading: true });
-
-    const tableData = await getBrokerCampaignRewardsPool();
-    this.setState({
-      tableData,
-    });
-    this.setState({ tableLoading: false });
+  public setModelVisible = (visible: boolean) => {
+    this.setState({ recordsVisible: visible });
   };
 
   render() {
-    const { data, loading, visible, tableData } = this.state;
-    return loading ? null : (
-      <div>
-        <CardInfo isNumber={true} loading={false} theme="inner" title="Campaign Rewards" items={data}>
-          <Button type="link" onClick={this.visible.show}>
-            Rewards Record
-          </Button>
-        </CardInfo>
+    const rs = (
+      <SiteContext.Consumer>
+        {({ isMobile }: ISiteContextProps) => {
+          const rootClassName = [styles.root, isMobile ? styles.mobile : ''].join(' ');
 
-        <ModalRender
-          visible={visible}
-          title="Rewards Record"
-          className={styles.modal}
-          height={420}
-          onCancel={this.visible.hide}
-          footer={null}
-        >
-          <Table scroll={{ y: 300, x: 500 }} columns={CommissionColumns} pagination={false} dataSource={tableData} />
-        </ModalRender>
-      </div>
+          const card = (
+            <div className={rootClassName}>
+              <h2 className={styles.title}>Campaign Rewards</h2>
+
+              <div className={styles.content}>
+                <div className={styles.coinValue}>
+                  <span className={styles.label}>DAI</span>
+                  <span className={styles.val}>
+                    <Placeholder width={'100%'} loading={this.state.isLoading}>
+                      {format(this.state.rewardAmount.DAI)}
+                    </Placeholder>
+                  </span>
+                </div>
+                <div className={styles.coinValue}>
+                  <span className={styles.label}>USDT</span>
+                  <span className={styles.val}>
+                    <Placeholder width={'100%'} loading={this.state.isLoading}>
+                      {format(this.state.rewardAmount.USDT)}
+                    </Placeholder>
+                  </span>
+                </div>
+                <div className={styles.coinValue}>
+                  <span className={styles.label}>USDC</span>
+                  <span className={styles.val}>
+                    <Placeholder width={'100%'} loading={this.state.isLoading}>
+                      {format(this.state.rewardAmount.USDC)}
+                    </Placeholder>
+                  </span>
+                </div>
+              </div>
+
+              <div className={styles.rewardRecord}>
+                <span onClick={() => this.setModelVisible(true)}>Rewards Record</span>
+              </div>
+            </div>
+          );
+
+          return (
+            <div>
+              {card}
+              <ModalRender
+                visible={this.state.recordsVisible}
+                title="Rewards Record"
+                className={styles.modal}
+                height={420}
+                onCancel={() => this.setModelVisible(false)}
+                footer={null}
+              >
+                <Table scroll={{ y: 300, x: 500 }} columns={CommissionColumns} pagination={false} dataSource={[]} />
+              </ModalRender>
+            </div>
+          );
+        }}
+      </SiteContext.Consumer>
     );
+
+    return rs;
   }
 }
