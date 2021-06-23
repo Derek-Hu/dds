@@ -8,7 +8,7 @@ import Logo from '~/assets/imgs/logo.png';
 import LogoWhite from '~/assets/imgs/logo-white.png';
 import { homeBasePath, ddsBasePath } from '../../constant/index';
 import { isNumberLike } from '../../util/math';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 const { SubMenu } = Menu;
 

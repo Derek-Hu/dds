@@ -3,7 +3,7 @@ import styles from './style.module.less';
 import { ddsBasePath } from '../../constant';
 import SiteContext from '../../layouts/SiteContext';
 import { Visible, Hidden } from '../builtin/hidden';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 export default () => {
   return (

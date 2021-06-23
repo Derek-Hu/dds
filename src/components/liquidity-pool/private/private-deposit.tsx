@@ -10,7 +10,7 @@ import { doPrivateDeposit } from '../../../services/pool.service';
 import Auth, { Public } from '../../builtin/auth';
 import InputNumber from '../../input/index';
 import SiteContext from '../../../layouts/SiteContext';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 const { Option } = Select;
 interface IState {

@@ -19,7 +19,7 @@ import { isNumberLike, isNotZeroLike, format, isGreaterZero } from '../../util/m
 import Placeholder from '../placeholder/index';
 import InputNumber from '../input/index';
 import { formatTime } from '../../util/time';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 const { TabPane } = Tabs;
 const { Option } = Select;

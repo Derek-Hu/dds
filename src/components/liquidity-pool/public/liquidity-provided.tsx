@@ -3,7 +3,7 @@ import { Component } from 'react';
 import Pool from '../pool';
 import { getCollaborativeLiquidityProvided } from '../../../services/pool.service';
 import CoinCard from '../../card-info/coin-card';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 export default class LiquidityProvided extends Component {
   render() {

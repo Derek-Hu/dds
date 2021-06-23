@@ -10,7 +10,7 @@ import { getPriceGraphData } from '../../services/trade.service';
 import { format, isNumberLike } from '../../util/math';
 import Coin1 from '~/assets/imgs/coin1.png';
 import Coin2 from '~/assets/imgs/coin2.png';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 const { Option } = Select;
 

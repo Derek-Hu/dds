@@ -7,7 +7,7 @@ import { Hidden } from '../../builtin/hidden';
 import SiteContext from '../../../layouts/SiteContext';
 import Auth, { Public } from '../../builtin/auth';
 import Placeholder from '../../placeholder/index';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 interface IState {
   loading: boolean;

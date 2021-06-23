@@ -1,5 +1,5 @@
 import { Icon } from 'antd';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 interface ILink {
   link: string;

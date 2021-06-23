@@ -2,7 +2,7 @@ import { Tabs, Button, Row, Col, Select, Input } from 'antd';
 import { CustomTabKey, SupportedCoins } from '../../../constant/index';
 import styles from './style.module.less';
 import ModalRender from '../../modal-render/index';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 const { Option } = Select;
 

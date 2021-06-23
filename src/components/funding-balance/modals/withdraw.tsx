@@ -7,7 +7,7 @@ import SiteContext from '../../../layouts/SiteContext';
 import { Component } from 'react';
 import { format, isGreaterZero } from '../../../util/math';
 import InputNumber from '../../input/index';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 const title = formatMessage({ id: 'funding-fee-withdraw' });
 

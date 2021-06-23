@@ -15,7 +15,7 @@ import ColumnConvert from '../../column-convert/index';
 import dayjs from 'dayjs';
 import Placeholder from '../../placeholder/index';
 import { formatTime } from '../../../util/time';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 interface IState {
   loading: boolean;

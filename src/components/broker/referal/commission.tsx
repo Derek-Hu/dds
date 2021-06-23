@@ -8,7 +8,7 @@ import { format } from '../../../util/math';
 import { DefaultCoinDatas } from '../../../constant/index';
 import { formatTime } from '../../../util/time';
 import Placeholder from '../../placeholder/index';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 interface IState {
   data: Array<{ label: string; value: any }> | { [key: string]: number };

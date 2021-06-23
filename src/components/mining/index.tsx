@@ -19,7 +19,7 @@ import ReTokenBalance from './liquidity/re-token-balance';
 // import SystemFundBalance from './liquiditor/system-fund-balance';
 import YourMiningShare from './liquidity/your-mining-share';
 import { formatTime } from '../../util/time';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 // const { Option } = Select;
 const { TabPane } = Tabs;

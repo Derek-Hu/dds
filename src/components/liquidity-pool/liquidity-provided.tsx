@@ -2,7 +2,7 @@ import SiteContext from '../../layouts/SiteContext';
 import { Component } from 'react';
 import Pool from './pool';
 import { getCollaborativeLiquidityProvided } from '../../services/pool.service';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 interface IState {
   data: Array<{ label: string; value: number }>;

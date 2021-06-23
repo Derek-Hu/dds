@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 import { getCollaborativeShareInPool } from '../../../services/pool.service';
 import CoinProgress from '../../card-info/coin-progress';
 

@@ -26,7 +26,15 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "noFallthroughCasesInSwitch": true,
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "paths": {
+      "~/*": [
+        "src/*"
+      ],
+      "locale/*": [
+        "src/locale/*"
+      ]
+    }
   },
   "linterOptions": {
     "exclude": [

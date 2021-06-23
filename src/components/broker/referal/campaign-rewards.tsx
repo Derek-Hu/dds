@@ -7,7 +7,7 @@ import ColumnConvert from '../../column-convert/index';
 import styles from '../style.module.less';
 import { format } from '../../../util/math';
 import { formatTime } from '../../../util/time';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 interface IState {
   data: Array<{ label: string; value: number }>;

@@ -2,7 +2,7 @@ import { PureComponent } from 'react';
 import { Table, Icon, Button } from 'antd';
 import Placeholder from '../placeholder/index';
 import SiteContext from '../../layouts/SiteContext';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 interface IState {
   data: PrivatePoolOrder[];

@@ -12,7 +12,7 @@ import Auth from '../../builtin/auth';
 import { Hidden } from '../../builtin/hidden';
 import Placeholder from '../../placeholder/index';
 import InputNumber from '../../input/index';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 const { Option } = Select;
 

@@ -4,7 +4,7 @@ import styles from '../campion-pool.module.less';
 import PoolProgress from '../../progress-bar/pool-progress';
 import { IIndicatorProgress } from '../../progress-bar/with-indicator';
 import { dividedPecent } from '../../../util/math';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 interface IState {
   data: Array<IIndicatorProgress>;

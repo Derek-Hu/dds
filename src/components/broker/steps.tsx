@@ -6,7 +6,7 @@ import SiteContext from '../../layouts/SiteContext';
 import BrokerIcon1 from '~/assets/imgs/broker-icon1.png';
 import BrokerIcon2 from '~/assets/imgs/broker-icon2.png';
 import BrokerIcon3 from '~/assets/imgs/broker-icon3.png';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 // const percentages = {
 //   center: 30,

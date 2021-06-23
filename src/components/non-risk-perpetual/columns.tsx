@@ -1,7 +1,7 @@
 import ColumnConvert from '../column-convert/index';
 import styles from './style.module.less';
 import { ICoins, ddsBasePath } from '../../constant';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 export default ColumnConvert<INonRiskPerpetual, { coin: any; action: any }>({
   column: {

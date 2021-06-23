@@ -1,5 +1,5 @@
 import PoolProgress, { IMiningShare } from '../progress-bar/pool-progress';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 const data: IMiningShare = {
   title: formatMessage({ id: 'your-liquidity-mining-share' }),

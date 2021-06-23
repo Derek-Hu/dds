@@ -18,7 +18,7 @@ import { format, isGreaterZero, truncated, isNumberLike, divide } from '../../ut
 import InputNumber from '../input/index';
 import Placeholder from '../placeholder/index';
 import { setPendingOrders } from '../../util/order-cache';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 interface IState {
   depositVisible: boolean;

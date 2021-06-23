@@ -4,7 +4,7 @@ import success from '../../assets/images/success.png';
 import pending from '../../assets/images/pending.png';
 import fail from '../../assets/images/fail.png';
 import ReactDOM from 'react-dom';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 export default {
   dom: null,

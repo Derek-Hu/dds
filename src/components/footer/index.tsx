@@ -2,7 +2,7 @@ import { Row, Col, message } from 'antd';
 import styles from './style.module.less';
 import links from './links';
 import Logo from '~/assets/imgs/logo-white.png';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 export default () => {
   return (

@@ -4,7 +4,7 @@ import Icon3 from '~/assets/imgs/icon3.png';
 import Icon4 from '~/assets/imgs/icon4.png';
 import Icon5 from '~/assets/imgs/icon5.png';
 import Icon6 from '~/assets/imgs/icon6.png';
-import { formatMessage } from 'util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 export const datasourceOne = [
   {

@@ -3,7 +3,7 @@ import { Icon, Modal, Button, Checkbox } from 'antd';
 import LiquidityPool from '../components/liquidity-pool/index';
 import styles from './style.module.less';
 import SiteContext from '../layouts/SiteContext';
-import { formatMessage } from '../util/i18n';
+import { formatMessage } from 'locale/i18n';
 
 const cacheKey = 'dontShowAgain';
 const cacheVal = 'Y';
