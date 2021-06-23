@@ -754,6 +754,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       }),
       map((rs: BigNumber[]) => {
         return { coin: 'DAI' as IUSDCoins, time: (rs[0].toNumber() + addition) * 1000 }; // 转毫秒
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of({ coin: 'DAI' as IUSDCoins, time: 0 });
       })
     );
     const usdt$ = of({ coin: 'USDT' as IUSDCoins, time: 0 });
@@ -1111,6 +1115,31 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
             lpUSDC: rs.totalShareUSDC,
           },
         };
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of({
+          lockedReToken: {
+            reDAI: BigNumber.from(0),
+            reUSDT: BigNumber.from(0),
+            reUSDC: BigNumber.from(0),
+          },
+          totalLockedReToken: {
+            reDAI: BigNumber.from(0),
+            reUSDT: BigNumber.from(0),
+            reUSDC: BigNumber.from(0),
+          },
+          lpToken: {
+            lpDAI: BigNumber.from(0),
+            lpUSDT: BigNumber.from(0),
+            lpUSDC: BigNumber.from(0),
+          },
+          totalLpToken: {
+            lpDAI: BigNumber.from(0),
+            lpUSDT: BigNumber.from(0),
+            lpUSDC: BigNumber.from(0),
+          },
+        });
       })
     );
   }
@@ -1268,6 +1297,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       }),
       map((rs: BigNumber[]) => {
         return rs[0];
+      }),
+      catchError(err => {
+        console.log('error', err);
+        return of(BigNumber.from(0));
       })
     );
     const usdt$ = of(BigNumber.from(0));
@@ -1628,7 +1661,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
 
   protected abstract getSigner(): ethers.Signer | undefined;
 
-  protected abstract getNetwork(): Observable<EthNetwork>;
+  public abstract getNetwork(): Observable<EthNetwork>;
 }
 
 /**
@@ -1758,7 +1791,7 @@ class MetamaskContractAccessor extends BaseTradeContractAccessor {
     return of(('ETH' + coin) as IExchangeStr);
   }
 
-  protected getNetwork(): Observable<EthNetwork> {
+  public getNetwork(): Observable<EthNetwork> {
     return walletManager
       .getMetamaskIns()
       .watchNetwork()
@@ -1819,6 +1852,12 @@ export class ContractAccessor implements ContractProxy {
     return this.curAccessor.pipe(
       filter((a: BaseTradeContractAccessor | null) => a !== null),
       map(a => a as BaseTradeContractAccessor),
+      switchMap(a => {
+        return a.getNetwork().pipe(
+          filter(network => network === EthNetwork.bianTest),
+          map(() => a) // TODO optimize
+        );
+      }),
       take(1)
     );
   }
@@ -1928,7 +1967,7 @@ export class ContractAccessor implements ContractProxy {
   }
 
   public watchPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber> {
-    return this.watchContractAccessor().pipe(
+    return this.accessor.pipe(
       switchMap((accessor: BaseTradeContractAccessor) => {
         return accessor.watchPriceByETHDAI(coin);
       })
@@ -1940,15 +1979,19 @@ export class ContractAccessor implements ContractProxy {
   }
 
   public watchUserAccount(address: string, coin: IUSDCoins): Observable<UserAccountInfo> {
-    return this.watchContractAccessor().pipe(
-      switchMap((accessor: BaseTradeContractAccessor) => {
+    return this.accessor.pipe(
+      switchMap(accessor => {
         return accessor.watchUserAccount(address, coin);
       })
     );
   }
 
   public getMaxOpenAmount(coin: IUSDCoins, exchange: IExchangeStr, maxUSDAmount: number): Observable<BigNumber> {
-    return this.accessor.pipe(switchMap(accessor => accessor.getMaxOpenAmount(coin, exchange, maxUSDAmount)));
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.getMaxOpenAmount(coin, exchange, maxUSDAmount);
+      })
+    );
   }
 
   public getMaxOpenTradeAmount(
@@ -1970,9 +2013,8 @@ export class ContractAccessor implements ContractProxy {
   }
 
   public withdrawToken(count: number, coin: IUSDCoins): Observable<any> {
-    return this.watchContractAccessor().pipe(
-      filter((accessor: BaseTradeContractAccessor) => accessor.transferable),
-      switchMap((accessor: BaseTradeContractAccessor) => {
+    return this.accessor.pipe(
+      switchMap(accessor => {
         return accessor.withdrawToken(count, coin);
       }),
       catchError(err => {
