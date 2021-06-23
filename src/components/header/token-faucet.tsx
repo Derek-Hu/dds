@@ -53,9 +53,6 @@ export class TokenFaucet extends Component<IProps, IState> {
 
   switchNetworkList() {
     switch (this.props.network) {
-      case EthNetwork.kovan: {
-        return this.kovanList;
-      }
       case EthNetwork.bianTest: {
         return (
           <Dropdown overlay={this.bscList} trigger={['hover']} placement={'bottomCenter'}>

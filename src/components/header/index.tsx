@@ -241,15 +241,6 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                     <Menu.Item key={RouteKey.broker}>
                       <a href={`${ddsBasePath}/${RouteKey.broker}`}>Broker</a>
                     </Menu.Item>
-                    {/* <Menu.Item key="analytics">
-                      <Link to="/analytics" activeClassName="ant-menu-item-selected">
-                        Analytics
-                      </Link>
-                    </Menu.Item>
-                    <Menu.Item key="support">
-                      Support&nbsp;&nbsp;
-                      <Icon type="down" />
-                    </Menu.Item> */}
                   </Menu>
                 </Col>
                 <Col span={12} className={styles.connectWpr}>
@@ -262,8 +253,6 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                       <div style={{ marginRight: '20px' }}>
                         <TokenFaucet network={network} />
                       </div>
-
-                      {/*{account && account.address ? <NetworkSwitch/> : null}*/}
 
                       <ConnectWallet>
                         {account ? (
