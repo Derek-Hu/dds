@@ -60,7 +60,7 @@ export class TokenFaucet extends Component<IProps, IState> {
         return (
           <Dropdown overlay={this.bscList} trigger={['hover']} placement={'bottomCenter'}>
             <div className={styles.dropdownWrapper}>
-              <span className={styles.downText}>Test Token</span>
+              <span className={styles.downText}>Testnet Token</span>
               <Icon className={styles.downIcon} type="down" style={{ fontSize: '14px' }} />
             </div>
           </Dropdown>
