@@ -4,6 +4,8 @@ import SiteContext from '../../layouts/SiteContext';
 import Pool, { IPool } from '../liquidity-pool/pool';
 import { formatMessage } from 'locale/i18n';
 
+const rankingScore = 23;
+
 const PublicProvidedPool: IPool = {
   title: formatMessage({ id: 'system-fund-balance' }),
   usd: 748830,
