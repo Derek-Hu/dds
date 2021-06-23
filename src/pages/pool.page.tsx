@@ -55,7 +55,7 @@ export default class PoolPage extends Component {
                 onCancel={this.closeAgree}
                 footer={[
                   <Button type="danger" onClick={this.closeAgree}>
-                    I understand and agree
+                    I agree and confirm
                   </Button>,
                   <Checkbox checked={agreed} onChange={this.onCheckChange} className={styles.agree}>
                     Don't show it again
@@ -63,8 +63,8 @@ export default class PoolPage extends Component {
                 ]}
               >
                 <p>
-                  Shield protocol is under audit. Your funds still might be at risk and you can lose up to 100% of the
-                  amount provided. This is BETA version and use at your own risk.
+                  Shield has been audited by Peckshield and Slowmist. You can check audit reports on GitHub. Your funds
+                  still might be at risk and you can lose up to 100% of the amount provided. Use at your risk.
                 </p>
               </Modal>
             </div>

@@ -12,6 +12,7 @@ import InputNumber from '../../input/index';
 import SiteContext from '../../../layouts/SiteContext';
 
 const { Option } = Select;
+
 interface IState {
   modalVisible: boolean;
   selectedCoin: IUSDCoins;
@@ -19,6 +20,7 @@ interface IState {
 }
 
 interface IProps {}
+
 type TModalKeys = Pick<IState, 'modalVisible'>;
 
 export default class LiquidityProvided extends Component<IProps, IState> {
@@ -81,7 +83,13 @@ export default class LiquidityProvided extends Component<IProps, IState> {
           <Auth>
             <Alert
               className={styles.poolMsg}
-              message="Note: private pool is targeting professional investor and market maker, please be aware of risk before you proceed."
+              message={
+                <span>
+                  Note: Private pool involves catering specifically to institutional market makers and sophisticated
+                  parties. <br />
+                  Please be aware of risk before you proceed.
+                </span>
+              }
               type="warning"
             />
             <div className={[styles.actionArea, styles.privateArea].join(' ')}>

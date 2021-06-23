@@ -52,6 +52,9 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
   };
 
   componentWillReceiveProps(nextProps: any) {
+    if (!nextProps.location) {
+      return;
+    }
     const key: RouteKey | null = this.findMenuKey((nextProps.location.pathname as string).substring(1));
     if (key) {
       this.setState({ current: key });
