@@ -57,6 +57,7 @@ export default class ConnectWallet extends Component<any, any> {
   };
 
   showModal = () => {
+    console.log('do show modal');
     this.setState({
       visible: true,
     });

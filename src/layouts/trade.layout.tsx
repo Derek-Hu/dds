@@ -4,6 +4,7 @@ import ToolBar from '../components/footer/tool-bar';
 import SiteContext from './SiteContext';
 import ConnectWallet from '../components/connect-wallet/index';
 import { withRouter } from 'react-router-dom';
+import NetworkSwitch from '../components/network-switch';
 
 const RouteHeader = withRouter(props => <Header {...props} />);
 
@@ -20,7 +21,8 @@ export default class TradeLayout extends Component {
             {children}
             {isMobile ? <ToolBar /> : null}
 
-            <ConnectWallet></ConnectWallet>
+            <ConnectWallet />
+            <NetworkSwitch />
           </div>
         )}
       </SiteContext.Consumer>

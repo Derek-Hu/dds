@@ -4,7 +4,7 @@ import TradeLayout from '../layouts/trade.layout';
 import { RouteComponentProps } from 'react-router-dom';
 import SiteContext from './SiteContext';
 import { ddsBasePath, DefaultKeNetwork, LocalStorageKeyPrefix } from '../constant/index';
-import { getNetworkAndAccount, initTryConnect, userAccountInfo } from '../services/account';
+import { getCurNetwork, getNetworkAndAccount, initTryConnect, userAccountInfo } from '../services/account';
 import { CentralPath } from '../constant/address';
 import { accountEvents } from '../services/global-event.service';
 import { Subscription } from 'rxjs';
@@ -58,6 +58,11 @@ export default class Layout extends Component<RouteComponentProps, IState> {
 
     this.eventSub = accountEvents.watchAccountEvent().subscribe(() => {
       if (this.state.connected) {
+        const network: EthNetwork | null = getCurNetwork();
+        if (network) {
+          this.setState({ network, currentNetwork: NetworkKey[network] });
+        }
+
         this.refreshPage();
       }
     });

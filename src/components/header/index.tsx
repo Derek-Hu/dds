@@ -254,6 +254,8 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                         <TokenFaucet network={network} />
                       </div>
 
+                      {/*{account && account.address ? <NetworkSwitch/> : null}*/}
+
                       <ConnectWallet>
                         {account ? (
                           <div className={styles.accountInfo}>

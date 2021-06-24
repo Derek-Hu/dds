@@ -159,9 +159,6 @@ export class MetamaskWallet implements WalletInterface {
 
   private networkChangeCallback = (chainId: string) => {
     const network: EthNetwork = parseInt(chainId, 16).toString() as EthNetwork;
-    if (network !== EthNetwork.bianTest) {
-      return;
-    }
     this.updateNetwork(network);
   };
 

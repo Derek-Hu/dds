@@ -20,9 +20,9 @@ const SiteContext = React.createContext<ISiteContextProps>({
   isMobile: false,
   direction: 'ltr',
   address: '',
-  isBSC: false,
-  currentNetwork: 'kovan',
-  network: EthNetwork.kovan,
+  isBSC: true,
+  currentNetwork: 'bsctest',
+  network: EthNetwork.bianTest,
   connected: null,
   account: null,
 });
