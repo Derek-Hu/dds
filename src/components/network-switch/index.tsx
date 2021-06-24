@@ -1,20 +1,13 @@
 import { Component } from 'react';
 import styles from './style.module.less';
 import ModalRender from '../modal-render/index';
-import { Button, Col, Icon, Row } from 'antd';
-import { WarningOutline } from '@ant-design/icons';
+import { Col, Icon, Row } from 'antd';
 import commonStyles from '../funding-balance/modals/style.module.less';
 import SiteContext, { ISiteContextProps } from '../../layouts/SiteContext';
 import { DefaultKeNetwork } from '../../constant/index';
 import { switchNetwork } from '../../services/account';
 import { EthNetwork } from '../../constant/network';
 import NormalButton from '../common/buttons/normal-btn';
-
-const Nets: Record<INetworkKey, string> = {
-  kovan: 'Kovan',
-  bsctest: 'BSC Testnet',
-  bscmain: 'BSC Mainnet',
-};
 
 interface IState {
   visible: boolean;
@@ -54,12 +47,6 @@ export default class NetworkSwitch extends Component<any, IState> {
       selectedNetwork,
     });
   };
-  switch = async () => {
-    const { selectedNetwork } = this.state;
-    if (this.context.switNetwork) {
-      await this.context.switNetwork(selectedNetwork);
-    }
-  };
 
   switchToBsc = async () => {
     switchNetwork(EthNetwork.bianTest).then(suc => {
@@ -91,20 +78,16 @@ export default class NetworkSwitch extends Component<any, IState> {
         </span>
       ),
     };
-    console.log('this.context.network', this.context.network);
-    const shouldVisible: boolean = visible || this.context.network !== EthNetwork.bianTest;
+
+    const wrongNetWork: boolean = this.context.network && this.context.network !== EthNetwork.bianTest;
+    const shouldVisible: boolean = this.context.connected && (visible || wrongNetWork);
 
     return (
       <SiteContext.Consumer>
-        {({ currentNetwork }) => (
+        {({ network }) => (
           <>
-            <div className={styles.network} onClick={this.openModal}>
-              <span className={styles.icon} />
-              <span>{Nets[currentNetwork]}</span>
-              <Icon className={styles.switch} type="down" />
-            </div>
             <ModalRender
-              visible={visible || this.context.network !== EthNetwork.bianTest}
+              visible={shouldVisible}
               title="Switch Network"
               className={commonStyles.commonModal}
               onCancel={this.closeModal}

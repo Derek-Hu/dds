@@ -122,7 +122,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
     // const { currentNetwork } = this.context;
     return (
       <SiteContext.Consumer>
-        {({ isMobile, account, currentNetwork, network }) =>
+        {({ isMobile, account, network }) =>
           isMobile ? (
             darkMode ? (
               <div className={styles.homeHeader}>
@@ -251,11 +251,8 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                   ) : (
                     <div className={styles.rightContent}>
                       <div style={{ marginRight: '20px' }}>
-                        <TokenFaucet network={network} />
+                        {network !== null ? <TokenFaucet network={network} /> : null}
                       </div>
-
-                      {/*{account && account.address ? <NetworkSwitch/> : null}*/}
-
                       <ConnectWallet>
                         {account ? (
                           <div className={styles.accountInfo}>
