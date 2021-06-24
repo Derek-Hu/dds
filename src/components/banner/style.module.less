@@ -3,7 +3,8 @@
     padding: 52px 30px 64px;
     text-align: center;
     height: 100vh;
-    background: #1346ff;
+    background: #fff;
+    color: #272727;
     .content {
       padding-left: 0;
       position: absolute;
@@ -21,13 +22,15 @@
   }
 }
 
+@header-font-color: #272727;
+
 .root {
-  background-color: #1346ff;
-  height: 600px;
-  color: #fff;
+  background-color: #fff;
+  height: 700px;
+  color: #272727;
   padding-top: 50px;
   position: relative;
-  background: #1346ff url('../../assets/imgs/banner.png') 90% bottom no-repeat;
+  background: #fff url('../../assets/imgs/banner.png') 90% bottom no-repeat;
   background-size: 55%;
 
   .content {
@@ -39,40 +42,48 @@
   }
   h2 {
     font-size: 40px;
-    line-height: 52px;
-    color: #fff;
+    line-height: 60px;
     margin-bottom: 0px;
+    font-size: 60px;
+    font-family: Gilroy-Bold, Gilroy;
+    font-weight: bold;
+    color: #272727;
+  }
+  h2 + p {
+    margin-top: 14px;
+    width: 50%;
+    font-size: 20px;
+    font-family: Gilroy-Regular, Gilroy;
+    font-weight: 400;
+    color: #000000;
+    line-height: 24px;
   }
   .spot,
   .read {
-    text-transform: uppercase;
     width: 170px;
+    font-size: 16px;
   }
   .spot {
     height: 50px;
     border-radius: 2px;
-    color: #0049da;
     margin: 40px 0 24px;
   }
 
   .read {
-    color: #fff;
-    display: block;
-    height: 1em;
-    line-height: 1em;
+    margin-left: 20px;
   }
 }
 
 @media screen and (min-width: 1400px) {
   .root {
-    background: #1346ff url('../../assets/imgs/banner.png') 85% bottom no-repeat;
+    background: #fff url('../../assets/imgs/banner.png') 85% bottom no-repeat;
     background-size: 44%;
   }
 }
 
 @media screen and (min-width: 2000px) {
   .root {
-    background: #1346ff url('../../assets/imgs/banner.png') 80% bottom no-repeat;
+    background: #fff url('../../assets/imgs/banner.png') 80% bottom no-repeat;
     background-size: 34%;
   }
 }

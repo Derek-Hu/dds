@@ -154,7 +154,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                   <Menu onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal">
                     <Menu.Item key="logo" className={styles.dderivatives}>
                       <a href={`${homeBasePath}/home`}>
-                        <img src={window.location.hash === '#/home' ? LogoWhite : Logo} alt="" width="120px" />
+                        <img src={window.location.hash === '#/home' ? Logo : Logo} alt="" width="120px" />
                       </a>
                     </Menu.Item>
                     <Menu.Item key="trade">
@@ -204,11 +204,10 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                   </Menu>
                 </Col>
                 <Col span={12} className={styles.connectWpr}>
-                  {window.location.hash === '#/home' ? (
-                    <Button className={styles.connectBtn}>
-                      <a href={`${ddsBasePath}/trade`}>{formatMessage({ id: 'trade' })}</a>
-                    </Button>
-                  ) : (
+                  {window.location.hash === '#/home' ? // <Button className={styles.connectBtn}>
+                  //   <a href={`${ddsBasePath}/trade`}>{formatMessage({ id: 'trade' })}</a>
+                  // </Button>
+                  null : (
                     <div className={styles.rightContent}>
                       <div className={styles.network}>
                         <span className={styles.icon}></span>
