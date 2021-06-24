@@ -8,7 +8,7 @@ export enum Wallet {
   WalletConnect = 'Wallet Connect',
 }
 
-export const DefaultKeNetwork: INetworkKey = 'kovan';
+export const DefaultKeNetwork: INetworkKey = 'bsctest';
 
 export const NetWork2Coin: Record<INetworkKey, IFromCoins> = {
   bscmain: 'ETH',

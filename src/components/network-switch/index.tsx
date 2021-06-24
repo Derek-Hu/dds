@@ -91,6 +91,7 @@ export default class NetworkSwitch extends Component<any, IState> {
         </span>
       ),
     };
+    console.log('this.context.network', this.context.network);
     const shouldVisible: boolean = visible || this.context.network !== EthNetwork.bianTest;
 
     return (

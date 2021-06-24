@@ -32,7 +32,7 @@ export default class Layout extends Component<RouteComponentProps, IState> {
 
   state: IState = {
     currentNetwork: DefaultKeNetwork,
-    network: EthNetwork.kovan,
+    network: EthNetwork.bianTest,
     connected: null,
     timestamp: null,
     isMobile: false,
