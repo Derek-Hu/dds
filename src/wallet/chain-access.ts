@@ -72,6 +72,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       }),
       map((rs: BigNumber) => {
         return rs.gt(0);
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of(false);
       })
     );
   }

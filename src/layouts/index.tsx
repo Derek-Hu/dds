@@ -4,14 +4,7 @@ import TradeLayout from '../layouts/trade.layout';
 import { RouteComponentProps } from 'react-router-dom';
 import SiteContext from './SiteContext';
 import { ddsBasePath, DefaultKeNetwork, LocalStorageKeyPrefix } from '../constant/index';
-import {
-  getCurNetwork,
-  getCurUserAccount,
-  getNetworkAndAccount,
-  initTryConnect,
-  userAccountInfo,
-} from '../services/account';
-import { CentralPath } from '../constant/address';
+import { getCurNetwork, getCurUserAccount, initTryConnect, userAccountInfo } from '../services/account';
 import { accountEvents } from '../services/global-event.service';
 import { Subscription } from 'rxjs';
 import { getLocalStorageKey } from '../util/string';
