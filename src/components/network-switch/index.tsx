@@ -87,7 +87,7 @@ export default class NetworkSwitch extends Component<any, IState> {
         {({ network }) => (
           <>
             <ModalRender
-              visible={shouldVisible}
+              visible={false}
               title="Switch Network"
               className={commonStyles.commonModal}
               onCancel={this.closeModal}
@@ -106,7 +106,7 @@ export default class NetworkSwitch extends Component<any, IState> {
                   </div>
                 </Col>
               </Row>
-              <Row gutter={[16, 24]} type="flex" className={styles.coinList}>
+              <Row gutter={[16, 24]} className={styles.coinList}>
                 <Col span={24}>
                   <NormalButton disabled={true} inModal={true} type={'default'}>
                     Arbitrum Testnet (Coming Soon)
@@ -117,14 +117,11 @@ export default class NetworkSwitch extends Component<any, IState> {
                     BSC Testnet
                   </NormalButton>
                 </Col>
-
-                <>
-                  <Col span={24}>
-                    <NormalButton type="primary" onClick={() => this.switchToBsc()}>
-                      Switch To BSC Testnet
-                    </NormalButton>
-                  </Col>
-                </>
+                <Col span={24}>
+                  <NormalButton type="primary" onClick={() => this.switchToBsc()}>
+                    Switch To BSC Testnet
+                  </NormalButton>
+                </Col>
               </Row>
             </ModalRender>
           </>
