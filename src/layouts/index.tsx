@@ -4,8 +4,7 @@ import TradeLayout from '../layouts/trade.layout';
 import { RouteComponentProps } from 'react-router-dom';
 import SiteContext from './SiteContext';
 import { ddsBasePath, DefaultKeNetwork, LocalStorageKeyPrefix } from '../constant/index';
-import { getNetworkAndAccount, initTryConnect, userAccountInfo } from '../services/account';
-import { CentralPath } from '../constant/address';
+import { getCurNetwork, getCurUserAccount, initTryConnect, userAccountInfo } from '../services/account';
 import { accountEvents } from '../services/global-event.service';
 import { Subscription } from 'rxjs';
 import { getLocalStorageKey } from '../util/string';
@@ -16,10 +15,10 @@ const RESPONSIVE_MOBILE = 768;
 interface IState {
   isMobile: boolean;
   account: IAccount | null;
-  address: string;
+  address: string | null;
   connected: boolean | null;
   timestamp: number | null;
-  network: EthNetwork;
+  network: EthNetwork | null;
   currentNetwork: INetworkKey;
 }
 
@@ -32,11 +31,11 @@ export default class Layout extends Component<RouteComponentProps, IState> {
 
   state: IState = {
     currentNetwork: DefaultKeNetwork,
-    network: EthNetwork.kovan,
+    network: EthNetwork.bianTest,
     connected: null,
     timestamp: null,
     isMobile: false,
-    address: '',
+    address: null,
     account: null,
   };
 
@@ -57,7 +56,20 @@ export default class Layout extends Component<RouteComponentProps, IState> {
     window.addEventListener('resize', this.updateMobileMode);
 
     this.eventSub = accountEvents.watchAccountEvent().subscribe(() => {
-      if (this.state.connected) {
+      const network: EthNetwork | null = getCurNetwork();
+      if (network) {
+        this.setState({ network, currentNetwork: NetworkKey[network] });
+      } else {
+        this.setState({ network });
+      }
+
+      const address: string | null = getCurUserAccount();
+      this.setState({
+        address,
+        connected: address !== null && address.length > 0,
+      });
+
+      if (address) {
         this.refreshPage();
       }
     });
@@ -93,19 +105,6 @@ export default class Layout extends Component<RouteComponentProps, IState> {
     }
   };
 
-  switNetwork = async (currentNetwork: INetworkKey) => {
-    const { address } = this.state;
-    // @ts-ignore
-    const networkCode: EthNetwork = Object.keys(CentralPath).find(v => CentralPath[v as EthNetwork] === currentNetwork);
-    const switched = await getNetworkAndAccount({
-      network: networkCode,
-      account: address,
-    });
-    this.setState({
-      currentNetwork,
-    });
-    await this.refreshPage();
-  };
   tick = async () => {
     // let isConnected = null;
     // let hasError = false;
@@ -171,8 +170,8 @@ export default class Layout extends Component<RouteComponentProps, IState> {
       account,
       // @ts-ignore
       currentNetwork: networkKey,
-      network: networkCode || EthNetwork.kovan,
-      address: account && account.address ? account.address : '',
+      network: networkCode || null,
+      address: account && account.address ? account.address : null,
     });
     // @ts-ignore
     window.PendingOrderCacheKey = getLocalStorageKey(
@@ -199,7 +198,6 @@ export default class Layout extends Component<RouteComponentProps, IState> {
         value={{
           updateAccount: this.updateAccount,
           refreshPage: this.refreshPage,
-          switNetwork: this.switNetwork,
           isMobile,
           connected,
           network,

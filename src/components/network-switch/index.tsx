@@ -1,18 +1,13 @@
 import { Component } from 'react';
 import styles from './style.module.less';
 import ModalRender from '../modal-render/index';
-import { Button, Col, Icon, Row } from 'antd';
+import { Col, Icon, Row } from 'antd';
 import commonStyles from '../funding-balance/modals/style.module.less';
 import SiteContext, { ISiteContextProps } from '../../layouts/SiteContext';
 import { DefaultKeNetwork } from '../../constant/index';
 import { switchNetwork } from '../../services/account';
 import { EthNetwork } from '../../constant/network';
-
-const Nets: Record<INetworkKey, string> = {
-  kovan: 'Kovan',
-  bsctest: 'BSC Testnet',
-  bscmain: 'BSC Mainnet',
-};
+import NormalButton from '../common/buttons/normal-btn';
 
 interface IState {
   visible: boolean;
@@ -52,17 +47,12 @@ export default class NetworkSwitch extends Component<any, IState> {
       selectedNetwork,
     });
   };
-  switch = async () => {
-    const { selectedNetwork } = this.state;
-    if (this.context.switNetwork) {
-      await this.context.switNetwork(selectedNetwork);
-    }
-  };
 
-  switchToBsc = async (network: INetworkKey) => {
-    const chainId = network === 'bsctest' ? EthNetwork.bianTest : EthNetwork.bianTest;
-    switchNetwork(chainId).then(suc => {
-      this.closeModal();
+  switchToBsc = async () => {
+    switchNetwork(EthNetwork.bianTest).then(suc => {
+      if (suc) {
+        this.closeModal();
+      }
     });
   };
 
@@ -88,19 +78,16 @@ export default class NetworkSwitch extends Component<any, IState> {
         </span>
       ),
     };
-    const isSelectBSC: boolean = selectedNetwork === 'bsctest';
+
+    const wrongNetWork: boolean = this.context.network && this.context.network !== EthNetwork.bianTest;
+    const shouldVisible: boolean = this.context.connected && (visible || wrongNetWork);
 
     return (
       <SiteContext.Consumer>
-        {({ currentNetwork }) => (
+        {({ network }) => (
           <>
-            <div className={styles.network} onClick={this.openModal}>
-              <span className={styles.icon} />
-              <span>{Nets[currentNetwork]}</span>
-              <Icon className={styles.switch} type="down" />
-            </div>
             <ModalRender
-              visible={visible}
+              visible={shouldVisible}
               title="Switch Network"
               className={commonStyles.commonModal}
               onCancel={this.closeModal}
@@ -110,42 +97,34 @@ export default class NetworkSwitch extends Component<any, IState> {
               maskClosable={true}
               footer={null}
             >
+              <Row>
+                <Col span={24}>
+                  <div className={styles.wrong}>
+                    <Icon type="warning" />
+                    &nbsp;&nbsp;
+                    <span>Wrong Network!</span>
+                  </div>
+                </Col>
+              </Row>
               <Row gutter={[16, 24]} type="flex" className={styles.coinList}>
-                {Object.keys(Nets)
-                  .filter(k => k !== 'bscmain')
-                  .map(key => (
-                    <Col key={key} span={24} className={selectedNetwork === key ? styles.active : ''}>
-                      <Button onClick={() => this.setType(key as INetworkKey)}>
-                        {currentNetwork === key ? <span className={styles.icon}></span> : null}
-                        {Nets[key as INetworkKey]}
-                      </Button>
-                    </Col>
-                  ))}
+                <Col span={24}>
+                  <NormalButton disabled={true} inModal={true} type={'default'}>
+                    Arbitrum Testnet (Coming Soon)
+                  </NormalButton>
+                </Col>
+                <Col span={24} className={styles.active}>
+                  <NormalButton inModal={true} marginTop={'0px'} type={'default'}>
+                    BSC Testnet
+                  </NormalButton>
+                </Col>
 
-                {currentNetwork === selectedNetwork ? <span></span> : tips[selectedNetwork]}
-
-                {currentNetwork !== selectedNetwork && isSelectBSC ? (
-                  <>
-                    <Col span={10}>
-                      <Button type="default" onClick={this.closeModal}>
-                        {' '}
-                        Cancel{' '}
-                      </Button>
-                    </Col>
-                    <Col span={14}>
-                      <Button type="primary" onClick={() => this.switchToBsc(selectedNetwork)}>
-                        Switch To {Nets[selectedNetwork]}
-                      </Button>
-                    </Col>
-                  </>
-                ) : (
+                <>
                   <Col span={24}>
-                    <Button type="primary" onClick={this.closeModal}>
-                      {' '}
-                      OK{' '}
-                    </Button>
+                    <NormalButton type="primary" onClick={() => this.switchToBsc()}>
+                      Switch To BSC Testnet
+                    </NormalButton>
                   </Col>
-                )}
+                </>
               </Row>
             </ModalRender>
           </>

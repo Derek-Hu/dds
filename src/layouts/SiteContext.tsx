@@ -5,12 +5,12 @@ export interface ISiteContextProps {
   isMobile: boolean;
   direction: string;
   account: IAccount;
-  address: string;
+  address: string | null;
   connected: boolean | null;
   isBSC: boolean;
   timestamp?: number;
   currentNetwork: INetworkKey;
-  network: EthNetwork;
+  network: EthNetwork | null;
   updateAccount?: (account: IAccount) => any;
   switNetwork?: (network: INetworkKey) => any;
   refreshPage?: () => void;
@@ -20,9 +20,9 @@ const SiteContext = React.createContext<ISiteContextProps>({
   isMobile: false,
   direction: 'ltr',
   address: '',
-  isBSC: false,
-  currentNetwork: 'kovan',
-  network: EthNetwork.kovan,
+  isBSC: true,
+  currentNetwork: 'bsctest',
+  network: null,
   connected: null,
   account: null,
 });

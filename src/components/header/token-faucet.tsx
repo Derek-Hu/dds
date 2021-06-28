@@ -4,6 +4,7 @@ import { EthNetwork } from '../../constant/network';
 import styles from './token-faucet.module.less';
 import { CircleBorderBtn } from '../common/buttons/circle-border-btn';
 import { ClaimTestToken } from '../activities/claim-test/claim-test-token';
+import SiteContext from '../../layouts/SiteContext';
 
 type IProps = {
   network: EthNetwork;
@@ -14,6 +15,8 @@ type IState = {
 };
 
 export class TokenFaucet extends Component<IProps, IState> {
+  static contextType = SiteContext;
+
   state: IState = {
     dropdownVisible: false,
     claimTestTokenVisible: false,
@@ -53,9 +56,6 @@ export class TokenFaucet extends Component<IProps, IState> {
 
   switchNetworkList() {
     switch (this.props.network) {
-      case EthNetwork.kovan: {
-        return this.kovanList;
-      }
       case EthNetwork.bianTest: {
         return (
           <Dropdown overlay={this.bscList} trigger={['hover']} placement={'bottomCenter'}>
@@ -74,9 +74,13 @@ export class TokenFaucet extends Component<IProps, IState> {
 
   render() {
     return (
-      <CircleBorderBtn paddingHorizon={this.btnPaddingH + 'px'} paddingVertical={this.btnPaddingV + 'px'}>
-        {this.switchNetworkList()}
-      </CircleBorderBtn>
+      <SiteContext.Consumer>
+        {() => (
+          <CircleBorderBtn paddingHorizon={this.btnPaddingH + 'px'} paddingVertical={this.btnPaddingV + 'px'}>
+            {this.switchNetworkList()}
+          </CircleBorderBtn>
+        )}
+      </SiteContext.Consumer>
     );
   }
 }

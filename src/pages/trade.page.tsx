@@ -5,9 +5,9 @@ import TradePool from '../components/trade-pool/index';
 import styles from './style.module.less';
 import KLine from '../components/k-line/index';
 import FundingBalance from '../components/funding-balance/index';
-import SiteContext, { ISiteContextProps } from '../layouts/SiteContext';
+import SiteContext from '../layouts/SiteContext';
 import Auth from '../components/builtin/auth';
-import { SupporttedUSD, SupporttedCoins, NetWork2Coin, DefaultKeNetwork, ISupporttedUSD } from '../constant/index';
+import { SupporttedUSD, SupporttedCoins, NetWork2Coin, DefaultKeNetwork } from '../constant/index';
 import TradeInfo from '../components/trade-info/index';
 import parse from '../util/url';
 
