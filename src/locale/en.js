@@ -22,11 +22,11 @@ export default {
   'dnot-show-again': "Don't show it again",
   'shield-private-warning':
     'Shield protocol is under audit. Your funds still might be at risk and you can lose up to 100% of the amount provided. This is BETA version and use at your own risk.',
-  'shield-slogan': 'Decentralized protocol<br>for trading derivatives <br>in a borderless and trustless way',
+  'shield-slogan': 'Decentralized<br> protocol for trading<br> derivatives borderless',
   'shield-slogan-desc':
-    'We are creating a secure, stable and open decentralized derivatives trading market based on a fully non-cooperative game network',
+    'Building up a secure, stable and open derivatives trading market based on a fully non-cooperative game network with blockchain technology',
   'start-trade': 'Start trading',
-  'read-whitepaper': 'Whitepaper',
+  'read-whitepaper': 'Read whitepaper',
   'campaign-rewards-pool': 'Campaign Rewards Pool',
   'next-distribution-time': 'Next distribution time',
   'your-share': 'Your <br /> Share',

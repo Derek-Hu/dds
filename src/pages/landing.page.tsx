@@ -18,20 +18,20 @@ export default class HomePage extends Component {
         <div className={styles.bannerDatas}>
           <Row>
             <Col span={6}>
-              <span>All Time Volum</span>
               <p>{formatInt(13012)}</p>
+              <span>All Time Volum</span>
             </Col>
             <Col span={6}>
-              <span>All Time Volum</span>
               <p>{formatInt(13012)}</p>
+              <span>All Time Volum</span>
             </Col>
             <Col span={6}>
-              <span>All Time Volum</span>
               <p>{formatInt(13012)}</p>
+              <span>All Time Volum</span>
             </Col>
             <Col span={6}>
-              <span>All Time Volum</span>
               <p>{formatInt(13012)}</p>
+              <span>All Time Volum</span>
             </Col>
           </Row>
         </div>
