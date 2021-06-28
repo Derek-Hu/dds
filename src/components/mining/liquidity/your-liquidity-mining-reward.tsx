@@ -88,7 +88,7 @@ export default class LiquidityMiningReward extends Component<IProps, IState> {
             <p className={styles.dynamic}>
               <span>Current reward factor </span>
               <br />
-              {isBSC ? 6 : 32} <span>SLD/Block</span>
+              {isBSC ? 2 : 32} <span>SLD/Block</span>
             </p>
 
             {isBSC ? (
