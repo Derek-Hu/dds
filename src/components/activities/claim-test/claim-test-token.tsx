@@ -16,7 +16,6 @@ type IState = {
   isPopUp: boolean;
   isClaimed: boolean;
   isPending: boolean;
-  curAddress: string;
 };
 
 export class ClaimTestToken extends Component<IProps, IState> {
@@ -26,28 +25,32 @@ export class ClaimTestToken extends Component<IProps, IState> {
     isPopUp: false,
     isClaimed: false,
     isPending: false,
-    curAddress: '',
   };
 
+  private account: string | null = null;
+
   componentDidMount() {
-    this.loadUserAddress();
     this.loadIsClaimed();
   }
 
+  componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>, snapshot?: any) {
+    if (this.account !== this.context.address) {
+      this.loadIsClaimed();
+    }
+  }
+
   loadIsClaimed() {
+    console.log('do load claim state');
     from(loginUserAccount())
       .pipe(
         switchMap((account: string) => {
+          this.account = account;
           return contractAccessor.isTestTokenClaimed(account, 'DAI');
         })
       )
       .subscribe(isClaimed => {
         this.setState({ isClaimed: isClaimed });
       });
-  }
-
-  loadUserAddress() {
-    loginUserAccount().then(addr => this.setState({ curAddress: addr }));
   }
 
   onClaim() {
@@ -96,7 +99,7 @@ export class ClaimTestToken extends Component<IProps, IState> {
                     <span className={styles.addressHex}>5000</span>
                     <br />
                     <span className={styles.address}>Address:</span>
-                    <span className={styles.addressHex}>{this.state.curAddress}</span>
+                    <span className={styles.addressHex}>{this.context.address}</span>
                   </Col>
                 </Row>
 
