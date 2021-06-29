@@ -32,3 +32,5 @@ export const NetworkParam = {
     blockExplorerUrls: ['https://testnet.bscscan.com/'],
   },
 };
+
+export const SupportedNetwork: EthNetwork[] = [EthNetwork.bianTest, EthNetwork.kovan];

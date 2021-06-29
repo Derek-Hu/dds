@@ -36,7 +36,7 @@ import { ContractAddress, ContractAddressByNetwork } from '../constant/address';
 import { getContractAddress, getContractInfo } from './contract-info';
 import { bigNumMultiple } from '../util/math';
 import { ReTokenMapping } from '../constant/tokens';
-import { EthNetwork } from '../constant/network';
+import { EthNetwork, SupportedNetwork } from '../constant/network';
 
 declare const window: Window & { ethereum: any };
 
@@ -46,6 +46,39 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   protected timer = interval(DataRefreshInterval).pipe(startWith(0));
 
   constructor() {}
+
+  // air drop coin is
+  public airDropWhiteList(address: string): Observable<BigNumber> {
+    return this.getAirDropContract().pipe(
+      switchMap(contract => {
+        console.log('whiteList', contract.address, address);
+        return from(contract.whiteList(address) as Promise<BigNumber>);
+      }),
+      map((rs: BigNumber) => {
+        return rs;
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of(BigNumber.from(0));
+      })
+    );
+  }
+
+  public airDropClaim(): Observable<boolean> {
+    return this.getAirDropContract().pipe(
+      switchMap(contract => {
+        return from(contract.claim());
+      }),
+      switchMap((rs: any) => {
+        return from(rs.wait());
+      }),
+      mapTo(true),
+      catchError(err => {
+        console.warn('error', err);
+        return of(false);
+      })
+    );
+  }
 
   public claimTestToken(token: IUSDCoins): Observable<boolean> {
     return this.getTestTokenClaimContract().pipe(
@@ -120,7 +153,11 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         const amountNum: BigNumber = tokenBigNumber(amount, reToken);
         return this.needApprove(amountNum, address, rewards.address, erc20);
       }),
-      take(1)
+      take(1),
+      catchError(err => {
+        console.warn('error', err);
+        return of(false);
+      })
     );
   }
 
@@ -129,6 +166,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     return zip(this.getMiningRewardContract(), this.getPubPoolContract(usdToken)).pipe(
       switchMap(([rewards, erc20]) => {
         return this.approve(rewards.address, erc20);
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of(false);
       })
     );
   }
@@ -138,6 +179,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       switchMap(([trade, erc20]) => {
         const amountNum: BigNumber = tokenBigNumber(amount, usdToken);
         return this.needApprove(amountNum, address, trade.address, erc20);
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of(false);
       })
     );
   }
@@ -146,6 +191,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     return zip(this.getContract(usdToken), this.getErc20USDContract(usdToken)).pipe(
       switchMap(([trade, erc20]) => {
         return this.approve(trade.address, erc20);
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of(false);
       })
     );
   }
@@ -155,6 +204,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       switchMap(([pubPool, erc20]) => {
         const amountNum: BigNumber = tokenBigNumber(amount, usdToken);
         return this.needApprove(amountNum, address, pubPool.address, erc20);
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of(false);
       })
     );
   }
@@ -163,6 +216,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     return zip(this.getPubPoolContract(usdToken), this.getErc20USDContract(usdToken)).pipe(
       switchMap(([pubPool, erc20]) => {
         return this.approve(pubPool.address, erc20);
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of(false);
       })
     );
   }
@@ -172,6 +229,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       switchMap(([priPool, erc20]) => {
         const amountNum: BigNumber = tokenBigNumber(amount, usdToken);
         return this.needApprove(amountNum, address, priPool.address, erc20);
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of(false);
       })
     );
   }
@@ -180,6 +241,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     return zip(this.getPriPoolContract(usdToken), this.getErc20USDContract(usdToken)).pipe(
       switchMap(([priPool, erc20]) => {
         return this.approve(priPool.address, erc20);
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of(false);
       })
     );
   }
@@ -230,6 +295,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         }),
         map((rs: any) => {
           return { coin: ('re' + token) as IReUSDCoins, balance: rs as BigNumber };
+        }),
+        catchError(err => {
+          console.warn('error', err);
+          return of({ coin: ('re' + token) as IReUSDCoins, balance: BigNumber.from(0) });
         })
       );
     };
@@ -262,6 +331,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     return this.timer.pipe(
       switchMap(() => {
         return this.getPriceByETHDAI(coin);
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of(BigNumber.from(0));
       })
     );
   }
@@ -526,6 +599,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       }),
       map((orderInfo: any[]) => {
         return orderInfo;
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return [];
       })
     );
   }
@@ -542,6 +619,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       }),
       map((rs: any) => {
         return rs.marginFee;
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of(BigNumber.from(0));
       })
     );
   }
@@ -559,6 +640,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
           value: available,
           total,
         };
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of({ value: 0, total: 0 });
       })
     );
   }
@@ -575,6 +660,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
           value: available,
           total,
         };
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of({ value: 0, total: 0 });
       })
     );
   }
@@ -603,6 +692,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       }),
       map(rs => {
         return rs.retokenAmount;
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of(BigNumber.from(0));
       })
     );
   }
@@ -679,6 +772,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       }),
       map((rs: any) => {
         return rs;
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of(BigNumber.from(0));
       })
     );
 
@@ -732,6 +829,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       }),
       map((rs: any) => {
         return rs.selfReToken as BigNumber;
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of(BigNumber.from(0));
       })
     );
 
@@ -823,11 +924,19 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
                 reduce((acc: PrivateLockLiquidity[], one: PrivateLockLiquidity) => {
                   acc.push(one);
                   return acc;
-                }, [])
+                }, []),
+                catchError(err => {
+                  console.warn('error', err);
+                  return of([]);
+                })
               );
             }
           })
         );
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of([]);
       })
     );
   }
@@ -927,6 +1036,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       }),
       map((rs: any) => {
         return rs.availableAmount;
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of(BigNumber.from(0));
       })
     );
 
@@ -996,6 +1109,15 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
           locked: rs.lockedAmount,
           isRejectOrder: rs.isRejectOrder,
         };
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of({
+          total: BigNumber.from(0),
+          available: BigNumber.from(0),
+          locked: BigNumber.from(0),
+          isRejectOrder: false,
+        });
       })
     );
 
@@ -1189,6 +1311,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
           switchMap((reTokenAddr: string | null) => {
             if (reTokenAddr) {
               const reTokenNum: BigNumber = tokenBigNumber(reTokenAmount);
+              console.log('retoken addr', reTokenAddr);
               return from(rewardContract.stakeForLP1(reTokenAddr, reTokenNum));
             } else {
               throw new Error('Can not get reToken contract address.');
@@ -1333,7 +1456,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   // 获取某位清算者的稳定币奖励总数
   public getLiquiditorRewards(address: string): Observable<LiquditorRewardsResult> {
     return this.getLiquidatorContract().pipe(
-      switchMap(liqContract => {
+      switchMap((liqContract: ethers.Contract) => {
         return from(liqContract.getFeeBackByLiquidor(address) as Promise<BigNumber[]>);
       }),
       map(
@@ -1363,7 +1486,20 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
             rank,
           };
         }
-      )
+      ),
+      catchError(err => {
+        console.warn('error', err);
+        return of({
+          usdRewards: [
+            { coin: 'DAI', balance: BigNumber.from(0) },
+            { coin: 'USDT', balance: BigNumber.from(0) },
+            { coin: 'USDC', balance: BigNumber.from(0) },
+          ],
+          campaign: BigNumber.from(0),
+          compensate: BigNumber.from(0),
+          rank: BigNumber.from(0),
+        } as LiquditorRewardsResult);
+      })
     );
   }
 
@@ -1374,6 +1510,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       }),
       map((rs: any) => {
         return { startTime: rs.time as BigNumber, period: rs.period as BigNumber };
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of({ startTime: BigNumber.from(0), period: BigNumber.from(0) });
       })
     );
   }
@@ -1393,13 +1533,25 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       map((rs: any) => {
         return {
           rewards: [
-            { coin: 'DAI', balance: rs[0] as BigNumber },
-            { coin: 'USDT', balance: rs[1] as BigNumber },
-            { coin: 'USDC', balance: rs[2] as BigNumber },
+            { coin: 'DAI' as const, balance: rs[0] as BigNumber },
+            { coin: 'USDT' as const, balance: rs[1] as BigNumber },
+            { coin: 'USDC' as const, balance: rs[2] as BigNumber },
             { coin: MyTokenSymbol, balance: rs[3] as BigNumber },
           ],
           info: { extSLD: rs[4] as BigNumber, rank: rs[5] as BigNumber },
         };
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of({
+          rewards: [
+            { coin: 'DAI' as const, balance: BigNumber.from(0) },
+            { coin: 'USDT' as const, balance: BigNumber.from(0) },
+            { coin: 'USDC' as const, balance: BigNumber.from(0) },
+            { coin: MyTokenSymbol, balance: BigNumber.from(0) },
+          ],
+          info: { extSLD: BigNumber.from(0), rank: BigNumber.from(0) },
+        });
       })
     );
   }
@@ -1443,6 +1595,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
             balance: rs[3],
           },
         ];
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of([]);
       })
     );
   }
@@ -1513,11 +1669,19 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
           refer: count,
           rank: rank,
           claim: [
-            { coin: 'DAI', balance: dai },
-            { coin: 'USDT', balance: usdt },
-            { coin: 'USDC', balance: usdc },
+            { coin: 'DAI' as const, balance: dai },
+            { coin: 'USDT' as const, balance: usdt },
+            { coin: 'USDC' as const, balance: usdc },
           ],
         };
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of({
+          refer: BigNumber.from(0),
+          rank: BigNumber.from(0),
+          claim: [],
+        });
       })
     );
   }
@@ -1530,10 +1694,14 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       }),
       map((rs: BigNumber[]) => {
         return [
-          { coin: 'DAI', balance: rs[0] },
-          { coin: 'USDT', balance: rs[1] },
-          { coin: 'USDC', balance: rs[2] },
+          { coin: 'DAI' as const, balance: rs[0] },
+          { coin: 'USDT' as const, balance: rs[1] },
+          { coin: 'USDC' as const, balance: rs[2] },
         ];
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of([]);
       })
     );
   }
@@ -1547,10 +1715,14 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       map((rs: any) => {
         const balance = rs as BigNumber[];
         return [
-          { coin: 'DAI', balance: balance[0] },
-          { coin: 'USDT', balance: balance[1] },
-          { coin: 'USDC', balance: balance[2] },
+          { coin: 'DAI' as const, balance: balance[0] },
+          { coin: 'USDT' as const, balance: balance[1] },
+          { coin: 'USDC' as const, balance: balance[2] },
         ] as CoinBalance[];
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of([]);
       })
     );
   }
@@ -1563,6 +1735,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       }),
       map(rs => {
         return (rs as BigNumber).toNumber() * 1000;
+      }),
+      catchError(err => {
+        console.warn('error', err);
+        return of(0);
       })
     );
   }
@@ -1654,6 +1830,8 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   protected abstract getBrokerContract(): Observable<ethers.Contract>;
 
   protected abstract getTestTokenClaimContract(): Observable<ethers.Contract>;
+
+  protected abstract getAirDropContract(): Observable<ethers.Contract>;
 
   protected abstract getContractAddress(contract: keyof ContractAddress): Observable<string>;
 
@@ -1766,6 +1944,10 @@ class MetamaskContractAccessor extends BaseTradeContractAccessor {
     return this.getAContract('ReceiveTestTokenContract');
   }
 
+  protected getAirDropContract(): Observable<ethers.Contract> {
+    return this.getAContract('AirDropContract');
+  }
+
   protected getContractAddress(contract: keyof ContractAddress): Observable<string> {
     return this.getNetwork().pipe(
       map((network: EthNetwork) => {
@@ -1858,7 +2040,7 @@ export class ContractAccessor implements ContractProxy {
       map(a => a as BaseTradeContractAccessor),
       switchMap(a => {
         return a.getNetwork().pipe(
-          filter(network => network === EthNetwork.bianTest),
+          filter((network: EthNetwork) => SupportedNetwork.indexOf(network) >= 0),
           map(() => a) // TODO optimize
         );
       }),
@@ -1868,6 +2050,22 @@ export class ContractAccessor implements ContractProxy {
 
   public watchContractAccessor(): Observable<BaseTradeContractAccessor> {
     return this.curAccessor.pipe(filter(a => a !== null)) as Observable<BaseTradeContractAccessor>;
+  }
+
+  public airDropWhiteList(address: string): Observable<BigNumber> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.airDropWhiteList(address);
+      })
+    );
+  }
+
+  public airDropClaim(): Observable<boolean> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.airDropClaim();
+      })
+    );
   }
 
   public claimTestToken(token: IUSDCoins): Observable<boolean> {

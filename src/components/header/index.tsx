@@ -13,6 +13,7 @@ import { shortAddress } from '../../util/index';
 import NetworkSwitch from '../network-switch/index';
 import { RouteKey } from '../../constant/routes';
 import { TokenFaucet } from './token-faucet';
+import { AirDropModal } from '../activities/air-drop/air-drop-modal';
 
 const { SubMenu } = Menu;
 
@@ -250,6 +251,9 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                     </Button>
                   ) : (
                     <div className={styles.rightContent}>
+                      <div style={{ marginRight: '20px' }}>
+                        <AirDropModal />
+                      </div>
                       <div style={{ marginRight: '20px' }}>
                         {network !== null ? <TokenFaucet network={network} /> : null}
                       </div>

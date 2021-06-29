@@ -23,6 +23,7 @@ export type ContractAddress = {
   ERC20USDC: string;
 
   ReceiveTestTokenContract: string;
+  AirDropContract: string;
 };
 
 export const KOVAN_ADDRESS: ContractAddress = {
@@ -46,6 +47,7 @@ export const KOVAN_ADDRESS: ContractAddress = {
   ERC20USDC: '0xc8c0278b371316fb3629a7c2c4e003cc296b5925',
 
   ReceiveTestTokenContract: '',
+  AirDropContract: '0x086530B6E7D8a0E94B0eCf9A321183c702b10106',
 };
 
 export const BIAN_TEST_ADDRESS: ContractAddress = {
@@ -69,6 +71,7 @@ export const BIAN_TEST_ADDRESS: ContractAddress = {
   ERC20USDC: '0x9E404218898Fb63Cac611D02BAF508A61215B2FE',
 
   ReceiveTestTokenContract: '0x69FA54869e95f67A9b36f4aFF808B45De6347DE7',
+  AirDropContract: '0x9Db0545a335ae5aEa1aE98Dc1f618Cb49d2bABeB',
 };
 
 export const ContractAddressByNetwork = {
