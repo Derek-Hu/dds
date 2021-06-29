@@ -5,6 +5,7 @@ import WhyDderivatives from '../components/sections/why-dderivatives/index';
 import ContactUs from '../components/sections/contact-us/index';
 import WhatIs from '../components/sections/what-is-dderivatives/index';
 import ShieldDAO from '../components/sections/shield-dao/index';
+import JoinCommunity from '../components/sections/join-comunity/index';
 import Partners from '../components/sections/partners/index';
 import Banner from '../components/banner/index';
 import { formatInt } from '../util/math';
@@ -36,13 +37,14 @@ export default class HomePage extends Component {
           </Row>
         </div>
         <ShieldDAO></ShieldDAO>
+        <JoinCommunity></JoinCommunity>
         <Partners></Partners>
-        <WhatIs></WhatIs>
+        {/* <WhatIs></WhatIs> */}
         {/* <NonRisk></NonRisk> */}
         {/* <HowTrade></HowTrade> */}
-        <WhyDderivatives />
-        <CommunityDrived />
-        <ContactUs />
+        {/* <WhyDderivatives /> */}
+        {/* <CommunityDrived /> */}
+        {/* <ContactUs /> */}
       </div>
     );
   }
