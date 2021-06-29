@@ -71,7 +71,7 @@ export const BIAN_TEST_ADDRESS: ContractAddress = {
   ERC20USDC: '0x9E404218898Fb63Cac611D02BAF508A61215B2FE',
 
   ReceiveTestTokenContract: '0x69FA54869e95f67A9b36f4aFF808B45De6347DE7',
-  AirDropContract: '',
+  AirDropContract: '0x9Db0545a335ae5aEa1aE98Dc1f618Cb49d2bABeB',
 };
 
 export const ContractAddressByNetwork = {

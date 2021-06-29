@@ -51,6 +51,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   public airDropWhiteList(address: string): Observable<BigNumber> {
     return this.getAirDropContract().pipe(
       switchMap(contract => {
+        console.log('whiteList', contract.address, address);
         return from(contract.whiteList(address) as Promise<BigNumber>);
       }),
       map((rs: BigNumber) => {
@@ -66,7 +67,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   public airDropClaim(): Observable<boolean> {
     return this.getAirDropContract().pipe(
       switchMap(contract => {
-        return from(contract.Claim());
+        return from(contract.claim());
       }),
       switchMap((rs: any) => {
         return from(rs.wait());
@@ -1310,6 +1311,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
           switchMap((reTokenAddr: string | null) => {
             if (reTokenAddr) {
               const reTokenNum: BigNumber = tokenBigNumber(reTokenAmount);
+              console.log('retoken addr', reTokenAddr);
               return from(rewardContract.stakeForLP1(reTokenAddr, reTokenNum));
             } else {
               throw new Error('Can not get reToken contract address.');

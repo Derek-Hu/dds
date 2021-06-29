@@ -87,7 +87,7 @@ export default class NetworkSwitch extends Component<any, IState> {
         {({ network }) => (
           <>
             <ModalRender
-              visible={false}
+              visible={shouldVisible}
               title="Switch Network"
               className={commonStyles.commonModal}
               onCancel={this.closeModal}

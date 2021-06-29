@@ -19,3 +19,7 @@ export function airdropAvailable(): Observable<number> {
     })
   );
 }
+
+export function claimAirdrop(): Observable<boolean> {
+  return contractAccessor.airDropClaim();
+}
