@@ -34,9 +34,9 @@ export default class HomePage extends Component {
           </Row>
         </div>
         <ShieldDAO></ShieldDAO>
+        <WhatIsPerpetual></WhatIsPerpetual>
         <JoinCommunity></JoinCommunity>
         <Partners></Partners>
-        <WhatIsPerpetual></WhatIsPerpetual>
         {/* <NonRisk></NonRisk> */}
         {/* <HowTrade></HowTrade> */}
         {/* <WhyDderivatives /> */}
