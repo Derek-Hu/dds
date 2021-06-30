@@ -1,9 +1,6 @@
 import { Component } from 'react';
 import { Menu, Icon, Row, Col, Button, Drawer } from 'antd';
-import CommunityDrived from '../components/sections/community-drived/index';
-import WhyDderivatives from '../components/sections/why-dderivatives/index';
-import ContactUs from '../components/sections/contact-us/index';
-import WhatIs from '../components/sections/what-is-dderivatives/index';
+import WhatIsPerpetual from '../components/sections/what-is-perpetual-option/index';
 import ShieldDAO from '../components/sections/shield-dao/index';
 import JoinCommunity from '../components/sections/join-comunity/index';
 import Partners from '../components/sections/partners/index';
@@ -39,7 +36,7 @@ export default class HomePage extends Component {
         <ShieldDAO></ShieldDAO>
         <JoinCommunity></JoinCommunity>
         <Partners></Partners>
-        {/* <WhatIs></WhatIs> */}
+        <WhatIsPerpetual></WhatIsPerpetual>
         {/* <NonRisk></NonRisk> */}
         {/* <HowTrade></HowTrade> */}
         {/* <WhyDderivatives /> */}

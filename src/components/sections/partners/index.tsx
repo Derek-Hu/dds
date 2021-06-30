@@ -3,6 +3,18 @@ import SectionTitle from '../section-title/index';
 import { formatMessage } from 'locale/i18n';
 import { Row, Col } from 'antd';
 
+import sevenImg from '../../../assets/backed-by/seven-x@2x.png';
+import hashkeyImg from '../../../assets/backed-by/hashkey@2x.png';
+import atImg from '../../../assets/backed-by/at@2x.png';
+import lncubaImg from '../../../assets/backed-by/lncuba@2x.png';
+import bonfireImg from '../../../assets/backed-by/bonfire@2x.png';
+
+import hoonImg from '../../../assets/backed-by/hoon@2x.png';
+import youbiImg from '../../../assets/backed-by/youbi@2x.png';
+import shimaImg from '../../../assets/backed-by/shima@2x.png';
+import zonffImg from '../../../assets/backed-by/zonff@2x.png';
+import okexImg from '../../../assets/backed-by/okex@2x.png';
+
 const Image = ({ src }: { src: string }) => {
   return (
     <div className={styles.partnerItem}>
@@ -18,38 +30,38 @@ export default () => {
       <div className={styles.partnerWpr}>
         <Row>
           <Col span={4} offset={2}>
-            <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+            <Image src={sevenImg} />
           </Col>
           <Col span={4}>
-            <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+            <Image src={hashkeyImg} />
           </Col>
           <Col span={4}>
-            <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+            <Image src={atImg} />
           </Col>
           <Col span={4}>
-            <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+            <Image src={lncubaImg} />
           </Col>
           <Col span={4}>
-            <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+            <Image src={bonfireImg} />
           </Col>
         </Row>
       </div>
       <div className={styles.partnerWpr}>
         <Row>
           <Col span={4} offset={2}>
-            <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+            <Image src={hoonImg} />
           </Col>
           <Col span={4}>
-            <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+            <Image src={youbiImg} />
           </Col>
           <Col span={4}>
-            <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+            <Image src={shimaImg} />
           </Col>
           <Col span={4}>
-            <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+            <Image src={zonffImg} />
           </Col>
           <Col span={4}>
-            <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+            <Image src={okexImg} />
           </Col>
         </Row>
       </div>
