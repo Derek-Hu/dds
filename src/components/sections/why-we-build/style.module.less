@@ -1,0 +1,103 @@
+@import '../../../variable.less';
+
+.whatWeBuild {
+  background: #1346ff;
+  color: #fff;
+  .content {
+    padding: 200px 0 120px;
+    max-width: @max-content-width;
+    margin: 0 auto;
+    position: relative;
+    & > h2 {
+      font-size: 60px;
+      font-family: Gilroy-Bold, Gilroy;
+      font-weight: bold;
+      line-height: 74px;
+      color: #fff;
+      margin-bottom: 24px;
+    }
+
+    & > h2 + p {
+      font-size: 20px;
+      font-family: Gilroy-Regular, Gilroy;
+      font-weight: 400;
+      line-height: 24px;
+      opacity: 0.6;
+    }
+
+    .bottomAds {
+      ul {
+        padding: 0;
+        list-style: none;
+        text-align: center;
+        display: flex;
+
+        li {
+          align-items: stretch;
+          width: 20%;
+          font-size: 18px;
+          font-family: Gilroy-Regular, Gilroy;
+          font-weight: 400;
+          color: #ffffff;
+          line-height: 26px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          padding: 17px 34px;
+          display: inline-block;
+          & > div {
+            align-items: center;
+            display: inline-block;
+            vertical-align: -webkit-baseline-middle;
+          }
+          &.active {
+            background: rgba(255, 255, 255, 0.15);
+          }
+        }
+      }
+    }
+    .details {
+      margin-top: 120px;
+      margin-bottom: 350px;
+      text-align: center;
+      .detailRow {
+        align-items: stretch;
+      }
+      .detailItem {
+        background: rgba(255, 255, 255, 0.06);
+        padding: 60px 20px;
+        height: 100%;
+
+        &.active {
+          background: rgba(255, 255, 255, 0.15);
+        }
+        .itemImg {
+          width: 60px;
+          height: 60px;
+          margin: 0 auto;
+        }
+        p {
+          font-size: 18px;
+          font-family: Gilroy-Regular, Gilroy;
+          font-weight: 400;
+          color: #ffffff;
+          line-height: 24px;
+          margin-top: 40px;
+          margin-bottom: 0;
+        }
+      }
+    }
+    .partnerWpr {
+      text-align: center;
+    }
+
+    .partnerItem {
+      width: 120px;
+      height: 50px;
+      display: inline-block;
+      margin: 35px 0;
+    }
+
+    img {
+      height: 100%;
+    }
+  }
+}

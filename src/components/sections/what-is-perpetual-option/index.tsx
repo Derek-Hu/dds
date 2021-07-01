@@ -3,6 +3,11 @@ import SectionTitle from '../section-title/index';
 import { formatMessage } from 'locale/i18n';
 import { Row, Col } from 'antd';
 
+import oneImg from '../../../assets/what-is/1.svg';
+import twoImg from '../../../assets/what-is/2.svg';
+import threeImg from '../../../assets/what-is/3.svg';
+import fourImg from '../../../assets/what-is/4.svg';
+
 const Image = ({ src }: { src: string }) => {
   return (
     <div className={styles.itemImg}>
@@ -32,19 +37,19 @@ export default () => {
           <Row>
             <Col span={colSize}>
               <div className={styles.detailItem}>
-                <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+                <Image src={oneImg} />
                 <p>Exercise at any moment and has no expiration date</p>
               </div>
             </Col>
             <Col span={colSize}>
               <div className={styles.detailItem}>
-                <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+                <Image src={twoImg} />
                 <p>Long-term exposure without the need to roll position, decrease opertional work and risk</p>
               </div>
             </Col>
             <Col span={colSize}>
               <div className={styles.detailItem}>
-                <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+                <Image src={threeImg} />
                 <p>Concentrated liquidity, avoid liquidity fragmentation by differnet expiration date and price</p>
               </div>
             </Col>
@@ -55,7 +60,7 @@ export default () => {
           <Row>
             <Col span={colSize}>
               <div className={styles.detailItem}>
-                <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+                <Image src={fourImg} />
                 <p>
                   No position loss, the gain has infinite potantial while the maximum loss is capped by the funding fee
                 </p>
