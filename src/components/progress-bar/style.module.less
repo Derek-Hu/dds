@@ -12,6 +12,15 @@
   line-height: 19px;
 }
 
+.barValues {
+  overflow: hidden;
+  & > span:first-child {
+    float: left;
+  }
+  & > span:last-child {
+    float: right;
+  }
+}
 .percentage,
 .dds {
   line-height: 44px;
@@ -35,7 +44,7 @@
 .mobile {
   .dds,
   .percentage {
-    font-size: 18px;
+    font-size: 14px;
   }
   .today,
   .unit,

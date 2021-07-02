@@ -1,14 +1,19 @@
 import { Component } from 'react';
-import { Menu, Icon, Row, Col, Button, Drawer } from 'antd';
+import { Button, Col, Icon, Menu, Row } from 'antd';
 import styles from './style.module.less';
-import { NavLink as Link, Link as LLink } from 'react-router-dom';
-import SiteContext from '../../layouts/SiteContext';
+import { Link as LLink, Route } from 'react-router-dom';
+import SiteContext, { ISiteContextProps } from '../../layouts/SiteContext';
 import ConnectWallet from '../connect-wallet/index';
 import Logo from '~/assets/imgs/logo.png';
+import LogoMobile from '~/assets/imgs/logo-mobile.png';
 import LogoWhite from '~/assets/imgs/logo-white.png';
-import { homeBasePath, ddsBasePath } from '../../constant/index';
+import { ddsBasePath, DefaultKeNetwork, homeBasePath } from '../../constant/index';
 import { isNumberLike } from '../../util/math';
 import { formatMessage } from 'locale/i18n';
+import { shortAddress } from '../../util/index';
+import NetworkSwitch from '../network-switch/index';
+import { RouteKey } from '../../constant/routes';
+import { TokenFaucet } from './token-faucet';
 
 const { SubMenu } = Menu;
 
@@ -44,7 +49,34 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
   state = {
     current: 'mail',
     drawerOpen: false,
+    selectedNetwork: (this.context as ISiteContextProps).currentNetwork || DefaultKeNetwork,
   };
+
+  componentWillReceiveProps(nextProps: any) {
+    if (!nextProps.location) {
+      return;
+    }
+    const key: RouteKey | null = this.findMenuKey((nextProps.location.pathname as string).substring(1));
+    if (key) {
+      this.setState({ current: key });
+    }
+  }
+
+  findMenuKey(path: string): RouteKey | null {
+    if (path.startsWith(RouteKey.pool)) {
+      return RouteKey.pool;
+    } else if (path.startsWith(RouteKey.trade)) {
+      return RouteKey.trade;
+    } else if (path.startsWith(RouteKey.mining)) {
+      return RouteKey.mining;
+    } else if (path.startsWith(RouteKey.swapBurn)) {
+      return RouteKey.swapBurn;
+    } else if (path.startsWith(RouteKey.broker)) {
+      return RouteKey.broker;
+    } else {
+      return null;
+    }
+  }
 
   openDrawer = () => {
     this.setState({
@@ -59,7 +91,6 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
   };
 
   handleClick = (e: any) => {
-    console.log('click ', e);
     this.setState({
       current: e.key,
     });
@@ -89,14 +120,15 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
   render() {
     const { darkMode } = this.props;
     const { drawerOpen } = this.state;
+    // const { currentNetwork } = this.context;
     return (
       <SiteContext.Consumer>
-        {({ isMobile, account }) =>
+        {({ isMobile, account, network }) =>
           isMobile ? (
             darkMode ? (
               <div className={styles.homeHeader}>
-                <a href={`${homeBasePath}/home`}>
-                  <img src={window.location.hash === '#/home' ? LogoWhite : Logo} alt="" width="120px" />
+                <a href={`${homeBasePath}/${RouteKey.home}`}>
+                  <img src={window.location.hash === `#/${RouteKey.home}` ? LogoWhite : Logo} alt="" width="120px" />
                 </a>
                 {/* <Row>
                   <Col span={12}>Shield</Col>
@@ -113,16 +145,16 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
             ) : (
               <div className={[styles.root, darkMode ? '' : styles.light, styles.mobileLight].join(' ')}>
                 <Row type="flex" justify="space-between" align="middle">
-                  <Col span={2} style={{ textAlign: 'center' }}>
-                    D
+                  <Col span={4} style={{ textAlign: 'center' }}>
+                    <img alt="" src={LogoMobile} width="30px" />
                   </Col>
-                  <Col span={22} style={{ textAlign: 'right' }}>
+                  <Col span={20} style={{ textAlign: 'right' }}>
                     <Menu onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal">
-                      <Menu.Item key="trade">
-                        <a href={`${ddsBasePath}/trade`}>{formatMessage({ id: 'menu-trade' })}</a>
+                      <Menu.Item key={RouteKey.trade}>
+                        <a href={`${ddsBasePath}/${RouteKey.trade}`}>Trade</a>
                       </Menu.Item>
-                      <Menu.Item key="pool">
-                        <a href={`${ddsBasePath}/pool`}>{formatMessage({ id: 'menu-pool' })}</a>
+                      <Menu.Item key={RouteKey.pool}>
+                        <a href={`${ddsBasePath}/${RouteKey.pool}`}>Pool</a>
                       </Menu.Item>
                       <SubMenu
                         title={
@@ -132,15 +164,15 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                           </span>
                         }
                       >
-                        <Menu.Item key="setting:1">
-                          <a href={`${ddsBasePath}/mining`}>{formatMessage({ id: 'menu-mining' })}</a>
+                        <Menu.Item key={RouteKey.mining}>
+                          <a href={`${ddsBasePath}/${RouteKey.mining}`}>Mining</a>
                         </Menu.Item>
-                        <Menu.Item key="setting:2">
-                          <a href={`${ddsBasePath}/swap-burn`}>{formatMessage({ id: 'menu-swap-burn' })}</a>
+                        <Menu.Item key={RouteKey.swapBurn}>
+                          <a href={`${ddsBasePath}/${RouteKey.swapBurn}`}>Swap & Burn</a>
                         </Menu.Item>
                       </SubMenu>
-                      <Menu.Item key="broker">
-                        <a href={`${ddsBasePath}/broker`}>{formatMessage({ id: 'menu-broker' })}</a>
+                      <Menu.Item key={RouteKey.broker}>
+                        <a href={`${ddsBasePath}/${RouteKey.broker}`}>Broker</a>
                       </Menu.Item>
                     </Menu>
                   </Col>
@@ -153,17 +185,22 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                 <Col span={12}>
                   <Menu onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal">
                     <Menu.Item key="logo" className={styles.dderivatives}>
-                      <a href={`${homeBasePath}/home`}>
-                        <img src={window.location.hash === '#/home' ? Logo : Logo} alt="" width="120px" />
+                      <a href={`${homeBasePath}/${RouteKey.home}`}>
+                        <img
+                          src={window.location.hash === `#/${RouteKey.home}` ? LogoWhite : Logo}
+                          alt=""
+                          width="120px"
+                        />
                       </a>
                     </Menu.Item>
-                    <Menu.Item key="trade">
-                      <a href={`${ddsBasePath}/trade`}>{formatMessage({ id: 'menu-trade' })}</a>
+                    <Menu.Item key={RouteKey.trade}>
+                      <a href={`${ddsBasePath}/${RouteKey.trade}`}>Trade</a>
                     </Menu.Item>
-                    <Menu.Item key="pool">
-                      <a href={`${ddsBasePath}/pool`}>{formatMessage({ id: 'menu-pool' })}</a>
+                    <Menu.Item key={RouteKey.pool}>
+                      <a href={`${ddsBasePath}/${RouteKey.pool}`}>Pool</a>
                     </Menu.Item>
                     <SubMenu
+                      key="sld"
                       title={
                         <span className="submenu-title-wrapper">
                           SLD&nbsp;&nbsp;
@@ -171,47 +208,51 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                         </span>
                       }
                     >
+                      {/*hidden*/}
+                      <Menu.Item key="mining" style={{ display: 'none' }} />
+                      <Menu.Item key="swap-burn" style={{ display: 'none' }} />
+                      {/*------*/}
+
                       <div className="submenu-dialog">
                         <div className="top">
-                          <div className="title">{formatMessage({ id: 'token-economics' })}</div>
-                          <div className="content">{formatMessage({ id: 'token-economics-description' })}</div>
-                          {/* <Link to="/" className="link" style={{ color: '#1346FF' }}>
-                            Learn more
-                          </Link> */}
+                          <div className="title">Token Economics</div>
+                          <div className="content">
+                            SLD is a utility token for community governance and fuels further Shield ecosystem
+                            development.
+                          </div>
                         </div>
                         <div className="bottom">
-                          <a href={`${ddsBasePath}/mining`} className="link">
-                            {formatMessage({ id: 'menu-mining' })}
+                          <a
+                            href={`${ddsBasePath}/${RouteKey.mining}`}
+                            className="link"
+                            onClick={() => this.setState({ current: RouteKey.mining })}
+                          >
+                            Mining
                           </a>
-                          <a href={`${ddsBasePath}/swap-burn`} className="link">
-                            {formatMessage({ id: 'menu-swap-burn' })}
+                          <a
+                            href={`${ddsBasePath}/${RouteKey.swapBurn}`}
+                            className="link"
+                            onClick={() => this.setState({ current: RouteKey.swapBurn })}
+                          >
+                            Swap & Burn
                           </a>
                         </div>
                       </div>
                     </SubMenu>
-                    <Menu.Item key="broker">
-                      <a href={`${ddsBasePath}/broker`}>{formatMessage({ id: 'menu-broker' })}</a>
+                    <Menu.Item key={RouteKey.broker}>
+                      <a href={`${ddsBasePath}/${RouteKey.broker}`}>Broker</a>
                     </Menu.Item>
-                    {/* <Menu.Item key="analytics">
-                      <Link to="/analytics" activeClassName="ant-menu-item-selected">
-                        Analytics
-                      </Link>
-                    </Menu.Item>
-                    <Menu.Item key="support">
-                      Support&nbsp;&nbsp;
-                      <Icon type="down" />
-                    </Menu.Item> */}
                   </Menu>
                 </Col>
                 <Col span={12} className={styles.connectWpr}>
-                  {window.location.hash === '#/home' ? // <Button className={styles.connectBtn}>
-                  //   <a href={`${ddsBasePath}/trade`}>{formatMessage({ id: 'trade' })}</a>
-                  // </Button>
-                  null : (
+                  {window.location.hash === `#/${RouteKey.home}` ? (
+                    <Button className={styles.connectBtn}>
+                      <a href={`${ddsBasePath}/${RouteKey.trade}`}>Trade</a>
+                    </Button>
+                  ) : (
                     <div className={styles.rightContent}>
-                      <div className={styles.network}>
-                        <span className={styles.icon}></span>
-                        {formatMessage({ id: 'network-kovan' })}
+                      <div style={{ marginRight: '20px' }}>
+                        {network !== null ? <TokenFaucet network={network} /> : null}
                       </div>
                       <ConnectWallet>
                         {account ? (
@@ -227,7 +268,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                                     </span>
                                   ))
                               : null}
-                            <span>{account.address.replace(/^(.{6})(.*)(.{4})/, '$1...$3')}</span>
+                            <span>{shortAddress(account.address)}</span>
                           </div>
                         ) : (
                           <Button className={styles.connectBtn}>{formatMessage({ id: 'connect-wallet' })}</Button>

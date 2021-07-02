@@ -10,9 +10,10 @@ interface IState {
   poolInfo?: ITradePoolInfo;
   loading: boolean;
 }
+
 export default class TradePool extends Component<{ coin: IUSDCoins }, IState> {
   state: IState = {
-    loading: false,
+    loading: true,
   };
 
   UNSAFE_componentWillReceiveProps() {
@@ -25,15 +26,14 @@ export default class TradePool extends Component<{ coin: IUSDCoins }, IState> {
 
   async loadData() {
     const { coin } = this.props;
-    this.setState({
-      loading: true,
-    });
+
     try {
       const poolInfo = await getTradeLiquidityPoolInfo(coin);
       this.setState({
         poolInfo,
       });
     } catch {}
+
     this.setState({
       loading: false,
     });

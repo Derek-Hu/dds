@@ -32,20 +32,18 @@ export default ({ fees, data: { type, amount, coins }, visible, onCancel, onConf
           title={title}
           className={styles.commonModal}
         >
-          <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
-            <Descriptions.Item label={formatMessage({ id: 'type' })} span={24}>
-              {type}
-            </Descriptions.Item>
-            <Descriptions.Item label={formatMessage({ id: 'open-price' })} span={24}>
+          <Descriptions column={1} colon={false}>
+            <Descriptions.Item label="Type">{type}</Descriptions.Item>
+            <Descriptions.Item label="Open Price">
               {fees?.curPrice} {to}
             </Descriptions.Item>
-            <Descriptions.Item label={formatMessage({ id: 'amount' })} span={24}>
+            <Descriptions.Item label="Amount">
               {amount} {from}
             </Descriptions.Item>
-            <Descriptions.Item label={formatMessage({ id: 'funding-fee-lock' })} span={24}>
+            <Descriptions.Item label="Funding Fee Lock">
               {fees?.fundingFeeLocked} {to}
             </Descriptions.Item>
-            <Descriptions.Item label={formatMessage({ id: 'settlement-fee' })} span={24}>
+            <Descriptions.Item label="Settlement Fee">
               {fees?.settlementFee} {to}
             </Descriptions.Item>
           </Descriptions>

@@ -11,6 +11,7 @@ export class WalletManager {
   // metamask 钱包实例
   private readonly metamask: WalletInterface;
 
+  // 钱包类型
   private curWallet: BehaviorSubject<Wallet | null> = new BehaviorSubject<Wallet | null>(null);
 
   constructor() {
@@ -53,6 +54,26 @@ export class WalletManager {
       map(wallets => wallets as Wallet[]),
       take(1)
     );
+  }
+
+  public getMetamaskIns(): WalletInterface {
+    return this.metamask;
+  }
+
+  public getCurWalletInstance(): WalletInterface | null {
+    const walletType: Wallet | null = this.curWallet.getValue();
+    if (walletType === null) {
+      return null;
+    }
+
+    switch (walletType) {
+      case Wallet.Metamask: {
+        return this.metamask;
+      }
+      default: {
+        return null;
+      }
+    }
   }
 
   // -------------------------------------------------------------------

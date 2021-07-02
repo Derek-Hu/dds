@@ -6,12 +6,22 @@
   padding: 0 1em;
   background-color: #f9fafc;
   max-width: 900px;
+  line-height: 1;
+
   &.mobile {
     line-height: 1;
     margin-bottom: 60px;
+    :global {
+      .ant-tabs .ant-tabs-top-content {
+        padding-bottom: 30px;
+      }
+      .ant-tabs-tab {
+        font-size: 12px !important;
+      }
+    }
     & > h2 {
-      font-size: 18px;
-      padding: 30px 0;
+      font-size: 28px;
+      padding: 40px 0;
     }
     .shareTotalTip {
       font-size: 12px;
@@ -31,9 +41,13 @@
       }
 
       .btn {
-        margin: 50px 0 30px;
+        margin: 30px 0;
         width: 100%;
         border-radius: 4px;
+        font-size: 14px;
+      }
+      .redBtn {
+        font-size: 14px;
       }
       .fifo {
         font-size: 12px;
@@ -41,11 +55,25 @@
       .cliamBtn {
         margin-bottom: 0;
       }
+      .wantoBe + button {
+        margin-bottom: 10px !important;
+      }
     }
     .panels {
       margin-top: 0;
       & > div > div {
         margin-top: 30px;
+      }
+    }
+    .liquiditorWpr {
+      span.ads {
+        margin-top: 30px;
+        font-size: 30px !important;
+      }
+      .col:first-child {
+        span.ads {
+          margin-top: 0;
+        }
       }
     }
   }
@@ -114,6 +142,7 @@
         line-height: 1;
         display: block;
         margin-bottom: 20px;
+        padding: 0 10px;
       }
       span.ads + span {
         font-size: 16px;
@@ -164,6 +193,7 @@
     .ant-tabs .ant-tabs-top-content {
       background: #fff;
       padding-bottom: 60px;
+      border-radius: 8px;
     }
 
     .ant-tabs-content {
@@ -197,5 +227,9 @@
   .uppercase {
     text-transform: uppercase;
     line-height: 22px;
+  }
+  .redBtn {
+    width: 40%;
+    font-size: 18px;
   }
 }

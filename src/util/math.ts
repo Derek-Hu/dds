@@ -1,5 +1,6 @@
 import { Decimal } from 'decimal.js';
 import numeral from 'numeral';
+import { BigNumber } from 'ethers';
 
 export const format = (value: any) => {
   if (isNumberLike(value)) {
@@ -88,4 +89,26 @@ export const isNotZeroLike = (value: any) => {
 
 export const isGreaterZero = (value: any) => {
   return isNumberLike(value) && Number(value) > 0;
+};
+
+/**
+ * BigNumber 乘以任意数字，返回的结果是近似整数
+ * @param num - 原始数
+ * @param factor - 乘法因数
+ */
+export const bigNumMultiple = (num: BigNumber, factor: number): BigNumber => {
+  const isFloat = (a: number) => Math.floor(a) !== a;
+
+  if (!isFloat(factor)) {
+    return num.mul(factor);
+  } else {
+    let times = 0;
+    let cur = factor;
+    while (isFloat(cur)) {
+      cur = cur * 10;
+      times++;
+    }
+
+    return num.mul(cur).div(Math.pow(10, times));
+  }
 };

@@ -59,7 +59,10 @@ export default class PoolPage extends Component {
                   </Checkbox>,
                 ]}
               >
-                <p>{formatMessage({ id: 'shield-private-warning' })}</p>
+                <p>
+                  Shield has been audited by Peckshield and Slowmist. You can check audit reports on GitHub. Your funds
+                  still might be at risk and you can lose up to 100% of the amount provided. Use at your risk.
+                </p>
               </Modal>
             </div>
           );

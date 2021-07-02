@@ -4,7 +4,8 @@ import styles from './style.module.less';
 import option, { seryName } from './option';
 // import MockData from './mock';
 import dayjs from 'dayjs';
-import { Select, Row, Col, Button } from 'antd';
+import { Row, Col, Button } from 'antd';
+// import { Select, Row, Col, Button } from 'antd';
 import SiteContext from '../../layouts/SiteContext';
 import { getPriceGraphData } from '../../services/trade.service';
 import { format, isNumberLike } from '../../util/math';
@@ -12,7 +13,7 @@ import Coin1 from '~/assets/imgs/coin1.png';
 import Coin2 from '~/assets/imgs/coin2.png';
 import { formatMessage } from 'locale/i18n';
 
-const { Option } = Select;
+// const { Option } = Select;
 
 const echarts = window.echarts;
 
@@ -35,6 +36,7 @@ const sig = value => {
   }
   return '';
 };
+
 export default class MainLayout extends Component {
   ref = React.createRef();
 
@@ -42,29 +44,23 @@ export default class MainLayout extends Component {
 
   state = {
     duration: 'day',
-    from: 'ETH',
-    to: 'DAI',
   };
 
   chartInstance = null;
 
-  loadGraph = async (from, to, duration) => {
-    if (this.timer) {
-      clearTimeout(this.timer);
-    }
-    const graphData = await getPriceGraphData({ from, to }, duration).catch(() => ({}));
+  updateGraphData = (data, duration) => {
+    const { from, to } = this.props;
+    let pFrom = from;
+    let pTo = to;
 
-    this.timer = setTimeout(() => {
-      this.loadGraph(from, to, duration);
-    }, 5000);
-
-    const { data } = graphData || {};
     if (!data || !data.length) {
-      return;
+      data = [];
     }
+
     this.setState({
-      graphData,
-      price: graphData.price,
+      // price: graphData.price,
+      dataFrom: pFrom,
+      dataTo: pTo,
     });
 
     if (!this.chartInstance) {
@@ -73,14 +69,19 @@ export default class MainLayout extends Component {
       this.chartInstance = echarts.init(container);
       this.chartInstance.setOption(option);
     }
-    const { xData, yData } = data.reduce(
-      (all, { timestamp, value }) => {
-        all.xData.push(dayjs(timestamp).format(Rule[duration]));
-        all.yData.push(value);
-        return all;
-      },
-      { xData: [], yData: [] }
-    );
+    const consistent = pFrom === this.props.from && pTo === this.props.to;
+    //console.log('consistent', this.props.from, this.props.to);
+
+    const { xData, yData } = consistent
+      ? data.reduce(
+          (all, { timestamp, value }) => {
+            all.xData.push(dayjs(timestamp).format(Rule[duration]));
+            all.yData.push(value);
+            return all;
+          },
+          { xData: [], yData: [] }
+        )
+      : { xData: [], yData: [] };
 
     this.chartInstance.setOption({
       grid: {
@@ -113,70 +114,84 @@ export default class MainLayout extends Component {
       if (this.chartInstance.containPixel('series', pointInPixel)) {
         let xIndex = this.chartInstance.convertFromPixel({ seriesIndex: 0 }, [params.offsetX, params.offsetY])[0];
         this.setState({
-          price: yData[xIndex],
+          // price: yData[xIndex],
         });
       }
     });
     this.chartInstance.getZr().on('mouseout', () => {
       this.setState({
-        price: graphData.price,
+        // price: graphData.price,
       });
     });
+  };
+
+  loadGraph = async duration => {
+    const { from, to, updatePrice } = this.props;
+    let pFrom = from;
+    let pTo = to;
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
+    // console.log('dataFrom loadGraph start', from, to);
+    const graphData = await getPriceGraphData({ from: pFrom, to: pTo }, duration).catch(() => ({}));
+    // console.log('dataFrom loadGraph end', pFrom, this.props.from);
+    this.timer = setTimeout(() => {
+      this.loadGraph(duration);
+    }, 5000);
+
+    updatePrice && updatePrice(graphData.price);
+
+    const { data } = graphData || {};
+    this.updateGraphData(data, duration);
   };
   componentWillUnmount() {
     if (this.timer) {
       clearTimeout(this.timer);
     }
   }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (this.props.from !== nextProps.from) {
+      const { duration } = this.state;
+      this.updateGraphData([], duration);
+    }
+  }
+
   async componentDidMount() {
-    const { from, to } = this.props;
     const { duration } = this.state;
-
-    this.setState({
-      from: from.toUpperCase(),
-      to: to.toUpperCase(),
-    });
-
-    this.loadGraph(from, to, duration);
+    this.loadGraph(duration);
   }
 
   changeDuration = key => {
-    const { from, to } = this.state;
     this.setState({
       duration: key,
     });
-    this.loadGraph(from, to, key);
+    this.loadGraph(key);
   };
   render() {
-    const { from, to, graphData, duration, price } = this.state;
+    const { curPrice, from, to } = this.props;
+    const { dataFrom, dataTo, graphData, duration } = this.state;
     const { percentage, range } = graphData || {};
+    const consistent = dataFrom === from && to === dataTo;
+    const selectedCoinPair = `${from}/${to}`;
+    const price = consistent ? curPrice : '';
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => {
-          const width = isMobile ? window.innerWidth - 32 : '100%';
+          const width = '100%';
           return (
             <div className={[styles.root, isMobile ? styles.mobile : ''].join(' ')}>
               <div className={styles.headArea}>
                 <img src={Coin1} alt="" width="26px" style={{ position: 'relative', right: '-4px' }} />
                 <img src={Coin2} alt="" width="26px" />
-                <Select defaultValue="ETH/DAI" style={{ width: 120 }}>
+                <span style={{ display: 'inline-block', marginLeft: '1.5em', lineHeight: '26px' }}>
+                  {selectedCoinPair}
+                </span>
+                {/* <Select value={selectedCoinPair} style={{ width: 120 }}>
                   <Option value="ETH/DAI">ETH/DAI</Option>
-                  <Option value="ETH/USDT" disabled>
-                    ETH/USDT
-                  </Option>
-                  <Option value="ETH/USDC" disabled>
-                    ETH/USDC
-                  </Option>
-                  <Option value="WBTC/DAI" disabled>
-                    WBTC/DAI
-                  </Option>
-                  <Option value="WBTC/USDT" disabled>
-                    WBTC/USDT
-                  </Option>
-                  <Option value="WBTC/USDC" disabled>
-                    WBTC/USDC
-                  </Option>
-                </Select>
+                  <Option value="BNB/DAI">BNB/DAI</Option>
+                  <Option value={selectedCoinPair}>{selectedCoinPair}</Option>
+                </Select> */}
               </div>
               <Row type="flex" justify="space-between" align="middle">
                 <Col xs={24} sm={24} md={12} lg={12} className={styles.currPrice}>
@@ -201,7 +216,7 @@ export default class MainLayout extends Component {
                 </Col>
               </Row>
 
-              <div id="k-line" style={{ width: width, margin: '0', height: '400px' }}></div>
+              <div id="k-line" style={{ width: width, margin: '0 auto', height: '400px' }}></div>
             </div>
           );
         }}

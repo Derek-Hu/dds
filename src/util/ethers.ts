@@ -10,6 +10,11 @@ export function toEthers(
   decimal: number,
   coin: number | ISLD | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'
 ): string {
+  if (num === undefined) {
+    console.warn('number value is undefined.');
+    return '0';
+  }
+
   let numStr = num.toString();
   const wei = typeof coin === 'number' ? coin : getTokenWei(coin);
 
@@ -47,14 +52,6 @@ export function keepDecimal(num: number, decimal: number): string {
   }
 }
 
-//
-export function toBigNumber(num: number, weight: number): BigNumber {
-  const a = (num * 1000000).toString();
-  const by = '1' + new Array(weight - 6).fill('0').join('');
-
-  return BigNumber.from(a).mul(by);
-}
-
 export function tokenBigNumber(amount: number, coin: ISLD | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'): BigNumber {
   const wei = getTokenWei(coin);
 
@@ -69,14 +66,31 @@ export function tokenBigNumber(amount: number, coin: ISLD | IUSDCoins | IReUSDCo
   return BigNumber.from(amount.toString() + new Array(wei).fill('0').join(''));
 }
 
-export function toExchangePair(pair: IExchangePair): ExchangeCoinPair {
-  const eth: IFromCoins = pair.startsWith('ETH') ? 'ETH' : 'BTC';
-  const usd: IUSDCoins = pair.substr(eth.length) as IUSDCoins;
+export function toExchangePair(pair: IExchangeStr): ExchangeCoinPair {
+  switch (pair) {
+    case 'ETHDAI': {
+      return { USD: 'DAI', ETH: 'ETH' };
+    }
+    case 'BTCDAI': {
+      return { USD: 'DAI', ETH: 'BTC' };
+    }
+    case 'BTCUSDC': {
+      return { USD: 'USDC', ETH: 'BTC' };
+    }
+    case 'BTCUSDT': {
+      return { USD: 'USDT', ETH: 'BTC' };
+    }
+    case 'EHTUSDT': {
+      return { USD: 'USDT', ETH: 'ETH' };
+    }
+    case 'ETHUSDC': {
+      return { USD: 'USDC', ETH: 'ETH' };
+    }
+  }
+}
 
-  return {
-    USD: usd,
-    ETH: eth,
-  };
+export function fromExchangePair(exchange: ExchangeCoinPair): IExchangeStr {
+  return (exchange.ETH + exchange.USD) as IExchangeStr;
 }
 
 export function getTokenWei(coin: ISLD | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'): number {

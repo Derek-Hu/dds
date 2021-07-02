@@ -1,5 +1,5 @@
 import { Tabs, Button, Row, Col, Select, Input } from 'antd';
-import { CustomTabKey, SupportedCoins } from '../../../constant/index';
+import { SupportedCoins } from '../../../constant/index';
 import styles from './style.module.less';
 import ModalRender from '../../modal-render/index';
 import { formatMessage } from 'locale/i18n';

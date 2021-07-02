@@ -21,10 +21,12 @@ export default (props: IMiningShare) => {
           <h2>{title}</h2>
           <p>{desc}</p>
           {Array.isArray(coins)
-            ? coins.map((coin) => <WithIndicator loading={loading} totalMode={totalMode} data={coin} />)
+            ? coins.map((coin, index) => (
+                <WithIndicator key={index} loading={loading} totalMode={totalMode} data={coin} />
+              ))
             : coins
-            ? Object.keys(coins).map((label) => (
-                <WithIndicator loading={loading} totalMode={totalMode} data={{ label, ...coins[label] }} />
+            ? Object.keys(coins).map(label => (
+                <WithIndicator key={label} loading={loading} totalMode={totalMode} data={{ label, ...coins[label] }} />
               ))
             : null}
           {children}

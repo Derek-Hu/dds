@@ -9,7 +9,7 @@ import { formatMessage } from 'locale/i18n';
 export default {
   dom: null,
 
-  $run(url: string) {
+  $run(url: string, pendingText = 'Pending', failText = 'Failed') {
     // @ts-ignore
     this.hide();
     // @ts-ignore
@@ -32,13 +32,7 @@ export default {
             <div className={styles.imgContent}>
               <img src={url} alt="" className={url === pending ? styles.loading : ''} />
             </div>
-            <p>
-              {url === fail
-                ? formatMessage({ id: 'failed' })
-                : url === success
-                ? formatMessage({ id: 'succeed' })
-                : formatMessage({ id: 'pending' })}
-            </p>
+            <p>{url === fail ? failText : url === success ? 'Succeed' : pendingText}</p>
             {url === pending ? null : (
               <Button type="primary" onClick={() => this.hide()} className={styles.btn}>
                 {formatMessage({ id: 'ok' })}
@@ -53,14 +47,22 @@ export default {
     // @ts-ignore
     document.body.appendChild(this.dom);
   },
-  showLoading() {
-    this.$run(pending);
+  showLoading(loadingText: string | null = null) {
+    if (loadingText) {
+      this.$run(pending, loadingText);
+    } else {
+      this.$run(pending);
+    }
   },
   showSuccess() {
     this.$run(success);
   },
-  showFail() {
-    this.$run(fail);
+  showFail(failText: string | null = null) {
+    if (failText && failText.trim().length > 0) {
+      this.$run(fail, '', failText);
+    } else {
+      this.$run(fail);
+    }
   },
   hide() {
     // @ts-ignore

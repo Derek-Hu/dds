@@ -129,7 +129,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
       <SiteContext.Consumer>
         {({ isMobile }) => (
           <div>
-            <div style={{ paddingTop: '10px' }}>
+            <div style={{ padding: '10px 10px 0' }}>
               <h3>{formatMessage({ id: 'arp' })}</h3>
               <p className={styles.coins}>
                 <Placeholder loading={false} width={'5em'}>
@@ -138,8 +138,8 @@ export default class LiquidityProvided extends Component<IProps, IState> {
               </p>
               <Auth>
                 <div className={styles.actionArea}>
-                  <Row gutter={[isMobile ? 0 : 12, isMobile ? 15 : 0]}>
-                    <Col xs={24} sm={24} md={8} lg={6}>
+                  <Row gutter={[isMobile ? 12 : 12, isMobile ? 15 : 0]}>
+                    <Col xs={8} sm={8} md={8} lg={6}>
                       <Select
                         value={selectedCoin}
                         style={{ width: '100%', height: 50 }}
@@ -150,7 +150,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                         <Option value="DAI">DAI</Option>
                       </Select>
                     </Col>
-                    <Col xs={24} sm={24} md={16} lg={18}>
+                    <Col xs={16} sm={16} md={16} lg={18}>
                       <InputNumber
                         min={1}
                         onChange={this.onAmountChange}
@@ -183,11 +183,11 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                 height={300}
                 footer={null}
               >
-                <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
-                  <Descriptions.Item label={formatMessage({ id: 'amount' })} span={24}>
+                <Descriptions column={1} colon={false}>
+                  <Descriptions.Item label={formatMessage({ id: 'amount' })}>
                     {amount} {selectedCoin}
                   </Descriptions.Item>
-                  <Descriptions.Item label={formatMessage({ id: 'receive' })} span={24}>
+                  <Descriptions.Item label={formatMessage({ id: 'receive' })}>
                     {reAmount} re{selectedCoin}
                   </Descriptions.Item>
                 </Descriptions>

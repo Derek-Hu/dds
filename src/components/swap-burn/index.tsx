@@ -93,7 +93,7 @@ export default class PoolArea extends Component<any, IState> {
         {({ isMobile }) => {
           return (
             <div className={styles.root}>
-              <h1>{formatMessage({ id: 'menu-swap-burn' })}</h1>
+              <h2>{formatMessage({ id: 'menu-swap-burn' })}</h2>
               <div className={styles.card}>
                 <div className={styles.imgBar}>
                   <SwapBar
@@ -171,14 +171,10 @@ export default class PoolArea extends Component<any, IState> {
                     onCancel={this.closeSwapModal}
                     footer={null}
                   >
-                    <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
-                      <Descriptions.Item label="Swap Ratio" span={24}>
-                        1SLD : {format(data?.rate)} USD
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Swap Amount" span={24}>
-                        {format(amount)} SLD
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Receive" span={24}>
+                    <Descriptions column={1} colon={false}>
+                      <Descriptions.Item label="Swap Ratio">1SLD : {format(data?.rate)} USD</Descriptions.Item>
+                      <Descriptions.Item label="Swap Amount">{format(amount)} SLD</Descriptions.Item>
+                      <Descriptions.Item label="Receive">
                         {transferText} {selectedCoin}
                       </Descriptions.Item>
                     </Descriptions>

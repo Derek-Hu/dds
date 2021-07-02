@@ -6,13 +6,11 @@ import {
   getLiquiditorBalanceRecord,
   claimLiquidityLocked,
 } from '../../../services/mining.service';
-import { Visible } from '../../builtin/hidden';
 import SiteContext from '../../../layouts/SiteContext';
 import Auth, { Public } from '../../builtin/auth';
 import { format, isGreaterZero } from '../../../util/math';
 import ModalRender from '../../modal-render/index';
 import ColumnConvert from '../../column-convert/index';
-import dayjs from 'dayjs';
 import Placeholder from '../../placeholder/index';
 import { formatTime } from '../../../util/time';
 import { formatMessage } from 'locale/i18n';
@@ -121,7 +119,7 @@ export default class LiquiditorReward extends Component<any, IState> {
   render() {
     const { data, loading, visible, tableData } = this.state;
     return (
-      <div>
+      <div style={{ padding: '0 10px' }}>
         <h3>
           {this.context.address
             ? formatMessage({ id: 'your-active-liquidity-rewards' })

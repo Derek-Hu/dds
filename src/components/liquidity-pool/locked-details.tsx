@@ -1,12 +1,10 @@
-import { Icon, Button } from 'antd';
+import { Icon, Button, Switch } from 'antd';
 import { Form, Row, Col, Select, Descriptions } from 'antd';
-import dayjs from 'dayjs';
 import styles from './locked.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import { percentage, multiple, isGreaterZero, format, truncated } from '../../util/math';
 import { Component } from 'react';
-import { getCurPrice } from '../../services/trade.service';
-import { getPrivateOrders, addPrivateOrderMargin } from '../../services/pool.service';
+import { getPrivateOrders, addPrivateOrderMargin, getIsUserRejectPrivateOrder } from '../../services/pool.service';
 import ColumnConvert from '../column-convert/index';
 import ModalRender from '../modal-render/index';
 import modalStyles from '../funding-balance/modals/style.module.less';
@@ -15,6 +13,7 @@ import { formatTime } from '../../util/time';
 import DTable from '../table/index';
 import settings from '../../constant/settings';
 import { formatMessage } from 'locale/i18n';
+import { contractAccessor } from '../../wallet/chain-access';
 
 interface IState {
   data: PrivatePoolOrder[];
@@ -27,7 +26,11 @@ interface IState {
   pageSize: number;
   initLoad: boolean;
   end: boolean;
+  isTakeOrder: boolean;
+  isTakeOrderChangeable: boolean;
+  isLoadingTakeOrder: boolean;
 }
+
 export default class Balance extends Component<any, IState> {
   state: IState = {
     data: [],
@@ -39,13 +42,26 @@ export default class Balance extends Component<any, IState> {
     pageSize: 50,
     initLoad: true,
     end: false,
+    isTakeOrder: true,
+    isTakeOrderChangeable: true,
+    isLoadingTakeOrder: true,
   };
 
   static contextType = SiteContext;
 
   async componentDidMount() {
     // this.loadData();
+    this.getIsTakingOrder();
   }
+
+  getIsTakingOrder = async () => {
+    const { isReject, isChangeable } = await getIsUserRejectPrivateOrder();
+    this.setState({
+      isTakeOrder: !isReject,
+      isLoadingTakeOrder: false,
+      isTakeOrderChangeable: isChangeable,
+    });
+  };
 
   loadPage = async (page: number, pageSize: number) => {
     return await getPrivateOrders(page, pageSize, true);
@@ -82,10 +98,11 @@ export default class Balance extends Component<any, IState> {
 
   orderModalVisible = this.setModalVisible('modalVisible');
 
-  columns = ColumnConvert<PrivatePoolOrder, { operation: any }>({
+  columns = ColumnConvert<PrivatePoolOrder, { operation: any; type: any }>({
     column: {
       orderId: formatMessage({ id: 'order-id' }),
       time: formatMessage({ id: 'time' }),
+      type: 'Type',
       amount: formatMessage({ id: 'amount' }),
       lockedAmount: formatMessage({ id: 'locked-amount' }),
       openPrice: formatMessage({ id: 'open-price' }),
@@ -100,8 +117,9 @@ export default class Balance extends Component<any, IState> {
           return formatTime(value);
         case 'amount':
         case 'openPrice':
-        case 'lockedAmount':
           return format(value);
+        case 'lockedAmount':
+          return `${format(value)} ${record.coin}`;
         case 'operation':
           return record.status === 'ACTIVE' ? (
             <Button
@@ -137,8 +155,16 @@ export default class Balance extends Component<any, IState> {
     });
   };
 
+  // checked === true: takingOrders; checked===false: rejectOrders;
+  onRejectOrderChange = (checked: boolean) => {
+    this.setState({ isLoadingTakeOrder: true });
+    contractAccessor.setPriPoolRejectOrder(!checked).subscribe(() => {
+      this.getIsTakingOrder();
+    });
+  };
+
   render() {
-    const { loading, end, initLoad, curPrice, data, modalVisible, addAmount, selectedItem } = this.state;
+    const { loading, end, initLoad, curPrice, data, modalVisible, addAmount, selectedItem, isTakeOrder } = this.state;
     return (
       <SiteContext.Consumer>
         {({ isMobile, account }) => {
@@ -150,7 +176,22 @@ export default class Balance extends Component<any, IState> {
           const marginTxt = isNaN(marginRate) ? '-' : marginRate + '%';
           return (
             <div className={styles.tableList}>
-              <h4>{formatMessage({ id: 'liquidity-locked-detail' })}</h4>
+              <h4>
+                Liquidity Locked Detail
+                <div className={styles.orderSwitch}>
+                  <span className={styles.stateTitle}>Taking Orders: </span>
+                  <span className={this.state.isTakeOrder ? styles.stateOff : styles.state}>OFF</span>
+                  <Switch
+                    disabled={!this.state.isTakeOrderChangeable}
+                    defaultChecked={true}
+                    checked={isTakeOrder}
+                    onChange={this.onRejectOrderChange}
+                    loading={this.state.isLoadingTakeOrder}
+                  />
+                  <span className={this.state.isTakeOrder ? styles.state : styles.stateOff}>ON</span>
+                </div>
+              </h4>
+
               <DTable hasMore={true} columns={this.columns} rowKey="orderId" loadPage={this.loadPage} />
               {/* {initLoad ? (
                 <>
@@ -189,27 +230,25 @@ export default class Balance extends Component<any, IState> {
                 title={formatMessage({ id: 'add-margin' })}
                 className={modalStyles.commonModal}
               >
-                <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
-                  <Descriptions.Item label={formatMessage({ id: 'order-id' })} span={24}>
-                    {selectedItem?.orderId}
-                  </Descriptions.Item>
-                  <Descriptions.Item label={formatMessage({ id: 'current-margin-rate' })} span={24}>
+                <Descriptions column={1} colon={false}>
+                  <Descriptions.Item label="Order Id">{selectedItem?.orderId}</Descriptions.Item>
+                  <Descriptions.Item label="Current margin rate">
                     {/* // @ts-ignore */}
                     {marginTxt}
                   </Descriptions.Item>
-                  {/* <Descriptions.Item label="Time" span={24}>
+                  {/* <Descriptions.Item label="Time" >
                   {formatTime(selectedItem?.time)}
                 </Descriptions.Item>
-                <Descriptions.Item label="Amount" span={24}>
+                <Descriptions.Item label="Amount" >
                   {format(selectedItem?.amount)}
                 </Descriptions.Item>
-                <Descriptions.Item label="Locked Amount" span={24}>
+                <Descriptions.Item label="Locked Amount" >
                   {format(selectedItem?.lockedAmount)}
                 </Descriptions.Item>
-                <Descriptions.Item label="Open Price" span={24}>
+                <Descriptions.Item label="Open Price" >
                   {format(selectedItem?.openPrice)}
                 </Descriptions.Item>
-                <Descriptions.Item label="Coins" span={24}>
+                <Descriptions.Item label="Coins" >
                   {selectedItem?.coin}
                 </Descriptions.Item> */}
                 </Descriptions>

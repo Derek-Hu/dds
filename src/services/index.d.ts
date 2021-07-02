@@ -26,11 +26,11 @@ declare interface ICoinAmount {
   amount: number;
 }
 
-declare type IFromCoins = 'ETH' | 'BTC';
+declare type IFromCoins = 'ETH' | 'BTC' | 'BNB';
 declare type ISLD = 'SLD';
 declare type IUSDCoins = 'DAI' | 'USDT' | 'USDC';
 declare type IReUSDCoins = 'reDAI' | 'reUSDT' | 'reUSDC';
-declare type IExchangePair = 'ETHDAI' | 'EHTUSDT' | 'ETHUSDC' | 'BTCDAI' | 'BTCUSDT' | 'BTCUSDC';
+declare type IExchangeStr = 'ETHDAI' | 'EHTUSDT' | 'ETHUSDC' | 'BTCDAI' | 'BTCUSDT' | 'BTCUSDC';
 
 declare interface ExchangeCoinPair {
   USD: IUSDCoins;
@@ -53,17 +53,20 @@ declare interface IRecord {
  * Trade Order Status
  */
 declare type IOrderStatus = 'ACTIVE' | 'CLOSED';
+declare type IOrderPendingResult = 'success' | 'pending' | 'fail';
 
 /**
  * Trade Order 记录
  */
 declare interface ITradeRecord {
+  network: string;
+  hash: string;
+  userAddress: string;
   id: string;
   time: number;
   type: ITradeType;
   price: number;
-  // openPrice: number;
-  // curPrice: number;
+  closePrice: number | undefined;
   amount: number;
   cost: number;
   costCoin: IUSDCoins;
@@ -120,20 +123,8 @@ declare interface IPriceGraph {
   }>;
 }
 
-// Pool 页面
-declare interface IPoolCoinAmount {
-  coin: IUSDCoins;
-  amount: number;
-}
-
 /*pool type*/
 declare type IPoolType = 'public' | 'private';
-
-declare interface PoolPercentInfo {
-  DAI: CoinAvailableInfo;
-  USDT: CoinAvailableInfo;
-  USDC: CoinAvailableInfo;
-}
 
 declare interface CoinValueInfo {
   DAI: number;
@@ -148,28 +139,6 @@ declare interface MiningTokenBalance {
 }
 
 declare type LiquiditorRanking = [string, string, string];
-
-declare type RewardRecord = {
-  id: string;
-  amount: number;
-  time: number;
-  price: number;
-  reward: number;
-};
-
-declare interface MyReferralSummary {
-  bonus: number;
-  level: string;
-  ranking: number;
-  referrals: number;
-}
-
-declare type TimeStamp = number;
-
-declare interface CampaignRewardPool {
-  nextDistribution: TimeStamp;
-  coins: CoinValueInfo;
-}
 
 interface ICoinItem {
   coin: IUSDCoins;
@@ -200,7 +169,7 @@ declare interface IBrokerSpark {
 declare interface IBrokerReferal {
   bonus: number;
   level: string;
-  ranking: number;
+  ranking: string;
   referals: number;
 }
 
@@ -237,6 +206,13 @@ declare interface ILiquiditorBalanceRecord {
   reward: number;
 }
 
+// 清算者在单个清算周期内的收益
+declare interface ILiquiditorPeriodReward {
+  rewards: ICoinValue[]; // DAI,USDT,USDC,SLD 收益余额
+  extSLD: number; // 前三名会获得额外SLD，包含在上面的SLD余额中
+  rank: number; // 排名，不在排名榜中返回0
+}
+
 declare interface INonRiskPerpetual {
   fromCoin: IFromCoins;
   toCoin: IUSDCoins;
@@ -259,6 +235,7 @@ declare interface ICoinProgressObj {
 
 declare interface UserAccountInfo {
   address: string;
+  network: string;
   USDBalance: { coin: IUSDCoins; amount: number }[];
 }
 
@@ -266,11 +243,30 @@ declare type IAccount = (Omit<UserAccountInfo, 'USDBalance'> & { USDBalance: { [
 
 // 私池订单信息
 declare interface PrivatePoolOrder {
+  network: string;
+  hash: string;
+  userAddress: string;
   orderId: string;
   time: number;
+  type: ITradeType;
   amount: number;
   lockedAmount: number;
   status: IOrderStatus;
   openPrice: number;
   coin: IUSDCoins;
+  type?: string;
 }
+
+declare type INetworkKey = 'kovan' | 'bsctest' | 'bscmain';
+
+declare type INetworkChain = 'binancecoin' | 'ethereum';
+
+declare interface IRankings {
+  top: Array<string>;
+  current: number;
+}
+
+declare type TradeSetting = {
+  tolerance: number; // percent
+  deadline: number; // minute
+};

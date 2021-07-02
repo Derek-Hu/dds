@@ -6,12 +6,15 @@ interface IProps {
   loading: boolean;
   children: any;
   style?: any;
+  noWrp?: boolean;
 }
-export default ({ width = '100%', style, height = '20px', loading, children }: IProps) => {
+export default ({ width = '100%', noWrp, style, height = '20px', loading, children }: IProps) => {
   return loading ? (
     <div className="animated-background" style={{ width: width, height, ...style }}></div>
+  ) : noWrp ? (
+    children
   ) : (
-    <div style={{ ...style }}>{children}</div>
+    <div>{children}</div>
   );
 };
 

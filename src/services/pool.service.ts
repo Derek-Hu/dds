@@ -3,14 +3,15 @@ import { contractAccessor } from '../wallet/chain-access';
 import { toEthers } from '../util/ethers';
 import { BigNumber } from 'ethers';
 import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
-import { curUserAccount, loginUserAccount } from './account';
+import { getNetworkAndAccount, loginUserAccount } from './account';
 import { from, Observable, of, zip } from 'rxjs';
-import { withLoading } from './utils';
+import { loadingObs, withLoading } from './utils';
 import { defaultCoinDatas, defaultPoolData } from './mock/unlogin-default';
-import { CentralHost, DefaultNetwork } from '../constant';
 import * as request from 'superagent';
-import { Response } from 'superagent';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
+import { CoinBalance, PrivatePoolAccountInfo } from '../wallet/contract-interface';
+import { CentralHost, CentralPath, CentralPort, CentralProto } from '../constant/address';
+import { queryMan } from '../wallet/state-manager';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   if (process.env.NODE_ENV === 'development') {
@@ -32,6 +33,13 @@ export const getCollaborativeArp = async (): Promise<number> => {
 
 /** Done */
 export const getPoolBalance = async (type: 'public' | 'private'): Promise<{ [key in IUSDCoins]: number }> => {
+  // if(process.env.NODE_ENV === 'development'){
+  //   return returnVal({
+  //     DAI: 2330,
+  //     USDC: 2343,
+  //     USDT: 8000
+  //   })
+  // }
   return from(loginUserAccount())
     .pipe(
       switchMap((account: string | null) => {
@@ -41,7 +49,15 @@ export const getPoolBalance = async (type: 'public' | 'private'): Promise<{ [key
           if (type === 'public') {
             return contractAccessor.pubPoolBalanceOf(account);
           } else {
-            return contractAccessor.priPoolBalanceOf(account);
+            return contractAccessor.priPoolUserBalance(account).pipe(
+              map(rs => {
+                const res = new Map<IUSDCoins, BigNumber>();
+                rs.total.forEach(one => {
+                  res.set(one.coin as IUSDCoins, one.balance);
+                });
+                return res;
+              })
+            );
           }
         } else {
           return of(null);
@@ -92,21 +108,45 @@ export const getCollaborativeShareInPool = async (): Promise<IPoolShareInPool[]>
 /** Done */
 export const getPrivateSharePool = async (): Promise<ICoinItem[]> => {
   const getSharePool = (account: string): Observable<ICoinItem[]> => {
-    return zip(contractAccessor.priPoolBalanceOf(account), contractAccessor.priPoolBalanceWhole()).pipe(
-      map((rs: Map<IUSDCoins, BigNumber>[]) => {
-        return Array.from(rs[0].keys()).map(coin => {
-          const amount = Number(toEthers(rs[0].get(coin) as BigNumber, 4));
-          const total = Number(toEthers(rs[1].get(coin) as BigNumber, 4));
-          return { coin, amount, total };
+    return queryMan.priPoolUserBalance(account).pipe(
+      map(rs => {
+        return rs.total.map(one => {
+          const availableNum: BigNumber = rs.available.filter(c => c.coin === one.coin)[0].balance;
+          return {
+            coin: one.coin as IUSDCoins,
+            amount: Number(toEthers(availableNum, 4, one.coin)),
+            total: Number(toEthers(one.balance, 4, one.coin)),
+          } as ICoinItem;
         });
       })
     );
   };
 
-  return from(curUserAccount())
+  return from(loginUserAccount())
     .pipe(
       switchMap((account: string | null) => {
         return account === null ? of(defaultPoolData) : getSharePool(account);
+      }),
+      take(1)
+    )
+    .toPromise();
+};
+
+// 获取私池是否接单的状态
+export const getIsUserRejectPrivateOrder = async (): Promise<{ isReject: boolean; isChangeable: boolean }> => {
+  return from(loginUserAccount())
+    .pipe(
+      switchMap((account: string) => {
+        return queryMan.priPoolUserBalance(account);
+      }),
+      map((info: PrivatePoolAccountInfo) => {
+        const daiBalanceInfo = info.total.filter(one => one.coin === 'DAI');
+        const daiAmount: number = Number(toEthers(daiBalanceInfo[0].balance, 6, 'DAI'));
+        const isChangeable: boolean = daiAmount > 0;
+        const rejectInfo = info.isRejectOrder.filter(one => one.coin === 'DAI');
+        const isReject = rejectInfo[0].reject;
+
+        return { isReject, isChangeable };
       }),
       take(1)
     )
@@ -162,15 +202,33 @@ export const doCollaborativeDeposit = async ({
   coin: IUSDCoins;
   amount: number;
 }): Promise<boolean> => {
-  const result: Promise<boolean> = from(loginUserAccount())
+  let userAccount: string | null = null;
+
+  return from(loginUserAccount())
     .pipe(
-      switchMap(account => {
-        return contractAccessor.provideToPubPool(account, coin, amount);
+      switchMap((account: string) => {
+        userAccount = account;
+        return contractAccessor.needApprovePubPool(amount, account, coin);
+      }),
+      switchMap((need: boolean) => {
+        if (need) {
+          const doApprove: Observable<boolean> = contractAccessor.approvePubPool(coin);
+          return loadingObs(doApprove, 'Approve Failed!', 'Approving...', true);
+        } else {
+          return of(true);
+        }
+      }),
+      switchMap((approved: boolean) => {
+        if (userAccount && approved) {
+          const depositObs: Observable<boolean> = contractAccessor.provideToPubPool(userAccount, coin, amount);
+          return loadingObs(depositObs, 'Deposit Failed!', 'Depositing...');
+        } else {
+          return of(false);
+        }
       }),
       take(1)
     )
     .toPromise();
-  return await withLoading(result);
 };
 
 export const doPoolWithdraw = async ({
@@ -211,16 +269,32 @@ export const doCollaborativeWithdraw = async ({
  * @param amount - DAI的数量
  */
 export const doPrivateDeposit = async ({ coin, amount }: { coin: IUSDCoins; amount: number }): Promise<boolean> => {
-  const result: Promise<boolean> = from(loginUserAccount())
+  let userAccount: string | null = null;
+
+  return from(loginUserAccount())
     .pipe(
       switchMap(account => {
-        return contractAccessor.provideToPrivatePool(account, coin, amount);
+        userAccount = account;
+        return contractAccessor.needApprovePrivatePool(amount, account, coin);
       }),
-      take(1)
+      switchMap((need: boolean) => {
+        if (need) {
+          const approveObs = contractAccessor.approvePrivatePool(coin);
+          return loadingObs(approveObs, 'Approve Failed!', 'Approving...', true);
+        } else {
+          return of(true);
+        }
+      }),
+      switchMap((approved: boolean) => {
+        if (userAccount && approved) {
+          const depositObs = contractAccessor.provideToPrivatePool(userAccount, coin, amount);
+          return loadingObs(depositObs, 'Deposit Failed!', 'Depositing...');
+        } else {
+          return of(false);
+        }
+      })
     )
     .toPromise();
-
-  return withLoading(result);
 };
 
 /**
@@ -241,30 +315,52 @@ export const getPrivateOrders = async (
   pageSize: number,
   isActive = true
 ): Promise<PrivatePoolOrder[]> => {
-  return from(loginUserAccount())
+  // if(process.env.NODE_ENV === 'development'){
+  //   return returnVal([{
+  //     hash: 'string',
+  //     orderId: '233',
+  //     time: new Date().getTime(),
+  //     amount: 3,
+  //     lockedAmount: 2,
+  //     status: 'ACTIVE',
+  //     openPrice: 20,
+  //     coin: 'DAI',
+  //   }])
+  // }
+  return from(getNetworkAndAccount())
     .pipe(
-      switchMap(account => {
-        const baseHost = 'http://' + CentralHost + '/' + DefaultNetwork;
+      switchMap(({ account, network }) => {
+        const baseHost: string =
+          CentralProto === 'https:'
+            ? CentralHost + '/' + CentralPath[network]
+            : CentralHost + ':' + CentralPort[network] + '/' + CentralPath[network];
         const url: string = baseHost + '/transactions/getTransactionsInfo';
         const pageIndex = page - 1;
         const state = isActive ? 1 : 2;
-        return request.post(url).send({
-          page: pageIndex,
-          offset: pageSize,
-          state: state,
-          address: account, //"0xbfce8288fF225188EEC741aBfaac6BC9163d7a2B",
-          name: 'maker',
-        });
+        return from(
+          request.post(url).send({
+            page: pageIndex,
+            offset: pageSize,
+            state: state,
+            address: account,
+            name: 'maker',
+          })
+        ).pipe(
+          map(res => {
+            return { res, network };
+          })
+        );
       }),
-      map((res: Response) => {
+      map(({ res, network }) => {
         if (res.body.code === 200 && res.body.msg.length > 0) {
           const orders: IOrderInfoData[] = res.body.msg;
-          return orders.map(one => new OrderInfoObject(one).getMakerOrder());
+          return orders.map(one => new OrderInfoObject(one, network).getMakerOrder());
         } else {
           return [];
         }
       }),
       catchError(err => {
+        console.warn('error when get private orders', err);
         return of([]);
       }),
       take(1)
@@ -292,10 +388,59 @@ export const addPrivateOrderMargin = async (order: PrivatePoolOrder, amount: num
  * 返回公池中提取锁定的解锁时间戳
  */
 export const getPubPoolWithdrawDeadline = async (): Promise<{ coin: IUSDCoins; time: number }[]> => {
+  // if(process.env.NODE_ENV === 'development'){
+  //   return returnVal({
+  //     DAI: new Date().getTime() + 3430243,
+  //     USDT: new Date().getTime() - 30243,
+  //     USDC: new Date().getTime() - 330243,
+  //   });
+  // }
   return from(loginUserAccount())
     .pipe(
       switchMap((account: string) => {
         return contractAccessor.getPubPoolWithdrawDate(account);
+      }),
+      take(1)
+    )
+    .toPromise();
+};
+
+/**
+ * 获取私池流动性总余额以及最大可取余额
+ *
+ * @return - 三种USD稳定币的总余额以及最大可取余额
+ */
+export const getPrivateLiquidityBalance = async (): Promise<
+  { [key in IUSDCoins]: { total: number; maxWithdraw: number } }
+> => {
+  // if(process.env.NODE_ENV === 'development'){
+  //   return returnVal({
+  //     DAI: { total: 100, maxWithdraw: 200 },
+  //     USDT:{ total: 120, maxWithdraw: 121 },
+  //     USDC: { total: 201, maxWithdraw: 202 },
+  //   });
+  // }
+  return from(loginUserAccount())
+    .pipe(
+      switchMap(account => {
+        return queryMan.priPoolUserBalance(account);
+      }),
+      map(allBalances => {
+        const res = {
+          DAI: { total: 0, maxWithdraw: 0 },
+          USDT: { total: 0, maxWithdraw: 0 },
+          USDC: { total: 0, maxWithdraw: 0 },
+        };
+        allBalances.total.forEach((balance: CoinBalance) => {
+          const coin: IUSDCoins = balance.coin as IUSDCoins;
+          res[coin]['total'] = Number(toEthers(balance.balance, 4));
+        });
+        allBalances.available.forEach(balance => {
+          const coin: IUSDCoins = balance.coin as IUSDCoins;
+          res[coin]['maxWithdraw'] = Number(toEthers(balance.balance, 2));
+        });
+
+        return res;
       }),
       take(1)
     )

@@ -105,6 +105,25 @@ export const ABI = [
     inputs: [
       {
         indexed: true,
+        internalType: 'uint256',
+        name: 'orderID',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'currentPrice',
+        type: 'uint256',
+      },
+    ],
+    name: 'DDSRiskHandler',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
         internalType: 'address',
         name: 'sender',
         type: 'address',
@@ -145,6 +164,32 @@ export const ABI = [
     type: 'event',
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'addr',
+        type: 'address',
+      },
+    ],
+    name: 'SetFormular',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'addr',
+        type: 'address',
+      },
+    ],
+    name: 'SetrepayFudAddr',
+    type: 'event',
+  },
+  {
     inputs: [],
     name: 'DDSBrokerAddr',
     outputs: [
@@ -182,6 +227,11 @@ export const ABI = [
         name: 'currentPrice',
         type: 'uint256',
       },
+      {
+        internalType: 'uint256',
+        name: 'intervalDay',
+        type: 'uint256',
+      },
     ],
     name: 'addFeesForUser',
     outputs: [
@@ -197,6 +247,30 @@ export const ABI = [
       },
     ],
     stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'startTime',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'endTime',
+        type: 'uint256',
+      },
+    ],
+    name: 'calculatIntervalDay',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'pure',
     type: 'function',
   },
   {
@@ -263,13 +337,8 @@ export const ABI = [
         name: 'orderID',
         type: 'uint256',
       },
-      {
-        internalType: 'uint256',
-        name: 'currentPrice',
-        type: 'uint256',
-      },
     ],
-    name: 'closeContract',
+    name: 'closecontract',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -326,6 +395,11 @@ export const ABI = [
         internalType: 'uint256',
         name: 'number',
         type: 'uint256',
+      },
+      {
+        internalType: 'enum IDDSCommon.ContractType',
+        name: 'contractType',
+        type: 'uint8',
       },
     ],
     name: 'fees',
@@ -468,6 +542,11 @@ export const ABI = [
         name: 'currentPrice',
         type: 'uint256',
       },
+      {
+        internalType: 'uint256',
+        name: 'intervalDay',
+        type: 'uint256',
+      },
     ],
     name: 'getHoldFeeByOrderID',
     outputs: [
@@ -588,6 +667,11 @@ export const ABI = [
         name: 'amount',
         type: 'uint256',
       },
+      {
+        internalType: 'enum IDDSCommon.ContractType',
+        name: 'contractType',
+        type: 'uint8',
+      },
     ],
     name: 'getMaxOpenAmount',
     outputs: [
@@ -616,6 +700,11 @@ export const ABI = [
         internalType: 'uint256',
         name: 'openPrice',
         type: 'uint256',
+      },
+      {
+        internalType: 'enum IDDSCommon.ContractType',
+        name: 'contractType',
+        type: 'uint8',
       },
     ],
     name: 'getOpenPositionFee',
@@ -723,7 +812,7 @@ export const ABI = [
   },
   {
     inputs: [],
-    name: 'getPriceByETHDAI',
+    name: 'getPriceByBTCDAI',
     outputs: [
       {
         internalType: 'uint256',
@@ -736,7 +825,7 @@ export const ABI = [
   },
   {
     inputs: [],
-    name: 'getPriceByWBTCDAI',
+    name: 'getPriceByETHDAI',
     outputs: [
       {
         internalType: 'uint256',
@@ -750,19 +839,38 @@ export const ABI = [
   {
     inputs: [
       {
-        internalType: 'uint256',
-        name: 'orderID',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'currentPrice',
-        type: 'uint256',
+        internalType: 'uint256[]',
+        name: 'orderIDs',
+        type: 'uint256[]',
       },
     ],
     name: 'migrationContract',
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'migrationInfo',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -924,11 +1032,6 @@ export const ABI = [
         name: 'orderIDs',
         type: 'uint256[]',
       },
-      {
-        internalType: 'uint256',
-        name: 'currentPrice',
-        type: 'uint256',
-      },
     ],
     name: 'riskControl',
     outputs: [],
@@ -946,6 +1049,32 @@ export const ABI = [
       },
     ],
     stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_DDSLiquidorAddr',
+        type: 'address',
+      },
+    ],
+    name: 'setDDSLiquidorAddr',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_DDSBrokerAddr',
+        type: 'address',
+      },
+    ],
+    name: 'setDDSbrokerAddr',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -1026,7 +1155,20 @@ export const ABI = [
         type: 'address',
       },
     ],
-    name: 'setrepayFudAddr',
+    name: 'setRepayFudAddr',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_riskFundAddr',
+        type: 'address',
+      },
+    ],
+    name: 'setRiskFundAddr',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -1055,19 +1197,6 @@ export const ABI = [
     name: 'transferOwnership',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'uniswapRouter',
-    outputs: [
-      {
-        internalType: 'contract IUniswapV2Router01',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -4781,12 +4910,54 @@ export const ERC20 = [
   },
 ];
 
+export interface ContractRead {
+  getUserSelfWalletBalance(address: string): Observable<CoinBalance[]>;
+
+  getUserSelfReTokenBalance(address: string): Observable<CoinBalance[]>;
+
+  priPoolUserBalance(address: string): Observable<PrivatePoolAccountInfo>;
+
+  /**
+   * 获取公池流动性质押的奖励（质押reToken）
+   *
+   * @param address
+   */
+  getReTokenLiquidityReward(address: string): Observable<PubPoolRewards>;
+
+  /**
+   * 公池流动性挖矿的质押信息
+   */
+  getPubPoolLiquidityShareInfo(address: string): Observable<PubPoolLockInfo>;
+}
+
+export interface ApprovalAction {
+  approveReToken(reToken: IReUSDCoins): Observable<boolean>;
+
+  needApproveReToken(amount: number, address: string, reToken: IReUSDCoins): Observable<boolean>;
+
+  approveUSDFunding(usdToken: IUSDCoins): Observable<boolean>;
+
+  needApproveUSDFunding(amount: number, address: string, usdToken: IUSDCoins): Observable<boolean>;
+
+  needApprovePubPool(amount: number, address: string, usdToken: IUSDCoins): Observable<boolean>;
+
+  approvePubPool(usdToken: IUSDCoins): Observable<boolean>;
+
+  needApprovePrivatePool(amount: number, address: string, usdToken: IUSDCoins): Observable<boolean>;
+
+  approvePrivatePool(usdToken: IUSDCoins): Observable<boolean>;
+}
+
+export interface ActivityItems {
+  claimTestToken(token: IUSDCoins): Observable<boolean>;
+
+  isTestTokenClaimed(userAddr: string, token: IUSDCoins): Observable<boolean>;
+}
+
 /**
  * 合约接口
  */
-export interface ContractProxy {
-  getUserSelfWalletBalance(address: string): Observable<CoinBalance[]>;
-
+export interface ContractProxy extends ContractRead, ApprovalAction, ActivityItems {
   //
 
   getPriceByETHDAI(coin: IUSDCoins): Observable<BigNumber>;
@@ -4797,19 +4968,43 @@ export interface ContractProxy {
 
   watchUserAccount(address: string, coin: IUSDCoins): Observable<UserAccountInfo>;
 
-  getMaxOpenAmount(coin: IUSDCoins, exchange: IExchangePair, maxUSDAmount: number): Observable<BigNumber>;
+  getMaxOpenAmount(coin: IUSDCoins, exchange: IExchangeStr, maxUSDAmount: number): Observable<BigNumber>;
+
+  getMaxOpenTradeAmount(
+    exchange: ExchangeCoinPair,
+    type: ITradeType,
+    availableUsdAmount: number
+  ): Observable<BigNumber>;
 
   depositToken(address: string, count: number, coin: IUSDCoins): Observable<boolean>;
 
   withdrawToken(count: number, coin: IUSDCoins): Observable<boolean>;
 
-  confirmContract(count: number, coin: IUSDCoins): Observable<ConfirmInfo>;
+  confirmContract(exchangeStr: IExchangeStr, count: number, type: ITradeType): Observable<ConfirmInfo>;
 
-  createContract(coin: IUSDCoins, orderType: ITradeType, amount: number, inviter: string): Observable<boolean>;
+  /**
+   *
+   * @param coin
+   * @param orderType
+   * @param amount
+   * @param userPrice - 用户认可的价格
+   * @param inviter
+   * @param slider - 滑点价格百分比 8 === 8%
+   * @param timeout - 超时时常 1分钟 === 60
+   */
+  createContract(
+    coin: IUSDCoins,
+    orderType: ITradeType,
+    amount: number,
+    userPrice: number,
+    inviter: string,
+    slider: number,
+    timeout: number
+  ): Observable<string>;
 
-  closeContract(orderId: ITradeRecord, curPrice: number): Observable<boolean>;
+  closeContract(orderId: ITradeRecord): Observable<boolean>;
 
-  getFundingLockedAmount(coin: IUSDCoins, exchange: IExchangePair, ethAmount: number): Observable<BigNumber>;
+  getFundingLockedAmount(coin: IUSDCoins, exchange: IExchangeStr, ethAmount: number): Observable<BigNumber>;
 
   getUserOrders(address: string, curPrice: BigNumber, page: number, pageSize: number): Observable<any>;
 
@@ -4852,7 +5047,12 @@ export interface ContractProxy {
 
   priPoolBalanceOf(address: string): Observable<Map<IUSDCoins, BigNumber>>;
 
-  priPoolBalanceWhole(): Observable<Map<IUSDCoins, BigNumber>>;
+  // priPoolBalanceWhole(): Observable<Map<IUSDCoins, BigNumber>>;
+
+  /**
+   * @param isReject - 是否停止接单。true：停止接单；false：继续接单
+   */
+  setPriPoolRejectOrder(isReject: boolean): Observable<boolean>;
 
   //
 
@@ -4860,13 +5060,41 @@ export interface ContractProxy {
 
   getLiquidityMiningShare(address: string): Observable<CoinShare[]>;
 
+  /**
+   * @Deprecated
+   */
   getActiveLiquidityRewards(address: string): Observable<BigNumber>;
+
+  /**
+   * 质押reToken，储备流动性挖矿
+   * @param reToken
+   * @param reTokenAmount
+   */
+  lockReTokenForLiquidity(reToken: IReUSDCoins, reTokenAmount: number): Observable<boolean>;
+
+  unLockReTokenFromLiquidity(reToken: IReUSDCoins, reTokenAmount: number): Observable<boolean>;
+
+  claimRewardsForLP1(): Observable<boolean>;
+
+  //queryLockedReTokenAmount(): Observable<any>;
 
   claimRewardsForLP2(): Observable<boolean>;
 
   getSystemFundingBalance(): Observable<CoinBalance[]>;
 
-  getLiquiditorRewards(address: string): Observable<CoinBalance[]>;
+  getLiquiditorRewards(address: string): Observable<LiquditorRewardsResult>;
+
+  getLiquiditorPeriod(): Observable<{ startTime: BigNumber; period: BigNumber }>;
+
+  getLiquiditorRewardsOfPeriod(
+    address: string,
+    period: number
+  ): Observable<{
+    rewards: CoinBalance[];
+    info: { extSLD: BigNumber; rank: BigNumber };
+  }>;
+
+  getLiquiditorRatingList(period: number): Observable<string[]>;
 
   //
 
@@ -4877,6 +5105,12 @@ export interface ContractProxy {
   getBrokerInfo(address: string): Observable<{ refer: BigNumber; claim: CoinBalance[] }>;
 
   getBrokerAllCommission(address: string): Observable<CoinBalance[]>;
+
+  getBrokerMonthlyAwardsInfo(address: string): Observable<CoinBalance[]>;
+
+  getBrokerMonthlyStartTime(): Observable<number>;
+
+  getBrokerMonthlyRewardPool(): Observable<CoinBalance[]>;
 
   doBrokerClaim(): Observable<boolean>;
 }
@@ -4919,4 +5153,48 @@ export interface ConfirmInfo {
   exchgFee: BigNumber;
   openFee: BigNumber;
   total: BigNumber;
+}
+
+export interface ContractInfo {
+  abi: any[];
+  address: string;
+}
+
+export type LiquditorRewardsResult = {
+  usdRewards: CoinBalance[];
+  campaign: BigNumber;
+  compensate: BigNumber;
+  rank: BigNumber;
+};
+
+export interface PrivatePoolAccountInfo {
+  total: CoinBalance[];
+  available: CoinBalance[];
+  locked: CoinBalance[];
+  isRejectOrder: { coin: IUSDCoins; reject: boolean }[];
+}
+
+export interface PubPoolRewards {
+  available: BigNumber;
+  vesting: BigNumber;
+  unactivated: BigNumber;
+}
+
+export interface ReTokenAmountNum {
+  reDAI: BigNumber;
+  reUSDT: BigNumber;
+  reUSDC: BigNumber;
+}
+
+export interface LpTokenAmountNum {
+  lpDAI: BigNumber;
+  lpUSDT: BigNumber;
+  lpUSDC: BigNumber;
+}
+
+export interface PubPoolLockInfo {
+  lockedReToken: ReTokenAmountNum;
+  totalLockedReToken: ReTokenAmountNum;
+  lpToken: LpTokenAmountNum;
+  totalLpToken: LpTokenAmountNum;
 }

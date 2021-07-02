@@ -2,7 +2,6 @@ import { Button, Tabs } from 'antd';
 import ColumnConvert from '../column-convert/index';
 import { format, isNumberLike, formatThree } from '../../util/math';
 import { toCamelCase } from '../../util/string';
-import dayjs from 'dayjs';
 import styles from './style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import { Component } from 'react';
@@ -46,17 +45,23 @@ const getPL = (value?: { val: number; percentage: number }) => {
   const { val, percentage } = value;
   const flag = percentage === 0 ? '' : percentage < 0 ? <span>-</span> : <span>+</span>;
   const color = percentage === 0 ? '#383838' : percentage < 0 ? '#FA4D56' : '#02B464';
+
+  const negative = val <= 0;
   return (
     <span>
       {isNumberLike(val) ? (
-        <>
-          {format(val)}(
-          <span style={{ color }}>
-            {flag}
-            {Math.abs(percentage)}%
-          </span>
-          )
-        </>
+        negative ? (
+          0
+        ) : (
+          <>
+            {format(val)}(
+            <span style={{ color }}>
+              {flag}
+              {Math.abs(percentage)}%
+            </span>
+            )
+          </>
+        )
       ) : (
         '-'
       )}
@@ -75,11 +80,11 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
   static contextType = SiteContext;
 
   UNSAFE_componentWillReceiveProps() {
-    console.log('trade orders refresh...');
+    // console.log('trade orders refresh...');
   }
 
   loadActiveData = async (page: number, pageSize: number) => {
-    return await getTradeOrders(page, pageSize, true);
+    return await getTradeOrders(page, 999999, true);
     // this.setState({
     //   loading: true,
     // });
@@ -117,6 +122,9 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
     attributes: {
       fee: {
         width: '180px',
+      },
+      exercise: {
+        fixed: 'right',
       },
     },
     render: (value, key, record) => {
@@ -157,12 +165,13 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
     },
   });
 
-  historyColumns = ColumnConvert<ITradeRecord, { exercise: any }>({
+  historyColumns = ColumnConvert<ITradeRecord, { closePrice: any; exercise: any }>({
     column: {
       time: formatMessage({ id: 'time' }),
       type: formatMessage({ id: 'type' }),
       price: formatMessage({ id: 'open-price' }),
       amount: formatMessage({ id: 'amount' }),
+      closePrice: 'Close Price',
       cost: formatMessage({ id: 'funding-fee-cost' }),
       fee: formatMessage({ id: 'settlement-fee' }),
       pl: formatMessage({ id: 'P&L' }),
@@ -178,6 +187,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
         case 'time':
           return formatTime(value);
         case 'price':
+        case 'closePrice':
         case 'amount':
           return format(value);
         case 'fee':
@@ -262,7 +272,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
                     columns={this.columns}
                     cacheService={getPendingOrders}
                     timestamp={timestamp}
-                    rowKey="id"
+                    rowKey="hash"
                     loadPage={this.loadActiveData}
                   />
                 </TabPane>
@@ -274,7 +284,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
                     hasMore={true}
                     columns={this.historyColumns}
                     timestamp={timestamp}
-                    rowKey="id"
+                    rowKey="hash"
                     loadPage={this.loadHistoryData}
                   />
                 </TabPane>
@@ -297,7 +307,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
               title={formatMessage({ id: 'close-position' })}
               className={modalStyles.commonModal}
             >
-              <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
+              <Descriptions column={1} colon={false}>
                 <Descriptions.Item label={formatMessage({ id: 'type' })} span={24}>
                   {toCamelCase(type)}
                 </Descriptions.Item>

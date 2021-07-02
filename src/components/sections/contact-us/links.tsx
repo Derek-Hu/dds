@@ -14,7 +14,7 @@ export default [
   },
   {
     icon: <img src={TelegramIcon} alt="" className={styles.icon} />,
-    url: 'https://t.me/shielddaoofficial',
+    url: 'https://t.me/shield_dao',
   },
   {
     icon: <img src={DiscordIcon} alt="" className={styles.icon} />,

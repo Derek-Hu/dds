@@ -18,7 +18,7 @@ export default {
   'bonus-recieved-sld': 'Bonus Received(SLD)',
   'settlement-fee-dollar': 'Settlement Fee ($)',
   'risk-warning': 'RISK WARNING',
-  'understand-and-agree': 'I understand and agree',
+  'understand-and-agree': 'I agree and confirm',
   'dnot-show-again': "Don't show it again",
   'shield-private-warning':
     'Shield protocol is under audit. Your funds still might be at risk and you can lose up to 100% of the amount provided. This is BETA version and use at your own risk.',

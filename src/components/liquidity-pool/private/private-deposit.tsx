@@ -13,6 +13,7 @@ import SiteContext from '../../../layouts/SiteContext';
 import { formatMessage } from 'locale/i18n';
 
 const { Option } = Select;
+
 interface IState {
   modalVisible: boolean;
   selectedCoin: IUSDCoins;
@@ -20,6 +21,7 @@ interface IState {
 }
 
 interface IProps {}
+
 type TModalKeys = Pick<IState, 'modalVisible'>;
 
 export default class LiquidityProvided extends Component<IProps, IState> {
@@ -80,10 +82,20 @@ export default class LiquidityProvided extends Component<IProps, IState> {
       <SiteContext.Consumer>
         {({ isMobile }) => (
           <Auth>
-            <Alert className={styles.poolMsg} message={formatMessage({ id: 'pool-warning-message' })} type="warning" />
+            <Alert
+              className={styles.poolMsg}
+              message={
+                <span>
+                  Note: Private pool involves catering specifically to institutional market makers and sophisticated
+                  parties. <br />
+                  Please be aware of risk before you proceed.
+                </span>
+              }
+              type="warning"
+            />
             <div className={[styles.actionArea, styles.privateArea].join(' ')}>
-              <Row gutter={[isMobile ? 0 : 12, isMobile ? 15 : 0]}>
-                <Col xs={24} sm={24} md={8} lg={6}>
+              <Row gutter={[isMobile ? 12 : 12, isMobile ? 15 : 0]}>
+                <Col xs={8} sm={8} md={8} lg={6}>
                   <Select
                     defaultValue={selectedCoin}
                     style={{ width: '100%', height: 50 }}
@@ -94,7 +106,7 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                     <Option value="DAI">DAI</Option>
                   </Select>
                 </Col>
-                <Col xs={24} sm={24} md={16} lg={18}>
+                <Col xs={16} sm={16} md={16} lg={18}>
                   <InputNumber
                     min={1}
                     onChange={this.onAmountChange}
@@ -115,8 +127,8 @@ export default class LiquidityProvided extends Component<IProps, IState> {
               height={300}
               footer={null}
             >
-              <Descriptions column={{ xs: 24, sm: 24, md: 24 }} colon={false}>
-                <Descriptions.Item label={formatMessage({ id: 'amount' })} span={24}>
+              <Descriptions column={1} colon={false}>
+                <Descriptions.Item label={formatMessage({ id: 'amount' })}>
                   {amount} {selectedCoin}
                 </Descriptions.Item>
               </Descriptions>

@@ -2,13 +2,9 @@ import { Component } from 'react';
 import { Tabs, Button, Input, Row, Col, Select, Table } from 'antd';
 import styles from './style.module.less';
 // import commonStyles from '../funding-balance/modals/style.module.less';
-// import dayjs from 'dayjs';
 import { isNumberLike, isNotZeroLike, format } from '../../util/math';
 import { CustomTabKey, SupportedCoins } from '../../constant/index';
-// import Pool, { IPool } from '../liquidity-pool/pool';
 import ColumnConvert from '../column-convert/index';
-// import ModalRender from '../modal-render/index';
-// import currStyles from '../trade-bonus/modals/style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import Liquidity from './liquidity/your-liquidity-mining-reward';
 import LiquidityLocked from './liquidity-locked/your-liquidity-locked-reward';
@@ -16,10 +12,14 @@ import Liquiditor from './liquiditor/your-liquiditor-mining-reward';
 import { Visible } from 'components/builtin/hidden';
 import Auth from '../builtin/auth';
 import ReTokenBalance from './liquidity/re-token-balance';
-// import SystemFundBalance from './liquiditor/system-fund-balance';
+import SystemRanking from './system-ranking';
 import YourMiningShare from './liquidity/your-mining-share';
 import { formatTime } from '../../util/time';
 import { formatMessage } from 'locale/i18n';
+import Settings from '../../constant/settings';
+import { Subject } from 'rxjs';
+
+const showRanking = Settings.test;
 
 // const { Option } = Select;
 const { TabPane } = Tabs;
@@ -40,6 +40,7 @@ interface IReward {
   amount: number;
   reward: number;
 }
+
 const columns = ColumnConvert<IReward, {}>({
   column: {
     time: formatMessage({ id: 'time' }),
@@ -87,6 +88,8 @@ export default class Mining extends Component {
     selectedTab: TabName.Liquidity,
   };
 
+  refreshEvent: Subject<boolean> = new Subject<boolean>();
+
   showWithDraw = () => {
     this.setState({
       visible: true,
@@ -130,7 +133,7 @@ export default class Mining extends Component {
 
     return (
       <SiteContext.Consumer>
-        {({ isMobile }) => (
+        {({ isMobile, isBSC }) => (
           <div className={[styles.root, isMobile ? styles.mobile : ''].join(' ')}>
             <h2>{formatMessage({ id: 'menu-mining' })}</h2>
             <div className={styles.tabContainer}>
@@ -141,7 +144,7 @@ export default class Mining extends Component {
                 onChange={this.callback}
               >
                 <TabPane tab={<span className={styles.uppercase}>{TabName.Liquidity}</span>} key={TabName.Liquidity}>
-                  <Liquidity />
+                  <Liquidity refreshEvent={this.refreshEvent} />
                 </TabPane>
                 <TabPane
                   tab={<span className={styles.uppercase}>{TabName.Utilization}</span>}
@@ -150,7 +153,7 @@ export default class Mining extends Component {
                   <LiquidityLocked />
                 </TabPane>
                 <TabPane tab={<span className={styles.uppercase}>{TabName.Liquiditor}</span>} key={TabName.Liquiditor}>
-                  <Liquiditor />
+                  <Liquiditor isBSC={isBSC} />
                 </TabPane>
               </Tabs>
 
@@ -235,32 +238,18 @@ export default class Mining extends Component {
                   <div className={styles.panels}>
                     <Row gutter={24}>
                       <Col xs={24} sm={24} md={12} lg={12}>
-                        <YourMiningShare />
+                        <YourMiningShare refreshEvent={this.refreshEvent} />
                       </Col>
                       <Col xs={24} sm={24} md={12} lg={12}>
-                        <ReTokenBalance />
-                        {/* <Pool {...ReTokenBalance} smallSize={true}> */}
-                        {/* <Button type="primary" className={styles.lock} onClick={() => this.showLockModal(false)}>
-                          Lock reTokens
-                        </Button>
-                        <p>Lock reTokens to start receving rewards inDDS tokens</p> 
-                      </Pool>*/}
+                        <ReTokenBalance refreshEvent={this.refreshEvent} />
                       </Col>
-                      {/* <Col xs={24} sm={24} md={8} lg={8}>
-                      <Pool {...LockBalance} smallSize={true}>
-                        <Button type="primary" className={styles.lock} onClick={() => this.showLockModal(true)}>
-                          Unlock reTokens
-                        </Button>
-                        <p>Unlock reToken to be able to withdraw your reToken from the liquidity</p>
-                      </Pool>
-                    </Col> */}
                     </Row>
                   </div>
                 </Auth>
               </Visible>
-              {/* <Visible when={selectedTab === TabName.Liquiditor}>
-                <SystemFundBalance />
-              </Visible> */}
+              <Visible when={isBSC && showRanking && selectedTab === TabName.Liquiditor}>
+                <SystemRanking />
+              </Visible>
             </div>
           </div>
         )}

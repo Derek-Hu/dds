@@ -1,0 +1,65 @@
+.network {
+  display: flex;
+  align-items: center;
+  border-radius: 100px;
+  border: 1px solid #bbc0c5;
+  font-size: 12px;
+  color: #6a737d;
+  text-align: center;
+  padding: 8px 20px;
+  margin-right: 20px;
+  min-width: 86px;
+  cursor: pointer;
+
+  .switch {
+    display: block;
+    margin-left: 0.3em;
+  }
+}
+
+.icon {
+  display: inline-block;
+  height: 8px;
+  width: 8px;
+  flex-basis: 8px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  border-radius: 100%;
+  background: #1346ff;
+  position: relative;
+  right: 6px;
+}
+
+.tips {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bolder;
+  padding: 15px;
+}
+
+.coinList {
+  button {
+    width: 100%;
+  }
+
+  .active {
+    button {
+      border-radius: 4px;
+      border: 2px solid #1346ff;
+      color: #1346ff;
+    }
+  }
+}
+
+.wrong {
+  color: #ffffff;
+  text-align: center;
+  display: block;
+  border-radius: 10px;
+  background-color: #cf1818;
+  padding: 5px 10px;
+  width: 50%;
+  margin: auto;
+}

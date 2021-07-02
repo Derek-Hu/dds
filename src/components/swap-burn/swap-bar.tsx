@@ -40,7 +40,11 @@ export default ({
             <div className={styles.leftBar}>
               <div className={styles.bar} style={{ height: height + 'px' }}>
                 <div className={styles.percentBar} style={{ height: 100 - left.percentage + '%' }}></div>
-                <p>{formatMessage({ id: 'shield-net-income' })}</p>
+                <p>
+                  Shield
+                  <br /> Net <br />
+                  Income
+                </p>
                 <span>{left.percentage}%</span>
               </div>
               <div className={styles.amount}>
@@ -60,7 +64,9 @@ export default ({
               <div className={styles.bar} style={{ height: height + 'px' }}>
                 <div className={styles.percentBar} style={{ height: right.percentage + '%' }}></div>
                 <p>
-                  {formatMessage({ id: 'sld-circulating-supply' })} ×{right.percentage}%
+                  SLD <br />
+                  Circulating <br />
+                  Supply
                 </p>
                 <span className={styles.rightPecentage}>{right.percentage}%</span>
               </div>

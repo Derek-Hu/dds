@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
 import { Wallet } from '../constant';
+import { EthNetwork } from '../constant/network';
 
 /**
  * 一个钱包实例要实现的接口
@@ -11,13 +12,15 @@ export interface WalletInterface {
 
   wasConnected(): Observable<boolean>;
 
-  watchAccount(): Observable<string | null>;
+  watchAccount(): Observable<string>;
 
   getAccount(): string | null;
 
-  getNetwork(): string | null;
+  getNetwork(): EthNetwork | null;
 
-  watchNetwork(): Observable<string | null>;
+  watchNetwork(): Observable<EthNetwork>;
 
   tryInitConnect(): Observable<boolean>;
+
+  switchNetwork(id: EthNetwork): Observable<boolean>;
 }

@@ -52,8 +52,9 @@ const links: { [key: string]: ILink[] } = {
   // ...(isStage? null : { Ecosystem }),
   Security: [
     {
-      name: formatMessage({ id: 'audits' }),
-      link: '',
+      name: 'Audits(Slowmist)',
+      link:
+        'https://github.com/slowmist/Knowledge-Base/blob/master/open-report/Smart%20Contract%20Security%20Audit%20Report%20-%20Shield.pdf',
     },
     {
       name: formatMessage({ id: 'bug-bounty' }),
@@ -72,8 +73,8 @@ const links: { [key: string]: ILink[] } = {
   ],
   About: [
     {
-      name: formatMessage({ id: 'blog' }),
-      link: 'https://medium.com/@shielddaoofficial',
+      name: 'Blog',
+      link: 'https://shield-dao.medium.com/',
     },
     {
       name: formatMessage({ id: 'brand-assets' }),

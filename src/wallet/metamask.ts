@@ -2,7 +2,8 @@ import MetaMaskOnboarding from '@metamask/onboarding';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { Wallet } from '../constant';
 import { WalletInterface } from '../wallet/wallet-interface';
-import { filter, map, take } from 'rxjs/operators';
+import { catchError, filter, map, mapTo, take } from 'rxjs/operators';
+import { EthNetwork, NetworkParam } from '../constant/network';
 
 declare const window: Window & { ethereum: any };
 
@@ -14,7 +15,7 @@ export const { isMetaMaskInstalled } = MetaMaskOnboarding;
 export class MetamaskWallet implements WalletInterface {
   public readonly walletType: Wallet = Wallet.Metamask;
   private curSelectedAccount: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
-  private curNetwork: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private curNetwork: BehaviorSubject<EthNetwork | null> = new BehaviorSubject<EthNetwork | null>(null);
 
   constructor() {
     // 初始化时自动尝试连接
@@ -43,11 +44,14 @@ export class MetamaskWallet implements WalletInterface {
     return this.curSelectedAccount.getValue();
   }
 
-  public watchNetwork(): Observable<string> {
-    return this.curNetwork.pipe(filter(net => net !== ''));
+  public watchNetwork(): Observable<EthNetwork> {
+    return this.curNetwork.pipe(
+      filter(net => net !== null),
+      map(net => net as EthNetwork)
+    );
   }
 
-  public getNetwork(): string {
+  public getNetwork(): EthNetwork | null {
     return this.curNetwork.getValue();
   }
 
@@ -68,8 +72,21 @@ export class MetamaskWallet implements WalletInterface {
     }
   }
 
-  public watchAccount(): Observable<string | null> {
-    return this.curSelectedAccount.pipe(filter(account => account !== null));
+  public watchAccount(): Observable<string> {
+    return this.curSelectedAccount.pipe(
+      filter(account => account !== null),
+      map(acc => acc as string)
+    );
+  }
+
+  public switchNetwork(id: EthNetwork): Observable<boolean> {
+    const netParam = NetworkParam[id as EthNetwork.bianTest];
+    const data = [netParam];
+    const net: Promise<any> = window.ethereum.request({ method: 'wallet_addEthereumChain', params: data });
+    return from(net).pipe(
+      mapTo(true),
+      catchError(err => of(false))
+    );
   }
 
   // --------------------------------------------------------------------------
@@ -93,14 +110,18 @@ export class MetamaskWallet implements WalletInterface {
 
   private updateAccount(accounts: string[]) {
     if (accounts && accounts.length > 0) {
-      this.curSelectedAccount.next(accounts[0]);
+      if (this.curSelectedAccount.getValue() !== accounts[0]) {
+        this.curSelectedAccount.next(accounts[0]);
+      }
     } else {
       this.curSelectedAccount.next(null);
     }
   }
 
-  private updateNetwork(network: string) {
-    this.curNetwork.next(network);
+  private updateNetwork(network: EthNetwork) {
+    if (this.curNetwork.getValue() !== network) {
+      this.curNetwork.next(network);
+    }
   }
 
   private syncAccount(init = false): void {
@@ -113,7 +134,7 @@ export class MetamaskWallet implements WalletInterface {
       });
 
       this.doRequestNetwork().subscribe(network => {
-        this.updateNetwork(network);
+        this.updateNetwork(network as EthNetwork);
         this.watchNetworkChange();
       });
     }
@@ -136,7 +157,8 @@ export class MetamaskWallet implements WalletInterface {
     this.updateAccount(accounts);
   };
 
-  private networkChangeCallback = (network: string) => {
+  private networkChangeCallback = (chainId: string) => {
+    const network: EthNetwork = parseInt(chainId, 16).toString() as EthNetwork;
     this.updateNetwork(network);
   };
 
@@ -158,7 +180,7 @@ export class MetamaskWallet implements WalletInterface {
 
   private watchNetworkChange() {
     if (isMetaMaskInstalled()) {
-      window.ethereum.on('networkChanged', this.networkChangeCallback);
+      window.ethereum.on('chainChanged', this.networkChangeCallback);
     }
   }
 }

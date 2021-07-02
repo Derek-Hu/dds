@@ -7,6 +7,7 @@ import { formatMessage } from 'locale/i18n';
 
 interface IState {
   amount: string;
+  cacheInputAmount: number | undefined;
 }
 
 export default class InputNumberComp extends Component<
@@ -22,28 +23,27 @@ export default class InputNumberComp extends Component<
     tagClassName?: string;
     showTag?: boolean;
     skip?: boolean;
+    value?: number | null;
+    mustInt?: boolean;
   },
   IState
 > {
-  state: IState = {
-    amount: '',
-  };
+  state: IState = { amount: '', cacheInputAmount: undefined };
 
   amountChange = (e: any) => {
-    const val = e.target.value;
-    const { max, min, skip } = this.props;
+    const val: string = e.target.value;
+    const { max, min, skip, mustInt } = this.props;
 
     // const isCompatible = (val: string) => val === '' || /^\d+\.\d*$/.test(val);
     // delete or exceed
     // if ((!isNumberLike(val) && !isCompatible(val)) || (isNumberLike(max) && Number(val) > Number(max!))) {
     //   return;
     // }
-    const isCompatible =
-      /^[1-9]\d{0,8}$/.test(val) ||
-      /^[1-9]\d{0,8}\.\d{0,2}?$/.test(val) ||
-      /^0\.\d{0,2}?$/.test(val) ||
-      val === '' ||
-      val === '0';
+    const isInt = /^[1-9]\d{0,8}$/.test(val) || val === '0';
+    const isFloat = /^[1-9]\d{0,8}\.\d{0,2}?$/.test(val) || /^0\.\d{0,2}?$/.test(val);
+    const isEmpty = val === '';
+    const isCompatible = mustInt ? isInt || isEmpty : isInt || isFloat || isEmpty;
+
     if (!isCompatible) {
       return;
     }
@@ -56,10 +56,9 @@ export default class InputNumberComp extends Component<
       }
     }
 
-    this.setState({
-      amount: val,
+    this.setState({ amount: val }, () => {
+      this.onPropChange && this.onPropChange(Number(val));
     });
-    this.onPropChange && this.onPropChange(Number(val));
   };
 
   onPropChange = this.props.onChange
@@ -76,6 +75,30 @@ export default class InputNumberComp extends Component<
       },
     });
   };
+
+  static valCache: number | null = null;
+
+  // deal with value property input.
+  static getDerivedStateFromProps(nextProps: any, prevState: IState) {
+    // income value
+    const newVal: number | null = nextProps.value === null ? null : Number(nextProps.value);
+    // income value was not changed, return;
+    if (newVal === prevState.cacheInputAmount) {
+      return null;
+    }
+
+    // update income value cache
+    const rs = { cacheInputAmount: newVal };
+    // update real amount if needed.
+    if (newVal && !isNaN(newVal) && prevState.amount !== newVal.toString()) {
+      Object.assign(rs, { amount: newVal.toString() });
+    } else if (newVal === null) {
+      Object.assign(rs, { amount: '' });
+    }
+
+    return rs;
+  }
+
   render() {
     const { placeholder, className, disabled, suffix, max, showTag, tagClassName } = this.props;
     const { amount } = this.state;

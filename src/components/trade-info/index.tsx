@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import CardInfo from '../card-info/index';
 import { formatMessage } from 'locale/i18n';
+import SiteContext from '../../layouts/SiteContext';
 
 // interface IState {
 //   info?: any;
@@ -30,7 +31,7 @@ export default class TradeInfo extends Component<{ from: string; coin: IUSDCoins
       },
       liquidityRate: {
         label: formatMessage({ id: 'forced-liquidation-rate' }),
-        value: '2%',
+        value: '1%',
       },
       type: {
         label: formatMessage({ id: 'type' }),
@@ -44,7 +45,19 @@ export default class TradeInfo extends Component<{ from: string; coin: IUSDCoins
     // @ts-ignore
     const items = Object.keys(info).map(key => info[key]);
     return (
-      <CardInfo isNumber={false} loading={false} items={items} theme="outer" title={formatMessage({ id: 'info' })} />
+      <SiteContext.Consumer>
+        {({ isMobile }) => (
+          <div style={{ padding: isMobile ? '0 16px' : '' }}>
+            <CardInfo
+              isNumber={false}
+              loading={false}
+              items={items}
+              theme="outer"
+              title={formatMessage({ id: 'info' })}
+            />
+          </div>
+        )}
+      </SiteContext.Consumer>
     );
   }
 }
