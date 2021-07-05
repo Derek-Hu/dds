@@ -19,6 +19,11 @@ const multipleEntry = require('react-app-rewire-multiple-entry')([
     entry: 'src/entry/landing.js',
     template: 'public/landing.html',
     outPath: '/landing.html'
+  },
+  {
+    entry: 'src/entry/old.js',
+    template: 'public/index.html',
+    outPath: '/old.html'
   }
 ]);
 

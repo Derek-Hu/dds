@@ -15,7 +15,6 @@
   "plugins": ["@typescript-eslint"],
   "globals": {
     "d3": true,
-    "Typing": true,
     "PendingOrderCacheKey": true,
   },
   "rules": {

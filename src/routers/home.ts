@@ -1,17 +1,15 @@
-import { IRouter } from "./render";
+import { IRouter } from './render';
 
 import Layout from '../layouts/index';
 
-import HomePage from '../pages/home.page';
+import OldPage from '../pages/old.page';
 
 const routers: IRouter[] = [
   {
-    path: "/",
+    path: '/',
     component: Layout,
-    routes: [
-      { path: "/home", component: HomePage },
-    ],
-  }
+    routes: [{ path: '/home', component: OldPage }],
+  },
 ];
 
 export default routers;
