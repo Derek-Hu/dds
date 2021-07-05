@@ -72,9 +72,9 @@ export default () => {
             <div className={styles.rightContent}>
               <Image src={howWorksImg} />
               <p>
-                The SLD token is designed to facilitate and incentivize the decentalized goverance of Shield protocol
-                and value allocation. It captures value through trading fees and transit 100% value back to the role of
-                maintaining the system by mining and buyback mechanism.
+                The SLD token is designed to facilitate and incentivize the decentralized governance of the Shield
+                protocol and value allocation. It captures value through trading fees and transfers 100% of the value
+                back to maintaining the system by efficient mining and an impressive buyback mechanism.
               </p>
             </div>
           </Col>

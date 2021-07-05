@@ -25,15 +25,15 @@ export default class HomePage extends Component {
             </Col>
             <Col span={6}>
               <p>{formatInt(13012)}</p>
-              <span>All Time Volum</span>
+              <span>All Time Traders</span>
             </Col>
             <Col span={6}>
               <p>{formatInt(13012)}</p>
-              <span>All Time Volum</span>
+              <span>All Time Broker Commission</span>
             </Col>
             <Col span={6}>
               <p>{formatInt(13012)}</p>
-              <span>All Time Volum</span>
+              <span>All Time Liquidity</span>
             </Col>
           </Row>
         </div>

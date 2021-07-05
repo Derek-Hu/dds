@@ -23,7 +23,7 @@ export default () => {
           <div className={styles.bgImg}>
             <div>
               <h3>Shield DAO</h3>
-              <p>ShieldDao is committed to being an open global decentralized cloud governance organization.</p>
+              <p>ShieldDAO is committed to becoming an open global decentralized governance organization.</p>
               <div className={carouselStyles.carousel}>
                 <Carousel autoplay>
                   {Datasource.map(({ name, avatar, description }) => (

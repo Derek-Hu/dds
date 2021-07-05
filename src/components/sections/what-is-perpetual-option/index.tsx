@@ -31,7 +31,7 @@ export default () => {
         </h2>
         <p>
           The first long-term on-chain options <br />
-          without the effort, risk, or expense of rolling positions .
+          without the effort, risk, or expense of rolling positions.
         </p>
         <div className={styles.details}>
           <h3>For option traders</h3>
@@ -39,19 +39,19 @@ export default () => {
             <Col span={colSize}>
               <div className={styles.detailItem}>
                 <Image src={oneImg} />
-                <p>Exercise at any moment and has no expiration date</p>
+                <p>Exercise anytime with no expiration date</p>
               </div>
             </Col>
             <Col span={colSize}>
               <div className={styles.detailItem}>
                 <Image src={twoImg} />
-                <p>Long-term exposure without the need to roll position, decrease opertional work and risk</p>
+                <p>Long-term exposure without the need to roll position, decrease operational work, and risk</p>
               </div>
             </Col>
             <Col span={colSize}>
               <div className={styles.detailItem}>
                 <Image src={threeImg} />
-                <p>Concentrated liquidity, avoid liquidity fragmentation by differnet expiration date and price</p>
+                <p>Concentrated liquidity to avoid liquidity fragmentation by different expiration dates and prices</p>
               </div>
             </Col>
           </Row>
@@ -62,15 +62,13 @@ export default () => {
             <Col span={colSize}>
               <div className={styles.detailItem}>
                 <Image src={fourImg} />
-                <p>
-                  No position loss, the gain has infinite potantial while the maximum loss is capped by the funding fee
-                </p>
+                <p>No position loss; Wrong directional trading only loss of daily funding fee</p>
               </div>
             </Col>
             <Col span={colSize}>
               <div className={styles.detailItem}>
                 <Image src={fiveImg} />
-                <p>Leverage on-chain, up to 100x-1000x</p>
+                <p>On-chain leverage from 100x to 1000x</p>
               </div>
             </Col>
           </Row>

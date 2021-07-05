@@ -33,21 +33,19 @@ export default () => {
           Why we build <br />
           Shield
         </h2>
-        <p>
-          The first long-term on-chain options <br /> without the effort, risk, or expense of rolling positions.
-        </p>
+        <p>The current derivatives market gap is not optimal</p>
         <div className={styles.details}>
           <Row gutter={50} type="flex">
             <Col span={colSize} className={styles.detailRow}>
               <div className={[styles.detailItem, styles.active].join(' ')}>
                 <Image src={oneImg} />
-                <p>Third-party custody, centralized platform in control of your funds</p>
+                <p>Third-party custody and centralized platforms control your funds</p>
               </div>
             </Col>
             <Col span={colSize} className={styles.detailRow}>
               <div className={styles.detailItem}>
                 <Image src={twoImg} />
-                <p>Intransparent trading system lead to CEX profits</p>
+                <p>Intransparent trading system lead to CEX profits only</p>
               </div>
             </Col>
             <Col span={colSize} className={styles.detailRow}>
@@ -59,7 +57,7 @@ export default () => {
             <Col span={colSize} className={styles.detailRow}>
               <div className={styles.detailItem}>
                 <Image src={fourImg} />
-                <p>Subject to trust and regulation boundary, high user barrier when accessing the market</p>
+                <p>Accessing is difficult due to trust and regulation boundary.</p>
               </div>
             </Col>
           </Row>
@@ -75,19 +73,19 @@ export default () => {
             <Col span={adColSize} className={styles.adRow}>
               <div className={[styles.adItem, styles.active].join(' ')}>
                 <Image src={adsoneImg} />
-                <p>Non custodial</p>
+                <p>Non-custodial in nature</p>
               </div>
             </Col>
             <Col span={adColSize} className={styles.adRow}>
               <div className={styles.adItem}>
                 <Image src={adstwoImg} />
-                <p>0 intermediary tax</p>
+                <p>Transparent rules enforced by the blockchain</p>
               </div>
             </Col>
             <Col span={adColSize} className={styles.adRow}>
               <div className={styles.adItem}>
                 <Image src={adsthreeImg} />
-                <p>Trading transparency</p>
+                <p>0 intermediary tax</p>
               </div>
             </Col>
           </Row>
@@ -95,13 +93,17 @@ export default () => {
             <Col span={adColSize} className={styles.adRow}>
               <div className={styles.adItem}>
                 <Image src={adsfourImg} />
-                <p>Borderless & permissionless</p>
+                <p>Borderless &amp; permissionless</p>
               </div>
             </Col>
             <Col span={adColSize} className={styles.adRow}>
               <div className={styles.adItem}>
                 <Image src={adsfiveImg} />
-                <p>Easy access</p>
+                <p>
+                  Easily accessible
+                  <br />
+                  (No KYC, email, or registration required)
+                </p>
               </div>
             </Col>
           </Row>
