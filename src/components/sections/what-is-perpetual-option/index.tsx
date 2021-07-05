@@ -3,10 +3,11 @@ import SectionTitle from '../section-title/index';
 import { formatMessage } from 'locale/i18n';
 import { Row, Col } from 'antd';
 
-import oneImg from '../../../assets/what-is/1.svg';
-import twoImg from '../../../assets/what-is/2.svg';
-import threeImg from '../../../assets/what-is/3.svg';
-import fourImg from '../../../assets/what-is/4.svg';
+import oneImg from '../../../assets/landing/1.svg';
+import twoImg from '../../../assets/landing/2.svg';
+import threeImg from '../../../assets/landing/3.svg';
+import fourImg from '../../../assets/landing/4.svg';
+import fiveImg from '../../../assets/landing/5.svg';
 
 const Image = ({ src }: { src: string }) => {
   return (
@@ -68,7 +69,7 @@ export default () => {
             </Col>
             <Col span={colSize}>
               <div className={styles.detailItem}>
-                <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+                <Image src={fiveImg} />
                 <p>Leverage on-chain, up to 100x-1000x</p>
               </div>
             </Col>

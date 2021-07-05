@@ -1,0 +1,120 @@
+@import './font.css';
+
+*,
+::after,
+::before {
+  -webkit-tap-highlight-color: transparent;
+}
+
+blockquote,
+body,
+dd,
+div,
+dl,
+dt,
+fieldset,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+input,
+legend,
+li,
+ol,
+p,
+td,
+textarea,
+th,
+ul {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+fieldset,
+img {
+  border: 0;
+}
+
+li {
+  list-style: none;
+}
+
+caption,
+th {
+  text-align: left;
+}
+
+q::after,
+q::before {
+  content: '';
+}
+
+input[type='password'] {
+  ime-mode: disabled;
+}
+
+:focus {
+  outline: 0;
+}
+
+body {
+  -webkit-user-select: none;
+  -webkit-text-size-adjust: none;
+  user-select: none;
+  background-color: #fff;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+a,
+img {
+  -webkit-touch-callout: none;
+}
+
+body,
+button,
+input,
+select,
+textarea {
+  font-size: 24px;
+  line-height: 1;
+  color: #333;
+  font-family: PingFang SC, miui, system-ui, -apple-system, BlinkMacSystemFont, Helvetica Neue, Helvetica, sans-serif;
+}
+
+input {
+  line-height: normal;
+}
+
+a {
+  color: #0ae;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 100%;
+  font-weight: normal;
+}
+
+.clear::after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: ' ';
+  clear: both;
+  height: 0;
+}

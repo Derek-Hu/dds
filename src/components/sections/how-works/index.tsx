@@ -3,11 +3,7 @@ import SectionTitle from '../section-title/index';
 import { formatMessage } from 'locale/i18n';
 import { Row, Col } from 'antd';
 
-import sevenImg from '../../../assets/backed-by/seven-x@2x.png';
-import hashkeyImg from '../../../assets/backed-by/hashkey@2x.png';
-import atImg from '../../../assets/backed-by/at@2x.png';
-import lncubaImg from '../../../assets/backed-by/lncuba@2x.png';
-import bonfireImg from '../../../assets/backed-by/bonfire@2x.png';
+import howWorksImg from '../../../assets/how-shield-works.svg';
 
 const Image = ({ src }: { src: string }) => {
   return (
@@ -21,7 +17,7 @@ export default () => {
   return (
     <div className={styles.howWorks}>
       <div className={styles.workContent}>
-        <Row>
+        <Row type="flex" justify="space-between" align="bottom">
           <Col span={12}>
             <div className={styles.leftContent}>
               <h2>
@@ -30,15 +26,43 @@ export default () => {
               </h2>
               <Row>
                 <Col>
+                  <div className={[styles.dots, styles.theme1].join(' ')}>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
                   <p>Leverage on-chain, up to 100x-1000x</p>
                 </Col>
                 <Col>
+                  <div className={[styles.dots, styles.theme2].join(' ')}>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
                   <p>Leverage on-chain, up to 100x-1000x</p>
                 </Col>
                 <Col>
+                  <div className={[styles.dots, styles.theme3].join(' ')}>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
                   <p>Leverage on-chain, up to 100x-1000x</p>
                 </Col>
                 <Col>
+                  <div className={[styles.dots, styles.theme4].join(' ')}>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+                  <p>Leverage on-chain, up to 100x-1000x</p>
+                </Col>
+                <Col>
+                  <div className={[styles.dots, styles.theme5].join(' ')}>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
                   <p>Leverage on-chain, up to 100x-1000x</p>
                 </Col>
               </Row>
@@ -46,7 +70,7 @@ export default () => {
           </Col>
           <Col span={12}>
             <div className={styles.rightContent}>
-              <Image src={'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'} />
+              <Image src={howWorksImg} />
               <p>
                 The SLD token is designed to facilitate and incentivize the decentalized goverance of Shield protocol
                 and value allocation. It captures value through trading fees and transit 100% value back to the role of

@@ -1,3 +1,4 @@
+import '../landing.css';
 import { Component } from 'react';
 import { Menu, Icon, Row, Col, Button, Drawer } from 'antd';
 import WhatIsPerpetual from '../components/sections/what-is-perpetual-option/index';

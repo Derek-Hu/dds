@@ -2,7 +2,7 @@
 
 .howWorks {
   background: #000;
-  padding: 200px 0;
+  padding: 120px 0 170px;
   color: #fff;
 
   .workContent {
@@ -16,10 +16,48 @@
     font-weight: bold;
     color: #ffffff;
     line-height: 74px;
-    margin-bottom: 270px;
+    margin-bottom: 120px;
+  }
+
+  .dots {
+    margin-top: 64px;
+
+    & > div {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border-radius: 16px;
+      margin-right: 12px;
+    }
+    &.theme1 {
+      & > div {
+        background: #a7f5ff;
+      }
+    }
+    &.theme2 {
+      & > div {
+        background: #ffee2f;
+      }
+    }
+    &.theme3 {
+      & > div {
+        background: #979dff;
+      }
+    }
+    &.theme4 {
+      & > div {
+        background: #e88cff;
+      }
+    }
+    &.theme5 {
+      & > div {
+        background: #ffffff;
+      }
+    }
   }
 
   .rightContent {
+    padding-bottom: 60px;
     .imgContainer {
       width: 560px;
       img {
@@ -32,7 +70,7 @@
       font-weight: 400;
       color: #ffffff;
       line-height: 17px;
-      margin-top: 64px;
+      margin-top: 60px;
       opacity: 0.6;
     }
   }
@@ -44,7 +82,7 @@
       color: #ffffff;
       line-height: 22px;
       opacity: 0.6;
-      margin-top: 64px;
+      margin-top: 10px;
     }
   }
 

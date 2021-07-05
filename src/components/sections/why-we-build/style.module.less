@@ -3,8 +3,14 @@
 .whatWeBuild {
   background: #1346ff;
   color: #fff;
+
+  .arrowDown {
+    text-align: center;
+    margin-bottom: 80px;
+    font-size: 60px;
+  }
   .content {
-    padding: 200px 0 120px;
+    padding: 200px 0 160px;
     max-width: @max-content-width;
     margin: 0 auto;
     position: relative;
@@ -26,48 +32,58 @@
     }
 
     .bottomAds {
-      ul {
-        padding: 0;
-        list-style: none;
-        text-align: center;
-        display: flex;
+      text-align: center;
+      font-size: 30px;
+      font-family: Gilroy-Bold, Gilroy;
+      font-weight: bold;
+      color: #000000;
+      line-height: 30px;
+      padding: 130px 70px 0;
+      position: relative;
 
-        li {
-          align-items: stretch;
-          width: 20%;
-          font-size: 18px;
-          font-family: Gilroy-Regular, Gilroy;
-          font-weight: 400;
-          color: #ffffff;
-          line-height: 26px;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          padding: 17px 34px;
-          display: inline-block;
-          & > div {
-            align-items: center;
-            display: inline-block;
-            vertical-align: -webkit-baseline-middle;
-          }
-          &.active {
-            background: rgba(255, 255, 255, 0.15);
-          }
+      .comment {
+        transform: rotate(60deg);
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        right: 20px;
+        top: 90px;
+
+        & > div {
+          background: #9fd2ff;
+          height: 100%;
+          width: 100%;
         }
+      }
+
+      .itemImg {
+        height: 110px;
+        margin-bottom: 40px;
+      }
+      .secondRow {
+        margin-top: 80px;
+      }
+      .adItem {
+        padding: 80px 60px 60px;
+        background: #ffffff;
+        border-radius: 20px;
+        height: 100%;
       }
     }
     .details {
       margin-top: 120px;
-      margin-bottom: 350px;
+      margin-bottom: 110px;
       text-align: center;
       .detailRow {
         align-items: stretch;
       }
       .detailItem {
-        background: rgba(255, 255, 255, 0.06);
+        // background: rgba(255, 255, 255, 0.06);
         padding: 60px 20px;
         height: 100%;
 
         &.active {
-          background: rgba(255, 255, 255, 0.15);
+          // background: rgba(255, 255, 255, 0.15);
         }
         .itemImg {
           width: 60px;
