@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组 45</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板备份-12" transform="translate(-430.000000, -1688.000000)">
+            <g id="编组-43" transform="translate(360.000000, 1688.000000)">
+                <g id="编组-45" transform="translate(70.000000, 0.000000)">
+                    <g id="编组-27" transform="translate(1.000000, 2.000000)" fill="#FFFFFF">
+                        <polygon id="矩形" opacity="0.8" transform="translate(29.500000, 19.091883) rotate(45.000000) translate(-29.500000, -19.091883) " points="23.0710678 12.6629509 43 5.59188309 35.9289322 25.5208153 16 32.5918831"></polygon>
+                        <g id="编组-26" transform="translate(0.000000, 14.591883)">
+                            <polygon id="矩形备份-5" opacity="0.3" transform="translate(39.091883, 19.091883) rotate(45.000000) translate(-39.091883, -19.091883) " points="35.8449314 2.40990258 49.4099026 15.8449314 42.3388348 35.7738636 28.7738636 22.3388348"></polygon>
+                            <polygon id="矩形备份-6" opacity="0.6" transform="translate(19.091883, 19.091883) scale(-1, 1) rotate(45.000000) translate(-19.091883, -19.091883) " points="15.8449314 2.40990258 29.4099026 15.8449314 22.3388348 35.7738636 8.77386361 22.3388348"></polygon>
+                        </g>
+                    </g>
+                    <rect id="矩形" x="0" y="0" width="60" height="60"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

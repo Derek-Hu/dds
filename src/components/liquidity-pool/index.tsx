@@ -13,12 +13,13 @@ import LiquidityARP from './public/collaborative-arp';
 import { Visible } from '../builtin/hidden';
 import Auth, { Public } from '../builtin/auth';
 import PrivateDeposit from './private/private-deposit';
+import { formatMessage } from 'locale/i18n';
 
 const { TabPane } = Tabs;
 
 const TabName = {
-  Collaborative: 'Public',
-  Private: 'Private',
+  Collaborative: formatMessage({ id: 'public' }),
+  Private: formatMessage({ id: 'private' }),
 };
 
 export default class PoolArea extends Component<any, any> {
@@ -39,7 +40,7 @@ export default class PoolArea extends Component<any, any> {
         {({ isMobile }) => (
           <div>
             <div className={[styles.root, isMobile ? styles.mobile : ''].join(' ')}>
-              <h2>LIQUIDITY POOL</h2>
+              <h2>{formatMessage({ id: 'liquidity-pool' })}</h2>
               <div className={styles.tabContainer}>
                 <Tabs className={CustomTabKey} defaultActiveKey={selectedTab} animated={false} onChange={this.callback}>
                   <TabPane

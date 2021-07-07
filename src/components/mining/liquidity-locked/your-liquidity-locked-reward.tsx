@@ -13,6 +13,7 @@ import ModalRender from '../../modal-render/index';
 import ColumnConvert from '../../column-convert/index';
 import Placeholder from '../../placeholder/index';
 import { formatTime } from '../../../util/time';
+import { formatMessage } from 'locale/i18n';
 
 interface IState {
   loading: boolean;
@@ -24,11 +25,11 @@ interface IState {
 
 const CommissionColumns = ColumnConvert<ILiquiditorBalanceRecord, {}>({
   column: {
-    time: 'Time',
-    pair: 'Friend Address',
-    amount: 'Amount',
-    price: 'Settlement Fee',
-    reward: 'Commission',
+    time: formatMessage({ id: 'time' }),
+    pair: formatMessage({ id: 'friend-address' }),
+    amount: formatMessage({ id: 'amount' }),
+    price: formatMessage({ id: 'settlement-fee' }),
+    reward: formatMessage({ id: 'commission' }),
   },
   render(value, key, record) {
     switch (key) {
@@ -90,7 +91,7 @@ export default class LiquiditorReward extends Component<any, IState> {
     const { data } = this.state;
 
     if (!isGreaterZero(data)) {
-      message.info('No availble to claim!');
+      message.info(formatMessage({ id: 'no-available-claim' }));
       return;
     }
     const success = await claimLiquidityLocked();
@@ -119,7 +120,11 @@ export default class LiquiditorReward extends Component<any, IState> {
     const { data, loading, visible, tableData } = this.state;
     return (
       <div style={{ padding: '0 10px' }}>
-        <h3>{this.context.address ? 'Your Active Liquidity Rewards' : 'Active Liquidity Reward Today'}</h3>
+        <h3>
+          {this.context.address
+            ? formatMessage({ id: 'your-active-liquidity-rewards' })
+            : formatMessage({ id: 'active-liquidity-reward-today' })}
+        </h3>
         <p className={styles.coins}>
           <Placeholder loading={loading} width={'10em'}>
             {format(data)} SLD
@@ -127,13 +132,13 @@ export default class LiquiditorReward extends Component<any, IState> {
         </p>
         <Auth>
           <p className={styles.dynamic}>
-            <span>Only reward for liquidity locked</span>
+            <span>{formatMessage({ id: 'only-reward-liquidity-locked' })}</span>
           </p>
           <div>
             <Placeholder loading={loading} width={'10em'}>
               {/* <Visible when={isGreaterZero(data)}> */}
               <Button type="primary" className={[styles.btn, styles.cliamBtn].join(' ')} onClick={this.cofirmClaim}>
-                CLAIM
+                {formatMessage({ id: 'claim' })}
               </Button>
               {/* </Visible> */}
             </Placeholder>
@@ -147,7 +152,7 @@ export default class LiquiditorReward extends Component<any, IState> {
 
         <ModalRender
           visible={visible}
-          title="Rewards Balance History"
+          title={formatMessage({ id: 'rewards-balance-history' })}
           className={styles.modal}
           height={420}
           onCancel={this.visible.hide}

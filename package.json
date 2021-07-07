@@ -13,6 +13,7 @@
     "echarts": "^5.0.0",
     "ethers": "^5.0.31",
     "lodash": "^4.17.21",
+    "node-xlsx": "^0.16.1",
     "numeral": "^2.0.6",
     "react": "^17.0.1",
     "react-copy-to-clipboard": "^5.0.3",

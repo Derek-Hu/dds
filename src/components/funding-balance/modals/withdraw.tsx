@@ -7,8 +7,10 @@ import SiteContext from '../../../layouts/SiteContext';
 import { Component } from 'react';
 import { format, isGreaterZero } from '../../../util/math';
 import InputNumber from '../../input/index';
+import { formatMessage } from 'locale/i18n';
 
-const title = 'Funding Fee Withdraw';
+const title = formatMessage({ id: 'funding-fee-withdraw' });
+
 interface IProps {
   visible: boolean;
   onCancel: () => any;
@@ -69,7 +71,7 @@ export default class Balance extends Component<IProps, IState> {
                 <InputNumber
                   className={styles.orderInput}
                   onChange={this.onAmountChange}
-                  placeholder={max ? `Max ${max}` : '0.00'}
+                  placeholder={max ? `${formatMessage({ id: 'max' })} ${max}` : '0.00'}
                   max={max}
                   showTag={true}
                   // tagClassName={styles.utilMax}
@@ -80,7 +82,7 @@ export default class Balance extends Component<IProps, IState> {
 
             <Row gutter={[16, 16]} className={styles.actionBtns} style={{ paddingTop: '8px' }} type="flex">
               <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                <Button onClick={onCancel}>CANCEL</Button>
+                <Button onClick={onCancel}>{formatMessage({ id: 'cancel' })}</Button>
               </Col>
               <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                 <Button
@@ -92,7 +94,7 @@ export default class Balance extends Component<IProps, IState> {
                     onConfirm(amount!, coin);
                   }}
                 >
-                  WITHDRAW
+                  {formatMessage({ id: 'withdraw' })}
                 </Button>
               </Col>
             </Row>

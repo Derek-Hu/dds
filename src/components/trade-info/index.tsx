@@ -1,6 +1,6 @@
 import { Component } from 'react';
-import { getTradeInfo } from '../../services/trade.service';
 import CardInfo from '../card-info/index';
+import { formatMessage } from 'locale/i18n';
 import SiteContext from '../../layouts/SiteContext';
 
 // interface IState {
@@ -14,48 +14,32 @@ export default class TradeInfo extends Component<{ from: string; coin: IUSDCoins
     loading: false,
   };
 
-  //   async componentDidMount() {
-  //     const { coin } = this.props;
-  //     this.setState({
-  //       loading: true,
-  //     });
-  //     try {
-  //       const info = await getTradeInfo(coin);
-  //       this.setState({
-  //         info,
-  //       });
-  //     } catch {}
-  //     this.setState({
-  //       loading: false,
-  //     });
-  //   }
-
   render() {
     const { from, coin } = this.props;
     const info = {
       ticketRoot: {
-        label: 'Ticker Root',
+        label: formatMessage({ id: 'ticker-root' }),
         value: `${from}/${coin}`,
       },
       expireData: {
-        label: 'Expiry Date',
-        value: 'Perpetual',
+        label: formatMessage({ id: 'expiry-date' }),
+        value: formatMessage({ id: 'coin-value-expiry-date-perpetual' }),
       },
       feeRate: {
-        label: 'Settlements Fee Rate',
+        label: formatMessage({ id: 'settlements-fee-rate' }),
         value: '1‰',
       },
       liquidityRate: {
-        label: 'Forced Liquidation Rate',
+        label: formatMessage({ id: 'forced-liquidation-rate' }),
         value: '1%',
       },
       type: {
-        label: 'Type',
-        value: 'Risk-free Perpetual',
+        label: formatMessage({ id: 'type' }),
+        value: formatMessage({ id: 'coin-info-value-type' }),
       },
       exercise: {
-        label: 'Exercise',
-        value: 'Manually',
+        label: formatMessage({ id: 'coin-info-exercise' }),
+        value: formatMessage({ id: 'coin-info-value-exercise' }),
       },
     };
     // @ts-ignore
@@ -64,7 +48,13 @@ export default class TradeInfo extends Component<{ from: string; coin: IUSDCoins
       <SiteContext.Consumer>
         {({ isMobile }) => (
           <div style={{ padding: isMobile ? '0 16px' : '' }}>
-            <CardInfo isNumber={false} loading={false} items={items} theme="outer" title="Info" />
+            <CardInfo
+              isNumber={false}
+              loading={false}
+              items={items}
+              theme="outer"
+              title={formatMessage({ id: 'info' })}
+            />
           </div>
         )}
       </SiteContext.Consumer>

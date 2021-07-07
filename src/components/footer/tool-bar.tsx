@@ -2,6 +2,7 @@ import { Component } from 'react';
 import { Menu, Icon, Row, Col, Button, Dropdown } from 'antd';
 import styles from './style.module.less';
 import ConnectWallet from '../connect-wallet/index';
+import { formatMessage } from 'locale/i18n';
 import SiteContext from '../../layouts/SiteContext';
 import { shortAddress } from '../../util/index';
 

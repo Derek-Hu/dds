@@ -3,15 +3,12 @@ import { Icon, Modal, Button, Checkbox } from 'antd';
 import LiquidityPool from '../components/liquidity-pool/index';
 import styles from './style.module.less';
 import SiteContext from '../layouts/SiteContext';
+import { formatMessage } from 'locale/i18n';
 
 const cacheKey = 'dontShowAgain';
 const cacheVal = 'Y';
 
 export default class PoolPage extends Component {
-  componentDidMount() {
-    console.log('mount');
-  }
-
   state = {
     visible: localStorage.getItem(cacheKey) !== cacheVal,
     agreed: false,
@@ -47,7 +44,7 @@ export default class PoolPage extends Component {
                 title={
                   <span style={{ color: '#F55858' }}>
                     <Icon type="warning" />
-                    &nbsp;RISK WARNING
+                    &nbsp;{formatMessage({ id: 'risk-warning' })}
                   </span>
                 }
                 closable={false}
@@ -55,10 +52,10 @@ export default class PoolPage extends Component {
                 onCancel={this.closeAgree}
                 footer={[
                   <Button type="danger" onClick={this.closeAgree}>
-                    I agree and confirm
+                    {formatMessage({ id: 'understand-and-agree' })}
                   </Button>,
                   <Checkbox checked={agreed} onChange={this.onCheckChange} className={styles.agree}>
-                    Don't show it again
+                    {formatMessage({ id: 'dnot-show-again' })}
                   </Checkbox>,
                 ]}
               >

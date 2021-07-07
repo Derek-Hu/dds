@@ -20,6 +20,7 @@ import { format, isGreaterZero, truncated, isNumberLike, divide } from '../../ut
 import InputNumber from '../input/index';
 import Placeholder from '../placeholder/index';
 import { setPendingOrders } from '../../util/order-cache';
+import { formatMessage } from 'locale/i18n';
 import { Setting } from './dropdown/setting';
 
 interface IState {
@@ -235,7 +236,7 @@ export default class Balance extends Component<IProps, IState> {
     }
 
     if (maxNumber! < openAmount!) {
-      message.warning('More balance required, Please deposit first!');
+      message.warning(formatMessage({ id: 'more-balance-required-deposit-first' }));
       return;
     }
 
@@ -281,28 +282,28 @@ export default class Balance extends Component<IProps, IState> {
             </p>
             <div className={styles.dayChange}>
               <Placeholder loading={loading}>
-                {format(balanceInfo?.locked)}&nbsp;<span>Locked</span>
+                {format(balanceInfo?.locked)}&nbsp;<span>{formatMessage({ id: 'locked' })}</span>
               </Placeholder>
             </div>
             <Row className={styles.actionLink} type="flex" justify="space-between">
               <Col>
                 <Button type="link" onClick={() => address && this.depositVisible.show()}>
-                  DEPOSIT
+                  {formatMessage({ id: 'deposit' })}
                 </Button>
               </Col>
               <Col>
                 <Button type="link" onClick={() => address && this.withdrawVisible.show()}>
-                  WITHDRAW
+                  {formatMessage({ id: 'withdraw' })}
                 </Button>
               </Col>
             </Row>
             <Row className={styles.radioBtn}>
               <Radio.Group value={tradeType} onChange={this.changeType}>
                 <Radio.Button value="LONG" className={styles.green}>
-                  LONG
+                  {formatMessage({ id: 'order-type-long' })}
                 </Radio.Button>
                 <Radio.Button value="SHORT" className={styles.red}>
-                  SHORT
+                  {formatMessage({ id: 'order-type-short' })}
                 </Radio.Button>
               </Radio.Group>
             </Row>
@@ -311,11 +312,11 @@ export default class Balance extends Component<IProps, IState> {
                 Current Price: {format(curPrice)} {to}
               </Placeholder>
             </p>
-            <p className={styles.amountTip}>Amount</p>
+            <p className={styles.amountTip}>{formatMessage({ id: 'amount' })}</p>
             <InputNumber
               className={styles.orderInput}
               onChange={this.onOpenAmountChange}
-              placeholder={maxNumber ? `Max ${maxNumber}` : '0.00'}
+              placeholder={maxNumber ? `${formatMessage({ id: 'max' })} ${maxNumber}` : '0.00'}
               max={maxNumber}
               skip={true}
               showTag={true}
@@ -323,9 +324,8 @@ export default class Balance extends Component<IProps, IState> {
               suffix={from}
             />
             <p className={styles.settlement}>
-              Settlement Fee :{' '}
-              {setFeeQuery ? <Icon type="loading" /> : isNumberLike(fees?.settlementFee) ? fees?.settlementFee : 0}
-              {to}
+              {formatMessage({ id: 'settlement-fee' })} :{' '}
+              {setFeeQuery ? <Icon type="loading" /> : isNumberLike(fees?.settlementFee) ? fees?.settlementFee : 0} {to}
             </p>
             {/* <Progress strokeColor="#1346FF" showInfo={false} percent={30} strokeWidth={20} /> */}
             <Button
@@ -334,7 +334,7 @@ export default class Balance extends Component<IProps, IState> {
               type="primary"
               onClick={this.clickOpen}
             >
-              OPEN
+              {formatMessage({ id: 'order-action-open' })}
             </Button>
 
             <DespositModal

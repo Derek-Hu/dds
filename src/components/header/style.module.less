@@ -10,14 +10,18 @@
   width: 100%;
 }
 
+@header-bg-color: #fff;
+@header-font-color: #272727;
 .root {
   // position: absolute;
   // left: 0;
   // top: 0;
   // right: 0;
   z-index: 9;
-  background-color: #1346ff;
-  border-bottom: 1px solid #1346ff;
+  background-color: @header-bg-color;
+  border-bottom: 1px solid @header-bg-color;
+  font-family: Gilroy-Bold, Gilroy;
+
   &.light {
     background-color: #f9fafc;
     border-bottom: 1px solid #eeeeee;
@@ -104,6 +108,16 @@
     .ant-menu-horizontal {
       border-bottom: 0;
       line-height: 60px;
+      color: @header-font-color;
+      background-color: @header-bg-color;
+      a,
+      a:hover {
+        color: @header-font-color !important;
+      }
+    }
+    .ant-menu-submenu-title:hover,
+    .ant-menu-submenu-active {
+      color: @header-font-color !important;
     }
     .ant-menu-item {
       &:hover,
@@ -119,6 +133,7 @@
 .dderivatives {
   font-size: 24px;
   padding-left: 42px;
+  border-bottom-color: @header-bg-color !important;
 }
 
 .accountInfo {

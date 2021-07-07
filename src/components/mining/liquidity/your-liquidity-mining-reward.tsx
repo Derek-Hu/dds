@@ -6,6 +6,7 @@ import SiteContext, { ISiteContextProps } from '../../../layouts/SiteContext';
 import Auth, { Public } from '../../builtin/auth';
 import { format } from '../../../util/math';
 import Placeholder from '../../placeholder/index';
+import { formatMessage } from 'locale/i18n';
 import { Button, Col } from 'antd';
 import { PublicPoolLiquidityRewards } from '../../../services/mining.service.interface';
 import NormalButton from '../../common/buttons/normal-btn';

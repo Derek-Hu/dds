@@ -8,14 +8,15 @@ import { Table } from 'antd';
 import ModalRender from '../../modal-render';
 import ColumnConvert from '../../column-convert';
 import { formatTime } from '../../../util/time';
+import { formatMessage } from 'locale/i18n';
 
 const CommissionColumns = ColumnConvert<IBrokerCampaignRecord, {}>({
   column: {
-    time: 'Time',
-    pair: 'Friend Address',
-    amount: 'Amount',
-    price: 'Settlement Fee',
-    reward: 'Commission',
+    time: formatMessage({ id: 'time' }),
+    pair: formatMessage({ id: 'friend-address' }),
+    amount: formatMessage({ id: 'amount' }),
+    price: formatMessage({ id: 'settlement-fee' }),
+    reward: formatMessage({ id: 'commission' }),
   },
   render(value, key, record) {
     switch (key) {

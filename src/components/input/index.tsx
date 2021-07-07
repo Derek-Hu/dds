@@ -3,6 +3,7 @@ import { Input, Row, Col, Tag } from 'antd';
 import { debounce } from '../../util/debounce';
 import { isNumberLike } from '../../util/math';
 import styles from './style.module.less';
+import { formatMessage } from 'locale/i18n';
 
 interface IState {
   amount: string;
@@ -120,7 +121,7 @@ export default class InputNumberComp extends Component<
           >
             <Col span={12}>
               <Tag style={{ cursor: 'pointer' }} onClick={this.onMaxOpenClick} color="#1346FF">
-                Max
+                {formatMessage({ id: 'max-all' })}
               </Tag>
             </Col>
             <Col span={12} style={{ textAlign: 'right' }}>

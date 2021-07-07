@@ -12,6 +12,7 @@ import { getSwapPrice, conformSwap } from '../../services/swap-burn.service';
 import { format, multiple, formatInt, isGreaterZero } from '../../util/math';
 import Placeholder from '../placeholder/index';
 import InputNumber from '../input/index';
+import { formatMessage } from 'locale/i18n';
 
 const { Option } = Select;
 interface IState {
@@ -92,7 +93,7 @@ export default class PoolArea extends Component<any, IState> {
         {({ isMobile }) => {
           return (
             <div className={styles.root}>
-              <h2>SWAP & BURN</h2>
+              <h2>{formatMessage({ id: 'menu-swap-burn' })}</h2>
               <div className={styles.card}>
                 <div className={styles.imgBar}>
                   <SwapBar
@@ -101,7 +102,7 @@ export default class PoolArea extends Component<any, IState> {
                     rightAmount={formatInt(data?.dds)}
                   ></SwapBar>
                 </div>
-                <h3 className={styles.msg}>Current Swap Price</h3>
+                <h3 className={styles.msg}>{formatMessage({ id: 'current-swap-price' })}</h3>
                 <p className={styles.calcute}>
                   <Placeholder width={'10em'} loading={loading}>
                     1 SLD = {format(data?.rate)} USD
@@ -118,7 +119,7 @@ export default class PoolArea extends Component<any, IState> {
                                 delay={false}
                                 className={styles.ddsInput}
                                 onChange={this.onAmountChange}
-                                placeholder="Amount"
+                                placeholder={formatMessage({ id: 'amount' })}
                               />
                             </Col>
                           </Row>
@@ -154,7 +155,7 @@ export default class PoolArea extends Component<any, IState> {
                           <Row>
                             <Col xs={24} sm={24} md={24} lg={24}>
                               <Button type="primary" onClick={this.showSwapModal}>
-                                SWAP
+                                {formatMessage({ id: 'swap' })}
                               </Button>
                             </Col>
                           </Row>
@@ -164,7 +165,7 @@ export default class PoolArea extends Component<any, IState> {
                   </Auth>
                   <ModalRender
                     visible={this.state.swapModalVisible}
-                    title="Order Comfirm"
+                    title={formatMessage({ id: 'order-confirm' })}
                     height={330}
                     className={commonStyles.commonModal}
                     onCancel={this.closeSwapModal}
@@ -179,11 +180,11 @@ export default class PoolArea extends Component<any, IState> {
                     </Descriptions>
                     <Row className={commonStyles.actionBtns} gutter={[16, 16]} type="flex">
                       <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                        <Button onClick={this.closeSwapModal}>CANCEL</Button>
+                        <Button onClick={this.closeSwapModal}>{formatMessage({ id: 'cancel' })}</Button>
                       </Col>
                       <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                         <Button onClick={this.conformSwap} type="primary">
-                          CONFIRM
+                          {formatMessage({ id: 'confirm' })}
                         </Button>
                       </Col>
                     </Row>

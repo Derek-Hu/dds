@@ -14,6 +14,7 @@ import { formatTime } from '../../util/time';
 import DTable from '../table/index';
 import { Visible, Hidden } from '../builtin/hidden';
 import { getPendingOrders } from '../../util/order-cache';
+import { formatMessage } from 'locale/i18n';
 
 const { TabPane } = Tabs;
 
@@ -108,15 +109,15 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
 
   columns = ColumnConvert<ITradeRecord, { exercise: any }>({
     column: {
-      time: 'Time',
-      type: 'Type',
-      price: 'Open Price',
-      amount: 'Amount',
-      cost: 'Funding Fee Locked',
-      fee: 'Settlement Fee',
-      pl: 'P&L',
-      status: 'Status',
-      exercise: 'Action',
+      time: formatMessage({ id: 'time' }),
+      type: formatMessage({ id: 'type' }),
+      price: formatMessage({ id: 'open-price' }),
+      amount: formatMessage({ id: 'amount' }),
+      cost: formatMessage({ id: 'funding-fee-locked' }),
+      fee: formatMessage({ id: 'settlement-fee' }),
+      pl: formatMessage({ id: 'P&L' }),
+      status: formatMessage({ id: 'status' }),
+      exercise: formatMessage({ id: 'action' }),
     },
     attributes: {
       fee: {
@@ -155,7 +156,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
         case 'exercise':
           return record.status === 'ACTIVE' ? (
             <Button type="link" onClick={() => this.orderModalVisible.show(record)}>
-              CLOSE
+              {formatMessage({ id: 'close' })}
             </Button>
           ) : null;
         default:
@@ -164,17 +165,17 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
     },
   });
 
-  historyColumns = ColumnConvert<ITradeRecord, { exercise: any }>({
+  historyColumns = ColumnConvert<ITradeRecord, { closePrice: any; exercise: any }>({
     column: {
-      time: 'Time',
-      type: 'Type',
-      price: 'Open Price',
-      amount: 'Amount',
+      time: formatMessage({ id: 'time' }),
+      type: formatMessage({ id: 'type' }),
+      price: formatMessage({ id: 'open-price' }),
+      amount: formatMessage({ id: 'amount' }),
       closePrice: 'Close Price',
-      cost: 'Funding Fee Cost',
-      fee: 'Settlement Fee',
-      pl: 'P&L',
-      status: 'Status',
+      cost: formatMessage({ id: 'funding-fee-cost' }),
+      fee: formatMessage({ id: 'settlement-fee' }),
+      pl: formatMessage({ id: 'P&L' }),
+      status: formatMessage({ id: 'status' }),
     },
     attributes: {
       fee: {
@@ -254,7 +255,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
       <SiteContext.Consumer>
         {({ isMobile, timestamp }) => (
           <div className={styles.root}>
-            <h2>Orders</h2>
+            <h2>{formatMessage({ id: 'orders' })}</h2>
             <div className={styles.tableWpr}>
               <Tabs
                 className={styles.orderTab}
@@ -303,26 +304,34 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
               onCancel={this.orderModalVisible.hide}
               height={320}
               footer={null}
-              title="Close Position"
+              title={formatMessage({ id: 'close-position' })}
               className={modalStyles.commonModal}
             >
               <Descriptions column={1} colon={false}>
-                <Descriptions.Item label="Type">{toCamelCase(type)}</Descriptions.Item>
-                <Descriptions.Item label="Open Price">{format(price)}</Descriptions.Item>
-                <Descriptions.Item label="Amount">{format(amount)}</Descriptions.Item>
-                <Descriptions.Item label="Close Price">
+                <Descriptions.Item label={formatMessage({ id: 'type' })} span={24}>
+                  {toCamelCase(type)}
+                </Descriptions.Item>
+                <Descriptions.Item label={formatMessage({ id: 'open-price' })} span={24}>
+                  {format(price)}
+                </Descriptions.Item>
+                <Descriptions.Item label={formatMessage({ id: 'amount' })} span={24}>
+                  {format(amount)}
+                </Descriptions.Item>
+                <Descriptions.Item label={formatMessage({ id: 'close-price' })} span={24}>
                   {format(curPrice)}
                   {coin}
                 </Descriptions.Item>
-                <Descriptions.Item label="P&L">{getPL(pl)}</Descriptions.Item>
+                <Descriptions.Item label={formatMessage({ id: 'P&L' })} span={24}>
+                  {getPL(pl)}
+                </Descriptions.Item>
               </Descriptions>
               <Row className={modalStyles.actionBtns} gutter={[16, 16]} type="flex">
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                  <Button onClick={this.orderModalVisible.hide}>CANCEL</Button>
+                  <Button onClick={this.orderModalVisible.hide}>{formatMessage({ id: 'cancel' })}</Button>
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                   <Button onClick={this.confirmClose} type="primary">
-                    CLOSE
+                    {formatMessage({ id: 'close' })}
                   </Button>
                 </Col>
               </Row>

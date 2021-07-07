@@ -4,6 +4,7 @@ import styles from './style.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import { getTradeLiquidityPoolInfo } from '../../services/trade.service';
 import { dividedPecent, format, formatInt } from '../../util/math';
+import { formatMessage } from 'locale/i18n';
 
 interface IState {
   poolInfo?: ITradePoolInfo;
@@ -43,8 +44,8 @@ export default class TradePool extends Component<{ coin: IUSDCoins }, IState> {
     const { poolInfo, loading } = this.state;
 
     const publicBar = {
-      title: 'Public Pool',
-      desc: 'Available Liquidity',
+      title: formatMessage({ id: 'public-pool' }),
+      desc: formatMessage({ id: 'available-liquidity' }),
       value: (
         <span>
           {format(poolInfo?.public?.value)}/ {formatInt(poolInfo?.public?.total)}
@@ -55,8 +56,8 @@ export default class TradePool extends Component<{ coin: IUSDCoins }, IState> {
     };
 
     const privateBar = {
-      title: 'Private Pool',
-      desc: 'Available Liquidity',
+      title: formatMessage({ id: 'private-pool' }),
+      desc: formatMessage({ id: 'available-liquidity' }),
       value: (
         <span>
           {format(poolInfo?.private?.value)}/ {formatInt(poolInfo?.private?.total)}
@@ -71,7 +72,7 @@ export default class TradePool extends Component<{ coin: IUSDCoins }, IState> {
         {() => {
           return (
             <div className={styles.root}>
-              <h2>Liquidity Pool</h2>
+              <h2>{formatMessage({ id: 'liquidity-pool' })}</h2>
               <div className={styles.barContainer}>
                 <ProgressBar {...publicBar} loading={loading} />
                 <div style={{ padding: '28px' }}></div>

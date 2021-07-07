@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { formatMessage } from 'locale/i18n';
 import {
   lockReTokenForLiquidity1,
   queryLiquidityLockedReTokenAmount,

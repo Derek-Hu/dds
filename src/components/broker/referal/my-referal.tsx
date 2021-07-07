@@ -4,6 +4,7 @@ import styles from '../style.module.less';
 import { formatInt, format, isGreaterZero } from '../../../util/math';
 import { getMyReferalInfo, claimReferalInfo } from '../../../services/broker.service';
 import Placeholder from '../../placeholder/index';
+import { formatMessage } from 'locale/i18n';
 import { Visible } from '../../builtin/hidden';
 import SiteContext from '../../../layouts/SiteContext';
 
@@ -35,7 +36,7 @@ export default class Broker extends Component<any, IState> {
     const { referalInfo } = this.state;
     const { bonus } = referalInfo || {};
     if (!isGreaterZero(bonus)) {
-      message.warn('No available to claim!');
+      message.warn(formatMessage({ id: 'no-available-to-claim' }));
       return;
     }
     const success = await claimReferalInfo();

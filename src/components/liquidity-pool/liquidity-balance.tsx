@@ -19,6 +19,7 @@ import { isNumberLike, isNotZeroLike, format, isGreaterZero } from '../../util/m
 import Placeholder from '../placeholder/index';
 import InputNumber from '../input/index';
 import { formatTime } from '../../util/time';
+import { formatMessage } from 'locale/i18n';
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -32,10 +33,10 @@ interface ITransfer {
 
 const columns = ColumnConvert<ITransfer, {}>({
   column: {
-    time: 'Time',
-    type: 'Type',
-    amount: 'Amount',
-    balance: 'Balance',
+    time: formatMessage({ id: 'time' }),
+    type: formatMessage({ id: 'type' }),
+    amount: formatMessage({ id: 'amount' }),
+    balance: formatMessage({ id: 'balance' }),
   },
   render(value, key) {
     switch (key) {
@@ -310,7 +311,7 @@ export default class PoolBalance extends Component<{ isPrivate: boolean }, IStat
   onWithDrawClick = () => {
     const { withdrawBtnEnable } = this.state;
     if (!withdrawBtnEnable) {
-      message.warn('No available balance!');
+      message.warn(formatMessage({ id: 'no-available-balance' }));
       return;
     }
     this.withDrawVisible.show();
@@ -341,7 +342,9 @@ export default class PoolBalance extends Component<{ isPrivate: boolean }, IStat
               <Placeholder loading={loading} style={{ margin: '22px 0' }}>
                 {/* <Visible when={withdrawBtnEnable}> */}
                 <Button type="primary" onClick={this.onWithDrawClick} className={styles.btn}>
-                  {deadline ? `Withdraw until ${deadline}` : 'WITHDRAW'}
+                  {deadline
+                    ? formatMessage({ id: 'withdraw-until-deadline', deadline })
+                    : formatMessage({ id: 'withdraw' })}
                 </Button>
                 {/* </Visible> */}
                 {/* <Button type="link" onClick={this.recordVisible.show} className={styles.link}>
@@ -351,7 +354,7 @@ export default class PoolBalance extends Component<{ isPrivate: boolean }, IStat
             </CardInfo>
             <ModalRender
               visible={this.state.recordVisible}
-              title="Liquidity Balance History"
+              title={formatMessage({ id: 'liquidity-balance-history' })}
               className={commonStyles.commonModal}
               onCancel={this.recordVisible.hide}
               height={500}
@@ -375,9 +378,9 @@ export default class PoolBalance extends Component<{ isPrivate: boolean }, IStat
 
             <ModalRender
               visible={this.state.withDrawVisible}
-              title="Liquidity Withdraw"
+              title={formatMessage({ id: 'liquidity-withdraw' })}
               className={commonStyles.commonModal}
-              okText={'Claim'}
+              okText={formatMessage({ id: 'claim' })}
               height={420}
               onCancel={this.withDrawVisible.hide}
               footer={null}
@@ -419,7 +422,7 @@ export default class PoolBalance extends Component<{ isPrivate: boolean }, IStat
                             </span>
                           </p>
                         )}
-                        <p>reToken will be automatically burnt. Stable coin will send to your address.</p>
+                        <p>{formatMessage({ id: 'retoken-will-send-to-your-address' })}</p>
                       </>
                     )}
                   </div>
@@ -427,11 +430,11 @@ export default class PoolBalance extends Component<{ isPrivate: boolean }, IStat
               </Row>
               <Row className={commonStyles.actionBtns} gutter={[16, 16]}>
                 <Col xs={24} sm={24} md={12} lg={12}>
-                  <Button onClick={this.withDrawVisible.hide}>CANCEL</Button>
+                  <Button onClick={this.withDrawVisible.hide}>{formatMessage({ id: 'cancel' })}</Button>
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12}>
                   <Button type="primary" onClick={isLocked ? this.withDrawVisible.hide : this.doWithdraw}>
-                    {isLocked ? `GOT IT` : 'WITHDRAW'}
+                    {isLocked ? formatMessage({ id: 'got-it' }) : formatMessage({ id: 'withdraw' })}
                   </Button>
                 </Col>
               </Row>

@@ -1,9 +1,10 @@
 :global(.mobile) {
-  .root {
+  .banner {
     padding: 52px 30px 64px;
     text-align: center;
     height: 100vh;
-    background: #1346ff;
+    background: #fff;
+    color: #272727;
     .content {
       padding-left: 0;
       position: absolute;
@@ -21,58 +22,67 @@
   }
 }
 
-.root {
-  background-color: #1346ff;
-  height: 600px;
-  color: #fff;
-  padding-top: 50px;
-  position: relative;
-  background: #1346ff url('../../assets/imgs/banner.png') 90% bottom no-repeat;
-  background-size: 55%;
+@header-font-color: #272727;
 
+.banner {
+  background-color: #fff;
+  color: #272727;
+  padding: 220px 0;
+  position: relative;
+  background: #fff url('../../assets/imgs/adsImage.png') no-repeat;
+  background-position: 90% 60%;
+  background-size: 680px;
+
+  & > .contentWpr {
+    margin: 0 auto;
+    max-width: 1280px;
+  }
   .content {
-    padding-left: 120px;
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translate(0, -50%);
+    width: 640px;
   }
   h2 {
-    font-size: 40px;
-    line-height: 52px;
-    color: #fff;
-    margin-bottom: 0px;
+    font-size: 60px;
+    font-family: Gilroy-Bold, Gilroy;
+    font-weight: normal;
+    color: #272727;
+    line-height: 66px;
+  }
+  h2 + p {
+    margin-top: 24px;
+    font-size: 20px;
+    font-family: Gilroy-Regular, Gilroy;
+    font-weight: 400;
+    color: #000000;
+    line-height: 24px;
+    opacity: 0.6;
   }
   .spot,
   .read {
-    text-transform: uppercase;
     width: 170px;
+    font-size: 16px;
+    font-family: Gilroy-Bold, Gilroy;
   }
   .spot {
     height: 50px;
     border-radius: 2px;
-    color: #0049da;
-    margin: 40px 0 24px;
+    margin: 24px 0 0;
   }
 
   .read {
-    color: #fff;
-    display: block;
-    height: 1em;
-    line-height: 1em;
+    margin-left: 20px;
   }
 }
 
-@media screen and (min-width: 1400px) {
-  .root {
-    background: #1346ff url('../../assets/imgs/banner.png') 85% bottom no-repeat;
-    background-size: 44%;
-  }
-}
+// @media screen and (min-width: 1400px) {
+//   .banner {
+//     background: #fff url('../../assets/imgs/adsImage.png') 85% bottom no-repeat;
+//     background-size: 44%;
+//   }
+// }
 
-@media screen and (min-width: 2000px) {
-  .root {
-    background: #1346ff url('../../assets/imgs/banner.png') 80% bottom no-repeat;
-    background-size: 34%;
-  }
-}
+// @media screen and (min-width: 2000px) {
+//   .banner {
+//     background: #fff url('../../assets/imgs/adsImage.png') 80% bottom no-repeat;
+//     background-size: 34%;
+//   }
+// }

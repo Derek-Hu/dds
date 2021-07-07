@@ -2,8 +2,9 @@ import { Descriptions, Row, Col, Button } from 'antd';
 import styles from './style.module.less';
 import ModalRender from '../../modal-render/index';
 import SiteContext from '../../../layouts/SiteContext';
+import { formatMessage } from 'locale/i18n';
 
-const title = 'Order Confirm';
+const title = formatMessage({ id: 'order-confirm' });
 
 interface IProps {
   visible: boolean;
@@ -48,11 +49,11 @@ export default ({ fees, data: { type, amount, coins }, visible, onCancel, onConf
           </Descriptions>
           <Row gutter={[isMobile ? 0 : 16, 16]} className={styles.actionBtns} type="flex">
             <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-              <Button onClick={onCancel}>CANCEL</Button>
+              <Button onClick={onCancel}>{formatMessage({ id: 'cancel' })}</Button>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
               <Button onClick={onConfirm} type="primary">
-                CONFIRM
+                {formatMessage({ id: 'confirm' })}
               </Button>
             </Col>
           </Row>

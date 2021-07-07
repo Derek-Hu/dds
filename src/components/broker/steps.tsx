@@ -6,6 +6,7 @@ import CampaignImg from '../../assets/imgs/campaign.png';
 import BrokerIcon1 from '~/assets/imgs/broker-icon1.png';
 import BrokerIcon2 from '~/assets/imgs/broker-icon2.png';
 import BrokerIcon3 from '~/assets/imgs/broker-icon3.png';
+import { formatMessage } from 'locale/i18n';
 import { Visible, Hidden } from '../builtin/hidden';
 
 // const percentages = {

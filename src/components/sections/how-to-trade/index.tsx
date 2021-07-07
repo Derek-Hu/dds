@@ -1,13 +1,14 @@
 import styles from './style.module.less';
 import SectionTitle from '../section-title/index';
 import { Icon } from 'antd';
+import { formatMessage } from 'locale/i18n';
 
 export default () => {
   return (
     <div className={styles.root}>
-      <SectionTitle title="How to Trade Risk-free Perpetual" />
+      <SectionTitle title={formatMessage({ id: 'how-to-trade-risk-free-perpetual' })} />
       <p className={styles.try}>
-        Try this demo{' '}
+        {formatMessage({ id: 'try-this-demo' })}{' '}
         <span>
           <Icon type="arrow-down" />
         </span>

@@ -1,4 +1,5 @@
 import { Icon } from 'antd';
+import { formatMessage } from 'locale/i18n';
 
 interface ILink {
   link: string;
@@ -56,17 +57,17 @@ const links: { [key: string]: ILink[] } = {
         'https://github.com/slowmist/Knowledge-Base/blob/master/open-report/Smart%20Contract%20Security%20Audit%20Report%20-%20Shield.pdf',
     },
     {
-      name: 'Bug Bounty',
+      name: formatMessage({ id: 'bug-bounty' }),
       link: '',
     },
   ],
   API: [
     {
-      name: 'Liquidator',
+      name: formatMessage({ id: 'liquidator' }),
       link: '',
     },
     {
-      name: 'Trade',
+      name: formatMessage({ id: 'trade' }),
       link: '',
     },
   ],
@@ -76,15 +77,15 @@ const links: { [key: string]: ILink[] } = {
       link: 'https://shield-dao.medium.com/',
     },
     {
-      name: 'Brand Assets',
+      name: formatMessage({ id: 'brand-assets' }),
       link: '',
     },
     {
-      name: 'Terms of Service',
+      name: formatMessage({ id: 'terms-of-service' }),
       link: '',
     },
     {
-      name: 'Privacy Policy',
+      name: formatMessage({ id: 'privacy-policy' }),
       link: '',
     },
   ],

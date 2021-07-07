@@ -6,6 +6,7 @@ import { getLiquiditorReward } from '../../../services/mining.service';
 import SiteContext from '../../../layouts/SiteContext';
 import Auth from '../../builtin/auth';
 import Placeholder from '../../placeholder/index';
+import { formatMessage } from 'locale/i18n';
 
 interface IState {
   loading: boolean;
@@ -42,8 +43,12 @@ export default class LiquiditorReward extends Component<{ isBSC: boolean }, ISta
     const { campaign, compensate } = data || {};
     return (
       <div className={styles.liquiditorWpr} style={{ padding: '0 10px' }}>
-        <h3>{this.context.address ? 'Your Liquiditor Mining Rewards' : 'Liquiditor Mining Rewards'}</h3>
-        <p>Get compensated when insurance fund is empty</p>
+        <h3>
+          {this.context.address
+            ? formatMessage({ id: 'your-liquiditor-mining-rewards' })
+            : formatMessage({ id: 'liquiditor-mining-rewards' })}
+        </h3>
+        <p>{formatMessage({ id: 'get-compensated-when-insurance-fund-is-empty' })}</p>
         <Row>
           {isBSC ? (
             <Col xs={24} sm={24} md={12} lg={12} className={styles.col}>
@@ -59,19 +64,19 @@ export default class LiquiditorReward extends Component<{ isBSC: boolean }, ISta
             <span className={styles.ads}>
               <Placeholder loading={loading}>{format(compensate)} SLD</Placeholder>
             </span>
-            <span>Compensate Rewards</span>
+            <span>{formatMessage({ id: 'compensate-rewards' })}</span>
           </Col>
         </Row>
         <Auth>
-          <p className={styles.wantoBe}>Want to become a liquiditor?</p>
+          <p className={styles.wantoBe}>{formatMessage({ id: 'want-to-become-liquiditor' })}</p>
           <Button
             type="primary"
             className={styles.redBtn}
             onClick={() => {
-              message.info('coming soon');
+              message.info(formatMessage({ id: 'coming-soon' }));
             }}
           >
-            READ DOCS
+            {formatMessage({ id: 'read-docs' })}
           </Button>
         </Auth>
       </div>

@@ -6,6 +6,7 @@ import SiteContext from '../../layouts/SiteContext';
 import { Hidden } from '../builtin/hidden';
 import { getNonRisks } from '../../services/home.service';
 import ColumnConvert from '../column-convert/index';
+import { formatMessage } from 'locale/i18n';
 
 interface IState {
   loading: boolean;
@@ -19,11 +20,11 @@ export default class BecomeSpark extends Component<any, IState> {
 
   columns = ColumnConvert<INonRiskPerpetual, { coin: any; action: any }>({
     column: {
-      coin: 'Coin',
-      price: <span className={styles.price}>Last Price</span>,
-      change: <span className={styles.change}>24h Change</span>,
+      coin: formatMessage({ id: 'coin' }),
+      price: <span className={styles.price}>{formatMessage({ id: 'last-price' })}</span>,
+      change: <span className={styles.change}>{formatMessage({ id: '24h-change' })}</span>,
       // chart: "Chart",
-      action: 'Action',
+      action: formatMessage({ id: 'action' }),
     },
     render: (value, key, record) => {
       switch (key) {
@@ -54,7 +55,7 @@ export default class BecomeSpark extends Component<any, IState> {
                 })
               }
             >
-              Trade
+              {formatMessage({ id: 'trade' })}
             </span>
           );
         default:
@@ -90,12 +91,13 @@ export default class BecomeSpark extends Component<any, IState> {
                 <div className={styles.head}>
                   <Row>
                     <Col xs={24} sm={24} md={24} lg={12} className={styles.col}>
-                      <h2>Risk-free Perpetual Contract</h2>
+                      <h2>{formatMessage({ id: 'risk-free-perpetual-contract' })}</h2>
                     </Col>
                     {isMobile ? null : isNumberLike(total) ? (
                       <Col xs={24} sm={24} md={24} lg={12} className={[styles.col, styles.summary].join(' ')}>
                         <span>
-                          24h Volume: <span className={styles.total}>{format(total)}</span> USD
+                          {formatMessage({ id: '24h-volume' })}: <span className={styles.total}>{format(total)}</span>{' '}
+                          USD
                         </span>
                       </Col>
                     ) : null}

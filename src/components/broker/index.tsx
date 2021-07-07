@@ -13,6 +13,7 @@ import Commission from './referal/commission';
 import SiteContext from '../../layouts/SiteContext';
 import { account2ReferalCode } from '../../services/broker.service';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { formatMessage } from 'locale/i18n';
 
 const { TabPane } = Tabs;
 
@@ -35,7 +36,7 @@ export default class Broker extends Component<any, any> {
   };
 
   onCopy = () => {
-    message.success('copied');
+    message.success(formatMessage({ id: 'copied' }));
     this.setState({ copied: true });
   };
 

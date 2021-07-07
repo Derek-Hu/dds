@@ -2,6 +2,7 @@ import SiteContext from '../../layouts/SiteContext';
 import { Component } from 'react';
 import Pool from './pool';
 import { getCollaborativeLiquidityProvided } from '../../services/pool.service';
+import { formatMessage } from 'locale/i18n';
 
 interface IState {
   data: Array<{ label: string; value: number }>;
@@ -28,6 +29,10 @@ export default class LiquidityProvided extends Component<IProps, IState> {
 
   render() {
     const { data } = this.state;
-    return <SiteContext.Consumer>{() => <Pool title="Liquidity Provided" coins={data} />}</SiteContext.Consumer>;
+    return (
+      <SiteContext.Consumer>
+        {() => <Pool title={formatMessage({ id: 'liquidity-provided' })} coins={data} />}
+      </SiteContext.Consumer>
+    );
   }
 }

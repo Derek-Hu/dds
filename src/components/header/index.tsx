@@ -9,6 +9,7 @@ import LogoMobile from '~/assets/imgs/logo-mobile.png';
 import LogoWhite from '~/assets/imgs/logo-white.png';
 import { ddsBasePath, DefaultKeNetwork, homeBasePath } from '../../constant/index';
 import { isNumberLike } from '../../util/math';
+import { formatMessage } from 'locale/i18n';
 import { shortAddress } from '../../util/index';
 import NetworkSwitch from '../network-switch/index';
 import { RouteKey } from '../../constant/routes';
@@ -186,11 +187,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                   <Menu onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal">
                     <Menu.Item key="logo" className={styles.dderivatives}>
                       <a href={`${homeBasePath}/${RouteKey.home}`}>
-                        <img
-                          src={window.location.hash === `#/${RouteKey.home}` ? LogoWhite : Logo}
-                          alt=""
-                          width="120px"
-                        />
+                        <img src={window.location.hash === `#/${RouteKey.home}` ? Logo : Logo} alt="" width="120px" />
                       </a>
                     </Menu.Item>
                     <Menu.Item key={RouteKey.trade}>
@@ -245,11 +242,12 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                   </Menu>
                 </Col>
                 <Col span={12} className={styles.connectWpr}>
-                  {window.location.hash === `#/${RouteKey.home}` ? (
-                    <Button className={styles.connectBtn}>
-                      <a href={`${ddsBasePath}/${RouteKey.trade}`}>Trade</a>
-                    </Button>
-                  ) : (
+                  {window.location.hash === `#/${RouteKey.home}` ? null : (
+                    // (
+                    //   <Button className={styles.connectBtn}>
+                    //     <a href={`${ddsBasePath}/${RouteKey.trade}`}>Trade</a>
+                    //   </Button>
+                    // )
                     <div className={styles.rightContent}>
                       <div style={{ marginRight: '20px' }}>
                         <AirDropModal />
@@ -274,7 +272,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                             <span>{shortAddress(account.address)}</span>
                           </div>
                         ) : (
-                          <Button className={styles.connectBtn}>Connect Wallet</Button>
+                          <Button className={styles.connectBtn}>{formatMessage({ id: 'connect-wallet' })}</Button>
                         )}
                       </ConnectWallet>
                     </div>

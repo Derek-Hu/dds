@@ -10,6 +10,7 @@ import { doPrivateDeposit } from '../../../services/pool.service';
 import Auth, { Public } from '../../builtin/auth';
 import InputNumber from '../../input/index';
 import SiteContext from '../../../layouts/SiteContext';
+import { formatMessage } from 'locale/i18n';
 
 const { Option } = Select;
 
@@ -106,34 +107,38 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                   </Select>
                 </Col>
                 <Col xs={16} sm={16} md={16} lg={18}>
-                  <InputNumber min={1} onChange={this.onAmountChange} placeholder="Min amount: 1 DAI" />
+                  <InputNumber
+                    min={1}
+                    onChange={this.onAmountChange}
+                    placeholder={formatMessage({ id: 'min-amount-one-dai' })}
+                  />
                 </Col>
               </Row>
               <Button type="primary" className={styles.btn} onClick={this.modalVisible.show}>
-                DEPOSIT
+                {formatMessage({ id: 'deposit' })}
               </Button>
             </div>
 
             <ModalRender
               visible={this.state.modalVisible}
-              title="Comfirm Deposit"
+              title={formatMessage({ id: 'comfirm-deposit' })}
               className={commonStyles.commonModal}
               onCancel={this.modalVisible.hide}
               height={300}
               footer={null}
             >
               <Descriptions column={1} colon={false}>
-                <Descriptions.Item label="Amount">
+                <Descriptions.Item label={formatMessage({ id: 'amount' })}>
                   {amount} {selectedCoin}
                 </Descriptions.Item>
               </Descriptions>
               <Row className={commonStyles.actionBtns} gutter={[16, 16]} type="flex">
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                  <Button onClick={this.modalVisible.hide}>CANCEL</Button>
+                  <Button onClick={this.modalVisible.hide}>{formatMessage({ id: 'cancel' })}</Button>
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
                   <Button onClick={this.confirmPrivateDeposit} type="primary">
-                    CONFIRM
+                    {formatMessage({ id: 'confirm' })}
                   </Button>
                 </Col>
               </Row>

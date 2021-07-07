@@ -4,6 +4,7 @@ import success from '../../assets/images/success.png';
 import pending from '../../assets/images/pending.png';
 import fail from '../../assets/images/fail.png';
 import ReactDOM from 'react-dom';
+import { formatMessage } from 'locale/i18n';
 
 export default {
   dom: null,
@@ -51,7 +52,7 @@ export default {
 
             {url === pending ? null : (
               <Button type="primary" onClick={() => this.hide()} className={styles.btn}>
-                OK
+                {formatMessage({ id: 'ok' })}
               </Button>
             )}
           </div>

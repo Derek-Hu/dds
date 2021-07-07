@@ -1,0 +1,107 @@
+@import '../../../variable.less';
+
+.whatIsPerpetual {
+  background: #fff;
+  padding: 200px 0;
+  max-width: @max-content-width;
+  margin: 0 auto;
+  .leftContent {
+    padding-right: 154px;
+    position: relative;
+
+    .milestone {
+      width: 154px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      ul {
+        list-style: none;
+        font-size: 18px;
+        font-family: Gilroy-Bold, Gilroy;
+        color: #000000;
+        line-height: 20px;
+        padding-left: 0;
+
+        li {
+          padding-bottom: 50px;
+          padding-left: 18px;
+          border-left: 16px solid #f4f4f4;
+          position: relative;
+
+          &.active {
+            border-color: #1346ff;
+          }
+          span {
+            font-weight: bold;
+          }
+
+          p {
+            font-weight: normal;
+            margin: 0;
+          }
+        }
+      }
+    }
+    & > h2 {
+      font-size: 60px;
+      font-family: Gilroy-Bold, Gilroy;
+      font-weight: bold;
+      color: #000000;
+      line-height: 74px;
+      margin-bottom: 24px;
+    }
+
+    & > h2 + p {
+      font-size: 20px;
+      font-family: Gilroy-Regular, Gilroy;
+      font-weight: 400;
+      color: #000000;
+      line-height: 24px;
+      opacity: 0.6;
+    }
+
+    .details {
+      margin-top: 120px;
+      & > h3 {
+        font-size: 30px;
+        font-family: Gilroy-Bold, Gilroy;
+        font-weight: bold;
+        color: #000000;
+        line-height: 33px;
+        margin-bottom: 60px;
+      }
+
+      .detailItem {
+        .itemImg {
+          width: 80px;
+          height: 80px;
+        }
+        p {
+          font-size: 18px;
+          padding: 0 2em 0 0;
+          font-family: Gilroy-Regular, Gilroy;
+          font-weight: 400;
+          color: #000000;
+          line-height: 20px;
+          margin-top: 20px;
+          margin-bottom: 0;
+          opacity: 0.6;
+        }
+      }
+    }
+    .partnerWpr {
+      text-align: center;
+    }
+
+    .partnerItem {
+      width: 120px;
+      height: 50px;
+      display: inline-block;
+      margin: 35px 0;
+    }
+
+    img {
+      height: 100%;
+    }
+  }
+}

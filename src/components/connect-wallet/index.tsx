@@ -14,6 +14,7 @@ import MetaMaskOnboarding from '@metamask/onboarding';
 // import { CoinBalance } from '../../wallet/contract-interface';
 // import { toEthers } from '../../util/ethers';
 import { userAccountInfo, initTryConnect } from '../../services/account';
+import { formatMessage } from 'locale/i18n';
 
 const { Option } = Select;
 const { isMetaMaskInstalled } = MetaMaskOnboarding;
@@ -110,7 +111,7 @@ export default class ConnectWallet extends Component<any, any> {
               <span onClick={this.showModal}>{children}</span>
               <ModalRender
                 visible={shouldShow}
-                title="Connect Wallet"
+                title={formatMessage({ id: 'connect-wallet' })}
                 className={commonStyles.commonModal}
                 onCancel={this.closeDepositModal}
                 height={300}
@@ -123,25 +124,27 @@ export default class ConnectWallet extends Component<any, any> {
                   <Col span={24} className={styles.active}>
                     {hasMetaMaskEnv ? (
                       <Button onClick={() => this.switchWallet(Wallet.Metamask)}>
-                        MetaMask
-                        {address ? <span>&nbsp;&nbsp;(Connected)</span> : null}
+                        {formatMessage({ id: 'wallet-metaMask' })}
+                        {address ? <span>&nbsp;&nbsp;({formatMessage({ id: 'connected' })})</span> : null}
                       </Button>
                     ) : (
                       <a href={'https://metamask.io/'}>
-                        <Button>Install MetaMask</Button>
+                        <Button>
+                          {formatMessage({ id: 'install' })} {formatMessage({ id: 'wallet-metaMask' })}
+                        </Button>
                       </a>
                     )}
                   </Col>
                   <Col span={24}>
                     <a href={'https://walletconnect.org/'}>
                       <Button>
-                        Wallet Connect
+                        {formatMessage({ id: 'wallet-wallet-connect' })}
                         <span
                           style={{
                             color: '#d9d9d9',
                           }}
                         >
-                          &nbsp;&nbsp;(Coming Soon)
+                          &nbsp;&nbsp;({formatMessage({ id: 'coming-soon' })})
                         </span>
                       </Button>
                     </a>
@@ -156,7 +159,7 @@ export default class ConnectWallet extends Component<any, any> {
                   {hasMetaMaskEnv && !address ? (
                     <Col span={24}>
                       <Button type="primary" onClick={() => this.connectWallet()}>
-                        Connect Wallet
+                        {formatMessage({ id: 'connect-wallet' })}
                       </Button>
                     </Col>
                   ) : null}

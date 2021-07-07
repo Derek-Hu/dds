@@ -1,6 +1,7 @@
 import styles from './swap-bar.module.less';
 import SiteContext from '../../layouts/SiteContext';
 import Placeholder from '../placeholder/index';
+import { formatMessage } from 'locale/i18n';
 
 const datas = {
   left: { percentage: 100 },
