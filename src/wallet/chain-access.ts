@@ -822,6 +822,48 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
+  public getUserReTokenShareInfo(address: string): Observable<CoinShare[]> {
+    const queryFun = (token: IUSDCoins): Observable<CoinShare> => {
+      return this.getPubPoolContract(token).pipe(
+        switchMap((pubPoolContract: ethers.Contract) => {
+          return from(pubPoolContract.getUserReToeknInfo(address)).pipe(
+            switchMap((rs: any) => {
+              const valueObs: Observable<BigNumber> = from(
+                pubPoolContract.getTokenAmountByreToken(rs.selfReToken) as Promise<BigNumber>
+              );
+              const totalObs: Observable<BigNumber> = from(
+                pubPoolContract.getTokenAmountByreToken(rs.total) as Promise<BigNumber>
+              );
+              return zip(valueObs, totalObs);
+            }),
+            map((values: BigNumber[]) => {
+              return {
+                coin: token,
+                value: values[0],
+                total: values[1],
+              };
+            })
+          );
+        }),
+        catchError(err => {
+          console.warn('error', err);
+          return of({ coin: token, value: BigNumber.from(0), total: BigNumber.from(0) });
+        })
+      );
+    };
+
+    const zeroNum = BigNumber.from(0);
+    const daiShareInfo: Observable<CoinShare> = queryFun('DAI');
+    const usdtShareInfo: Observable<CoinShare> = of({ coin: 'USDT', value: zeroNum, total: zeroNum });
+    const usdcShareInfo: Observable<CoinShare> = of({ coin: 'USDC', value: zeroNum, total: zeroNum });
+
+    return zip(daiShareInfo, usdtShareInfo, usdcShareInfo).pipe(
+      map((shares: CoinShare[]) => {
+        return shares;
+      })
+    );
+  }
+
   public getReTokenBalance(address: string): Observable<CoinBalance[]> {
     const daiBalance: Observable<BigNumber> = this.getPubPoolContract('DAI').pipe(
       switchMap((contract: ethers.Contract) => {
@@ -2330,6 +2372,14 @@ export class ContractAccessor implements ContractProxy {
       catchError(err => {
         console.warn('error ', err);
         return of(new Map());
+      })
+    );
+  }
+
+  public getUserReTokenShareInfo(address: string): Observable<CoinShare[]> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.getUserReTokenShareInfo(address);
       })
     );
   }
