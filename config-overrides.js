@@ -24,6 +24,11 @@ const multipleEntry = require('react-app-rewire-multiple-entry')([
     entry: 'src/entry/old.js',
     template: 'public/index.html',
     outPath: '/old.html'
+  },
+  {
+    entry: 'src/entry/airdrop.js',
+    template: 'public/airdrop.html',
+    outPath: '/airdrop.html'
   }
 ]);
 

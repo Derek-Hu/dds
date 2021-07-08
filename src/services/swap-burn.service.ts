@@ -46,6 +46,7 @@ export const conformSwap = async (data: IRecord): Promise<boolean> => {
     const swapRs: Promise<boolean> = from(loginUserAccount())
       .pipe(
         switchMap(account => {
+          console.log('do swap', account, data.coin, data.amount);
           return contractAccessor.doSwap(account, data.coin, data.amount);
         }),
         take(1)

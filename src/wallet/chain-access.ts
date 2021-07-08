@@ -15,10 +15,12 @@ import * as ethers from 'ethers';
 import {
   catchError,
   concatMap,
+  delay,
   filter,
   map,
   mapTo,
   reduce,
+  retryWhen,
   startWith,
   switchMap,
   take,
@@ -1364,6 +1366,14 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     return this.getMiningRewardContract().pipe(
       switchMap(rewardContract => {
         return from(rewardContract.queryRewardsForLP1(address) as Promise<BigNumber[]>);
+      }),
+      retryWhen(errorsObs => {
+        return errorsObs.pipe(
+          tap(err => {
+            console.log('err is', err);
+          }),
+          delay(3000)
+        );
       }),
       map((rs: BigNumber[]) => {
         return {

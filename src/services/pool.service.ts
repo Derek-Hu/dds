@@ -6,7 +6,7 @@ import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 import { getNetworkAndAccount, loginUserAccount } from './account';
 import { from, Observable, of, zip } from 'rxjs';
 import { loadingObs, withLoading } from './utils';
-import { defaultCoinDatas, defaultPoolData } from './mock/unlogin-default';
+import { defaultCoinDatas, defaultPoolData, defaultReTokenData } from './mock/unlogin-default';
 import * as request from 'superagent';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
 import { CoinBalance, PrivatePoolAccountInfo } from '../wallet/contract-interface';
@@ -99,6 +99,30 @@ export const getCollaborativeShareInPool = async (): Promise<IPoolShareInPool[]>
     .pipe(
       switchMap((account: string | null) => {
         return account === null ? of(defaultPoolData) : getShareInPool(account);
+      }),
+      take(1)
+    )
+    .toPromise();
+};
+
+export const getLiquidityReTokenBalance = (): Promise<ICoinValue[]> => {
+  const getReTokenBalance = (account: string): Observable<ICoinValue[]> => {
+    return contractAccessor.getReTokenBalance(account).pipe(
+      map((balances: CoinBalance[]) => {
+        return balances.map(one => {
+          return {
+            coin: one.coin,
+            value: Number(toEthers(one.balance, 4)),
+          };
+        });
+      })
+    );
+  };
+
+  return from(loginUserAccount())
+    .pipe(
+      switchMap((account: string | null) => {
+        return account === null ? of(defaultReTokenData) : getReTokenBalance(account);
       }),
       take(1)
     )
