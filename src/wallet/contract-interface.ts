@@ -4915,17 +4915,24 @@ export interface ContractRead {
 
   getUserSelfReTokenBalance(address: string): Observable<CoinBalance[]>;
 
+  /**
+   * 用户提供公池流动性获取的reToken信息
+   *
+   * @param address
+   */
+  getUserReTokenShareInfo(address: string): Observable<CoinShare[]>;
+
   priPoolUserBalance(address: string): Observable<PrivatePoolAccountInfo>;
 
   /**
-   * 获取公池流动性质押的奖励（质押reToken）
+   * 获取用户公池流动性质押的奖励（质押reToken）
    *
    * @param address
    */
   getReTokenLiquidityReward(address: string): Observable<PubPoolRewards>;
 
   /**
-   * 公池流动性挖矿的质押信息
+   * 用户公池流动性挖矿的质押信息
    */
   getPubPoolLiquidityShareInfo(address: string): Observable<PubPoolLockInfo>;
 }

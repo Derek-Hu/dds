@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { formatMessage } from 'locale/i18n';
-import { getCollaborativeShareInPool } from '../../../services/pool.service';
+import { getUserReTokenShareInPubPool } from '../../../services/pool.service';
 import CoinProgress from '../../card-info/coin-progress';
 
 export default class PoolArea extends Component {
@@ -20,7 +20,7 @@ export default class PoolArea extends Component {
     return (
       <CoinProgress
         totalMode={true}
-        service={getCollaborativeShareInPool}
+        service={getUserReTokenShareInPubPool}
         title={formatMessage({ id: 'your-share-in-the-pool' })}
       />
     );
