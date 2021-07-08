@@ -731,12 +731,12 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         switchMap((pubPoolContract: ethers.Contract) => {
           return from(pubPoolContract.getUserReToeknInfo(address)).pipe(
             switchMap((rs: any) => {
-              const valueObs: Observable<BigNumber> = from(
-                pubPoolContract.getTokenAmountByreToken(rs.selfReToken) as Promise<BigNumber>
-              );
-              const totalObs: Observable<BigNumber> = from(
-                pubPoolContract.getTokenAmountByreToken(rs.total) as Promise<BigNumber>
-              );
+              const valueObs: Observable<BigNumber> = (rs.selfReToken as BigNumber).gt(0)
+                ? from(pubPoolContract.getTokenAmountByreToken(rs.selfReToken) as Promise<BigNumber>)
+                : of(BigNumber.from(0));
+              const totalObs: Observable<BigNumber> = (rs.total as BigNumber).gt(0)
+                ? from(pubPoolContract.getTokenAmountByreToken(rs.total) as Promise<BigNumber>)
+                : of(BigNumber.from(0));
               return zip(valueObs, totalObs);
             }),
             map((values: BigNumber[]) => {
