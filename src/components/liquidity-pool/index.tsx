@@ -67,15 +67,9 @@ export default class PoolArea extends Component<any, any> {
                         </Col>
                       </Row>
                     </Auth>
-                    {/* <Public>
-                      <Row gutter={isMobile ? 0 : 12}>
-                        <Col xs={24} sm={24} md={24} lg={24}>
-                          <LiquidityProvided />
-                        </Col>
-                      </Row>
-                    </Public> */}
                   </div>
                 </Visible>
+
                 <Visible when={selectedTab === TabName.Private}>
                   <div>
                     <Auth>
@@ -91,13 +85,6 @@ export default class PoolArea extends Component<any, any> {
                         <LockedDetails />
                       </div>
                     </Auth>
-                    {/* <Public>
-                      <Row>
-                        <Col xs={24} sm={24} md={24} lg={24}>
-                          <AvailablePoolUnlogin />
-                        </Col>
-                      </Row>
-                    </Public> */}
                   </div>
                 </Visible>
               </div>
