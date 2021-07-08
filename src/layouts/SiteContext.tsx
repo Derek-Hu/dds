@@ -14,6 +14,8 @@ export interface ISiteContextProps {
   updateAccount?: (account: IAccount) => any;
   switNetwork?: (network: INetworkKey) => any;
   refreshPage?: () => void;
+  scaleHSize: number;
+  scaleWSize: number;
 }
 
 const SiteContext = React.createContext<ISiteContextProps>({
@@ -25,6 +27,8 @@ const SiteContext = React.createContext<ISiteContextProps>({
   network: null,
   connected: null,
   account: null,
+  scaleHSize: 10,
+  scaleWSize: 10,
 });
 
 export default SiteContext;

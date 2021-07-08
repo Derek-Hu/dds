@@ -2,6 +2,7 @@ import styles from './style.module.less';
 import SectionTitle from '../section-title/index';
 import { formatMessage } from 'locale/i18n';
 import { Row, Col, Icon } from 'antd';
+import { CSS_H_SCALE } from '../../../constant/index';
 
 import oneImg from '../../../assets/why-build/one@2x.png';
 import twoImg from '../../../assets/why-build/two@2x.png';
@@ -28,7 +29,7 @@ const adColSize = 8;
 export default () => {
   return (
     <div className={styles.whatWeBuild}>
-      <div className={styles.content}>
+      <div className={[styles.content, CSS_H_SCALE].join(' ')}>
         <h2>
           Why we build <br />
           Shield
@@ -64,49 +65,6 @@ export default () => {
         </div>
         <div className={styles.arrowDown}>
           <Icon type="down-circle" />
-        </div>
-        <div className={styles.bottomAds}>
-          <div className={styles.comment}>
-            <div></div>
-          </div>
-          <Row gutter={40} type="flex" justify="center">
-            <Col span={adColSize} className={styles.adRow}>
-              <div className={[styles.adItem, styles.active].join(' ')}>
-                <Image src={adsoneImg} />
-                <p>Non-custodial in nature</p>
-              </div>
-            </Col>
-            <Col span={adColSize} className={styles.adRow}>
-              <div className={styles.adItem}>
-                <Image src={adstwoImg} />
-                <p>Transparent rules enforced by the blockchain</p>
-              </div>
-            </Col>
-            <Col span={adColSize} className={styles.adRow}>
-              <div className={styles.adItem}>
-                <Image src={adsthreeImg} />
-                <p>0 intermediary tax</p>
-              </div>
-            </Col>
-          </Row>
-          <Row gutter={40} type="flex" justify="center" className={styles.secondRow}>
-            <Col span={adColSize} className={styles.adRow}>
-              <div className={styles.adItem}>
-                <Image src={adsfourImg} />
-                <p>Borderless &amp; permissionless</p>
-              </div>
-            </Col>
-            <Col span={adColSize} className={styles.adRow}>
-              <div className={styles.adItem}>
-                <Image src={adsfiveImg} />
-                <p>
-                  Easily accessible
-                  <br />
-                  (No KYC, email, or registration required)
-                </p>
-              </div>
-            </Col>
-          </Row>
         </div>
       </div>
     </div>

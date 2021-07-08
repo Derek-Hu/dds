@@ -26,52 +26,54 @@ const Image = ({ src }: { src: string }) => {
 export default () => {
   return (
     <div className={styles.backedBy}>
-      <h2>Backed By</h2>
-      <div className={styles.partnerWpr}>
-        <Row>
-          <Col span={4} offset={2}>
-            <Image src={sevenImg} />
-          </Col>
-          <Col span={4}>
-            <Image src={hashkeyImg} />
-          </Col>
-          <Col span={4}>
-            <Image src={atImg} />
-          </Col>
-          <Col span={4}>
-            <Image src={lncubaImg} />
-          </Col>
-          <Col span={4}>
-            <Image src={bonfireImg} />
-          </Col>
-        </Row>
-      </div>
-      <div className={styles.partnerWpr}>
-        <Row>
-          <Col span={4} offset={2}>
-            <Image src={hoonImg} />
-          </Col>
-          <Col span={4}>
-            <Image src={youbiImg} />
-          </Col>
-          <Col span={4}>
-            <Image src={shimaImg} />
-          </Col>
-          <Col span={4}>
-            <Image src={zonffImg} />
-          </Col>
-          <Col span={4}>
-            <Image src={okexImg} />
-          </Col>
-        </Row>
-      </div>
-      {/* <div className={styles.partnerWpr}>
+      <div>
+        <h2>Backed By</h2>
+        <div className={styles.partnerWpr}>
+          <Row>
+            <Col span={4} offset={2}>
+              <Image src={sevenImg} />
+            </Col>
+            <Col span={4}>
+              <Image src={hashkeyImg} />
+            </Col>
+            <Col span={4}>
+              <Image src={atImg} />
+            </Col>
+            <Col span={4}>
+              <Image src={lncubaImg} />
+            </Col>
+            <Col span={4}>
+              <Image src={bonfireImg} />
+            </Col>
+          </Row>
+        </div>
+        <div className={styles.partnerWpr}>
+          <Row>
+            <Col span={4} offset={2}>
+              <Image src={hoonImg} />
+            </Col>
+            <Col span={4}>
+              <Image src={youbiImg} />
+            </Col>
+            <Col span={4}>
+              <Image src={shimaImg} />
+            </Col>
+            <Col span={4}>
+              <Image src={zonffImg} />
+            </Col>
+            <Col span={4}>
+              <Image src={okexImg} />
+            </Col>
+          </Row>
+        </div>
+        {/* <div className={styles.partnerWpr}>
         <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
         <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
         <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
         <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
         <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
       </div> */}
+      </div>
     </div>
   );
 };

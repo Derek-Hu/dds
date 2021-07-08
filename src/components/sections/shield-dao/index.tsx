@@ -51,16 +51,10 @@ export default () => {
       {({ isMobile }) => (
         <div className={styles.shieldDao}>
           {/* <img alt="" src={AdsImage} width="56%" /> */}
-          <p>Company/Foundation/Business organization</p>
+          {/* <p>Company/Foundation/Business organization</p> */}
           <div className={styles.bgImg}>
             <div>
-              <h3>
-                Shield DAO is not a
-                <p id="output-wrap">
-                  <span id="output"></span>
-                  <span className="typing-cursor">|</span>
-                </p>
-              </h3>
+              <h3>Shield DAO is not a</h3>
               <p>ShieldDAO is committed to becoming an open global decentralized governance organization.</p>
               <div className={carouselStyles.carousel}>
                 <Carousel autoplay>

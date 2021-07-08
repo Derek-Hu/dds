@@ -1,0 +1,26 @@
+// each(range(1, 400, 1), {
+//     .scale-w-@{value} {
+//         line-height: 1;
+//         .scale-enable{
+//             transform: scale(@value);
+//         }
+//     }
+//     .scale-h-@{value} {
+//         .scale-enable{
+//             transform: scale(@value);
+//         }
+//     }
+// });
+
+// @for $value from 1 to 400 {
+// 　　.scale-w-#{$value} {
+//         .scale-w-enable{
+//             transform: scale($value/100);
+//         }
+//     }
+//     .scale-h-#{$value} {
+//         .scale-h-enable{
+//             transform: scale($value/100);
+//         }
+//     }
+// }
