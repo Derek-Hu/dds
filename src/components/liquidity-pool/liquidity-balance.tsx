@@ -9,14 +9,13 @@ import ModalRender from '../modal-render/index';
 import SiteContext from '../../layouts/SiteContext';
 import CardInfo from '../card-info/index';
 import {
-  getPoolBalance,
   getPrivateLiquidityBalance,
   doPoolWithdraw,
   getPubPoolWithdrawDeadline,
   getCollaborativeWithdrawRe,
   getUserReTokenShareInPubPool,
 } from '../../services/pool.service';
-import { isNumberLike, isNotZeroLike, format, isGreaterZero } from '../../util/math';
+import { isNotZeroLike, format, isGreaterZero } from '../../util/math';
 import Placeholder from '../placeholder/index';
 import InputNumber from '../input/index';
 import { formatTime } from '../../util/time';

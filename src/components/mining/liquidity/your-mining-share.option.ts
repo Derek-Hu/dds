@@ -21,7 +21,7 @@ export function shareOption(yourShare: number): EChartOption {
         name: '',
         type: 'pie',
         selectedMode: false,
-        minAngle: 1,
+        minAngle: 3,
         animation: false,
         radius: ['50%', '80%'],
         avoidLabelOverlap: false,

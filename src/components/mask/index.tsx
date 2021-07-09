@@ -9,7 +9,19 @@ import { formatMessage } from 'locale/i18n';
 export default {
   dom: null,
 
-  $run(url: string, pendingText = 'Pending', failText = 'Failed') {
+  $run(
+    url: string,
+    pendingText: string | null = 'Pending',
+    failText: string | null = 'Failed',
+    title: string | null = null
+  ) {
+    if (failText === null) {
+      failText = 'Failed';
+    }
+    if (pendingText === null) {
+      pendingText = 'Pending';
+    }
+
     // @ts-ignore
     this.hide();
     // @ts-ignore
@@ -29,10 +41,15 @@ export default {
             >
               <Icon type="close" />
             </span>
+
+            {title ? <div className={styles.title}>{title}</div> : null}
+
             <div className={styles.imgContent}>
               <img src={url} alt="" className={url === pending ? styles.loading : ''} />
             </div>
+
             <p>{url === fail ? failText : url === success ? 'Succeed' : pendingText}</p>
+
             {url === pending ? null : (
               <Button type="primary" onClick={() => this.hide()} className={styles.btn}>
                 {formatMessage({ id: 'ok' })}
@@ -47,22 +64,17 @@ export default {
     // @ts-ignore
     document.body.appendChild(this.dom);
   },
-  showLoading(loadingText: string | null = null) {
-    if (loadingText) {
-      this.$run(pending, loadingText);
-    } else {
-      this.$run(pending);
-    }
+
+  showLoading(loadingText: string | null = null, title: string | null = null) {
+    this.$run(pending, loadingText, null, title);
   },
-  showSuccess() {
-    this.$run(success);
+
+  showSuccess(title: string | null = null) {
+    this.$run(success, null, null, title);
   },
-  showFail(failText: string | null = null) {
-    if (failText && failText.trim().length > 0) {
-      this.$run(fail, '', failText);
-    } else {
-      this.$run(fail);
-    }
+
+  showFail(failText: string | null = null, title: string | null = null) {
+    this.$run(fail, null, failText, title);
   },
   hide() {
     // @ts-ignore

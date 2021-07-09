@@ -8,6 +8,7 @@ import { finalize, switchMap } from 'rxjs/operators';
 import { Col, message, Row } from 'antd';
 import styles from './claim-test-token.module.less';
 import SiteContext, { ISiteContextProps } from '../../../layouts/SiteContext';
+import { shortAddress } from '../../../util';
 
 type IProps = {
   visibleChange?: (visible: boolean) => void;
@@ -40,7 +41,6 @@ export class ClaimTestToken extends Component<IProps, IState> {
   }
 
   loadIsClaimed() {
-    console.log('do load claim state');
     from(loginUserAccount())
       .pipe(
         switchMap((account: string) => {
@@ -99,7 +99,7 @@ export class ClaimTestToken extends Component<IProps, IState> {
                     <span className={styles.addressHex}>5000</span>
                     <br />
                     <span className={styles.address}>Address:</span>
-                    <span className={styles.addressHex}>{this.context.address}</span>
+                    <span className={styles.addressHex}>{shortAddress(this.context.address, true)}</span>
                   </Col>
                 </Row>
 

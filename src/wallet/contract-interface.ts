@@ -4959,6 +4959,12 @@ export interface ActivityItems {
   claimTestToken(token: IUSDCoins): Observable<boolean>;
 
   isTestTokenClaimed(userAddr: string, token: IUSDCoins): Observable<boolean>;
+
+  airDropWhiteList(address: string): Observable<BigNumber>;
+
+  airDropClaim(): Observable<boolean>;
+
+  airDropHasClaimed(address: string): Observable<boolean>;
 }
 
 /**

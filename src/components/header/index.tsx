@@ -11,9 +11,9 @@ import { ddsBasePath, DefaultKeNetwork, homeBasePath } from '../../constant/inde
 import { isNumberLike } from '../../util/math';
 import { formatMessage } from 'locale/i18n';
 import { shortAddress } from '../../util/index';
-import NetworkSwitch from '../network-switch/index';
 import { RouteKey } from '../../constant/routes';
 import { TokenFaucet } from './token-faucet';
+import { AirDropEntry } from '../activities/air-drop/air-drop-entry';
 
 const { SubMenu } = Menu;
 
@@ -241,7 +241,9 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                   </Menu>
                 </Col>
                 <Col span={12} className={styles.connectWpr}>
-                  {window.location.hash === `#/${RouteKey.home}` ? null : (
+                  {window.location.hash === `#/${RouteKey.home}` ? (
+                    <AirDropEntry />
+                  ) : (
                     // (
                     //   <Button className={styles.connectBtn}>
                     //     <a href={`${ddsBasePath}/${RouteKey.trade}`}>Trade</a>

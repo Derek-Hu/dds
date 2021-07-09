@@ -189,8 +189,9 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   };
 
   render() {
-    const { children, location } = this.props;
+    const { children, location, match } = this.props;
     const { isMobile, account, address, currentNetwork, network, timestamp, connected } = this.state;
+
     const LayoutComp = location.pathname === '/home' ? HomeLayout : TradeLayout;
 
     return (
