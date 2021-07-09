@@ -18,7 +18,7 @@ export class AirDropEntry extends Component<IProps, IState> {
           bgColor={'#1346FF'}
           onClick={this.onEnterAirdrop.bind(this)}
           isLink={true}
-          aUrl={'/airdrop.html'}
+          aUrl={'./airdrop.html'}
           aTarget={'_blank'}
         >
           <img className={styles.btnImg} src={airdropSvg} height={18} />
