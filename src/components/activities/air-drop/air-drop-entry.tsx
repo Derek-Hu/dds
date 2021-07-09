@@ -14,6 +14,7 @@ export class AirDropEntry extends Component<IProps, IState> {
       <div className={styles.wrapper}>
         <CircleBorderBtn
           paddingHorizon={'5px'}
+          paddingVertical={'5px'}
           bgColor={'#1346FF'}
           onClick={this.onEnterAirdrop.bind(this)}
           isLink={true}
