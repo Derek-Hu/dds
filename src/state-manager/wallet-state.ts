@@ -1,7 +1,7 @@
-import { Observable } from 'rxjs';
+import { AsyncSubject, Observable } from 'rxjs';
 import { Wallet } from '../constant';
 import { walletManager } from '../wallet/wallet-manager';
-import { filter, map, switchMap, tap } from 'rxjs/operators';
+import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
 import { EthNetwork } from '../constant/network';
 import MetaMaskOnboarding from '@metamask/onboarding';
@@ -22,7 +22,6 @@ export class WalletState {
   // the wallet returned must be connected
   watchWalletInstance(): Observable<WalletInterface> {
     return walletManager.watchWalletInstance().pipe(
-      tap(w => console.log('wallet is', w)),
       filter(wallet => wallet !== null),
       map(wallet => wallet as WalletInterface)
     );
@@ -88,6 +87,21 @@ export class WalletState {
   // do connecting the specified wallet.
   connectToWallet(wallet: Wallet): void {
     walletManager.doSelectWallet(wallet);
+  }
+
+  // switch to target network
+  switchNetwork(network: EthNetwork.bsc | EthNetwork.bianTest): Observable<boolean> {
+    const res = new AsyncSubject<boolean>();
+    this.watchWalletInstance()
+      .pipe(
+        take(1),
+        switchMap((wallet: WalletInterface) => {
+          return wallet.switchNetwork(network);
+        })
+      )
+      .subscribe(res);
+
+    return res;
   }
 }
 

@@ -79,8 +79,8 @@ export class MetamaskWallet implements WalletInterface {
     );
   }
 
-  public switchNetwork(id: EthNetwork): Observable<boolean> {
-    const netParam = NetworkParam[id as EthNetwork.bianTest];
+  public switchNetwork(id: EthNetwork.bsc | EthNetwork.bianTest): Observable<boolean> {
+    const netParam = NetworkParam[id];
     const data = [netParam];
     const net: Promise<any> = window.ethereum.request({ method: 'wallet_addEthereumChain', params: data });
     return from(net).pipe(

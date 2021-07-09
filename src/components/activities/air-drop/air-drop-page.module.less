@@ -44,30 +44,39 @@
       display: block;
       position: relative;
       text-align: left;
-      width: 10em;
+      width: 100%;
       font-family: Gilroy-Bold, sans-serif, serif;
       line-height: 1;
       color: #000000;
       height: 20px;
+
+      .sld {
+        font-family: Gilroy-Medium, sans-serif;
+        float: right;
+      }
+    }
+
+    .amountNum,
+    .amountXxx,
+    .amountClaimed {
+      display: block;
+      position: relative;
+      overflow: hidden;
+      height: 11vw;
+      line-height: 11vw;
+      color: #000000;
+      font-family: Gilroy-Bold, sans-serif;
+      text-align: right;
     }
 
     .amountXxx {
-      display: block;
-      position: relative;
-      font-family: Gilroy-Bold, sans-serif;
       font-size: 11vw;
-      line-height: 11vw;
       letter-spacing: 0.6vw;
-      color: #000000;
+      padding-top: 3vw;
     }
 
-    .amountNum {
-      display: block;
-      position: relative;
-      font-family: Gilroy-Bold, sans-serif;
-      font-size: 9.4vw;
-      line-height: 11vw;
-      color: #000000;
+    .amountClaimed {
+      color: #666666;
     }
 
     .claimBtn {
@@ -83,6 +92,30 @@
       font-size: 16px;
     }
   }
+}
+
+.modalDesc {
+  text-align: center;
+  font-size: 16px;
+  padding-top: 16px;
+  line-height: 32px;
+  color: #333333;
+  height: 80px;
+}
+
+.confirmTitle,
+.confirmText {
+  font-size: 16px;
+  color: #000000;
+}
+
+.confirmTitle {
+  font-family: Gilroy-Bold, sans-serif;
+}
+
+.confirmSld {
+  color: #666666;
+  font-style: italic;
 }
 
 @media screen and (max-width: 1024px) {

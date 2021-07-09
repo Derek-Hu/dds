@@ -1,10 +1,16 @@
 import { Decimal } from 'decimal.js';
 import numeral from 'numeral';
 import { BigNumber } from 'ethers';
+import _ from 'lodash';
 
-export const format = (value: any) => {
+export const format = (value: any, withZero: boolean = true) => {
   if (isNumberLike(value)) {
-    return numeral(new Decimal(value).toFixed(2)).format('0,0.00');
+    let str = numeral(new Decimal(value).toFixed(2)).format('0,0.00');
+    if (!withZero) {
+      str = _.trimEnd(str, '0');
+      str = _.trimEnd(str, '.');
+    }
+    return str;
   }
   return '';
 };

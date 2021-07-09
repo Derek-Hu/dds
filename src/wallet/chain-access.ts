@@ -53,7 +53,6 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   public airDropWhiteList(address: string): Observable<BigNumber> {
     return this.getAirDropContract().pipe(
       switchMap(contract => {
-        console.log('whiteList', contract.address, address);
         return from(contract.whiteList(address) as Promise<BigNumber>);
       }),
       map((rs: BigNumber) => {
@@ -75,6 +74,22 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         return from(rs.wait());
       }),
       mapTo(true),
+      catchError(err => {
+        console.warn('error', err);
+        return of(false);
+      })
+    );
+  }
+
+  public airDropHasClaimed(address: string): Observable<boolean> {
+    return this.getAirDropContract().pipe(
+      switchMap(contract => {
+        return from(contract.receivedList(address) as Promise<boolean>);
+      }),
+      map((rs: boolean) => {
+        console.log('rs', rs);
+        return rs;
+      }),
       catchError(err => {
         console.warn('error', err);
         return of(false);
@@ -2116,6 +2131,14 @@ export class ContractAccessor implements ContractProxy {
     return this.accessor.pipe(
       switchMap(accessor => {
         return accessor.airDropClaim();
+      })
+    );
+  }
+
+  public airDropHasClaimed(address: string): Observable<boolean> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.airDropHasClaimed(address);
       })
     );
   }

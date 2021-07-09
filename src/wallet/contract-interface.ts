@@ -4963,6 +4963,8 @@ export interface ActivityItems {
   airDropWhiteList(address: string): Observable<BigNumber>;
 
   airDropClaim(): Observable<boolean>;
+
+  airDropHasClaimed(address: string): Observable<boolean>;
 }
 
 /**
