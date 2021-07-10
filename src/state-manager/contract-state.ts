@@ -1,1 +1,3 @@
-export class ContractState {}
+export class ContractState {
+  constructor() {}
+}
