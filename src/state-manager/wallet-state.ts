@@ -1,7 +1,7 @@
-import { AsyncSubject, Observable } from 'rxjs';
+import { AsyncSubject, Observable, of } from 'rxjs';
 import { Wallet } from '../constant';
 import { walletManager } from '../wallet/wallet-manager';
-import { filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { filter, map, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
 import { EthNetwork } from '../constant/network';
 import MetaMaskOnboarding from '@metamask/onboarding';
@@ -77,9 +77,15 @@ export class WalletState {
 
   // watch is now has connected to any wallet
   watchIsConnected(): Observable<boolean> {
+    const instance: WalletInterface | null = walletManager.getCurWalletInstance();
     return this.watchWalletInstance().pipe(
-      switchMap((wallet: WalletInterface) => {
-        return wallet.wasConnected();
+      startWith(instance),
+      switchMap((wallet: WalletInterface | null) => {
+        if (wallet) {
+          return wallet.wasConnected();
+        } else {
+          return of(false);
+        }
       })
     );
   }

@@ -20,6 +20,7 @@ type IProps = {};
 type IState = {
   isInstalledMetamask: boolean;
   isWalletConnected: boolean;
+  isWalletConnectedInit: boolean;
   curNetwork: EthNetwork | null;
   networkReady: boolean;
   needSwitchNetwork: boolean;
@@ -46,6 +47,7 @@ export default class AirDropPage extends Component<IProps, IState> {
   state: IState = {
     isInstalledMetamask: true,
     isWalletConnected: false,
+    isWalletConnectedInit: false,
     curNetwork: EthNetwork.bianTest,
     networkReady: false,
     needSwitchNetwork: false,
@@ -218,6 +220,10 @@ export default class AirDropPage extends Component<IProps, IState> {
   }
 
   private watchWallet() {
+    const sub1 = walletState.watchIsConnected().subscribe((isConnected: boolean) => {
+      this.setState({ isWalletConnectedInit: true });
+    });
+
     const sub = combineLatest([
       walletState.watchIsConnected(),
       walletState.watchNetwork(),
@@ -252,7 +258,7 @@ export default class AirDropPage extends Component<IProps, IState> {
       );
     });
 
-    this.subs.push(sub);
+    this.subs.push(sub1, sub);
   }
 
   render() {
@@ -284,7 +290,11 @@ export default class AirDropPage extends Component<IProps, IState> {
               </div>
 
               <div className={styles.claimBtn}>
-                <Placeholder loading={this.state.isWalletConnected && !this.state.isInitPageState}>
+                <Placeholder
+                  loading={
+                    !this.state.isWalletConnectedInit || (this.state.isWalletConnected && !this.state.isInitPageState)
+                  }
+                >
                   <NormalButton
                     type={'primary'}
                     marginTop={'5px'}
