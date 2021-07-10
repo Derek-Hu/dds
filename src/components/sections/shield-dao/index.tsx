@@ -9,43 +9,7 @@ import carouselStyles from './carousel.module.less';
 import SectionTitle from '../section-title/index';
 import Datasource from './says';
 
-const adsImage = (
-  <Col xs={24} sm={24} md={24} lg={10} className={styles.imgContainer}>
-    <img alt="" src={AdsImage} width="56%" />
-  </Col>
-);
-
 export default () => {
-  // const [message, setMesg] = useState<string>('Company');
-
-  // useEffect(() => {
-  //   const doAnimation = (source: any, output: any) => {
-  //     return new Promise(reslove => {
-  //       // eslint-disable-next-line
-  //       const typing = new Typing({
-  //         source,
-  //         output,
-  //         delay: 80,
-  //         done: function () {
-  //           reslove(null);
-  //         }, //完成打印后的回调事件
-  //       });
-  //       typing.start();
-  //     });
-  //   };
-  //   const doAll = async () => {
-  //     // eslint-disable-next-line
-  //     while(true){
-  //       await doAnimation('start', 'output');
-  //       await doAnimation('start', 'output');
-  //       await doAnimation('start', 'output');
-  //     }
-  //   }
-
-  //   doAll();
-
-  // }, []);
-
   return (
     <SiteContext.Consumer>
       {({ isMobile }) => (

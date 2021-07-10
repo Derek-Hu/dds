@@ -1,7 +1,7 @@
-import { Component } from "react";
-import Header from "../components/header/index";
-import Footer from "../components/footer/index";
-import SiteContext from "../layouts/SiteContext";
+import { Component } from 'react';
+import Header from '../components/header/index';
+import Footer from '../components/footer/index';
+import SiteContext from '../layouts/SiteContext';
 export default class MainLayout extends Component {
   render() {
     const { children } = this.props;
@@ -9,7 +9,7 @@ export default class MainLayout extends Component {
       <SiteContext.Consumer>
         {({ isMobile }) => (
           <div>
-            <Header darkMode={true} />
+            {/* <Header darkMode={true} /> */}
             {children}
             {isMobile ? null : <Footer />}
           </div>
