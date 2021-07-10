@@ -51,7 +51,7 @@ export default class AirDropPage extends Component<IProps, IState> {
     needSwitchNetwork: false,
     claimAmount: -1,
     claimAmountStr: '0',
-    claimAmountFont: '',
+    claimAmountFont: '11vw',
     showConfirm: false,
     hasClaimed: false,
     claimUserAddress: '',
@@ -84,7 +84,8 @@ export default class AirDropPage extends Component<IProps, IState> {
       .subscribe((amount: number) => {
         const text: string = format(amount, false);
         const fonts = [9.4, 9.4, 9.4, 9.4, 9.4, 9.4, 9.4, 8, 7.4, 6.5, 5.8];
-        const font: number = amount > 0 ? fonts[text.length > 10 ? 10 : text.length] : 11;
+        const font: number =
+          amount >= 0 && this.state.isWalletConnected ? fonts[text.length > 10 ? 10 : text.length] : 11;
 
         this.setState(
           {
@@ -279,11 +280,11 @@ export default class AirDropPage extends Component<IProps, IState> {
                 }
                 style={{ fontSize: this.state.claimAmountFont }}
               >
-                {!this.state.isWalletConnected ? '******' : this.state.claimAmountStr}
+                {!this.state.isWalletConnected || !this.state.isInitPageState ? '******' : this.state.claimAmountStr}
               </div>
 
               <div className={styles.claimBtn}>
-                <Placeholder loading={!this.state.isInitPageState}>
+                <Placeholder loading={this.state.isWalletConnected && !this.state.isInitPageState}>
                   <NormalButton
                     type={'primary'}
                     marginTop={'5px'}
@@ -296,7 +297,7 @@ export default class AirDropPage extends Component<IProps, IState> {
               </div>
 
               <div className={styles.rules}>
-                <a>Learn more about shield airdrop</a>
+                <a>Learn more about airdrop</a>
               </div>
             </div>
           </Col>
