@@ -49,7 +49,7 @@ export default class AirDropPage extends Component<IProps, IState> {
     curNetwork: EthNetwork.bianTest,
     networkReady: false,
     needSwitchNetwork: false,
-    claimAmount: 0,
+    claimAmount: -1,
     claimAmountStr: '0',
     claimAmountFont: '',
     showConfirm: false,
@@ -193,7 +193,7 @@ export default class AirDropPage extends Component<IProps, IState> {
         return 'Connect wallet to see your amount';
       }
       case Action.None: {
-        return 'No airdrop to claim';
+        return 'No available claim';
       }
       case Action.Claimed: {
         return 'CLAIMED';
@@ -271,7 +271,7 @@ export default class AirDropPage extends Component<IProps, IState> {
               </div>
               <div
                 className={
-                  this.state.claimAmount === 0
+                  this.state.claimAmount < 0
                     ? styles.amountXxx
                     : this.state.hasClaimed
                     ? styles.amountClaimed
@@ -279,7 +279,7 @@ export default class AirDropPage extends Component<IProps, IState> {
                 }
                 style={{ fontSize: this.state.claimAmountFont }}
               >
-                {this.state.claimAmount === 0 ? '******' : this.state.claimAmountStr}
+                {this.state.claimAmount < 0 ? '******' : this.state.claimAmountStr}
               </div>
 
               <div className={styles.claimBtn}>
@@ -296,7 +296,7 @@ export default class AirDropPage extends Component<IProps, IState> {
               </div>
 
               <div className={styles.rules}>
-                <a>See Airdrop Rules</a>
+                <a>Learn more about shield airdrop</a>
               </div>
             </div>
           </Col>
