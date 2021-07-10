@@ -271,7 +271,7 @@ export default class AirDropPage extends Component<IProps, IState> {
               </div>
               <div
                 className={
-                  this.state.claimAmount < 0
+                  !this.state.isWalletConnected
                     ? styles.amountXxx
                     : this.state.hasClaimed
                     ? styles.amountClaimed
@@ -279,7 +279,7 @@ export default class AirDropPage extends Component<IProps, IState> {
                 }
                 style={{ fontSize: this.state.claimAmountFont }}
               >
-                {this.state.claimAmount < 0 ? '******' : this.state.claimAmountStr}
+                {!this.state.isWalletConnected ? '******' : this.state.claimAmountStr}
               </div>
 
               <div className={styles.claimBtn}>
