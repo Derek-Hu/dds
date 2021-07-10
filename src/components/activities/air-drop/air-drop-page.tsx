@@ -292,7 +292,8 @@ export default class AirDropPage extends Component<IProps, IState> {
               <div className={styles.claimBtn}>
                 <Placeholder
                   loading={
-                    !this.state.isWalletConnectedInit || (this.state.isWalletConnected && !this.state.isInitPageState)
+                    (this.state.isInstalledMetamask && !this.state.isWalletConnectedInit) ||
+                    (this.state.isWalletConnected && !this.state.isInitPageState)
                   }
                 >
                   <NormalButton
