@@ -20,6 +20,7 @@ type IProps = {};
 type IState = {
   isInstalledMetamask: boolean;
   isWalletConnected: boolean;
+  isWalletConnectedInit: boolean;
   curNetwork: EthNetwork | null;
   networkReady: boolean;
   needSwitchNetwork: boolean;
@@ -46,12 +47,13 @@ export default class AirDropPage extends Component<IProps, IState> {
   state: IState = {
     isInstalledMetamask: true,
     isWalletConnected: false,
+    isWalletConnectedInit: false,
     curNetwork: EthNetwork.bianTest,
     networkReady: false,
     needSwitchNetwork: false,
     claimAmount: -1,
     claimAmountStr: '0',
-    claimAmountFont: '',
+    claimAmountFont: '11vw',
     showConfirm: false,
     hasClaimed: false,
     claimUserAddress: '',
@@ -84,7 +86,8 @@ export default class AirDropPage extends Component<IProps, IState> {
       .subscribe((amount: number) => {
         const text: string = format(amount, false);
         const fonts = [9.4, 9.4, 9.4, 9.4, 9.4, 9.4, 9.4, 8, 7.4, 6.5, 5.8];
-        const font: number = amount > 0 ? fonts[text.length > 10 ? 10 : text.length] : 11;
+        const font: number =
+          amount >= 0 && this.state.isWalletConnected ? fonts[text.length > 10 ? 10 : text.length] : 11;
 
         this.setState(
           {
@@ -217,6 +220,10 @@ export default class AirDropPage extends Component<IProps, IState> {
   }
 
   private watchWallet() {
+    const sub1 = walletState.watchIsConnected().subscribe((isConnected: boolean) => {
+      this.setState({ isWalletConnectedInit: true });
+    });
+
     const sub = combineLatest([
       walletState.watchIsConnected(),
       walletState.watchNetwork(),
@@ -251,7 +258,7 @@ export default class AirDropPage extends Component<IProps, IState> {
       );
     });
 
-    this.subs.push(sub);
+    this.subs.push(sub1, sub);
   }
 
   render() {
@@ -279,11 +286,16 @@ export default class AirDropPage extends Component<IProps, IState> {
                 }
                 style={{ fontSize: this.state.claimAmountFont }}
               >
-                {!this.state.isWalletConnected ? '******' : this.state.claimAmountStr}
+                {!this.state.isWalletConnected || !this.state.isInitPageState ? '******' : this.state.claimAmountStr}
               </div>
 
               <div className={styles.claimBtn}>
-                <Placeholder loading={!this.state.isInitPageState}>
+                <Placeholder
+                  loading={
+                    (this.state.isInstalledMetamask && !this.state.isWalletConnectedInit) ||
+                    (this.state.isWalletConnected && !this.state.isInitPageState)
+                  }
+                >
                   <NormalButton
                     type={'primary'}
                     marginTop={'5px'}
@@ -296,7 +308,7 @@ export default class AirDropPage extends Component<IProps, IState> {
               </div>
 
               <div className={styles.rules}>
-                <a>Learn more about shield airdrop</a>
+                <a>Learn more about airdrop</a>
               </div>
             </div>
           </Col>
