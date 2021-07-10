@@ -296,7 +296,7 @@ export default class AirDropPage extends Component<IProps, IState> {
               </div>
 
               <div className={styles.rules}>
-                <a>See Airdrop Rules</a>
+                <a>Learn More</a>
               </div>
             </div>
           </Col>
