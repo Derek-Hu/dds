@@ -21,7 +21,15 @@ export default (props: any) => {
             {children}
           </Drawer>
         ) : (
-          <DModal {...props} animationType="slide-up" closable={closable} maskClosable={maskClosable} title={title} onCancel={onCancel} className={className}>
+          <DModal
+            {...props}
+            animationType="slide-up"
+            closable={closable}
+            maskClosable={maskClosable}
+            title={title}
+            onCancel={onCancel}
+            className={className}
+          >
             {children}
           </DModal>
         );

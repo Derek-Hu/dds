@@ -1,7 +1,7 @@
 import Mask from '../components/mask';
 import { contractAccessor } from '../wallet/chain-access';
 import { from, Observable, of, zip } from 'rxjs';
-import { catchError, filter, finalize, map, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, delay, filter, finalize, map, retry, retryWhen, switchMap, take, tap } from 'rxjs/operators';
 import { BigNumber } from 'ethers';
 import { toEthers } from '../util/ethers';
 import { getCurNetwork, loginUserAccount } from './account';
@@ -272,7 +272,6 @@ export const queryReTokenLiquidityRewards = async (): Promise<PublicPoolLiquidit
       }),
       take(1),
       catchError(err => {
-        console.warn('error', err);
         return of({
           total: 0,
           available: 0,
@@ -403,30 +402,6 @@ export const getLiqiditorPeriodInfo = (): Promise<{ startTime: number; period: n
           startTime: startTime.toNumber() * 1000,
           period: period.toNumber(),
         };
-      }),
-      take(1)
-    )
-    .toPromise();
-};
-
-export const getLiquidityReTokenBalance = (): Promise<ICoinValue[]> => {
-  const getReTokenBalance = (account: string): Observable<ICoinValue[]> => {
-    return contractAccessor.getReTokenBalance(account).pipe(
-      map((balances: CoinBalance[]) => {
-        return balances.map(one => {
-          return {
-            coin: one.coin,
-            value: Number(toEthers(one.balance, 4)),
-          };
-        });
-      })
-    );
-  };
-
-  return from(loginUserAccount())
-    .pipe(
-      switchMap((account: string | null) => {
-        return account === null ? of(defaultReTokenData) : getReTokenBalance(account);
       }),
       take(1)
     )

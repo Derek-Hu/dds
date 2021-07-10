@@ -23,6 +23,7 @@ export type ContractAddress = {
   ERC20USDC: string;
 
   ReceiveTestTokenContract: string;
+  AirDropContract: string;
 };
 
 export const KOVAN_ADDRESS: ContractAddress = {
@@ -46,8 +47,8 @@ export const KOVAN_ADDRESS: ContractAddress = {
   ERC20USDC: '0xc8c0278b371316fb3629a7c2c4e003cc296b5925',
 
   ReceiveTestTokenContract: '',
+  AirDropContract: '0x086530B6E7D8a0E94B0eCf9A321183c702b10106',
 };
-
 export const BIAN_TEST_ADDRESS: ContractAddress = {
   TradeDAIContract: '0x32C10Ce5f9f47Ab82141D73A136823D3e20408E0', //
   TradeUSDTContract: '0x088EF7a6a8ff54898586cDF0C4098b3c4D5A5Fc7',
@@ -69,11 +70,35 @@ export const BIAN_TEST_ADDRESS: ContractAddress = {
   ERC20USDC: '0x9E404218898Fb63Cac611D02BAF508A61215B2FE',
 
   ReceiveTestTokenContract: '0x69FA54869e95f67A9b36f4aFF808B45De6347DE7',
+  AirDropContract: '0x0730d4Be6A3d232E40046Dd0156213F0dcd209BD',
 };
+export const BSC_ADDRESS: ContractAddress = {
+  TradeDAIContract: ' ', //
+  TradeUSDTContract: ' ',
+  TradeUSDCContract: ' ',
+  Lp1DAIContract: ' ', //
+  Lp1USDTContract: ' ',
+  Lp1USDCContract: ' ',
+  Lp2DAIContract: ' ', //
+  Lp2USDTContract: ' ',
+  Lp2USDCContract: ' ',
+  MiningRewardContract: ' ', //'0xb995604ded854D2068D57898e157675732C7B378', ////
+  LiquidatorContract: ' ', //
+  SwapBurnContract: ' ', //
+  BrokerContract: ' ', //
 
+  ERC20DDS: ' ', //
+  ERC20DAI: ' ', //
+  ERC20USDT: ' ',
+  ERC20USDC: ' ',
+
+  ReceiveTestTokenContract: ' ',
+  AirDropContract: ' ',
+};
 export const ContractAddressByNetwork = {
   [EthNetwork.bianTest]: BIAN_TEST_ADDRESS,
   [EthNetwork.kovan]: KOVAN_ADDRESS,
+  [EthNetwork.bsc]: BSC_ADDRESS,
 };
 
 export const CentralProto = window.location.protocol;
@@ -81,8 +106,11 @@ export const CentralHost = CentralProto + '//shieldex.io';
 export const CentralPort = {
   [EthNetwork.kovan]: '8090',
   [EthNetwork.bianTest]: '8095',
+  [EthNetwork.bsc]: '80', //TODO to change to correct port number
 };
+
 export const CentralPath: Record<EthNetwork, INetworkKey> = {
   [EthNetwork.kovan]: 'kovan',
   [EthNetwork.bianTest]: 'bsctest',
+  [EthNetwork.bsc]: 'bscmain',
 };

@@ -1,4 +1,4 @@
-import { BehaviorSubject, combineLatest, merge, Observable, zip } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, zip } from 'rxjs';
 import { WalletInterface } from './wallet-interface';
 import { map, take, tap } from 'rxjs/operators';
 import { Wallet } from '../constant';
@@ -11,7 +11,7 @@ export class WalletManager {
   // metamask 钱包实例
   private readonly metamask: WalletInterface;
 
-  // 钱包类型
+  // 当前连接的钱包类型，必须是处于已经连接的状态
   private curWallet: BehaviorSubject<Wallet | null> = new BehaviorSubject<Wallet | null>(null);
 
   constructor() {
@@ -80,6 +80,7 @@ export class WalletManager {
 
   // 监听钱包状态，设置当前使用的钱包
   private selectConnectedWallet() {
+    // 持续监听各个钱包的连接状态，根据需要选择一个已经连接的钱包作为当前使用的钱包。
     combineLatest([this.metamask.wasConnected()])
       .pipe(
         tap(([metamask]: [boolean]) => {

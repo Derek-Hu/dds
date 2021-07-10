@@ -6,11 +6,36 @@ type IProps = {
   fontSize?: string;
   paddingVertical?: string;
   paddingHorizon?: string;
+  bgColor?: string;
+  isLink?: boolean;
+  aTarget?: string;
+  aUrl?: string;
 };
 
 export class CircleBorderBtn extends Component<IProps, any> {
   render() {
-    return (
+    return this.props.isLink ? (
+      <a
+        className={styles.btnBorder}
+        style={{
+          fontSize: this.props.fontSize,
+          paddingRight: this.props.paddingHorizon,
+          paddingLeft: this.props.paddingHorizon,
+          paddingTop: this.props.paddingVertical,
+          paddingBottom: this.props.paddingVertical,
+          backgroundColor: this.props.bgColor,
+        }}
+        onClick={(event: React.MouseEvent<HTMLAnchorElement>) => {
+          if (this.props.onClick) {
+            this.props.onClick(event);
+          }
+        }}
+        href={this.props.aUrl}
+        target={this.props.aTarget}
+      >
+        {this.props.children}
+      </a>
+    ) : (
       <div
         className={styles.btnBorder}
         style={{
@@ -19,6 +44,7 @@ export class CircleBorderBtn extends Component<IProps, any> {
           paddingLeft: this.props.paddingHorizon,
           paddingTop: this.props.paddingVertical,
           paddingBottom: this.props.paddingVertical,
+          backgroundColor: this.props.bgColor,
         }}
         onClick={(event: React.MouseEvent<HTMLDivElement>) => {
           if (this.props.onClick) {

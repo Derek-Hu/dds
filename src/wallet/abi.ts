@@ -4698,6 +4698,141 @@ export const BrokerABI = [
     type: 'function',
   },
 ];
+export const AirDrop_ABI = [
+  {
+    inputs: [
+      {
+        internalType: 'address[]',
+        name: '_addr',
+        type: 'address[]',
+      },
+      {
+        internalType: 'uint256[]',
+        name: '_amounts',
+        type: 'uint256[]',
+      },
+    ],
+    name: 'addWhiteList',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'claim',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'Claim',
+    type: 'event',
+  },
+  {
+    inputs: [],
+    name: 'withdraw',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'endTime',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'owner',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    name: 'receivedList',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'tokenAddr',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    name: 'whiteList',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+];
 
 export const BN_TRADE_ABI = [
   {
@@ -11982,6 +12117,7 @@ export const ETH_ABI: { [p in keyof ContractAddress]: any[] } = {
   ERC20USDC: ERC20,
 
   ReceiveTestTokenContract: [],
+  AirDropContract: AirDrop_ABI,
 };
 
 export const BN_ABI: { [p in keyof ContractAddress]: any[] } = {
@@ -12005,4 +12141,5 @@ export const BN_ABI: { [p in keyof ContractAddress]: any[] } = {
   ERC20USDC: ERC20,
 
   ReceiveTestTokenContract: BN_TestToken_ABI,
+  AirDropContract: AirDrop_ABI,
 };

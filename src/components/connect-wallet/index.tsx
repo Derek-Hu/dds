@@ -19,7 +19,7 @@ import { formatMessage } from 'locale/i18n';
 const { Option } = Select;
 const { isMetaMaskInstalled } = MetaMaskOnboarding;
 
-const hasMetaMaskEnv = process.env.NODE_ENV === 'development' ? true : isMetaMaskInstalled();
+const hasMetaMaskEnv = process.env.NODE_ENV === 'development' ? isMetaMaskInstalled() : isMetaMaskInstalled();
 export default class ConnectWallet extends Component<any, any> {
   state = {
     visible: false,

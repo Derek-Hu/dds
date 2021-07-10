@@ -9,12 +9,15 @@ export const formatMessage = ({ id, ...params }, isHtml) => {
     }
     return <span dangerouslySetInnerHTML={{ __html: enTranslation[id] }}></span>;
   }
+
   const html = keys.reduce((translation, key) => {
-    return translation.replace(`\${${key}}`, params[key]);
+    const target = `\${${key}}`;
+    return translation.replace(target, params[key]);
   }, enTranslation[id]);
 
   if (!isHtml) {
     return html;
   }
+
   return <span dangerouslySetInnerHTML={{ __html: html }}></span>;
 };

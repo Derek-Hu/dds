@@ -101,7 +101,6 @@ export default class LiquidityProvided extends Component<IProps, IState> {
 
   calculateRe = async (newVal: { amount?: number | string; coin?: IUSDCoins }) => {
     const { selectedCoin, amount } = this.state;
-    console.log('...amount');
     const params = {
       amount,
       coin: selectedCoin,
@@ -165,7 +164,13 @@ export default class LiquidityProvided extends Component<IProps, IState> {
                         {formatMessage({ id: 'you-will-receive' })} <Icon type="loading" />
                       </>
                     ) : (
-                      <>{formatMessage({ id: 'you-will-receive', amount: format(reAmount), coin: selectedCoin })}</>
+                      <>
+                        {formatMessage({
+                          id: 'you-will-receive-amount-coin',
+                          amount: format(reAmount),
+                          coin: selectedCoin,
+                        })}
+                      </>
                     )}
                   </p>
                   {/* ) : null} */}

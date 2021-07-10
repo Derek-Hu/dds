@@ -4,6 +4,7 @@ import { AsyncSubject, EMPTY, Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import {
   CoinBalance,
+  CoinShare,
   ContractRead,
   PrivatePoolAccountInfo,
   PubPoolLockInfo,
@@ -30,6 +31,9 @@ export class QueryMergeManager implements ContractRead {
     this.registerFunction('getPubPoolLiquidityShareInfo', (args: any[]) =>
       contractAccessor.getPubPoolLiquidityShareInfo(args[0])
     );
+    this.registerFunction('getUserReTokenShareInfo', (args: any[]) =>
+      contractAccessor.getUserReTokenShareInfo(args[0])
+    );
   }
 
   public registerFunction(funName: string, fun: Function) {
@@ -43,8 +47,6 @@ export class QueryMergeManager implements ContractRead {
 
     const fun = _.get(contractAccessor, funName) as Function;
     const realFun = fun.bind(contractAccessor);
-
-    console.log('real fun is', realFun);
 
     this.functionMap.set(funName, realFun);
   }
@@ -64,7 +66,6 @@ export class QueryMergeManager implements ContractRead {
 
     const fun = this.functionMap.get(funName) as Function;
     const resObs: Observable<T> = fun(args);
-
     const pendingCache = this.pendingMap.get(funName) as AsyncSubject<T>;
     resObs
       .pipe(
@@ -95,6 +96,10 @@ export class QueryMergeManager implements ContractRead {
 
   public getPubPoolLiquidityShareInfo(address: string): Observable<PubPoolLockInfo> {
     return this.callFunction<PubPoolLockInfo>('getPubPoolLiquidityShareInfo', [address]);
+  }
+
+  public getUserReTokenShareInfo(address: string): Observable<CoinShare[]> {
+    return this.callFunction<CoinShare[]>('getUserReTokenShareInfo', [address]);
   }
 }
 

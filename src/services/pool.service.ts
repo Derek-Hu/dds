@@ -9,7 +9,7 @@ import { loadingObs, withLoading } from './utils';
 import { defaultCoinDatas, defaultPoolData } from './mock/unlogin-default';
 import * as request from 'superagent';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
-import { CoinBalance, PrivatePoolAccountInfo } from '../wallet/contract-interface';
+import { CoinBalance, CoinShare, PrivatePoolAccountInfo } from '../wallet/contract-interface';
 import { CentralHost, CentralPath, CentralPort, CentralProto } from '../constant/address';
 import { queryMan } from '../wallet/state-manager';
 
@@ -31,74 +31,23 @@ export const getCollaborativeArp = async (): Promise<number> => {
   return returnVal(1002);
 };
 
-/** Done */
-export const getPoolBalance = async (type: 'public' | 'private'): Promise<{ [key in IUSDCoins]: number }> => {
-  // if(process.env.NODE_ENV === 'development'){
-  //   return returnVal({
-  //     DAI: 2330,
-  //     USDC: 2343,
-  //     USDT: 8000
-  //   })
-  // }
+/**
+ * 获取用户在公池提供流动性的数据
+ */
+export const getUserReTokenShareInPubPool = async (): Promise<ICoinItem[]> => {
   return from(loginUserAccount())
     .pipe(
-      switchMap((account: string | null) => {
-        if (account === null && type === 'public') {
-          return contractAccessor.pubPoolBalanceWhole();
-        } else if (account !== null) {
-          if (type === 'public') {
-            return contractAccessor.pubPoolBalanceOf(account);
-          } else {
-            return contractAccessor.priPoolUserBalance(account).pipe(
-              map(rs => {
-                const res = new Map<IUSDCoins, BigNumber>();
-                rs.total.forEach(one => {
-                  res.set(one.coin as IUSDCoins, one.balance);
-                });
-                return res;
-              })
-            );
-          }
-        } else {
-          return of(null);
-        }
+      switchMap((account: string) => {
+        return queryMan.getUserReTokenShareInfo(account);
       }),
-      map((balances: Map<IUSDCoins, BigNumber> | null) => {
-        if (balances === null) {
-          return defaultCoinDatas;
-        }
-
-        return Array.from(balances.keys()).reduce(
-          (total, coin: IUSDCoins) => {
-            total[coin] = Number(toEthers(balances.get(coin) as BigNumber, 4));
-            return total;
-          },
-          { ...defaultCoinDatas }
-        );
-      }),
-      take(1)
-    )
-    .toPromise();
-};
-
-/** Done */
-export const getCollaborativeShareInPool = async (): Promise<IPoolShareInPool[]> => {
-  const getShareInPool = (account: string): Observable<IPoolShareInPool[]> => {
-    return zip(contractAccessor.pubPoolBalanceOf(account), contractAccessor.pubPoolBalanceWhole()).pipe(
-      map((rs: Map<IUSDCoins, BigNumber>[]) => {
-        return Array.from(rs[0].keys()).map(coin => {
-          const amount = Number(toEthers(rs[0].get(coin) as BigNumber, 4));
-          const total = Number(toEthers(rs[1].get(coin) as BigNumber, 4));
-          return { coin, amount, total };
+      map((coinShares: CoinShare[]) => {
+        return coinShares.map((share: CoinShare) => {
+          return {
+            coin: share.coin,
+            amount: Number(toEthers(share.value, 2, share.coin)),
+            total: Number(toEthers(share.total, 2, share.coin)),
+          } as ICoinItem;
         });
-      })
-    );
-  };
-
-  return from(loginUserAccount())
-    .pipe(
-      switchMap((account: string | null) => {
-        return account === null ? of(defaultPoolData) : getShareInPool(account);
       }),
       take(1)
     )

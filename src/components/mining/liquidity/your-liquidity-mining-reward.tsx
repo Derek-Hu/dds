@@ -10,7 +10,8 @@ import { formatMessage } from 'locale/i18n';
 import { Button, Col } from 'antd';
 import { PublicPoolLiquidityRewards } from '../../../services/mining.service.interface';
 import NormalButton from '../../common/buttons/normal-btn';
-import { Subject, Subscription } from 'rxjs';
+import { asyncScheduler, Subject, Subscription, timer } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 interface IState {
   loading: boolean;
@@ -65,7 +66,12 @@ export default class LiquidityMiningReward extends Component<IProps, IState> {
 
   public doClaim() {
     claimPubPoolReTokenRewards().then(() => {
-      this.loadRewards();
+      // 必须等到下一个区块才能查询
+      timer(3000)
+        .pipe(take(1))
+        .subscribe(() => {
+          this.loadRewards();
+        });
     });
   }
 

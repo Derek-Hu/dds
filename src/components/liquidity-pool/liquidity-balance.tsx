@@ -9,13 +9,13 @@ import ModalRender from '../modal-render/index';
 import SiteContext from '../../layouts/SiteContext';
 import CardInfo from '../card-info/index';
 import {
-  getPoolBalance,
   getPrivateLiquidityBalance,
   doPoolWithdraw,
   getPubPoolWithdrawDeadline,
   getCollaborativeWithdrawRe,
+  getUserReTokenShareInPubPool,
 } from '../../services/pool.service';
-import { isNumberLike, isNotZeroLike, format, isGreaterZero } from '../../util/math';
+import { isNotZeroLike, format, isGreaterZero } from '../../util/math';
 import Placeholder from '../placeholder/index';
 import InputNumber from '../input/index';
 import { formatTime } from '../../util/time';
@@ -219,16 +219,18 @@ export default class PoolBalance extends Component<{ isPrivate: boolean }, IStat
 
   getBalanceAndWithdraw = async (): Promise<{ [key in IUSDCoins]: { total: number; maxWithdraw: number } }> => {
     const { isPrivate } = this.props;
+
     if (isPrivate) {
       return await getPrivateLiquidityBalance();
+    } else {
+      const res: ICoinItem[] = await getUserReTokenShareInPubPool();
+      const rs = res.reduce((all, one) => {
+        all[one.coin] = { total: one.amount, maxWithdraw: one.amount };
+        return all;
+      }, {} as { [key in IUSDCoins]: { total: number; maxWithdraw: number } });
+
+      return rs;
     }
-    const coins = await getPoolBalance('public');
-    // @ts-ignore
-    return Object.keys(coins).reduce((all, key) => {
-      // @ts-ignore
-      all[key] = { total: coins[key], maxWithdraw: coins[key] };
-      return all;
-    }, {});
   };
 
   async init() {
@@ -321,10 +323,8 @@ export default class PoolBalance extends Component<{ isPrivate: boolean }, IStat
     const {
       data,
       selectCoin,
-      withdrawBtnEnable,
       deadline,
       loading,
-      deadlineLoading,
       unlockInfos,
       calculating,
       coins,
@@ -340,18 +340,14 @@ export default class PoolBalance extends Component<{ isPrivate: boolean }, IStat
           <div className={isMobile ? styles.mobile : ''}>
             <CardInfo isNumber={true} loading={loading} title="Liquidity Balance" theme="inner" items={cardData}>
               <Placeholder loading={loading} style={{ margin: '22px 0' }}>
-                {/* <Visible when={withdrawBtnEnable}> */}
                 <Button type="primary" onClick={this.onWithDrawClick} className={styles.btn}>
                   {deadline
                     ? formatMessage({ id: 'withdraw-until-deadline', deadline })
                     : formatMessage({ id: 'withdraw' })}
                 </Button>
-                {/* </Visible> */}
-                {/* <Button type="link" onClick={this.recordVisible.show} className={styles.link}>
-                    Liquidity Balance History
-                  </Button> */}
               </Placeholder>
             </CardInfo>
+
             <ModalRender
               visible={this.state.recordVisible}
               title={formatMessage({ id: 'liquidity-balance-history' })}
