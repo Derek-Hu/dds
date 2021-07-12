@@ -8,6 +8,8 @@ export enum Wallet {
   WalletConnect = 'Wallet Connect',
 }
 
+export const CSS_H_SCALE = 'scale-h-enable';
+
 export const DefaultKeNetwork: INetworkKey = 'bsctest';
 
 export const NetWork2Coin: Record<INetworkKey, IFromCoins> = {

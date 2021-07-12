@@ -20,6 +20,8 @@ interface IState {
   timestamp: number | null;
   network: EthNetwork | null;
   currentNetwork: INetworkKey;
+  scaleHSize: number;
+  scaleWSize: number;
 }
 
 // @ts-ignore
@@ -37,6 +39,8 @@ export default class Layout extends Component<RouteComponentProps, IState> {
     isMobile: false,
     address: null,
     account: null,
+    scaleHSize: 10,
+    scaleWSize: 10,
   };
 
   private eventSub: Subscription | undefined;
@@ -155,10 +159,23 @@ export default class Layout extends Component<RouteComponentProps, IState> {
   updateMobileMode = () => {
     const { isMobile } = this.state;
     const newIsMobile = window.innerWidth < RESPONSIVE_MOBILE;
+    const designHieght = 900;
+    const designWidth = 1320;
+    const scaleHSize = Math.round((window.innerHeight * 100) / designHieght);
+    const scaleWSize = Math.round((window.innerWidth * 100) / designWidth);
+
+    this.setState({
+      scaleHSize,
+      scaleWSize,
+    });
+
     if (isMobile !== newIsMobile) {
       this.setState({
         isMobile: newIsMobile,
       });
+      // if(!newIsMobile){
+
+      // }
     }
   };
 
@@ -190,7 +207,17 @@ export default class Layout extends Component<RouteComponentProps, IState> {
 
   render() {
     const { children, location, match } = this.props;
-    const { isMobile, account, address, currentNetwork, network, timestamp, connected } = this.state;
+    const {
+      isMobile,
+      account,
+      scaleHSize,
+      scaleWSize,
+      address,
+      currentNetwork,
+      network,
+      timestamp,
+      connected,
+    } = this.state;
 
     const LayoutComp = location.pathname === '/home' ? HomeLayout : TradeLayout;
 
@@ -210,6 +237,8 @@ export default class Layout extends Component<RouteComponentProps, IState> {
           timestamp,
           account,
           address,
+          scaleHSize,
+          scaleWSize,
           // account:
           //   process.env.NODE_ENV === 'development'
           //     ? {
@@ -225,7 +254,8 @@ export default class Layout extends Component<RouteComponentProps, IState> {
           // address: process.env.NODE_ENV === 'development' ? '0x839423432432' : address,
         }}
       >
-        <div className={isMobile ? 'mobile' : ''}>
+        {/* <div className={[isMobile ? 'mobile' : '', `scale-h-${scaleHSize}`, `scale-w-${scaleWSize}`].join(' ')}> */}
+        <div className={[isMobile ? 'mobile' : ''].join(' ')}>
           <LayoutComp>{children}</LayoutComp>
         </div>
       </SiteContext.Provider>

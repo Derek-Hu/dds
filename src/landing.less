@@ -1,10 +1,9 @@
 @import './font.css';
 @import './typing.css';
+// @import './scale.css';
 
-*,
-::after,
-::before {
-  -webkit-tap-highlight-color: transparent;
+* {
+  box-sizing: content-box;
 }
 
 blockquote,
@@ -118,4 +117,39 @@ h6 {
   content: ' ';
   clear: both;
   height: 0;
+}
+
+.contentWidth {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+@media only screen and (min-width: 1900) {
+  .contentWidth {
+    max-width: 1600px;
+  }
+}
+
+@media only screen and (min-width: 1700) {
+  .contentWidth {
+    max-width: 1500px;
+  }
+}
+
+@media only screen and (min-width: 1600) {
+  .contentWidth {
+    max-width: 1400px;
+  }
+}
+
+@media only screen and (min-width: 1500) {
+  .contentWidth {
+    max-width: 1200px;
+  }
+}
+
+@media only screen and (min-width: 1280px) {
+  .contentWidth {
+    max-width: 1120px;
+  }
 }
