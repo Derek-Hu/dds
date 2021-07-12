@@ -18,8 +18,7 @@ import BannerAnim, { Element } from 'rc-banner-anim';
 import TweenOne from 'rc-tween-one';
 import 'rc-banner-anim/assets/index.css';
 import Header from '../components/header/index';
-
-const BgElement = Element.BgElement;
+import ScrollOverPack from 'rc-scroll-anim/lib/ScrollOverPack';
 
 export default class HomePage extends Component {
   render() {
@@ -71,60 +70,64 @@ export default class HomePage extends Component {
           <Header darkMode={true} />
           <ContentWidth>
             <Banner></Banner>
-            <div className={styles.bannerDatas}>
-              <Row>
-                <Col span={6}>
-                  <p>{formatInt(13012)}</p>
-                  <span>All Time Volum</span>
-                </Col>
-                <Col span={6}>
-                  <p>{formatInt(13012)}</p>
-                  <span>All Time Volum</span>
-                </Col>
-                <Col span={6}>
-                  <p>{formatInt(13012)}</p>
-                  <span>All Time Volum</span>
-                </Col>
-                <Col span={6}>
-                  <p>{formatInt(13012)}</p>
-                  <span>All Time Volum</span>
-                </Col>
-              </Row>
-            </div>
+            <TweenOne className="banner-user-title" animation={{ y: 70, opacity: 0, delay: 400, type: 'from' }}>
+              <div className={styles.bannerDatas}>
+                <Row>
+                  <Col span={6}>
+                    <p>{formatInt(13012)}</p>
+                    <span>All Time Volum</span>
+                  </Col>
+                  <Col span={6}>
+                    <p>{formatInt(13012)}</p>
+                    <span>All Time Volum</span>
+                  </Col>
+                  <Col span={6}>
+                    <p>{formatInt(13012)}</p>
+                    <span>All Time Volum</span>
+                  </Col>
+                  <Col span={6}>
+                    <p>{formatInt(13012)}</p>
+                    <span>All Time Volum</span>
+                  </Col>
+                </Row>
+              </div>
+            </TweenOne>
           </ContentWidth>
         </Screen>
-        <Screen style={{ background: '#1346ff' }}>
-          <ContentWidth>
-            <WhyWeBuild></WhyWeBuild>
-          </ContentWidth>
-        </Screen>
-        <Screen style={{ background: '#1346ff' }}>
-          <ContentWidth>
-            <WhyWeBuild2></WhyWeBuild2>
-          </ContentWidth>
-        </Screen>
-        <Screen>
-          <ContentWidth>
-            <WhatIsPerpetual></WhatIsPerpetual>
-          </ContentWidth>
-        </Screen>
-        <Screen style={{ background: '#000' }}>
-          <ContentWidth>
-            <HowWorks></HowWorks>
-          </ContentWidth>
-        </Screen>
-        <Screen>
-          <ContentWidth>
-            <ShieldDAO></ShieldDAO>
-          </ContentWidth>
-          <JoinCommunity></JoinCommunity>
-        </Screen>
-        <Screen>
-          <ContentWidth>
-            <Partners></Partners>
-            <AsFeature></AsFeature>
-          </ContentWidth>
-        </Screen>
+        <ScrollOverPack>
+          <Screen style={{ background: '#1346ff' }}>
+            <ContentWidth>
+              <WhyWeBuild></WhyWeBuild>
+            </ContentWidth>
+          </Screen>
+          <Screen style={{ background: '#1346ff' }}>
+            <ContentWidth>
+              <WhyWeBuild2></WhyWeBuild2>
+            </ContentWidth>
+          </Screen>
+          <Screen>
+            <ContentWidth>
+              <WhatIsPerpetual></WhatIsPerpetual>
+            </ContentWidth>
+          </Screen>
+          <Screen style={{ background: '#000' }}>
+            <ContentWidth>
+              <HowWorks></HowWorks>
+            </ContentWidth>
+          </Screen>
+          <Screen>
+            <ContentWidth>
+              <ShieldDAO></ShieldDAO>
+            </ContentWidth>
+            <JoinCommunity></JoinCommunity>
+          </Screen>
+          <Screen>
+            <ContentWidth>
+              <Partners></Partners>
+              <AsFeature></AsFeature>
+            </ContentWidth>
+          </Screen>
+        </ScrollOverPack>
         {/* <NonRisk></NonRisk> */}
         {/* <HowTrade></HowTrade> */}
         {/* <WhyDderivatives /> */}
