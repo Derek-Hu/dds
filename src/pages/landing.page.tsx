@@ -15,6 +15,7 @@ import { formatInt } from '../util/math';
 import styles from './style.module.less';
 import landingStyles from './landing.module.less';
 import BannerAnim, { Element } from 'rc-banner-anim';
+import { Parallax } from 'rc-scroll-anim';
 import TweenOne from 'rc-tween-one';
 import 'rc-banner-anim/assets/index.css';
 import Header from '../components/header/index';
@@ -70,7 +71,7 @@ export default class HomePage extends Component {
           <Header darkMode={true} />
           <ContentWidth>
             <Banner></Banner>
-            <TweenOne className="banner-user-title" animation={{ y: 70, opacity: 0, delay: 400, type: 'from' }}>
+            <TweenOne animation={{ y: 70, opacity: 0, delay: 400, type: 'from' }}>
               <div className={styles.bannerDatas}>
                 <Row>
                   <Col span={6}>
@@ -102,30 +103,40 @@ export default class HomePage extends Component {
           </Screen>
           <Screen style={{ background: '#1346ff' }}>
             <ContentWidth>
-              <WhyWeBuild2></WhyWeBuild2>
+              <Parallax animation={{ y: 70, type: 'from', delay: 300, opacity: 0 }}>
+                <WhyWeBuild2></WhyWeBuild2>
+              </Parallax>
             </ContentWidth>
           </Screen>
           <Screen>
             <ContentWidth>
-              <WhatIsPerpetual></WhatIsPerpetual>
+              <Parallax animation={{ y: 70, type: 'from', delay: 300, opacity: 0 }}>
+                <WhatIsPerpetual></WhatIsPerpetual>
+              </Parallax>
             </ContentWidth>
           </Screen>
           <Screen style={{ background: '#000' }}>
             <ContentWidth>
-              <HowWorks></HowWorks>
+              <Parallax animation={{ y: 70, type: 'from', delay: 300, opacity: 0 }}>
+                <HowWorks></HowWorks>
+              </Parallax>
             </ContentWidth>
           </Screen>
           <Screen>
-            <ContentWidth>
-              <ShieldDAO></ShieldDAO>
-            </ContentWidth>
-            <JoinCommunity></JoinCommunity>
+            <Parallax animation={{ y: 70, type: 'from', delay: 300, opacity: 0 }}>
+              <ContentWidth>
+                <ShieldDAO></ShieldDAO>
+              </ContentWidth>
+              <JoinCommunity></JoinCommunity>
+            </Parallax>
           </Screen>
           <Screen>
-            <ContentWidth>
-              <Partners></Partners>
-              <AsFeature></AsFeature>
-            </ContentWidth>
+            <Parallax animation={{ y: 70, type: 'from', delay: 300, opacity: 0 }}>
+              <ContentWidth>
+                <Partners></Partners>
+                <AsFeature></AsFeature>
+              </ContentWidth>
+            </Parallax>
           </Screen>
         </ScrollOverPack>
         {/* <NonRisk></NonRisk> */}

@@ -8,6 +8,7 @@ import oneImg from '../../../assets/why-build/one@2x.png';
 import twoImg from '../../../assets/why-build/two@2x.png';
 import threeImg from '../../../assets/why-build/three@2x.png';
 import fourImg from '../../../assets/why-build/four@2x.png';
+import TweenOne from 'rc-tween-one';
 
 import adsoneImg from '../../../assets/why-build/11@2x.png';
 import adstwoImg from '../../../assets/why-build/22@2x.png';
@@ -31,47 +32,49 @@ export default () => {
     <div className={styles.whatWeBuildSection2}>
       <div className={[styles.content, CSS_H_SCALE].join(' ')}>
         <div className={styles.bottomAds}>
-          {/* <div className={styles.comment}>
+          <TweenOne key="1" animation={{ y: 100, type: 'from', delay: 300, opacity: 0 }}>
+            {/* <div className={styles.comment}>
             <div></div>
           </div> */}
-          <Row gutter={40} type="flex" justify="center">
-            <Col span={adColSize} className={styles.adRow}>
-              <div className={[styles.adItem, styles.active].join(' ')}>
-                <Image src={adsoneImg} />
-                <p>Non-custodial in nature</p>
-              </div>
-            </Col>
-            <Col span={adColSize} className={styles.adRow}>
-              <div className={styles.adItem}>
-                <Image src={adstwoImg} />
-                <p>Transparent rules enforced by the blockchain</p>
-              </div>
-            </Col>
-            <Col span={adColSize} className={styles.adRow}>
-              <div className={styles.adItem}>
-                <Image src={adsthreeImg} />
-                <p>0 intermediary tax</p>
-              </div>
-            </Col>
-          </Row>
-          <Row gutter={40} type="flex" justify="center" className={styles.secondRow}>
-            <Col span={adColSize} className={styles.adRow}>
-              <div className={styles.adItem}>
-                <Image src={adsfourImg} />
-                <p>Borderless &amp; permissionless</p>
-              </div>
-            </Col>
-            <Col span={adColSize} className={styles.adRow}>
-              <div className={styles.adItem}>
-                <Image src={adsfiveImg} />
-                <p>
-                  Easily accessible
-                  <br />
-                  (No KYC, email, or registration required)
-                </p>
-              </div>
-            </Col>
-          </Row>
+            <Row gutter={40} type="flex" justify="center">
+              <Col span={adColSize} className={styles.adRow}>
+                <div className={[styles.adItem, styles.active].join(' ')}>
+                  <Image src={adsoneImg} />
+                  <p>Non-custodial in nature</p>
+                </div>
+              </Col>
+              <Col span={adColSize} className={styles.adRow}>
+                <div className={styles.adItem}>
+                  <Image src={adstwoImg} />
+                  <p>Transparent rules enforced by the blockchain</p>
+                </div>
+              </Col>
+              <Col span={adColSize} className={styles.adRow}>
+                <div className={styles.adItem}>
+                  <Image src={adsthreeImg} />
+                  <p>0 intermediary tax</p>
+                </div>
+              </Col>
+            </Row>
+            <Row gutter={40} type="flex" justify="center" className={styles.secondRow}>
+              <Col span={adColSize} className={styles.adRow}>
+                <div className={styles.adItem}>
+                  <Image src={adsfourImg} />
+                  <p>Borderless &amp; permissionless</p>
+                </div>
+              </Col>
+              <Col span={adColSize} className={styles.adRow}>
+                <div className={styles.adItem}>
+                  <Image src={adsfiveImg} />
+                  <p>
+                    Easily accessible
+                    <br />
+                    (No KYC, email, or registration required)
+                  </p>
+                </div>
+              </Col>
+            </Row>
+          </TweenOne>
         </div>
       </div>
     </div>

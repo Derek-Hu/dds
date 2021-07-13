@@ -8,6 +8,7 @@ import twoImg from '../../../assets/landing/2.svg';
 import threeImg from '../../../assets/landing/3.svg';
 import fourImg from '../../../assets/landing/4.svg';
 import fiveImg from '../../../assets/landing/5.svg';
+import TweenOne from 'rc-tween-one';
 
 const Image = ({ src }: { src: string }) => {
   return (
