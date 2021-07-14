@@ -1,7 +1,7 @@
 import { AsyncSubject, Observable, of } from 'rxjs';
 import { Wallet } from '../constant';
 import { walletManager } from '../wallet/wallet-manager';
-import { filter, map, startWith, switchMap, take, tap } from 'rxjs/operators';
+import { filter, map, startWith, switchMap, take } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
 import { EthNetwork } from '../constant/network';
 import MetaMaskOnboarding from '@metamask/onboarding';
@@ -9,7 +9,13 @@ import MetaMaskOnboarding from '@metamask/onboarding';
 const { isMetaMaskInstalled } = MetaMaskOnboarding;
 
 export class WalletState {
-  constructor() {}
+  public readonly USER_ADDR: Observable<string>;
+  public readonly IS_CONNECTED: Observable<boolean>;
+
+  constructor() {
+    this.USER_ADDR = this.watchUserAccount();
+    this.IS_CONNECTED = this.watchIsConnected();
+  }
 
   // the current connected wallet type
   watchWalletType(): Observable<Wallet> {
