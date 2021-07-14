@@ -4,7 +4,7 @@ import { toEthers } from '../util/ethers';
 import { BigNumber } from 'ethers';
 import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 import { getNetworkAndAccount, loginUserAccount } from './account';
-import { from, Observable, of, zip } from 'rxjs';
+import { first, firstValueFrom, from, Observable, of, zip } from 'rxjs';
 import { loadingObs, withLoading } from './utils';
 import { defaultCoinDatas, defaultPoolData } from './mock/unlogin-default';
 import * as request from 'superagent';
@@ -35,23 +35,22 @@ export const getCollaborativeArp = async (): Promise<number> => {
  * 获取用户在公池提供流动性的数据
  */
 export const getUserReTokenShareInPubPool = async (): Promise<ICoinItem[]> => {
-  return from(loginUserAccount())
-    .pipe(
-      switchMap((account: string) => {
-        return queryMan.getUserReTokenShareInfo(account);
-      }),
-      map((coinShares: CoinShare[]) => {
-        return coinShares.map((share: CoinShare) => {
-          return {
-            coin: share.coin,
-            amount: Number(toEthers(share.value, 2, share.coin)),
-            total: Number(toEthers(share.total, 2, share.coin)),
-          } as ICoinItem;
-        });
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = from(loginUserAccount()).pipe(
+    switchMap((account: string) => {
+      return queryMan.getUserReTokenShareInfo(account);
+    }),
+    map((coinShares: CoinShare[]) => {
+      return coinShares.map((share: CoinShare) => {
+        return {
+          coin: share.coin,
+          amount: Number(toEthers(share.value, 2, share.coin)),
+          total: Number(toEthers(share.total, 2, share.coin)),
+        } as ICoinItem;
+      });
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 /** Done */
@@ -71,35 +70,33 @@ export const getPrivateSharePool = async (): Promise<ICoinItem[]> => {
     );
   };
 
-  return from(loginUserAccount())
-    .pipe(
-      switchMap((account: string | null) => {
-        return account === null ? of(defaultPoolData) : getSharePool(account);
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = from(loginUserAccount()).pipe(
+    switchMap((account: string | null) => {
+      return account === null ? of(defaultPoolData) : getSharePool(account);
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 // 获取私池是否接单的状态
 export const getIsUserRejectPrivateOrder = async (): Promise<{ isReject: boolean; isChangeable: boolean }> => {
-  return from(loginUserAccount())
-    .pipe(
-      switchMap((account: string) => {
-        return queryMan.priPoolUserBalance(account);
-      }),
-      map((info: PrivatePoolAccountInfo) => {
-        const daiBalanceInfo = info.total.filter(one => one.coin === 'DAI');
-        const daiAmount: number = Number(toEthers(daiBalanceInfo[0].balance, 6, 'DAI'));
-        const isChangeable: boolean = daiAmount > 0;
-        const rejectInfo = info.isRejectOrder.filter(one => one.coin === 'DAI');
-        const isReject = rejectInfo[0].reject;
+  const res = from(loginUserAccount()).pipe(
+    switchMap((account: string) => {
+      return queryMan.priPoolUserBalance(account);
+    }),
+    map((info: PrivatePoolAccountInfo) => {
+      const daiBalanceInfo = info.total.filter(one => one.coin === 'DAI');
+      const daiAmount: number = Number(toEthers(daiBalanceInfo[0].balance, 6, 'DAI'));
+      const isChangeable: boolean = daiAmount > 0;
+      const rejectInfo = info.isRejectOrder.filter(one => one.coin === 'DAI');
+      const isReject = rejectInfo[0].reject;
 
-        return { isReject, isChangeable };
-      }),
-      take(1)
-    )
-    .toPromise();
+      return { isReject, isChangeable };
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 export const getUnloginPrivateSharePool = async (): Promise<ICoinItem[]> => {
@@ -123,24 +120,20 @@ export const getUnloginPrivateSharePool = async (): Promise<ICoinItem[]> => {
 };
 
 export const getCollaborativeDepositRe = async ({ amount, coin }: IRecord): Promise<number> => {
-  return contractAccessor
-    .getPubPoolDepositReTokenFromToken(coin, amount)
-    .pipe(
-      map((num: BigNumber) => Number(toEthers(num, 4))),
-      take(1)
-    )
-    .toPromise();
+  const res = contractAccessor.getPubPoolDepositReTokenFromToken(coin, amount).pipe(
+    map((num: BigNumber) => Number(toEthers(num, 4))),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 // 从公池取出时使用的dai到reDai的换算
 export const getCollaborativeWithdrawRe = async ({ amount, coin }: IRecord): Promise<number> => {
-  return contractAccessor
-    .getPubPoolWithdrawReTokenFromToken(coin, amount)
-    .pipe(
-      map((num: BigNumber) => Number(toEthers(num, 4))),
-      take(1)
-    )
-    .toPromise();
+  const res = contractAccessor.getPubPoolWithdrawReTokenFromToken(coin, amount).pipe(
+    map((num: BigNumber) => Number(toEthers(num, 4))),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 /** Done */
@@ -153,31 +146,30 @@ export const doCollaborativeDeposit = async ({
 }): Promise<boolean> => {
   let userAccount: string | null = null;
 
-  return from(loginUserAccount())
-    .pipe(
-      switchMap((account: string) => {
-        userAccount = account;
-        return contractAccessor.needApprovePubPool(amount, account, coin);
-      }),
-      switchMap((need: boolean) => {
-        if (need) {
-          const doApprove: Observable<boolean> = contractAccessor.approvePubPool(coin);
-          return loadingObs(doApprove, 'Approve Failed!', 'Approving...', true);
-        } else {
-          return of(true);
-        }
-      }),
-      switchMap((approved: boolean) => {
-        if (userAccount && approved) {
-          const depositObs: Observable<boolean> = contractAccessor.provideToPubPool(userAccount, coin, amount);
-          return loadingObs(depositObs, 'Deposit Failed!', 'Depositing...');
-        } else {
-          return of(false);
-        }
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = from(loginUserAccount()).pipe(
+    switchMap((account: string) => {
+      userAccount = account;
+      return contractAccessor.needApprovePubPool(amount, account, coin);
+    }),
+    switchMap((need: boolean) => {
+      if (need) {
+        const doApprove: Observable<boolean> = contractAccessor.approvePubPool(coin);
+        return loadingObs(doApprove, 'Approve Failed!', 'Approving...', true);
+      } else {
+        return of(true);
+      }
+    }),
+    switchMap((approved: boolean) => {
+      if (userAccount && approved) {
+        const depositObs: Observable<boolean> = contractAccessor.provideToPubPool(userAccount, coin, amount);
+        return loadingObs(depositObs, 'Deposit Failed!', 'Depositing...');
+      } else {
+        return of(false);
+      }
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 export const doPoolWithdraw = async ({
@@ -208,7 +200,7 @@ export const doCollaborativeWithdraw = async ({
   coin: IUSDCoins;
   reAmount: number;
 }): Promise<boolean> => {
-  return withLoading(contractAccessor.withdrawFromPubPool(coin, reAmount).pipe(take(1)).toPromise());
+  return withLoading(firstValueFrom(contractAccessor.withdrawFromPubPool(coin, reAmount).pipe(take(1))));
 };
 
 /** Done */
@@ -220,30 +212,29 @@ export const doCollaborativeWithdraw = async ({
 export const doPrivateDeposit = async ({ coin, amount }: { coin: IUSDCoins; amount: number }): Promise<boolean> => {
   let userAccount: string | null = null;
 
-  return from(loginUserAccount())
-    .pipe(
-      switchMap(account => {
-        userAccount = account;
-        return contractAccessor.needApprovePrivatePool(amount, account, coin);
-      }),
-      switchMap((need: boolean) => {
-        if (need) {
-          const approveObs = contractAccessor.approvePrivatePool(coin);
-          return loadingObs(approveObs, 'Approve Failed!', 'Approving...', true);
-        } else {
-          return of(true);
-        }
-      }),
-      switchMap((approved: boolean) => {
-        if (userAccount && approved) {
-          const depositObs = contractAccessor.provideToPrivatePool(userAccount, coin, amount);
-          return loadingObs(depositObs, 'Deposit Failed!', 'Depositing...');
-        } else {
-          return of(false);
-        }
-      })
-    )
-    .toPromise();
+  const res = from(loginUserAccount()).pipe(
+    switchMap(account => {
+      userAccount = account;
+      return contractAccessor.needApprovePrivatePool(amount, account, coin);
+    }),
+    switchMap((need: boolean) => {
+      if (need) {
+        const approveObs = contractAccessor.approvePrivatePool(coin);
+        return loadingObs(approveObs, 'Approve Failed!', 'Approving...', true);
+      } else {
+        return of(true);
+      }
+    }),
+    switchMap((approved: boolean) => {
+      if (userAccount && approved) {
+        const depositObs = contractAccessor.provideToPrivatePool(userAccount, coin, amount);
+        return loadingObs(depositObs, 'Deposit Failed!', 'Depositing...');
+      } else {
+        return of(false);
+      }
+    })
+  );
+  return firstValueFrom(res);
 };
 
 /**
@@ -252,7 +243,7 @@ export const doPrivateDeposit = async ({ coin, amount }: { coin: IUSDCoins; amou
  * @param amount
  */
 export const doPrivateWithdraw = async ({ coin, amount }: { coin: IUSDCoins; amount: number }): Promise<boolean> => {
-  return withLoading(contractAccessor.withdrawFromPrivatePool(coin, amount).pipe(take(1)).toPromise());
+  return withLoading(firstValueFrom(contractAccessor.withdrawFromPrivatePool(coin, amount).pipe(take(1))));
 };
 
 /**
@@ -276,45 +267,44 @@ export const getPrivateOrders = async (
   //     coin: 'DAI',
   //   }])
   // }
-  return from(getNetworkAndAccount())
-    .pipe(
-      switchMap(({ account, network }) => {
-        const baseHost: string =
-          CentralProto === 'https:'
-            ? CentralHost + '/' + CentralPath[network]
-            : CentralHost + ':' + CentralPort[network] + '/' + CentralPath[network];
-        const url: string = baseHost + '/transactions/getTransactionsInfo';
-        const pageIndex = page - 1;
-        const state = isActive ? 1 : 2;
-        return from(
-          request.post(url).send({
-            page: pageIndex,
-            offset: pageSize,
-            state: state,
-            address: account,
-            name: 'maker',
-          })
-        ).pipe(
-          map(res => {
-            return { res, network };
-          })
-        );
-      }),
-      map(({ res, network }) => {
-        if (res.body.code === 200 && res.body.msg.length > 0) {
-          const orders: IOrderInfoData[] = res.body.msg;
-          return orders.map(one => new OrderInfoObject(one, network).getMakerOrder());
-        } else {
-          return [];
-        }
-      }),
-      catchError(err => {
-        console.warn('error when get private orders', err);
-        return of([]);
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = from(getNetworkAndAccount()).pipe(
+    switchMap(({ account, network }) => {
+      const baseHost: string =
+        CentralProto === 'https:'
+          ? CentralHost + '/' + CentralPath[network]
+          : CentralHost + ':' + CentralPort[network] + '/' + CentralPath[network];
+      const url: string = baseHost + '/transactions/getTransactionsInfo';
+      const pageIndex = page - 1;
+      const state = isActive ? 1 : 2;
+      return from(
+        request.post(url).send({
+          page: pageIndex,
+          offset: pageSize,
+          state: state,
+          address: account,
+          name: 'maker',
+        })
+      ).pipe(
+        map(res => {
+          return { res, network };
+        })
+      );
+    }),
+    map(({ res, network }) => {
+      if (res.body.code === 200 && res.body.msg.length > 0) {
+        const orders: IOrderInfoData[] = res.body.msg;
+        return orders.map(one => new OrderInfoObject(one, network).getMakerOrder());
+      } else {
+        return [];
+      }
+    }),
+    catchError(err => {
+      console.warn('error when get private orders', err);
+      return of([]);
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 /**
@@ -322,14 +312,14 @@ export const getPrivateOrders = async (
  */
 export const addPrivateOrderMargin = async (order: PrivatePoolOrder, amount: number): Promise<boolean> => {
   return withLoading(
-    from(loginUserAccount())
-      .pipe(
+    firstValueFrom(
+      from(loginUserAccount()).pipe(
         switchMap((account: string) => {
           return contractAccessor.addMarginAmount(order.orderId, order.coin, amount);
         }),
         take(1)
       )
-      .toPromise()
+    )
   );
 };
 
@@ -344,14 +334,13 @@ export const getPubPoolWithdrawDeadline = async (): Promise<{ coin: IUSDCoins; t
   //     USDC: new Date().getTime() - 330243,
   //   });
   // }
-  return from(loginUserAccount())
-    .pipe(
-      switchMap((account: string) => {
-        return contractAccessor.getPubPoolWithdrawDate(account);
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = from(loginUserAccount()).pipe(
+    switchMap((account: string) => {
+      return contractAccessor.getPubPoolWithdrawDate(account);
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 /**
@@ -369,29 +358,28 @@ export const getPrivateLiquidityBalance = async (): Promise<
   //     USDC: { total: 201, maxWithdraw: 202 },
   //   });
   // }
-  return from(loginUserAccount())
-    .pipe(
-      switchMap(account => {
-        return queryMan.priPoolUserBalance(account);
-      }),
-      map(allBalances => {
-        const res = {
-          DAI: { total: 0, maxWithdraw: 0 },
-          USDT: { total: 0, maxWithdraw: 0 },
-          USDC: { total: 0, maxWithdraw: 0 },
-        };
-        allBalances.total.forEach((balance: CoinBalance) => {
-          const coin: IUSDCoins = balance.coin as IUSDCoins;
-          res[coin]['total'] = Number(toEthers(balance.balance, 4));
-        });
-        allBalances.available.forEach(balance => {
-          const coin: IUSDCoins = balance.coin as IUSDCoins;
-          res[coin]['maxWithdraw'] = Number(toEthers(balance.balance, 2));
-        });
+  const res = from(loginUserAccount()).pipe(
+    switchMap(account => {
+      return queryMan.priPoolUserBalance(account);
+    }),
+    map(allBalances => {
+      const res = {
+        DAI: { total: 0, maxWithdraw: 0 },
+        USDT: { total: 0, maxWithdraw: 0 },
+        USDC: { total: 0, maxWithdraw: 0 },
+      };
+      allBalances.total.forEach((balance: CoinBalance) => {
+        const coin: IUSDCoins = balance.coin as IUSDCoins;
+        res[coin]['total'] = Number(toEthers(balance.balance, 4));
+      });
+      allBalances.available.forEach(balance => {
+        const coin: IUSDCoins = balance.coin as IUSDCoins;
+        res[coin]['maxWithdraw'] = Number(toEthers(balance.balance, 2));
+      });
 
-        return res;
-      }),
-      take(1)
-    )
-    .toPromise();
+      return res;
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };

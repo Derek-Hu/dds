@@ -1,4 +1,5 @@
 import { ContractAddress } from '../constant/address';
+import { EthNetwork } from '../constant/network';
 
 export const ABI = [
   {
@@ -12119,7 +12120,6 @@ export const ETH_ABI: { [p in keyof ContractAddress]: any[] } = {
   ReceiveTestTokenContract: [],
   AirDropContract: AirDrop_ABI,
 };
-
 export const BN_ABI: { [p in keyof ContractAddress]: any[] } = {
   TradeDAIContract: BN_TRADE_ABI,
   TradeUSDTContract: BN_TRADE_ABI,
@@ -12142,4 +12142,10 @@ export const BN_ABI: { [p in keyof ContractAddress]: any[] } = {
 
   ReceiveTestTokenContract: BN_TestToken_ABI,
   AirDropContract: AirDrop_ABI,
+};
+
+export const ContractABIByNetwork: { [p in EthNetwork]: { [p in keyof ContractAddress]: any[] } } = {
+  [EthNetwork.bianTest]: BN_ABI,
+  [EthNetwork.bsc]: BN_ABI,
+  [EthNetwork.kovan]: ETH_ABI,
 };

@@ -1,6 +1,6 @@
 import Mask from '../components/mask';
 import { contractAccessor } from '../wallet/chain-access';
-import { from, Observable, of, zip } from 'rxjs';
+import { first, firstValueFrom, from, Observable, of, zip } from 'rxjs';
 import { catchError, delay, filter, finalize, map, retry, retryWhen, switchMap, take, tap } from 'rxjs/operators';
 import { BigNumber } from 'ethers';
 import { toEthers } from '../util/ethers';
@@ -31,30 +31,28 @@ const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
 
 // 获取Top 3及用户排名  -- modified 05-09
 export const getRankings = (): Promise<IRankings> => {
-  return contractAccessor
-    .getLiquiditorPeriod()
-    .pipe(
-      switchMap(period => {
-        const periodVal = period.period.toNumber();
+  const res = contractAccessor.getLiquiditorPeriod().pipe(
+    switchMap(period => {
+      const periodVal = period.period.toNumber();
 
-        const info$ = from(loginUserAccount()).pipe(
-          switchMap((account: string) => {
-            return contractAccessor.getLiquiditorRewardsOfPeriod(account, periodVal);
-          }),
-          map(info => {
-            return info.info.rank.toNumber();
-          })
-        );
-        const top$ = contractAccessor.getLiquiditorRatingList(periodVal);
+      const info$ = from(loginUserAccount()).pipe(
+        switchMap((account: string) => {
+          return contractAccessor.getLiquiditorRewardsOfPeriod(account, periodVal);
+        }),
+        map(info => {
+          return info.info.rank.toNumber();
+        })
+      );
+      const top$ = contractAccessor.getLiquiditorRatingList(periodVal);
 
-        return zip(info$, top$);
-      }),
-      map(([current, top]) => {
-        return { top, current };
-      }),
-      take(1)
-    )
-    .toPromise();
+      return zip(info$, top$);
+    }),
+    map(([current, top]) => {
+      return { top, current };
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 //
 export const getLiquidityMiningReward = (
@@ -76,17 +74,16 @@ export const getLiquidityMiningReward = (
 
   const refactor$ = of(32893220);
 
-  return zip(reward$, refactor$)
-    .pipe(
-      map((nums: [number, number]) => {
-        return {
-          amount: nums[0],
-          refactor: nums[1],
-        };
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = zip(reward$, refactor$).pipe(
+    map((nums: [number, number]) => {
+      return {
+        amount: nums[0],
+        refactor: nums[1],
+      };
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 /**
@@ -95,30 +92,29 @@ export const getLiquidityMiningReward = (
  * @param amount
  */
 export const approveReTokenForLocking = async (reToken: IReUSDCoins, amount: number): Promise<boolean> => {
-  return from(loginUserAccount())
-    .pipe(
-      switchMap(account => {
-        return contractAccessor.needApproveReToken(amount, account, reToken);
-      }),
-      switchMap((need: boolean) => {
-        if (need) {
-          Mask.showLoading('Approving...');
-          return contractAccessor.approveReToken(reToken).pipe(
-            tap((rs: boolean) => {
-              if (!rs) {
-                Mask.showFail('Approve Failed!');
-              } else {
-                Mask.hide();
-              }
-            })
-          );
-        } else {
-          return of(true);
-        }
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = from(loginUserAccount()).pipe(
+    switchMap(account => {
+      return contractAccessor.needApproveReToken(amount, account, reToken);
+    }),
+    switchMap((need: boolean) => {
+      if (need) {
+        Mask.showLoading('Approving...');
+        return contractAccessor.approveReToken(reToken).pipe(
+          tap((rs: boolean) => {
+            if (!rs) {
+              Mask.showFail('Approve Failed!');
+            } else {
+              Mask.hide();
+            }
+          })
+        );
+      } else {
+        return of(true);
+      }
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 /**
@@ -127,30 +123,29 @@ export const approveReTokenForLocking = async (reToken: IReUSDCoins, amount: num
  * @param amount - reToken amount to be locked.
  */
 export const lockReTokenForLiquidity = async (reToken: IReUSDCoins, amount: number): Promise<boolean> => {
-  return contractAccessor.lockReTokenForLiquidity(reToken, amount).pipe(take(1)).toPromise();
+  return firstValueFrom(contractAccessor.lockReTokenForLiquidity(reToken, amount).pipe(take(1)));
 };
 
 export const lockReTokenForLiquidity1 = async (reToken: IReUSDCoins, amount: number): Promise<boolean> => {
-  return from(approveReTokenForLocking(reToken, amount))
-    .pipe(
-      switchMap((approved: boolean) => {
-        if (!approved) {
-          return of(false);
-        } else {
-          Mask.showLoading('Locking reTokens...');
-          return contractAccessor.lockReTokenForLiquidity(reToken, amount).pipe(
-            tap((isOK: boolean) => {
-              if (isOK) {
-                Mask.showSuccess();
-              } else {
-                Mask.showFail('Lock reTokens Failed!');
-              }
-            })
-          );
-        }
-      })
-    )
-    .toPromise();
+  const res = from(approveReTokenForLocking(reToken, amount)).pipe(
+    switchMap((approved: boolean) => {
+      if (!approved) {
+        return of(false);
+      } else {
+        Mask.showLoading('Locking reTokens...');
+        return contractAccessor.lockReTokenForLiquidity(reToken, amount).pipe(
+          tap((isOK: boolean) => {
+            if (isOK) {
+              Mask.showSuccess();
+            } else {
+              Mask.showFail('Lock reTokens Failed!');
+            }
+          })
+        );
+      }
+    })
+  );
+  return firstValueFrom(res);
 };
 
 /**
@@ -158,129 +153,127 @@ export const lockReTokenForLiquidity1 = async (reToken: IReUSDCoins, amount: num
  * @param reToken - reTokenType
  * @param amount - unlock amount
  */
-export const unLockReTokenForLiquidity = async (reToken: IReUSDCoins, amount: number) => {
+export const unLockReTokenForLiquidity = async (reToken: IReUSDCoins, amount: number): Promise<boolean> => {
   Mask.showLoading('Unlocking reTokens...');
-  return contractAccessor
-    .unLockReTokenFromLiquidity(reToken, amount)
-    .pipe(
-      tap((done: boolean) => {
-        if (done) {
-          Mask.showSuccess();
-        } else {
-          Mask.showFail('Unlock reTokens Failed!');
-        }
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = contractAccessor.unLockReTokenFromLiquidity(reToken, amount).pipe(
+    tap((done: boolean) => {
+      if (done) {
+        Mask.showSuccess();
+      } else {
+        Mask.showFail('Unlock reTokens Failed!');
+      }
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 /**
  * get current locked reToken in Liquidity Pool
  */
 export const queryLiquidityLockedReTokenAmount = async (): Promise<ReTokenAmounts> => {
-  return from(loginUserAccount())
-    .pipe(
-      switchMap((account: string) => {
-        return queryMan.getPubPoolLiquidityShareInfo(account);
-      }),
-      map((info: PubPoolLockInfo) => {
-        return {
-          reDAI: Number(toEthers(info.lockedReToken.reDAI, 2, 'reDAI')),
-          reUSDT: Number(toEthers(info.lockedReToken.reUSDT, 2, 'reUSDT')),
-          reUSDC: Number(toEthers(info.lockedReToken.reUSDC, 2, 'reUSDC')),
-        };
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = from(loginUserAccount()).pipe(
+    switchMap((account: string) => {
+      return queryMan.getPubPoolLiquidityShareInfo(account);
+    }),
+    map((info: PubPoolLockInfo) => {
+      return {
+        reDAI: Number(toEthers(info.lockedReToken.reDAI, 2, 'reDAI')),
+        reUSDT: Number(toEthers(info.lockedReToken.reUSDT, 2, 'reUSDT')),
+        reUSDC: Number(toEthers(info.lockedReToken.reUSDC, 2, 'reUSDC')),
+      };
+    }),
+    take(1)
+  );
+
+  return firstValueFrom(res);
 };
 
 /**
  * get user share of public pool liquidity.
  */
 export const queryLiquidityLockedReTokenShare = async (): Promise<number> => {
-  return from(loginUserAccount())
-    .pipe(
-      switchMap((account: string) => {
-        return queryMan.getPubPoolLiquidityShareInfo(account);
-      }),
-      map((info: PubPoolLockInfo) => {
-        // TODO 不同的代币精度可能不同，需要单独转换后相加
-        const lpToken: BigNumber = info.lpToken.lpDAI.add(info.lpToken.lpUSDT).add(info.lpToken.lpUSDC);
-        const lpTotal: BigNumber = info.totalLpToken.lpDAI.add(info.totalLpToken.lpUSDT).add(info.totalLpToken.lpUSDC);
+  const res = from(loginUserAccount()).pipe(
+    switchMap((account: string) => {
+      return queryMan.getPubPoolLiquidityShareInfo(account);
+    }),
+    map((info: PubPoolLockInfo) => {
+      // TODO 不同的代币精度可能不同，需要单独转换后相加
+      const lpToken: BigNumber = info.lpToken.lpDAI.add(info.lpToken.lpUSDT).add(info.lpToken.lpUSDC);
+      const lpTotal: BigNumber = info.totalLpToken.lpDAI.add(info.totalLpToken.lpUSDT).add(info.totalLpToken.lpUSDC);
 
-        const lpNum: number = Number(toEthers(lpToken, 18));
-        const lpAll: number = Number(toEthers(lpTotal, 18));
+      const lpNum: number = Number(toEthers(lpToken, 18));
+      const lpAll: number = Number(toEthers(lpTotal, 18));
 
-        if (lpAll === 0) {
-          return 0;
-        } else {
-          return dividedPecent(lpNum, lpAll);
-        }
-      }),
-      take(1)
-    )
-    .toPromise();
+      if (lpAll === 0) {
+        return 0;
+      } else {
+        return dividedPecent(lpNum, lpAll);
+      }
+    }),
+    take(1)
+  );
+
+  return firstValueFrom(res);
 };
 
 /**
  * 获取用户钱包中reToken的数量
  */
 export const queryUserReTokenBalance = (): Promise<ReTokenAmounts> => {
-  return from(loginUserAccount())
-    .pipe(
-      switchMap((account: string) => {
-        return contractAccessor.getUserSelfReTokenBalance(account);
-      }),
-      map((balances: CoinBalance[]) => {
-        return balances.map(one => {
-          return {
-            coin: one.coin as IReUSDCoins,
-            balance: Number(toEthers(one.balance, 2, one.coin)),
-          };
-        });
-      }),
-      map((balances: { coin: IReUSDCoins; balance: number }[]) => {
-        return balances.reduce((rs, cur) => {
-          rs[cur.coin] = cur.balance;
-          return rs;
-        }, {} as ReTokenAmounts);
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = from(loginUserAccount()).pipe(
+    switchMap((account: string) => {
+      return contractAccessor.getUserSelfReTokenBalance(account);
+    }),
+    map((balances: CoinBalance[]) => {
+      return balances.map(one => {
+        return {
+          coin: one.coin as IReUSDCoins,
+          balance: Number(toEthers(one.balance, 2, one.coin)),
+        };
+      });
+    }),
+    map((balances: { coin: IReUSDCoins; balance: number }[]) => {
+      return balances.reduce((rs, cur) => {
+        rs[cur.coin] = cur.balance;
+        return rs;
+      }, {} as ReTokenAmounts);
+    }),
+    take(1)
+  );
+
+  return firstValueFrom(res);
 };
 
 /**
  * get user rewards from public pool liquidity mining (locked reToken).
  */
 export const queryReTokenLiquidityRewards = async (): Promise<PublicPoolLiquidityRewards> => {
-  return from(loginUserAccount())
-    .pipe(
-      switchMap((account: string) => {
-        return queryMan.getReTokenLiquidityReward(account);
-      }),
-      map((reward: PubPoolRewards) => {
-        const all = reward.available.add(reward.vesting).add(reward.unactivated);
-        return {
-          available: Number(toEthers(reward.available, 2, 'SLD')),
-          vesting: Number(toEthers(reward.vesting, 2, 'SLD')),
-          unactivated: Number(toEthers(reward.unactivated, 2, 'SLD')),
-          total: Number(toEthers(all, 2, 'SLD')),
-        };
-      }),
-      take(1),
-      catchError(err => {
-        return of({
-          total: 0,
-          available: 0,
-          vesting: 0,
-          unactivated: 0,
-        });
-      })
-    )
-    .toPromise();
+  const res = from(loginUserAccount()).pipe(
+    switchMap((account: string) => {
+      return queryMan.getReTokenLiquidityReward(account);
+    }),
+    map((reward: PubPoolRewards) => {
+      const all = reward.available.add(reward.vesting).add(reward.unactivated);
+      return {
+        available: Number(toEthers(reward.available, 2, 'SLD')),
+        vesting: Number(toEthers(reward.vesting, 2, 'SLD')),
+        unactivated: Number(toEthers(reward.unactivated, 2, 'SLD')),
+        total: Number(toEthers(all, 2, 'SLD')),
+      };
+    }),
+    take(1),
+    catchError(err => {
+      return of({
+        total: 0,
+        available: 0,
+        vesting: 0,
+        unactivated: 0,
+      });
+    })
+  );
+
+  return firstValueFrom(res);
 };
 
 function getReTokenContractAddress(reToken: IReUSDCoins): string | null {
@@ -309,25 +302,25 @@ function getReTokenContractAddress(reToken: IReUSDCoins): string | null {
  * Claim liquidity rewards for public pool
  */
 export const claimPubPoolReTokenRewards = async (): Promise<boolean> => {
-  return loadingObs(contractAccessor.claimRewardsForLP1()).toPromise();
+  return firstValueFrom(loadingObs(contractAccessor.claimRewardsForLP1()));
 };
 
 export const claimLiquidityLocked = async () => {
-  return await withLoading(contractAccessor.claimRewardsForLP2().toPromise());
+  return await withLoading(firstValueFrom(contractAccessor.claimRewardsForLP2()));
 };
 
 export const getLiquidityLockedReward = (type: 'public' | 'private'): Promise<number> => {
-  return from(loginUserAccount())
-    .pipe(
-      switchMap(account => {
-        return contractAccessor.getActiveLiquidityRewards(account);
-      }),
-      map((re: BigNumber) => {
-        return Number(toEthers(re, 4));
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = from(loginUserAccount()).pipe(
+    switchMap(account => {
+      return contractAccessor.getActiveLiquidityRewards(account);
+    }),
+    map((re: BigNumber) => {
+      return Number(toEthers(re, 4));
+    }),
+    take(1)
+  );
+
+  return firstValueFrom(res);
 };
 
 export const getLiquiditorBalanceRecord = (): Promise<ILiquiditorBalanceRecord[]> => {
@@ -351,78 +344,72 @@ export const getLiquiditorBalanceRecord = (): Promise<ILiquiditorBalanceRecord[]
  * 累积收益
  */
 export const getLiquiditorReward = (type: 'public' | 'private'): Promise<{ campaign: number; compensate: number }> => {
-  return from(loginUserAccount())
-    .pipe(
-      switchMap((account: string) => {
-        return contractAccessor.getLiquiditorRewards(account);
-      }),
-      map((balances: LiquditorRewardsResult) => {
-        return {
-          campaign: Number(toEthers(balances.campaign, 4, MyTokenSymbol)),
-          compensate: Number(toEthers(balances.compensate, 4, MyTokenSymbol)),
-        };
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = from(loginUserAccount()).pipe(
+    switchMap((account: string) => {
+      return contractAccessor.getLiquiditorRewards(account);
+    }),
+    map((balances: LiquditorRewardsResult) => {
+      return {
+        campaign: Number(toEthers(balances.campaign, 4, MyTokenSymbol)),
+        compensate: Number(toEthers(balances.compensate, 4, MyTokenSymbol)),
+      };
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 // 获取清算者在当前周期中获得的奖励 new 4.18
 export const getLiquiditorPeriodReward = (): Promise<ILiquiditorPeriodReward> => {
-  return from(loginUserAccount())
-    .pipe(
-      switchMap(account => {
-        return contractAccessor.getLiquiditorPeriod().pipe(
-          switchMap(period => {
-            return contractAccessor.getLiquiditorRewardsOfPeriod(account, period.period.toNumber());
-          })
-        );
-      }),
-      map(rs => {
-        return {
-          rewards: rs.rewards.map(one => {
-            return { coin: one.coin, value: Number(toEthers(one.balance, 4, one.coin)) } as ICoinValue;
-          }),
-          extSLD: Number(toEthers(rs.info.extSLD, 4, 'SLD')),
-          rank: rs.info.rank.toNumber(),
-        } as ILiquiditorPeriodReward;
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = from(loginUserAccount()).pipe(
+    switchMap(account => {
+      return contractAccessor.getLiquiditorPeriod().pipe(
+        switchMap(period => {
+          return contractAccessor.getLiquiditorRewardsOfPeriod(account, period.period.toNumber());
+        })
+      );
+    }),
+    map(rs => {
+      return {
+        rewards: rs.rewards.map(one => {
+          return { coin: one.coin, value: Number(toEthers(one.balance, 4, one.coin)) } as ICoinValue;
+        }),
+        extSLD: Number(toEthers(rs.info.extSLD, 4, 'SLD')),
+        rank: rs.info.rank.toNumber(),
+      } as ILiquiditorPeriodReward;
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 // 获取清算周期的信息 new 4.18
 export const getLiqiditorPeriodInfo = (): Promise<{ startTime: number; period: number }> => {
-  return contractAccessor
-    .getLiquiditorPeriod()
-    .pipe(
-      map(({ startTime, period }) => {
-        return {
-          startTime: startTime.toNumber() * 1000,
-          period: period.toNumber(),
-        };
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = contractAccessor.getLiquiditorPeriod().pipe(
+    map(({ startTime, period }) => {
+      return {
+        startTime: startTime.toNumber() * 1000,
+        period: period.toNumber(),
+      };
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 export const getLiquiditorSystemBalance = (): Promise<ICoinValue[]> => {
-  return contractAccessor
-    .getSystemFundingBalance()
-    .pipe(
-      map(balances => {
-        return balances.map(one => {
-          return {
-            coin: one.coin,
-            value: Number(toEthers(one.balance, 4, one.coin)),
-          };
-        });
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = contractAccessor.getSystemFundingBalance().pipe(
+    map(balances => {
+      return balances.map(one => {
+        return {
+          coin: one.coin,
+          value: Number(toEthers(one.balance, 4, one.coin)),
+        };
+      });
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 export const getLiquidityMiningShare = (): Promise<ICoinItem[]> => {
@@ -449,12 +436,11 @@ export const getLiquidityMiningShare = (): Promise<ICoinItem[]> => {
     );
   };
 
-  return from(loginUserAccount())
-    .pipe(
-      switchMap((account: string | null) => {
-        return account === null ? of(defaultPoolData) : getMiningShare(account);
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = from(loginUserAccount()).pipe(
+    switchMap((account: string | null) => {
+      return account === null ? of(defaultPoolData) : getMiningShare(account);
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };

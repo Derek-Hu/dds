@@ -39,6 +39,7 @@ import { getContractAddress, getContractInfo } from './contract-info';
 import { bigNumMultiple } from '../util/math';
 import { ReTokenMapping } from '../constant/tokens';
 import { EthNetwork, SupportedNetwork } from '../constant/network';
+import { Contract } from 'ethers';
 
 declare const window: Window & { ethereum: any };
 
@@ -48,6 +49,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
   protected timer = interval(DataRefreshInterval).pipe(startWith(0));
 
   constructor() {}
+
+  public createAContract(abi: any[], address: string): Observable<Contract> {
+    return of(new ethers.Contract(address, abi, this.getSigner()));
+  }
 
   // air drop coin is
   public airDropWhiteList(address: string): Observable<BigNumber> {
@@ -266,6 +271,8 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
+  //
+
   public getUserSelfWalletBalance(address: string): Observable<CoinBalance[]> {
     const dds$: Observable<CoinBalance> = this.getERC20DDSContract().pipe(
       switchMap((ddsContract: ethers.Contract) => {
@@ -358,8 +365,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
 
   public getUserAccount(address: string, coin: IUSDCoins): Observable<UserAccountInfo> {
     return this.getContract(coin).pipe(
-      switchMap((contract: ethers.Contract) => contract.functions.userAccount(address)),
-      map((num: BigNumber[]) => ({ deposit: num[0], available: num[1] })),
+      switchMap((contract: ethers.Contract) => from(contract.userAccount(address) as Promise<BigNumber[]>)),
+      map((num: BigNumber[]) => {
+        return { deposit: num[0], available: num[1] };
+      }),
       catchError(err => of({ deposit: BigNumber.from(0), available: BigNumber.from(0) }))
     );
   }
@@ -2055,7 +2064,7 @@ class MetamaskContractAccessor extends BaseTradeContractAccessor {
       );
   }
 
-  private getAContract(contract: keyof ContractAddress): Observable<ethers.Contract> {
+  public getAContract(contract: keyof ContractAddress): Observable<ethers.Contract> {
     return this.getNetwork().pipe(
       map((network: EthNetwork) => {
         const { abi, address } = getContractInfo(network, contract);
@@ -2112,6 +2121,14 @@ export class ContractAccessor implements ContractProxy {
         );
       }),
       take(1)
+    );
+  }
+
+  public createAContract(abi: any[], address: string): Observable<Contract> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.createAContract(abi, address);
+      })
     );
   }
 

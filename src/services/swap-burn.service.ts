@@ -4,7 +4,7 @@ import { CoinBalance } from '../wallet/contract-interface';
 import { toEthers } from '../util/ethers';
 import { withLoading } from './utils';
 import { loginUserAccount } from './account';
-import { from } from 'rxjs';
+import { firstValueFrom, from } from 'rxjs';
 
 const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
   return new Promise(resolve => {
@@ -15,43 +15,41 @@ const returnVal: any = (val: any): Parameters<typeof returnVal>[0] => {
 };
 
 export const getSwapPrice = async (): Promise<ISwapBurn> => {
-  return contractAccessor
-    .getSwapBurnInfo()
-    .pipe(
-      map((info: CoinBalance[]) => {
-        const rs: { [c: string]: number } = {};
-        info.forEach((one: CoinBalance) => {
-          rs[one.coin.toString()] = Number(toEthers(one.balance, 0, one.coin));
-        });
-        return rs;
-      }),
-      map(info => {
-        const ddsAmount: number = info['SLD'] / 10;
-        const usdAmount: number = info['DAI'] + info['USDT'] + info['USDC'];
-        const price: number = usdAmount / ddsAmount;
+  const res = contractAccessor.getSwapBurnInfo().pipe(
+    map((info: CoinBalance[]) => {
+      const rs: { [c: string]: number } = {};
+      info.forEach((one: CoinBalance) => {
+        rs[one.coin.toString()] = Number(toEthers(one.balance, 0, one.coin));
+      });
+      return rs;
+    }),
+    map(info => {
+      const ddsAmount: number = info['SLD'] / 10;
+      const usdAmount: number = info['DAI'] + info['USDT'] + info['USDC'];
+      const price: number = usdAmount / ddsAmount;
 
-        return {
-          usd: usdAmount,
-          dds: ddsAmount,
-          rate: price,
-        };
-      }),
-      take(1)
-    )
-    .toPromise();
+      return {
+        usd: usdAmount,
+        dds: ddsAmount,
+        rate: price,
+      };
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 export const conformSwap = async (data: IRecord): Promise<boolean> => {
   const doSwap = async (): Promise<boolean> => {
-    const swapRs: Promise<boolean> = from(loginUserAccount())
-      .pipe(
+    const swapRs: Promise<boolean> = firstValueFrom(
+      from(loginUserAccount()).pipe(
         switchMap(account => {
           console.log('do swap', account, data.coin, data.amount);
           return contractAccessor.doSwap(account, data.coin, data.amount);
         }),
         take(1)
       )
-      .toPromise();
+    );
 
     return withLoading(swapRs);
   };

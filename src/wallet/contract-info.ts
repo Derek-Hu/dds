@@ -18,6 +18,9 @@ export function getContractABI(network: EthNetwork, contract: keyof ContractAddr
     case EthNetwork.bianTest: {
       return BN_ABI[contract];
     }
+    case EthNetwork.bsc: {
+      return BN_ABI[contract];
+    }
     default: {
       return [];
     }

@@ -3,7 +3,6 @@ import styles from './style.module.less';
 import DespositModal from './modals/deposit';
 import WithdrawModal from './modals/withdraw';
 import OrderConfirm from './modals/order-confirm';
-import { Component } from 'react';
 import dayjs from 'dayjs';
 import SiteContext from '../../layouts/SiteContext';
 import {
@@ -16,12 +15,21 @@ import {
   getMaxOpenAmount,
 } from '../../services/trade.service';
 import { getMaxFromCoin } from './calculate';
-import { format, isGreaterZero, truncated, isNumberLike, divide } from '../../util/math';
+import { format, isGreaterZero, truncated, isNumberLike } from '../../util/math';
 import InputNumber from '../input/index';
 import Placeholder from '../placeholder/index';
 import { setPendingOrders } from '../../util/order-cache';
 import { formatMessage } from 'locale/i18n';
 import { Setting } from './dropdown/setting';
+import { UserTradeAccountInfo } from '../../state-manager/contract-state-types';
+import { BaseStateComponent } from '../../state-manager/base-state-component';
+import { P, S } from '../../state-manager';
+import { PageTradingPair } from '../../state-manager/page-state-types';
+import { ContractState } from '../../state-manager/interface';
+import { map, switchMap } from 'rxjs/operators';
+import { toEtherNumber } from '../../util/ethers';
+import { Observable, of } from 'rxjs';
+import { BigNumber } from 'ethers';
 
 interface IState {
   depositVisible: boolean;
@@ -37,6 +45,11 @@ interface IState {
   feeQuery: boolean;
   fees?: IOpenFee;
   setFeeQuery: boolean;
+
+  fundingBalance: UserTradeAccountInfo | null;
+  fundingBalancePending: boolean;
+  curTradingPrice: BigNumber | null;
+  tradingPair: PageTradingPair;
 }
 
 interface IProps {
@@ -46,7 +59,9 @@ interface IProps {
 
 type TModalKeys = Pick<IState, 'withdrawVisible' | 'depositVisible' | 'orderConfirmVisible'>;
 
-export default class Balance extends Component<IProps, IState> {
+export default class Balance extends BaseStateComponent<IProps, IState> {
+  static contextType = SiteContext;
+
   state: IState = {
     depositVisible: false,
     withdrawVisible: false,
@@ -58,11 +73,34 @@ export default class Balance extends Component<IProps, IState> {
     setFeeQuery: false,
     loading: false,
     feeQuery: false,
+    fundingBalance: null,
+    fundingBalancePending: false,
+    curTradingPrice: null,
+    tradingPair: P.Trade.Pair.default(),
   };
 
-  static contextType = SiteContext;
+  private fundingStateMap = new Map<string, ContractState<UserTradeAccountInfo>>([
+    ['DAI', S.User.Account.DAI],
+    ['USDT', S.User.Account.USDT],
+    ['USDC', S.User.Account.USDC],
+  ]);
+
+  private curQuoteCurrency: Observable<string> = P.Trade.Pair.watch().pipe(map(pair => pair.quote.description || ''));
 
   componentDidMount = () => {
+    this.registerSwitchState('fundingBalance', this.curQuoteCurrency, this.fundingStateMap);
+    this.registerState('tradingPair', P.Trade.Pair);
+    this.watch(
+      'fundingBalancePending',
+      this.curQuoteCurrency.pipe(
+        switchMap((quote: string) => {
+          return this.fundingStateMap.has(quote)
+            ? (this.fundingStateMap.get(quote) as ContractState<UserTradeAccountInfo>).pending()
+            : of(false);
+        })
+      )
+    );
+
     this.loadBalanceInfo();
   };
 
@@ -274,17 +312,30 @@ export default class Balance extends Component<IProps, IState> {
         {({ account, isBSC }) => (
           <div className={styles.root}>
             <h2>
-              Funding Balance<span>({to})</span>
+              Funding Balance <span>({to})</span>
               {isBSC ? <Setting /> : null}
             </h2>
+
             <p className={styles.balanceVal}>
-              <Placeholder loading={loading}>{format(balanceInfo?.balance)}</Placeholder>
+              <Placeholder
+                height={'42px'}
+                loading={this.state.fundingBalance === null || this.state.fundingBalancePending}
+              >
+                {toEtherNumber(this.state.fundingBalance?.balance, 2, this.state.tradingPair.quote)}
+              </Placeholder>
             </p>
+
             <div className={styles.dayChange}>
-              <Placeholder loading={loading}>
-                {format(balanceInfo?.locked)}&nbsp;<span>{formatMessage({ id: 'locked' })}</span>
+              <Placeholder
+                height={'16px'}
+                loading={this.state.fundingBalance === null || this.state.fundingBalancePending}
+              >
+                {toEtherNumber(this.state.fundingBalance?.locked, 2, this.state.tradingPair.quote)}
+                &nbsp;
+                <span>{formatMessage({ id: 'locked' })}</span>
               </Placeholder>
             </div>
+
             <Row className={styles.actionLink} type="flex" justify="space-between">
               <Col>
                 <Button type="link" onClick={() => address && this.depositVisible.show()}>
