@@ -2,21 +2,49 @@
 
 .asFeature {
   height: 50vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: #fafafa;
+  font-family: Gilroy-Regular;
+  .dots {
+    width: 50%;
+    left: 25%;
+    position: absolute;
+    text-align: center;
+    z-index: 9;
+    span {
+      cursor: pointer;
+      width: 12px;
+      height: 12px;
+      background-color: #d8d8d8;
+      margin: 1em 0.5em;
+      display: inline-block;
+      border-radius: 12px;
+      &.active {
+        background-color: #41ccb4;
+      }
+    }
+  }
 
   .featureContent {
     padding: 0;
     margin: 0 auto;
-    background: #fafafa;
     text-align: center;
     width: 100%;
     padding: 0.4rem 0;
+
+    p {
+      margin-top: 12px;
+      font-style: italic;
+      font-family: Gilroy-Regular;
+      padding: 0 22px;
+      box-sizing: border-box;
+      font-size: 0.3rem;
+      font-weight: normal;
+      color: #142533;
+    }
   }
   h2 {
     font-size: 0.6rem;
-    font-family: Gilroy-Bold, Gilroy;
+    font-family: Gilroy-Regular, Gilroy;
     font-weight: bold;
     color: #000000;
     line-height: 0.74rem;
@@ -31,6 +59,7 @@
     color: #000000;
     line-height: 0.37rem;
     margin-bottom: 0.2rem;
+    height: 2em;
   }
 
   a.link {

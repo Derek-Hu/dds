@@ -15,11 +15,11 @@ import { formatInt } from '../util/math';
 import styles from './style.module.less';
 import landingStyles from './landing.module.less';
 import BannerAnim, { Element } from 'rc-banner-anim';
+import { Parallax } from 'rc-scroll-anim';
 import TweenOne from 'rc-tween-one';
 import 'rc-banner-anim/assets/index.css';
 import Header from '../components/header/index';
-
-const BgElement = Element.BgElement;
+import ScrollOverPack from 'rc-scroll-anim/lib/ScrollOverPack';
 
 export default class HomePage extends Component {
   render() {
@@ -71,60 +71,74 @@ export default class HomePage extends Component {
           <Header darkMode={true} />
           <ContentWidth>
             <Banner></Banner>
-            <div className={styles.bannerDatas}>
-              <Row>
-                <Col span={6}>
-                  <p>{formatInt(13012)}</p>
-                  <span>All Time Volum</span>
-                </Col>
-                <Col span={6}>
-                  <p>{formatInt(13012)}</p>
-                  <span>All Time Volum</span>
-                </Col>
-                <Col span={6}>
-                  <p>{formatInt(13012)}</p>
-                  <span>All Time Volum</span>
-                </Col>
-                <Col span={6}>
-                  <p>{formatInt(13012)}</p>
-                  <span>All Time Volum</span>
-                </Col>
-              </Row>
-            </div>
+            <TweenOne animation={{ y: 70, opacity: 0, delay: 400, type: 'from' }}>
+              <div className={styles.bannerDatas}>
+                <Row>
+                  <Col span={6}>
+                    <p>{formatInt(13012)}</p>
+                    <span>All Time Volum</span>
+                  </Col>
+                  <Col span={6}>
+                    <p>{formatInt(13012)}</p>
+                    <span>All Time Volum</span>
+                  </Col>
+                  <Col span={6}>
+                    <p>{formatInt(13012)}</p>
+                    <span>All Time Volum</span>
+                  </Col>
+                  <Col span={6}>
+                    <p>{formatInt(13012)}</p>
+                    <span>All Time Volum</span>
+                  </Col>
+                </Row>
+              </div>
+            </TweenOne>
           </ContentWidth>
         </Screen>
-        <Screen style={{ background: '#1346ff' }}>
-          <ContentWidth>
-            <WhyWeBuild></WhyWeBuild>
-          </ContentWidth>
-        </Screen>
-        <Screen style={{ background: '#1346ff' }}>
-          <ContentWidth>
-            <WhyWeBuild2></WhyWeBuild2>
-          </ContentWidth>
-        </Screen>
-        <Screen>
-          <ContentWidth>
-            <WhatIsPerpetual></WhatIsPerpetual>
-          </ContentWidth>
-        </Screen>
-        <Screen style={{ background: '#000' }}>
-          <ContentWidth>
-            <HowWorks></HowWorks>
-          </ContentWidth>
-        </Screen>
-        <Screen>
-          <ContentWidth>
-            <ShieldDAO></ShieldDAO>
-          </ContentWidth>
-          <JoinCommunity></JoinCommunity>
-        </Screen>
-        <Screen>
-          <ContentWidth>
-            <Partners></Partners>
-            <AsFeature></AsFeature>
-          </ContentWidth>
-        </Screen>
+        <ScrollOverPack>
+          <Screen style={{ background: '#1346ff' }}>
+            <ContentWidth>
+              <WhyWeBuild></WhyWeBuild>
+            </ContentWidth>
+          </Screen>
+          <Screen style={{ background: '#1346ff' }}>
+            <ContentWidth>
+              <Parallax animation={{ y: 70, type: 'from', delay: 300, opacity: 0 }}>
+                <WhyWeBuild2></WhyWeBuild2>
+              </Parallax>
+            </ContentWidth>
+          </Screen>
+          <Screen>
+            <ContentWidth>
+              <Parallax animation={{ y: 70, type: 'from', delay: 300, opacity: 0 }}>
+                <WhatIsPerpetual></WhatIsPerpetual>
+              </Parallax>
+            </ContentWidth>
+          </Screen>
+          <Screen style={{ background: '#000' }}>
+            <ContentWidth>
+              <Parallax animation={{ y: 70, type: 'from', delay: 300, opacity: 0 }}>
+                <HowWorks></HowWorks>
+              </Parallax>
+            </ContentWidth>
+          </Screen>
+          <Screen>
+            <Parallax animation={{ y: 70, type: 'from', delay: 300, opacity: 0 }}>
+              <ContentWidth>
+                <ShieldDAO></ShieldDAO>
+              </ContentWidth>
+              <JoinCommunity></JoinCommunity>
+            </Parallax>
+          </Screen>
+          <Screen>
+            <Parallax animation={{ y: 70, type: 'from', delay: 300, opacity: 0 }}>
+              <ContentWidth>
+                <Partners></Partners>
+                <AsFeature></AsFeature>
+              </ContentWidth>
+            </Parallax>
+          </Screen>
+        </ScrollOverPack>
         {/* <NonRisk></NonRisk> */}
         {/* <HowTrade></HowTrade> */}
         {/* <WhyDderivatives /> */}
