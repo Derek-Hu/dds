@@ -4,10 +4,11 @@ import { formatMessage } from 'locale/i18n';
 import { Row, Col, Icon } from 'antd';
 import { CSS_H_SCALE } from '../../../constant/index';
 
-import oneImg from '../../../assets/why-build/one@2x.png';
-import twoImg from '../../../assets/why-build/two@2x.png';
-import threeImg from '../../../assets/why-build/three@2x.png';
-import fourImg from '../../../assets/why-build/four@2x.png';
+import threeImg from '../../../assets/why-build/one@2x.png';
+import fourImg from '../../../assets/why-build/two@2x.png';
+import twoImg from '../../../assets/why-build/three@2x.png';
+import oneImg from '../../../assets/why-build/four@2x.png';
+
 import { Parallax } from 'rc-scroll-anim';
 import TweenOne from 'rc-tween-one';
 
@@ -44,19 +45,19 @@ export default () => {
               </Col>
               <Col span={colSize} className={styles.detailRow}>
                 <div className={styles.detailItem}>
-                  <Image src={twoImg} />
+                  <Image src={threeImg} />
                   <p>Intransparent trading system lead to CEX profits only</p>
                 </div>
               </Col>
               <Col span={colSize} className={styles.detailRow}>
                 <div className={styles.detailItem}>
-                  <Image src={threeImg} />
+                  <Image src={fourImg} />
                   <p>CEX charges a large amount of "intermediary tax"</p>
                 </div>
               </Col>
               <Col span={colSize} className={styles.detailRow}>
                 <div className={styles.detailItem}>
-                  <Image src={fourImg} />
+                  <Image src={twoImg} />
                   <p>Accessing is difficult due to trust and regulation boundary.</p>
                 </div>
               </Col>
