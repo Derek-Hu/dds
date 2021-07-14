@@ -5,6 +5,7 @@ import SiteContext from '../../layouts/SiteContext';
 import { Visible, Hidden } from '../builtin/hidden';
 import { formatMessage } from 'locale/i18n';
 import { format } from '../../util/math';
+import bg from '../../assets/imgs/adsImage.png';
 import TweenOne from 'rc-tween-one';
 
 export default () => {
@@ -12,9 +13,10 @@ export default () => {
     <SiteContext.Consumer>
       {({ isMobile }) => (
         <div className={styles.banner}>
+          <img className={styles.bannerBg} src={bg} />
           <div className={styles.contentWpr}>
             <div className={styles.content}>
-              <TweenOne className="banner-user-title" animation={{ y: 70, opacity: 0, delay: 200, type: 'from' }}>
+              <TweenOne className={styles.bannerTitle} animation={{ y: 70, opacity: 0, delay: 200, type: 'from' }}>
                 <h2>{formatMessage({ id: 'shield-slogan' }, true)}</h2>
                 <p>{formatMessage({ id: 'shield-slogan-desc' })}</p>
                 <Hidden when={isMobile}>

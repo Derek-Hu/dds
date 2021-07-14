@@ -8,6 +8,7 @@ import { Carousel, Avatar } from 'antd';
 import carouselStyles from './carousel.module.less';
 import SectionTitle from '../section-title/index';
 import Datasource from './says';
+import { Parallax } from 'rc-scroll-anim';
 
 export default () => {
   return (
@@ -18,19 +19,21 @@ export default () => {
           {/* <p>Company/Foundation/Business organization</p> */}
           <div className={styles.bgImg}>
             <div>
-              <h3>Shield DAO is not a</h3>
-              <p>ShieldDAO is committed to becoming an open global decentralized governance organization.</p>
-              <div className={carouselStyles.carousel}>
-                <Carousel autoplay>
-                  {Datasource.map(({ name, avatar, description }) => (
-                    <div key={name}>
-                      <Avatar size={64} src={avatar} />
-                      <div className={carouselStyles.name}>{name}</div>
-                      <p className={carouselStyles.description}>{description}</p>
-                    </div>
-                  ))}
-                </Carousel>
-              </div>
+              <Parallax animation={{ y: 70, type: 'from', delay: 300, opacity: 0 }}>
+                <h3>Shield DAO is not a</h3>
+                <p>ShieldDAO is committed to becoming an open global decentralized governance organization.</p>
+                <div className={carouselStyles.carousel}>
+                  <Carousel autoplay>
+                    {Datasource.map(({ name, avatar, description }) => (
+                      <div key={name}>
+                        <Avatar size={64} src={avatar} />
+                        <div className={carouselStyles.name}>{name}</div>
+                        <p className={carouselStyles.description}>{description}</p>
+                      </div>
+                    ))}
+                  </Carousel>
+                </div>
+              </Parallax>
             </div>
           </div>
         </div>

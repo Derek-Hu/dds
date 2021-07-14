@@ -3,11 +3,11 @@ import SectionTitle from '../section-title/index';
 import { formatMessage } from 'locale/i18n';
 import { Row, Col } from 'antd';
 
-import oneImg from '../../../assets/landing/1.svg';
-import twoImg from '../../../assets/landing/2.svg';
-import threeImg from '../../../assets/landing/3.svg';
-import fourImg from '../../../assets/landing/4.svg';
-import fiveImg from '../../../assets/landing/5.svg';
+import oneImg from '../../../assets/what-is/1.png';
+import twoImg from '../../../assets/what-is/2.png';
+import threeImg from '../../../assets/what-is/3.png';
+import fourImg from '../../../assets/what-is/4.png';
+import fiveImg from '../../../assets/what-is/5.png';
 import TweenOne from 'rc-tween-one';
 
 const Image = ({ src }: { src: string }) => {
@@ -51,7 +51,7 @@ export default () => {
             </Col>
             <Col span={colSize}>
               <div className={styles.detailItem}>
-                <Image src={threeImg} />
+                <Image src={fiveImg} />
                 <p>Concentrated liquidity to avoid liquidity fragmentation by different expiration dates and prices</p>
               </div>
             </Col>
@@ -68,7 +68,7 @@ export default () => {
             </Col>
             <Col span={colSize}>
               <div className={styles.detailItem}>
-                <Image src={fiveImg} />
+                <Image src={threeImg} />
                 <p>On-chain leverage from 100x to 1000x</p>
               </div>
             </Col>

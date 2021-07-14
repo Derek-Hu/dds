@@ -30,38 +30,38 @@ export default () => {
         <h2>Backed By</h2>
         <div className={styles.partnerWpr}>
           <Row>
-            <Col span={4} offset={2}>
+            <Col span={4} offset={2} className={styles.image1}>
               <Image src={sevenImg} />
             </Col>
-            <Col span={4}>
+            <Col span={4} className={styles.image2}>
               <Image src={hashkeyImg} />
             </Col>
-            <Col span={4}>
+            <Col span={4} className={styles.image3}>
               <Image src={atImg} />
             </Col>
-            <Col span={4}>
+            <Col span={4} className={styles.image4}>
               <Image src={lncubaImg} />
             </Col>
-            <Col span={4}>
+            <Col span={4} className={styles.image5}>
               <Image src={bonfireImg} />
             </Col>
           </Row>
         </div>
         <div className={styles.partnerWpr}>
           <Row>
-            <Col span={4} offset={2}>
+            <Col span={4} offset={2} className={styles.image6}>
               <Image src={hoonImg} />
             </Col>
-            <Col span={4}>
+            <Col span={4} className={styles.image7}>
               <Image src={youbiImg} />
             </Col>
-            <Col span={4}>
+            <Col span={4} className={styles.image8}>
               <Image src={shimaImg} />
             </Col>
-            <Col span={4}>
+            <Col span={4} className={styles.image9}>
               <Image src={zonffImg} />
             </Col>
-            <Col span={4}>
+            <Col span={4} className={styles.image10}>
               <Image src={okexImg} />
             </Col>
           </Row>
