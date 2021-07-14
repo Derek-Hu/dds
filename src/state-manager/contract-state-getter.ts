@@ -2,6 +2,7 @@ import { from, Observable, of } from 'rxjs';
 import { BigNumber, Contract } from 'ethers';
 import { map, take } from 'rxjs/operators';
 import { UserTradeAccountInfo } from './contract-state-types';
+import { TOKEN_SYMBOL } from '../constant/tokens';
 
 // balance in erc20
 export function walletBalanceGetter(contract: Contract, address: string): Observable<BigNumber> {
@@ -23,5 +24,8 @@ export function userTradeAccountGetter(contract: Contract, address: string): Obs
 
 // get trading price of trading pair
 export function tradePriceGetter(contract: Contract, baseCoin: symbol): Observable<BigNumber> {
-  return from(contract.getPriceByETHDAI() as Promise<BigNumber>).pipe(take(1));
+  if (baseCoin === TOKEN_SYMBOL.ETH) {
+    return from(contract.getPriceByETHDAI() as Promise<BigNumber>).pipe(take(1));
+  }
+  return of(BigNumber.from(0));
 }

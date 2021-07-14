@@ -7,8 +7,6 @@ export class ContractStateImp<T> implements ContractState<T> {
   private isPending: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private subscription: Subscription | null = null;
 
-  private args: Observable<any>[] = [];
-
   constructor(private depends: Observable<any>[], private getter: StateGetter<T>) {}
 
   public get(): Observable<T> {
@@ -29,9 +27,7 @@ export class ContractStateImp<T> implements ContractState<T> {
     }
   }
 
-  public watch(...args: Observable<any>[]): Observable<T> {
-    this.args = args;
-
+  public watch(): Observable<T> {
     return this.stateNotNull().pipe(
       startWith('_START_' as const),
       filter((a: '_START_' | T) => {
@@ -94,7 +90,7 @@ export class ContractStateImp<T> implements ContractState<T> {
   }
 
   private combineAllArgs(): Observable<any[]> {
-    return combineLatest([...this.depends, ...this.args]);
+    return combineLatest(this.depends);
   }
 
   private stateNotNull(): Observable<T> {

@@ -1,16 +1,20 @@
 import { Component } from 'react';
 import { ContractState, PageState } from './interface';
-import { isObservable, NEVER, Observable, Subscription } from 'rxjs';
+import { isObservable, Observable, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+
+type StateName<S> = keyof S & string;
+type PendingName<S> = `${keyof S & string}Pending` & keyof S;
 
 export class BaseStateComponent<P, S> extends Component<P, S> {
   protected subs: Subscription[] = [];
 
   public registerState<N extends keyof S, T extends Pick<S, N>>(
     name: N,
-    state: ContractState<S[N]> | PageState<S[N]>
+    state: ContractState<S[N]> | PageState<S[N]> | Observable<ContractState<S[N]> | PageState<S[N]>>
   ): void {
-    const sub: Subscription = state.watch().subscribe((s: S[N]) => {
+    const stateObs = isObservable(state) ? state : of(state);
+    const sub: Subscription = stateObs.pipe(switchMap(state => state.watch())).subscribe((s: S[N]) => {
       const newState = { [name]: s } as T;
       this.setState(newState);
     });
@@ -18,29 +22,15 @@ export class BaseStateComponent<P, S> extends Component<P, S> {
     this.subs.push(sub);
   }
 
-  public registerSwitchState<N extends keyof S, T extends Pick<S, N>, K>(
+  public registerStatePending<P extends StateName<S>, N extends PendingName<S>, T extends { [k in N]: any }>(
     name: N,
-    switchKey: Observable<K> | { watch: () => Observable<K> },
-    switchState: Map<K, ContractState<S[N]> | PageState<S[N]>>
-  ) {
-    if (!isObservable(switchKey)) {
-      switchKey = switchKey.watch();
-    }
-
-    const sub = switchKey
-      .pipe(
-        switchMap((key: K) => {
-          const state: ContractState<S[N]> | PageState<S[N]> | undefined = switchState.get(key);
-          if (state) {
-            return state.watch();
-          } else {
-            return NEVER;
-          }
-        })
-      )
-      .subscribe((s: S[N]) => {
-        this.setState({ [name]: s } as T);
-      });
+    state: ContractState<S[P]> | Observable<ContractState<S[P]>>
+  ): void {
+    const stateObs = isObservable(state) ? state : of(state);
+    const sub: Subscription = stateObs.pipe(switchMap(state => state.pending())).subscribe((pending: boolean) => {
+      const newState = { [name]: pending } as T;
+      this.setState(newState);
+    });
 
     this.subs.push(sub);
   }

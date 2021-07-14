@@ -26,10 +26,11 @@ import { BaseStateComponent } from '../../state-manager/base-state-component';
 import { P, S } from '../../state-manager';
 import { PageTradingPair } from '../../state-manager/page-state-types';
 import { ContractState } from '../../state-manager/interface';
-import { map, switchMap } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { toEtherNumber } from '../../util/ethers';
 import { Observable, of } from 'rxjs';
 import { BigNumber } from 'ethers';
+import { TOKEN_SYMBOL } from '../../constant/tokens';
 
 interface IState {
   depositVisible: boolean;
@@ -73,6 +74,7 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
     setFeeQuery: false,
     loading: false,
     feeQuery: false,
+
     fundingBalance: null,
     fundingBalancePending: false,
     curTradingPrice: null,
@@ -85,24 +87,40 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
     ['USDC', S.User.Account.USDC],
   ]);
 
+  // 当前的计价货币
   private curQuoteCurrency: Observable<string> = P.Trade.Pair.watch().pipe(map(pair => pair.quote.description || ''));
+  // 当前的用户账户状态
+  private curFundingState: Observable<ContractState<UserTradeAccountInfo>> = this.curQuoteCurrency.pipe(
+    map((quote: string) => this.fundingStateMap.get(quote)),
+    filter(state => Boolean(state)),
+    map(state => state as ContractState<UserTradeAccountInfo>)
+  );
 
   componentDidMount = () => {
-    this.registerSwitchState('fundingBalance', this.curQuoteCurrency, this.fundingStateMap);
     this.registerState('tradingPair', P.Trade.Pair);
-    this.watch(
-      'fundingBalancePending',
-      this.curQuoteCurrency.pipe(
-        switchMap((quote: string) => {
-          return this.fundingStateMap.has(quote)
-            ? (this.fundingStateMap.get(quote) as ContractState<UserTradeAccountInfo>).pending()
-            : of(false);
-        })
-      )
+
+    const fundingState: Observable<ContractState<UserTradeAccountInfo>> = P.Trade.Pair.watch().pipe(
+      map(pair => {
+        return this.switchAccountStateByTradePair(pair);
+      })
     );
+    this.registerState('fundingBalance', fundingState);
+    this.registerStatePending('fundingBalancePending', fundingState);
+
+    const priceState = {};
 
     this.loadBalanceInfo();
   };
+
+  private switchAccountStateByTradePair(tradePair: PageTradingPair): ContractState<UserTradeAccountInfo> {
+    const map = new Map<symbol, ContractState<UserTradeAccountInfo>>([
+      [TOKEN_SYMBOL.DAI, S.User.Account.DAI],
+      [TOKEN_SYMBOL.USDT, S.User.Account.USDT],
+      [TOKEN_SYMBOL.USDC, S.User.Account.USDC],
+    ]);
+
+    return map.get(tradePair.quote) as ContractState<UserTradeAccountInfo>;
+  }
 
   UNSAFE_componentWillReceiveProps(nextProps: IProps) {
     if (this.props.timestamp !== nextProps.timestamp) {

@@ -4,6 +4,8 @@
 import { constState } from './const-state';
 import { walletState } from './wallet-state';
 import { tradePriceGetter, userTradeAccountGetter, walletBalanceGetter } from './contract-state-getter';
+import { TOKEN_SYMBOL } from '../constant/tokens';
+import { of } from 'rxjs';
 
 export const CONTRACT_STATE = {
   User: {
@@ -54,9 +56,19 @@ export const CONTRACT_STATE = {
   },
   Trade: {
     Price: {
-      DAI: {
-        _depend: [constState.CONTRACTS.TradeDAIContract],
-        _getter: tradePriceGetter,
+      ETH: {
+        DAI: {
+          _depend: [constState.CONTRACTS.TradeDAIContract, of(TOKEN_SYMBOL.ETH)],
+          _getter: tradePriceGetter,
+        },
+        USDT: {
+          _depend: [constState.CONTRACTS.TradeUSDTContract, of(TOKEN_SYMBOL.ETH)],
+          _getter: tradePriceGetter,
+        },
+        USDC: {
+          _depend: [constState.CONTRACTS.TradeUSDCContract, of(TOKEN_SYMBOL.ETH)],
+          _getter: tradePriceGetter,
+        },
       },
     },
   },

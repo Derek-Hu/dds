@@ -1,14 +1,24 @@
 import { Observable } from 'rxjs';
 
 export type StateGetter<T> = (...args: any[]) => Observable<T>;
+
 export type ContractStateDefine<T> = {
   _depend: Observable<any>[];
   _getter: StateGetter<T>;
 };
+
+export type ContractStateType<T extends ContractStateDefine<any>> = ReturnType<T['_getter']> extends Observable<infer D>
+  ? D
+  : never;
+
+export type ContractArgsType<T extends ContractStateDefine<any>> = T extends { _args: Observable<infer A>[] }
+  ? Observable<A>[]
+  : [];
+
 export type ContractStateDefineTree = { [p: string]: ContractStateDefine<any> | ContractStateDefineTree };
 
 export interface ContractState<T> {
-  watch(...args: Observable<any>[]): Observable<T>;
+  watch(): Observable<T>;
 
   get(): Observable<T>;
 
@@ -17,16 +27,11 @@ export interface ContractState<T> {
   tick(): void;
 }
 
-export type ContractStateType<T extends ContractStateDefine<any>> = ReturnType<T['_getter']> extends Observable<infer D>
-  ? D
-  : never;
-export type ContractStateGetterArgType<T extends ContractStateDefine<any>> = Parameters<T['_getter']>;
-export type ContractStateDependArgType<T extends ContractStateDefine<any>> = T['_depend'];
-export type ContractStateWatchArgType<T extends ContractStateDefine<any>> = ContractStateGetterArgType<T>;
+export type ContractStateOfDefine<D extends ContractStateDefine<any>> = ContractState<ContractStateType<D>>;
 
 export type ContractStateTree<D extends ContractStateDefineTree> = {
-  [p in keyof D]: D[p] extends ContractStateDefine<infer S>
-    ? ContractState<S>
+  [p in keyof D]: D[p] extends ContractStateDefine<any>
+    ? ContractStateOfDefine<D[p]>
     : D[p] extends ContractStateDefineTree
     ? ContractStateTree<D[p]>
     : never;
