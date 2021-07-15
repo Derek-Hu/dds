@@ -70,6 +70,20 @@ export const CONTRACT_STATE = {
           _getter: tradePriceGetter,
         },
       },
+      BTC: {
+        DAI: {
+          _depend: [constState.CONTRACTS.TradeDAIContract, of(TOKEN_SYMBOL.BTC)],
+          _getter: tradePriceGetter,
+        },
+        USDT: {
+          _depend: [constState.CONTRACTS.TradeUSDTContract, of(TOKEN_SYMBOL.BTC)],
+          _getter: tradePriceGetter,
+        },
+        USDC: {
+          _depend: [constState.CONTRACTS.TradeUSDCContract, of(TOKEN_SYMBOL.BTC)],
+          _getter: tradePriceGetter,
+        },
+      },
     },
   },
 };

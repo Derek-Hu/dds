@@ -30,7 +30,7 @@ import { filter, map, switchMap } from 'rxjs/operators';
 import { toEtherNumber } from '../../util/ethers';
 import { Observable, of } from 'rxjs';
 import { BigNumber } from 'ethers';
-import { TOKEN_SYMBOL } from '../../constant/tokens';
+import { getTradePairSymbol, TOKEN_SYMBOL, TRADE_PAIR_SYMBOL } from '../../constant/tokens';
 
 interface IState {
   depositVisible: boolean;
@@ -50,6 +50,7 @@ interface IState {
   fundingBalance: UserTradeAccountInfo | null;
   fundingBalancePending: boolean;
   curTradingPrice: BigNumber | null;
+  curTradingPricePending: boolean;
   tradingPair: PageTradingPair;
 }
 
@@ -78,6 +79,7 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
     fundingBalance: null,
     fundingBalancePending: false,
     curTradingPrice: null,
+    curTradingPricePending: false,
     tradingPair: P.Trade.Pair.default(),
   };
 
@@ -99,20 +101,30 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
   componentDidMount = () => {
     this.registerState('tradingPair', P.Trade.Pair);
 
+    // funding balance state
     const fundingState: Observable<ContractState<UserTradeAccountInfo>> = P.Trade.Pair.watch().pipe(
       map(pair => {
-        return this.switchAccountStateByTradePair(pair);
+        return this.switchToAccountStateByTradePair(pair);
       })
     );
+    // current base coin price
+    const priceState: Observable<ContractState<BigNumber>> = P.Trade.Pair.watch().pipe(
+      map(pair => {
+        return this.switchToCurPriceStateByTradePair(pair);
+      }),
+      filter(state => state !== null),
+      map(state => state as ContractState<BigNumber>)
+    );
+
     this.registerState('fundingBalance', fundingState);
     this.registerStatePending('fundingBalancePending', fundingState);
-
-    const priceState = {};
+    this.registerState('curTradingPrice', priceState);
+    this.registerStatePending('curTradingPricePending', priceState);
 
     this.loadBalanceInfo();
   };
 
-  private switchAccountStateByTradePair(tradePair: PageTradingPair): ContractState<UserTradeAccountInfo> {
+  private switchToAccountStateByTradePair(tradePair: PageTradingPair): ContractState<UserTradeAccountInfo> {
     const map = new Map<symbol, ContractState<UserTradeAccountInfo>>([
       [TOKEN_SYMBOL.DAI, S.User.Account.DAI],
       [TOKEN_SYMBOL.USDT, S.User.Account.USDT],
@@ -120,6 +132,23 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
     ]);
 
     return map.get(tradePair.quote) as ContractState<UserTradeAccountInfo>;
+  }
+
+  private switchToCurPriceStateByTradePair(tradePair: PageTradingPair): ContractState<BigNumber> | null {
+    const stateMap = new Map<symbol, ContractState<BigNumber>>([
+      [TRADE_PAIR_SYMBOL.ETHDAI, S.Trade.Price.ETH.DAI],
+      [TRADE_PAIR_SYMBOL.ETHUSDT, S.Trade.Price.ETH.USDT],
+      [TRADE_PAIR_SYMBOL.ETHUSDC, S.Trade.Price.ETH.USDC],
+      [TRADE_PAIR_SYMBOL.BTCDAI, S.Trade.Price.BTC.DAI],
+      [TRADE_PAIR_SYMBOL.BTCUSDT, S.Trade.Price.BTC.USDT],
+      [TRADE_PAIR_SYMBOL.BTCUSDC, S.Trade.Price.BTC.USDC],
+    ]);
+    const pairSymbol: null | symbol = getTradePairSymbol(tradePair.base, tradePair.quote);
+    if (pairSymbol && stateMap.has(pairSymbol)) {
+      return stateMap.get(pairSymbol) as ContractState<BigNumber>;
+    } else {
+      return null;
+    }
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: IProps) {
@@ -305,7 +334,6 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
       withdrawVisible,
       orderConfirmVisible,
       tradeType,
-      balanceInfo,
       loading,
       fees,
       openAmount,
@@ -334,6 +362,7 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
               {isBSC ? <Setting /> : null}
             </h2>
 
+            {/* funding balance */}
             <p className={styles.balanceVal}>
               <Placeholder
                 height={'42px'}
@@ -343,6 +372,7 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
               </Placeholder>
             </p>
 
+            {/* funding locked */}
             <div className={styles.dayChange}>
               <Placeholder
                 height={'16px'}
@@ -366,6 +396,7 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
                 </Button>
               </Col>
             </Row>
+
             <Row className={styles.radioBtn}>
               <Radio.Group value={tradeType} onChange={this.changeType}>
                 <Radio.Button value="LONG" className={styles.green}>
@@ -376,11 +407,18 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
                 </Radio.Button>
               </Radio.Group>
             </Row>
+
+            {/* current base token price */}
             <p className={styles.price}>
-              <Placeholder loading={loading}>
-                Current Price: {format(curPrice)} {to}
+              <Placeholder
+                height={'14px'}
+                loading={this.state.curTradingPrice === null || this.state.curTradingPricePending}
+              >
+                Current Price: {toEtherNumber(this.state.curTradingPrice, 2, this.state.tradingPair.quote)}{' '}
+                {this.state.tradingPair.quote.description}
               </Placeholder>
             </p>
+
             <p className={styles.amountTip}>{formatMessage({ id: 'amount' })}</p>
             <InputNumber
               className={styles.orderInput}
