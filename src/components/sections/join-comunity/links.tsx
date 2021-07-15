@@ -1,8 +1,8 @@
 import { Icon } from 'antd';
-import TelegramIcon from '~/assets/telegram.png';
-import DiscordIcon from '~/assets/discord.png';
-import TwitterIcon from '~/assets/twitter.png';
-import MediumIcon from '~/assets/medium.png';
+import TelegramIcon from '~/assets/join-community/3.svg';
+import DiscordIcon from '~/assets/join-community/2.svg';
+import TwitterIcon from '~/assets/join-community/1.svg';
+import MediumIcon from '~/assets/join-community/4.svg';
 import styles from './style.module.less';
 
 export default [

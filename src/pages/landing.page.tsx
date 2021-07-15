@@ -96,7 +96,7 @@ export default class HomePage extends Component {
           </ContentWidth>
         </Screen>
         <ScrollOverPack>
-          <Screen style={{ background: '#1346ff' }}>
+          <Screen style={{ background: '#FAFAFA' }}>
             <ContentWidth>
               <WhyWeBuild></WhyWeBuild>
             </ContentWidth>
