@@ -1,6 +1,7 @@
 import { PageState, PageStateDefine, PageStateDefineTree, PageStateTree } from './interface';
 import { PageStateImp } from './page-state';
 import _ from 'lodash';
+import { PAGE_STATE } from './page-state-def';
 
 function isPageStateDefine(def: any): boolean {
   return _.has(def, '_default');
@@ -23,5 +24,7 @@ export function parsePageStateTreeDefine<D extends PageStateDefineTree>(defines:
 }
 
 export function convertPageState<T>(pageDefine: PageStateDefine<T>): PageState<T> {
-  return new PageStateImp(pageDefine._default, pageDefine._serializer);
+  return new PageStateImp(pageDefine._default);
 }
+
+export const P = parsePageStateTreeDefine(PAGE_STATE);

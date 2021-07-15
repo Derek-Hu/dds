@@ -12,11 +12,11 @@ import { shortAddress } from '../../util/index';
 import { RouteKey } from '../../constant/routes';
 import { TokenFaucet } from './token-faucet';
 import { AirDropEntry } from '../activities/air-drop/air-drop-entry';
-import { S } from '../../state-manager';
 import { toEthers } from '../../util/ethers';
 import { BigNumber } from 'ethers';
 import { BaseStateComponent } from '../../state-manager/base-state-component';
 import { walletState } from '../../state-manager/wallet-state';
+import { S } from '../../state-manager/contract-state-parser';
 
 const { SubMenu } = Menu;
 

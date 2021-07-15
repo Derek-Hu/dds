@@ -1,11 +1,15 @@
 import { ContractState, StateGetter } from './interface';
-import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, merge, Observable, Subscription } from 'rxjs';
 import { filter, finalize, map, startWith, switchMap, take, tap } from 'rxjs/operators';
 
 export class ContractStateImp<T> implements ContractState<T> {
   private state: BehaviorSubject<T | null> = new BehaviorSubject<T | null>(null);
   private isPending: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private subscription: Subscription | null = null;
+
+  private isDebug: boolean = false;
+  private debugLabel: string | null = null;
+  private debugSub: Subscription | null = null;
 
   constructor(private depends: Observable<any>[], private getter: StateGetter<T>) {}
 
@@ -39,12 +43,24 @@ export class ContractStateImp<T> implements ContractState<T> {
         return !isStart;
       }),
       map(a => a as T),
+      tap(a => {
+        if (this.isDebug) {
+          console.debug(this.debugLabel ? this.debugLabel : '', 'new state is', a);
+        }
+      }),
       finalize(() => {
         if (!this.state.observed) {
           this.unwatch();
         }
       })
     );
+  }
+
+  public debug(label?: string): this {
+    this.isDebug = true;
+    this.debugLabel = label ? label : null;
+
+    return this;
   }
 
   // =======================================================================================
@@ -54,9 +70,20 @@ export class ContractStateImp<T> implements ContractState<T> {
   }
 
   private doWatch() {
+    if (this.isDebug) {
+      this.debugSub = merge(this.depends)
+        .pipe(
+          tap((arg: any) => {
+            console.debug(this.debugLabel ? this.debugLabel : '', 'state state arg', arg);
+          })
+        )
+        .subscribe();
+    }
+
     this.subscription = this.combineAllArgs()
       .pipe(
         switchMap((args: any[]) => {
+          console.debug(this.debugLabel ? this.debugLabel : '', 'state args', args);
           return this.callGetter(args);
         })
       )
@@ -74,6 +101,11 @@ export class ContractStateImp<T> implements ContractState<T> {
     if (this.subscription) {
       this.subscription.unsubscribe();
       this.subscription = null;
+    }
+
+    if (this.debugSub) {
+      this.debugSub.unsubscribe();
+      this.debugSub = null;
     }
   }
 

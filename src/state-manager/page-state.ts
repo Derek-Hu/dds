@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 export class PageStateImp<T> implements PageState<T> {
   private readonly state: BehaviorSubject<T>;
 
-  constructor(private defaultVal: T, private serializer: (s: T) => string) {
+  constructor(private defaultVal: T) {
     this.state = new BehaviorSubject<T>(defaultVal);
   }
 
@@ -19,9 +19,5 @@ export class PageStateImp<T> implements PageState<T> {
 
   watch(): Observable<T> {
     return this.state;
-  }
-
-  serialize(): Observable<string> {
-    return this.watch().pipe(map(state => this.serializer(state)));
   }
 }

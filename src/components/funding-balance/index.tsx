@@ -15,7 +15,7 @@ import {
   getMaxOpenAmount,
 } from '../../services/trade.service';
 import { getMaxFromCoin } from './calculate';
-import { format, isGreaterZero, truncated, isNumberLike } from '../../util/math';
+import { isGreaterZero, truncated, isNumberLike } from '../../util/math';
 import InputNumber from '../input/index';
 import Placeholder from '../placeholder/index';
 import { setPendingOrders } from '../../util/order-cache';
@@ -23,14 +23,15 @@ import { formatMessage } from 'locale/i18n';
 import { Setting } from './dropdown/setting';
 import { UserTradeAccountInfo } from '../../state-manager/contract-state-types';
 import { BaseStateComponent } from '../../state-manager/base-state-component';
-import { P, S } from '../../state-manager';
-import { PageTradingPair } from '../../state-manager/page-state-types';
+import { PageTradingPair, TradeDirection } from '../../state-manager/page-state-types';
 import { ContractState } from '../../state-manager/interface';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { toEtherNumber } from '../../util/ethers';
 import { Observable, of } from 'rxjs';
 import { BigNumber } from 'ethers';
 import { getTradePairSymbol, TOKEN_SYMBOL, TRADE_PAIR_SYMBOL } from '../../constant/tokens';
+import { P } from '../../state-manager/page-state-parser';
+import { S } from '../../state-manager/contract-state-parser';
 
 interface IState {
   depositVisible: boolean;
@@ -51,7 +52,9 @@ interface IState {
   fundingBalancePending: boolean;
   curTradingPrice: BigNumber | null;
   curTradingPricePending: boolean;
+  maxOpenAmount: BigNumber | null;
   tradingPair: PageTradingPair;
+  tradingDirection: TradeDirection;
 }
 
 interface IProps {
@@ -80,7 +83,9 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
     fundingBalancePending: false,
     curTradingPrice: null,
     curTradingPricePending: false,
+    maxOpenAmount: null,
     tradingPair: P.Trade.Pair.default(),
+    tradingDirection: P.Trade.Direction.default(),
   };
 
   private fundingStateMap = new Map<string, ContractState<UserTradeAccountInfo>>([
@@ -100,6 +105,7 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
 
   componentDidMount = () => {
     this.registerState('tradingPair', P.Trade.Pair);
+    this.registerState('tradingDirection', P.Trade.Direction);
 
     // funding balance state
     const fundingState: Observable<ContractState<UserTradeAccountInfo>> = P.Trade.Pair.watch().pipe(
@@ -120,6 +126,7 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
     this.registerStatePending('fundingBalancePending', fundingState);
     this.registerState('curTradingPrice', priceState);
     this.registerStatePending('curTradingPricePending', priceState);
+    this.registerState('maxOpenAmount', S.Trade.Order.CurMaxOpenAmount.debug());
 
     this.loadBalanceInfo();
   };
@@ -226,6 +233,12 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
   withdrawVisible = this.setModalVisible('withdrawVisible');
   depositVisible = this.setModalVisible('depositVisible');
   orderConfirmVisible = this.setModalVisible('orderConfirmVisible');
+
+  switchTradeDirection(e: any) {
+    const direction: TradeDirection = e.target.value;
+    P.Trade.Direction.set(direction);
+    console.log('change direction', e.target.value);
+  }
 
   changeType = async (e: any) => {
     const tradeType: ITradeType = e.target.value;
@@ -384,6 +397,7 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
               </Placeholder>
             </div>
 
+            {/* deposit/withdraw options */}
             <Row className={styles.actionLink} type="flex" justify="space-between">
               <Col>
                 <Button type="link" onClick={() => address && this.depositVisible.show()}>
@@ -397,8 +411,9 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
               </Col>
             </Row>
 
+            {/* LONG/SHORT switch */}
             <Row className={styles.radioBtn}>
-              <Radio.Group value={tradeType} onChange={this.changeType}>
+              <Radio.Group value={this.state.tradingDirection} onChange={this.switchTradeDirection.bind(this)}>
                 <Radio.Button value="LONG" className={styles.green}>
                   {formatMessage({ id: 'order-type-long' })}
                 </Radio.Button>
@@ -420,20 +435,31 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
             </p>
 
             <p className={styles.amountTip}>{formatMessage({ id: 'amount' })}</p>
+
             <InputNumber
               className={styles.orderInput}
               onChange={this.onOpenAmountChange}
-              placeholder={maxNumber ? `${formatMessage({ id: 'max' })} ${maxNumber}` : '0.00'}
+              placeholder={
+                this.state.maxOpenAmount !== null
+                  ? `${formatMessage({ id: 'max' })} ${toEtherNumber(
+                      this.state.maxOpenAmount,
+                      2,
+                      this.state.tradingPair.base
+                    )}`
+                  : '0.00'
+              }
               max={maxNumber}
               skip={true}
               showTag={true}
               tagClassName={styles.utilMax}
               suffix={from}
             />
+
             <p className={styles.settlement}>
               {formatMessage({ id: 'settlement-fee' })} :{' '}
               {setFeeQuery ? <Icon type="loading" /> : isNumberLike(fees?.settlementFee) ? fees?.settlementFee : 0} {to}
             </p>
+
             {/* <Progress strokeColor="#1346FF" showInfo={false} percent={30} strokeWidth={20} /> */}
             <Button
               loading={feeQuery}

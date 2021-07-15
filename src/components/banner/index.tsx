@@ -1,10 +1,9 @@
-import { Button, Row, Col } from 'antd';
+import { Button } from 'antd';
 import styles from './style.module.less';
 import { ddsBasePath } from '../../constant';
 import SiteContext from '../../layouts/SiteContext';
 import { Visible, Hidden } from '../builtin/hidden';
 import { formatMessage } from 'locale/i18n';
-import { format } from '../../util/math';
 import TweenOne from 'rc-tween-one';
 
 export default () => {
