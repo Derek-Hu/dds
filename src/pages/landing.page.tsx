@@ -123,12 +123,14 @@ export default class HomePage extends Component {
             </ContentWidth>
           </Screen>
           <Screen>
-            <Parallax animation={{ y: 70, type: 'from', delay: 300, opacity: 0 }}>
+            {/* <Parallax animation={{ y: 70, type: 'from', delay: 300, opacity: 0 }}> */}
+            <div>
               <ContentWidth>
                 <ShieldDAO></ShieldDAO>
               </ContentWidth>
               <JoinCommunity></JoinCommunity>
-            </Parallax>
+            </div>
+            {/* </Parallax> */}
           </Screen>
           <Screen>
             <Parallax animation={{ y: 70, type: 'from', delay: 300, opacity: 0 }}>

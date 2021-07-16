@@ -31,7 +31,10 @@ export default () => {
                     <div></div>
                     <div></div>
                   </div>
-                  <p>Leverage on-chain, up to 100x-1000x</p>
+                  <p>
+                    Broker: A broker who brings a steady stream of traders to the Shield network through education and
+                    referrals, incentivized by the "Broker Campaign" commission system.
+                  </p>
                 </Col>
                 <Col>
                   <div className={[styles.dots, styles.theme2].join(' ')}>
@@ -39,7 +42,10 @@ export default () => {
                     <div></div>
                     <div></div>
                   </div>
-                  <p>Leverage on-chain, up to 100x-1000x</p>
+                  <p>
+                    Trader: Buyer of Shield to meet their trading needs, and to pay for trading fees and position
+                    charges, etc.
+                  </p>
                 </Col>
                 <Col>
                   <div className={[styles.dots, styles.theme3].join(' ')}>
@@ -47,7 +53,10 @@ export default () => {
                     <div></div>
                     <div></div>
                   </div>
-                  <p>Leverage on-chain, up to 100x-1000x</p>
+                  <p>
+                    Liquidator: Trigger liquidation trades for arbitrage rewards by monitoring Taker and Maker positions
+                    and discovering insufficient position fees or liquidity margin.
+                  </p>
                 </Col>
                 <Col>
                   <div className={[styles.dots, styles.theme4].join(' ')}>
@@ -55,7 +64,10 @@ export default () => {
                     <div></div>
                     <div></div>
                   </div>
-                  <p>Leverage on-chain, up to 100x-1000x</p>
+                  <p>
+                    Private Pool: Seller of Shield who provides the liquidity as a counterparty and receives a liquidity
+                    bonus (SLD) for taking orders.
+                  </p>
                 </Col>
                 <Col>
                   <div className={[styles.dots, styles.theme5].join(' ')}>
@@ -63,7 +75,10 @@ export default () => {
                     <div></div>
                     <div></div>
                   </div>
-                  <p>Leverage on-chain, up to 100x-1000x</p>
+                  <p>
+                    Public Pool: A pool of reserve liquidity in which everyone can participate by back up liquidity
+                    mining to obtain LP rewards (SLD) and only be used when Private Pool is insufficient.
+                  </p>
                 </Col>
               </Row>
             </div>

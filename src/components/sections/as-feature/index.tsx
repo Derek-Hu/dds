@@ -68,7 +68,7 @@ export default () => {
       const nextVal = idx < datas.length - 1 ? idx + 1 : 0;
       setIndex(nextVal);
       nextItem(nextVal);
-    }, 3000);
+    }, 6000);
   };
 
   const switchIcon = (i: number) => {
@@ -76,22 +76,24 @@ export default () => {
   };
   return (
     <div className={styles.asFeature}>
-      <QueueAnim>
-        <div className={styles.featureContent}>
-          <div>
-            <h2>
-              As featurred in <Image src={datas[index].icon} />
-            </h2>
+      <div>
+        <QueueAnim>
+          <div className={styles.featureContent}>
+            <div>
+              <h2>
+                As featurred in <Image src={datas[index].icon} />
+              </h2>
+            </div>
+            <p className={styles.desc}>
+              {/* <Texty type="right" mode="sync"> */}« {datas[index].label} »{/* </Texty> */}
+            </p>
           </div>
-          <p className={styles.desc}>
-            {/* <Texty type="right" mode="sync"> */}« {datas[index].label} »{/* </Texty> */}
-          </p>
+        </QueueAnim>
+        <div className={styles.dots}>
+          {datas.map((d, i) => (
+            <span key={i} className={i === index ? styles.active : ''} onClick={() => switchIcon(i)}></span>
+          ))}
         </div>
-      </QueueAnim>
-      <div className={styles.dots}>
-        {datas.map((d, i) => (
-          <span key={i} className={i === index ? styles.active : ''} onClick={() => switchIcon(i)}></span>
-        ))}
       </div>
     </div>
   );

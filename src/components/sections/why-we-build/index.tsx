@@ -27,13 +27,11 @@ export default () => {
   return (
     <div className={styles.whatWeBuild}>
       <div className={[styles.content, CSS_H_SCALE].join(' ')}>
-        <Parallax animation={{ x: 0 }} style={{ transform: 'translateX(-100px)', margin: '10px auto' }}>
+        <TweenOne key="1" animation={{ y: 70, type: 'from', delay: 200, opacity: 0.2 }} reverseDelay={200}>
           <h2>
             Why we build <br />
             Shield
           </h2>
-        </Parallax>
-        <TweenOne key="1" animation={{ y: 100, type: 'from', delay: 300, opacity: 0 }} reverseDelay={200}>
           <p>The current derivatives market gap is not optimal</p>
           <div className={styles.details}>
             <Row gutter={50} type="flex">
