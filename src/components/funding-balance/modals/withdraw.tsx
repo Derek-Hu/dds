@@ -1,104 +1,115 @@
-import { Tabs, Button, Row, Col, Select, Input, Tag } from 'antd';
-import { CustomTabKey, SupportedCoins } from '../../../constant/index';
+import { Button, Row, Col } from 'antd';
 import styles from './style.module.less';
 import ModalRender from '../../modal-render/index';
-// import { CoinSelectOption } from '../../../constant/index';
 import SiteContext from '../../../layouts/SiteContext';
-import { Component } from 'react';
-import { format, isGreaterZero } from '../../../util/math';
 import InputNumber from '../../input/index';
 import { formatMessage } from 'locale/i18n';
+import { BaseStateComponent } from '../../../state-manager/base-state-component';
+import { BigNumber } from 'ethers';
+import { toEtherNumber } from '../../../util/ethers';
+import { PageTradingPair } from '../../../state-manager/page-state-types';
+import { P } from '../../../state-manager/page-state-parser';
+import NormalButton from '../../common/buttons/normal-btn';
+import { UserTradeAccountInfo } from '../../../state-manager/contract-state-types';
+import { S } from '../../../state-manager/contract-state-parser';
 
 const title = formatMessage({ id: 'funding-fee-withdraw' });
 
 interface IProps {
-  visible: boolean;
-  onCancel: () => any;
-  onConfirm: (amount: number, coin: IUSDCoins) => any;
-  max?: number;
-  coin: IUSDCoins;
+  onConfirm: (amount: number) => any;
 }
+
 interface IState {
   amount?: number;
-  selectedCoin: IUSDCoins;
+  withdrawAmount: number;
+  visible: boolean;
+  userAccountInfo: UserTradeAccountInfo | null;
+  tradePair: PageTradingPair;
 }
-export default class Balance extends Component<IProps, IState> {
+
+export default class Withdraw extends BaseStateComponent<IProps, IState> {
   state: IState = {
-    selectedCoin: this.props.coin,
+    withdrawAmount: 0,
+    visible: false,
+    userAccountInfo: null,
+    tradePair: P.Trade.Pair.default(),
   };
 
-  onAmountChange = (amount: number) => {
-    this.setState({
-      amount,
-    });
-  };
+  componentDidMount() {
+    this.registerState('userAccountInfo', S.User.CurTradePairAccount);
+  }
 
-  onMaxOpenClick = () => {
-    const { max } = this.props;
-    this.setState({
-      amount: max,
-    });
-  };
+  componentWillUnmount() {
+    this.destroyState();
+  }
 
-  onCoinChange = (selectedCoin: IUSDCoins) => {
-    this.setState({
-      selectedCoin,
-    });
-  };
+  coinNum(num: BigNumber | null | undefined): string {
+    return toEtherNumber(num, 2, this.state.tradePair.quote);
+  }
+
+  onCancel() {
+    this.setState({ visible: false });
+  }
+
+  onWithdraw() {
+    if (this.state.withdrawAmount <= 0) {
+      return;
+    }
+
+    this.onCancel();
+    this.props.onConfirm(this.state.withdrawAmount);
+  }
+
+  onChangeAmount(withdrawAmount: number) {
+    this.setState({ withdrawAmount });
+  }
 
   render() {
-    const { visible, onCancel, onConfirm, max, coin } = this.props;
-    const { amount, selectedCoin } = this.state;
-
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => (
-          <ModalRender
-            visible={visible}
-            onCancel={onCancel}
-            footer={null}
-            height={375}
-            title={title}
-            className={styles.commonModal}
-          >
-            <Row gutter={[16, 16]} type="flex" justify="space-between" align="middle">
-              {/* <Col xs={24} sm={24} md={6} lg={6}>
-                <Select defaultValue={coin} disabled={true} onChange={this.onCoinChange} style={{ width: '100%', height: 50 }}>
-                  {CoinSelectOption}
-                </Select>
-              </Col> */}
-              <Col span={24}>
-                <InputNumber
-                  className={styles.orderInput}
-                  onChange={this.onAmountChange}
-                  placeholder={max ? `${formatMessage({ id: 'max' })} ${max}` : '0.00'}
-                  max={max}
-                  showTag={true}
-                  // tagClassName={styles.utilMax}
-                  suffix={coin}
-                />
-              </Col>
-            </Row>
+          <>
+            <Button type="link" onClick={() => this.setState({ visible: true })}>
+              {formatMessage({ id: 'withdraw' })}
+            </Button>
 
-            <Row gutter={[16, 16]} className={styles.actionBtns} style={{ paddingTop: '8px' }} type="flex">
-              <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                <Button onClick={onCancel}>{formatMessage({ id: 'cancel' })}</Button>
-              </Col>
-              <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
-                <Button
-                  type="primary"
-                  onClick={() => {
-                    if (!isGreaterZero(amount)) {
-                      return;
-                    }
-                    onConfirm(amount!, coin);
-                  }}
-                >
-                  {formatMessage({ id: 'withdraw' })}
-                </Button>
-              </Col>
-            </Row>
-          </ModalRender>
+            <ModalRender
+              visible={this.state.visible}
+              onCancel={this.onCancel.bind(this)}
+              footer={null}
+              height={375}
+              title={title}
+              className={styles.commonModal}
+            >
+              <Row gutter={[16, 16]} type="flex" justify="space-between" align="middle">
+                <Col span={24}>
+                  <InputNumber
+                    className={styles.orderInput}
+                    onChange={this.onChangeAmount.bind(this)}
+                    placeholder={`${formatMessage({ id: 'max' })} ${this.coinNum(
+                      this.state.userAccountInfo?.available
+                    )}`}
+                    max={Number(this.coinNum(this.state.userAccountInfo?.available))}
+                    showTag={true}
+                    suffix={this.state.tradePair.quote.description}
+                  />
+                </Col>
+              </Row>
+
+              <Row gutter={[16, 16]} className={styles.actionBtns} style={{ paddingTop: '8px' }} type="flex">
+                <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
+                  <NormalButton type={'default'} inModal={true} onClick={this.onCancel.bind(this)}>
+                    {formatMessage({ id: 'cancel' })}
+                  </NormalButton>
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
+                  <NormalButton type={'primary'} inModal={true} onClick={this.onWithdraw.bind(this)}>
+                    {formatMessage({ id: 'withdraw' })}
+                  </NormalButton>
+                </Col>
+              </Row>
+            </ModalRender>
+          </>
         )}
       </SiteContext.Consumer>
     );

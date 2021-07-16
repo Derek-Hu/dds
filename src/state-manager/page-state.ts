@@ -17,6 +17,10 @@ export class PageStateImp<T> implements PageState<T> {
     this.state.next(state);
   }
 
+  get(): T {
+    return this.state.getValue();
+  }
+
   watch(): Observable<T> {
     return this.state;
   }

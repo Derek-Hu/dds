@@ -394,6 +394,9 @@ const getOrderStatusFun = (hash: string): Observable<IOrderPendingResult> => {
       return from(request.post(url).send({ txHash: hash })).pipe(
         map(res => {
           return 'pending' as IOrderPendingResult;
+        }),
+        catchError(err => {
+          return of('pending' as IOrderPendingResult);
         })
       );
     }),

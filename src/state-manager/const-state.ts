@@ -16,6 +16,7 @@ type ContractName = keyof ContractAddress;
 export class ConstState {
   public readonly CONTRACTS: ContractObsMap;
   public readonly TradeOptionContract: Observable<Contract>;
+  public readonly DepositERC20Contract: Observable<Contract>;
 
   constructor() {
     this.CONTRACTS = Array.from(Object.keys(BSC_ADDRESS) as ContractName[]).reduce(
@@ -24,6 +25,25 @@ export class ConstState {
         return acc;
       },
       {} as ContractObsMap
+    );
+
+    this.DepositERC20Contract = P.Trade.Pair.watch().pipe(
+      switchMap((pair: PageTradingPair) => {
+        switch (pair.quote) {
+          case TOKEN_SYMBOL.DAI: {
+            return this.CONTRACTS.ERC20DAI;
+          }
+          case TOKEN_SYMBOL.USDT: {
+            return this.CONTRACTS.ERC20USDT;
+          }
+          case TOKEN_SYMBOL.USDC: {
+            return this.CONTRACTS.ERC20USDC;
+          }
+          default: {
+            return NEVER;
+          }
+        }
+      })
     );
 
     this.TradeOptionContract = P.Trade.Pair.watch().pipe(

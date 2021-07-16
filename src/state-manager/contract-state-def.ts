@@ -5,18 +5,20 @@ import { constState } from './const-state';
 import { walletState } from './wallet-state';
 import {
   maxOpenAmountGetter,
+  tradeFeeGetter,
+  tradePairPriceGetter,
   tradePriceGetter,
   userTradeAccountGetter,
   walletBalanceGetter,
 } from './contract-state-getter';
 import { TOKEN_SYMBOL } from '../constant/tokens';
 import { NEVER, Observable, of } from 'rxjs';
-import { ContractStateTree, StateReference } from './interface';
+import { ContractState, ContractStateTree, StateReference } from './interface';
 import _ from 'lodash';
 import { switchMap } from 'rxjs/operators';
 import { P } from './page-state-parser';
 
-class Replacer implements StateReference {
+class StateHolder implements StateReference {
   private treeRoot: ContractStateTree<any> | null = null;
 
   constructor(private path: string) {}
@@ -25,7 +27,7 @@ class Replacer implements StateReference {
     return of(true).pipe(
       switchMap(() => {
         if (this.treeRoot && _.has(this.treeRoot, this.path)) {
-          return _.get(this.treeRoot, this.path, of(null)) as Observable<any>;
+          return (_.get(this.treeRoot, this.path) as ContractState<any>).watch() as Observable<any>;
         }
 
         console.warn('state reference can not get a instance.', this.treeRoot, this.path);
@@ -41,7 +43,7 @@ class Replacer implements StateReference {
 }
 
 function Ref(path: string): StateReference {
-  return new Replacer(path);
+  return new StateHolder(path);
 }
 
 export const CONTRACT_STATE = {
@@ -75,6 +77,10 @@ export const CONTRACT_STATE = {
         _depend: [constState.CONTRACTS.Lp1USDCContract, walletState.USER_ADDR],
         _getter: walletBalanceGetter,
       },
+    },
+    DepositWalletBalance: {
+      _depend: [constState.DepositERC20Contract, walletState.USER_ADDR],
+      _getter: walletBalanceGetter,
     },
     Account: {
       DAI: {
@@ -126,10 +132,18 @@ export const CONTRACT_STATE = {
         },
       },
     },
+    CurPairPrice: {
+      _depend: [constState.TradeOptionContract, P.Trade.Pair],
+      _getter: tradePairPriceGetter,
+    },
     Order: {
       CurMaxOpenAmount: {
         _depend: [constState.TradeOptionContract, P.Trade.Direction, P.Trade.Pair, Ref('User.CurTradePairAccount')],
         _getter: maxOpenAmountGetter,
+      },
+      CurOpenOrderFee: {
+        _depend: [constState.TradeOptionContract, P.Trade.Create.OpenAmount, P.Trade.Pair, P.Trade.Direction],
+        _getter: tradeFeeGetter,
       },
     },
   },

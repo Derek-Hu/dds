@@ -1,6 +1,6 @@
 import { ContractState, StateGetter } from './interface';
-import { BehaviorSubject, combineLatest, merge, Observable, Subscription } from 'rxjs';
-import { filter, finalize, map, startWith, switchMap, take, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, merge, Observable, of, Subscription } from 'rxjs';
+import { debounceTime, filter, finalize, map, startWith, switchMap, take, tap } from 'rxjs/operators';
 
 export class ContractStateImp<T> implements ContractState<T> {
   private state: BehaviorSubject<T | null> = new BehaviorSubject<T | null>(null);
@@ -45,7 +45,7 @@ export class ContractStateImp<T> implements ContractState<T> {
       map(a => a as T),
       tap(a => {
         if (this.isDebug) {
-          console.debug(this.debugLabel ? this.debugLabel : '', 'new state is', a);
+          console.log(this.debugLabel ? this.debugLabel : '', 'new state is', a);
         }
       }),
       finalize(() => {
@@ -71,10 +71,10 @@ export class ContractStateImp<T> implements ContractState<T> {
 
   private doWatch() {
     if (this.isDebug) {
-      this.debugSub = merge(this.depends)
+      this.debugSub = merge(...this.depends)
         .pipe(
           tap((arg: any) => {
-            console.debug(this.debugLabel ? this.debugLabel : '', 'state state arg', arg);
+            console.log(this.debugLabel ? this.debugLabel : '', 'a state state arg', arg);
           })
         )
         .subscribe();
@@ -82,8 +82,8 @@ export class ContractStateImp<T> implements ContractState<T> {
 
     this.subscription = this.combineAllArgs()
       .pipe(
+        debounceTime(10),
         switchMap((args: any[]) => {
-          console.debug(this.debugLabel ? this.debugLabel : '', 'state args', args);
           return this.callGetter(args);
         })
       )

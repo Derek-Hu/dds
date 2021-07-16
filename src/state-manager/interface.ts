@@ -60,6 +60,8 @@ export type PageStateTree<D extends PageStateDefineTree> = {
 export interface PageState<T> {
   set(state: T): void;
 
+  get(): T;
+
   default(): T;
 
   watch(): Observable<T>;

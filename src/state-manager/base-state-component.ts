@@ -11,12 +11,17 @@ export class BaseStateComponent<P, S> extends Component<P, S> {
 
   public registerState<N extends keyof S, T extends Pick<S, N>>(
     name: N,
-    state: ContractState<S[N]> | PageState<S[N]> | Observable<ContractState<S[N]> | PageState<S[N]>>
+    state: ContractState<S[N]> | PageState<S[N]> | Observable<ContractState<S[N]> | PageState<S[N]>>,
+    callback?: () => void
   ): void {
     const stateObs = isObservable(state) ? state : of(state);
     const sub: Subscription = stateObs.pipe(switchMap(state => state.watch())).subscribe((s: S[N]) => {
       const newState = { [name]: s } as T;
-      this.setState(newState);
+      this.setState(newState, () => {
+        if (callback) {
+          callback();
+        }
+      });
     });
 
     this.subs.push(sub);
@@ -41,6 +46,10 @@ export class BaseStateComponent<P, S> extends Component<P, S> {
     });
 
     this.subs.push(sub);
+  }
+
+  public tickState(...states: ContractState<any>[]) {
+    states.forEach(one => one.tick());
   }
 
   public destroyState() {

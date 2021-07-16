@@ -9,5 +9,10 @@ export const PAGE_STATE = {
     Direction: {
       _default: 'LONG' as TradeDirection,
     },
+    Create: {
+      OpenAmount: {
+        _default: 0,
+      },
+    },
   },
 };

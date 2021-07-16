@@ -16,7 +16,6 @@ export function toEthers(
   }
 
   if (num === undefined) {
-    console.warn('number value is undefined.');
     return '0';
   }
 
@@ -61,7 +60,10 @@ export function keepDecimal(num: number, decimal: number): string {
   }
 }
 
-export function tokenBigNumber(amount: number, coin: ISLD | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'): BigNumber {
+export function tokenBigNumber(
+  amount: number,
+  coin: symbol | ISLD | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'
+): BigNumber {
   const wei = getTokenWei(coin);
 
   if (amount % 1) {

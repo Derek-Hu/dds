@@ -5,3 +5,10 @@ export type UserTradeAccountInfo = {
   available: BigNumber;
   locked: BigNumber;
 };
+
+export type TradeOrderFees = {
+  curPrice: BigNumber;
+  totalFee: BigNumber;
+  settlementFee: BigNumber;
+  fundingLocked: BigNumber;
+};

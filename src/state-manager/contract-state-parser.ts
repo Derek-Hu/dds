@@ -56,6 +56,7 @@ export function convertContractState<T extends ContractStateDefine<any>>(
       return (one as StateReference).setRoot(root).getRef();
     }
   });
+
   return new ContractStateImp(dependArgs, define._getter);
 }
 
