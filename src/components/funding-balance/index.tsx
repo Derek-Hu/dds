@@ -1,4 +1,4 @@
-import { Row, Col, Radio, message, Icon, Button } from 'antd';
+import { Row, Col, Radio, Icon } from 'antd';
 import styles from './style.module.less';
 import DepositModal from './modals/deposit';
 import WithdrawModal from './modals/withdraw';
@@ -20,19 +20,6 @@ import { P } from '../../state-manager/page-state-parser';
 import { S } from '../../state-manager/contract-state-parser';
 
 interface IState {
-  depositVisible: boolean;
-  withdrawVisible: boolean;
-  orderConfirmVisible: boolean;
-  balanceInfo?: IBalanceInfo;
-  openAmount: number | undefined;
-  maxNumber?: number;
-  available?: number;
-  curPrice?: number; // 从链上读取的price
-  loading: boolean;
-  feeQuery: boolean;
-  fees?: IOpenFee;
-  setFeeQuery: boolean;
-
   fundingBalance: UserTradeAccountInfo | null;
   fundingBalancePending: boolean;
   curTradingPrice: BigNumber | null;
@@ -54,16 +41,6 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
   static contextType = SiteContext;
 
   state: IState = {
-    depositVisible: false,
-    withdrawVisible: false,
-    orderConfirmVisible: false,
-    openAmount: undefined,
-    available: undefined,
-    curPrice: 0,
-    setFeeQuery: false,
-    loading: false,
-    feeQuery: false,
-
     fundingBalance: null,
     fundingBalancePending: false,
     curTradingPrice: null,
