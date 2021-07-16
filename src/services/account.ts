@@ -1,7 +1,7 @@
 import { walletManager } from '../wallet/wallet-manager';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
-import { combineLatest, NEVER, Observable, of, Subject, zip } from 'rxjs';
+import { combineLatest, firstValueFrom, NEVER, Observable, of, Subject, zip } from 'rxjs';
 import { contractAccessor } from '../wallet/chain-access';
 import { CoinBalance } from '../wallet/contract-interface';
 import { toEthers } from '../util/ethers';
@@ -23,7 +23,7 @@ export const isUserConnected = async (): Promise<boolean> => {
     take(1)
   );
 
-  return address$.toPromise();
+  return firstValueFrom(address$);
 };
 
 /**
@@ -35,65 +35,59 @@ export const initTryConnect = async (): Promise<boolean> => {
   //     resolve(true);
   //   }, 6000);
   // })
-  return walletManager
-    .initTryWallet()
-    .pipe(
-      map((wallet: Wallet[]) => {
-        return wallet.length === 0 ? false : true;
-      })
-    )
-    .toPromise();
+  const res = walletManager.initTryWallet().pipe(
+    map((wallet: Wallet[]) => {
+      return wallet.length === 0 ? false : true;
+    })
+  );
+  return firstValueFrom(res);
 };
 
 /**
  * 登陆后得到用户地址，连接前阻塞不返回
  */
 export const loginUserAccount = async (): Promise<string> => {
-  return walletManager
-    .watchWalletInstance()
-    .pipe(
-      switchMap((wallet: WalletInterface | null) => {
-        return wallet === null ? of(null) : wallet.watchAccount();
-      }),
-      filter(acc => acc !== null),
-      map(acc => acc as string),
-      take(1)
-    )
-    .toPromise();
+  const res = walletManager.watchWalletInstance().pipe(
+    switchMap((wallet: WalletInterface | null) => {
+      return wallet === null ? of(null) : wallet.watchAccount();
+    }),
+    filter(acc => acc !== null),
+    map(acc => acc as string),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 /**
  * 用户已经连接后返回用户账户信息
  */
 export const userAccountInfo = async (): Promise<IAccount> => {
-  return walletManager
-    .watchWalletInstance()
-    .pipe(
-      switchMap((wallet: WalletInterface | null) => {
-        return wallet === null ? NEVER : combineLatest([wallet.watchAccount(), wallet.watchNetwork()]);
-      }),
-      switchMap(([account, network]: [string, EthNetwork]) => {
-        //console.log("account or network", account, network);
-        return contractAccessor.getUserSelfWalletBalance(account).pipe(
-          map((balances: CoinBalance[]) => {
-            return {
-              network: network,
-              address: account,
-              USDBalance:
-                balances && balances.length
-                  ? balances.reduce((total, { coin, balance }) => {
-                      // @ts-ignore
-                      total[coin] = Number(toEthers(balance, 4, coin));
-                      return total;
-                    }, {})
-                  : {},
-            };
-          })
-        );
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = walletManager.watchWalletInstance().pipe(
+    switchMap((wallet: WalletInterface | null) => {
+      return wallet === null ? NEVER : combineLatest([wallet.watchAccount(), wallet.watchNetwork()]);
+    }),
+    switchMap(([account, network]: [string, EthNetwork]) => {
+      //console.log("account or network", account, network);
+      return contractAccessor.getUserSelfWalletBalance(account).pipe(
+        map((balances: CoinBalance[]) => {
+          return {
+            network: network,
+            address: account,
+            USDBalance:
+              balances && balances.length
+                ? balances.reduce((total, { coin, balance }) => {
+                    // @ts-ignore
+                    total[coin] = Number(toEthers(balance, 4, coin));
+                    return total;
+                  }, {})
+                : {},
+          };
+        })
+      );
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 /**
@@ -107,33 +101,31 @@ export const getNetworkAndAccount = async (old?: {
   network: EthNetwork;
   account: string;
 }): Promise<{ network: EthNetwork; account: string }> => {
-  return walletManager
-    .watchWalletInstance()
-    .pipe(
-      filter(wallet => wallet !== null),
-      map(wallet => wallet as WalletInterface),
-      switchMap((wallet: WalletInterface) => {
-        const net$ = wallet.watchNetwork();
-        const acc$ = wallet.watchAccount();
-        return combineLatest([net$, acc$]).pipe(
-          map(([network, account]: [EthNetwork, string]) => {
-            return {
-              network,
-              account,
-            };
-          })
-        );
-      }),
-      filter(newInfo => {
-        if (old) {
-          return old.network !== newInfo.network || old.account !== newInfo.account;
-        } else {
-          return true;
-        }
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = walletManager.watchWalletInstance().pipe(
+    filter(wallet => wallet !== null),
+    map(wallet => wallet as WalletInterface),
+    switchMap((wallet: WalletInterface) => {
+      const net$ = wallet.watchNetwork();
+      const acc$ = wallet.watchAccount();
+      return combineLatest([net$, acc$]).pipe(
+        map(([network, account]: [EthNetwork, string]) => {
+          return {
+            network,
+            account,
+          };
+        })
+      );
+    }),
+    filter(newInfo => {
+      if (old) {
+        return old.network !== newInfo.network || old.account !== newInfo.account;
+      } else {
+        return true;
+      }
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 /**
@@ -141,15 +133,13 @@ export const getNetworkAndAccount = async (old?: {
  * @param id - chain id
  */
 export const switchNetwork = async (id: EthNetwork): Promise<boolean> => {
-  return walletManager
-    .watchWalletInstance()
-    .pipe(
-      switchMap(wallet => {
-        return wallet === null ? of(false) : wallet.switchNetwork(id);
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = walletManager.watchWalletInstance().pipe(
+    switchMap(wallet => {
+      return wallet === null ? of(false) : wallet.switchNetwork(id);
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 // 获取此刻用户账户地址

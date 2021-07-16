@@ -1,6 +1,6 @@
 import CryptoJS from 'crypto-js';
 import { loginUserAccount } from './account';
-import { from, zip } from 'rxjs';
+import { firstValueFrom, from, zip } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { contractAccessor } from '../wallet/chain-access';
 import { toEthers } from '../util/ethers';
@@ -47,99 +47,94 @@ export const getSparkData = async (): Promise<IBrokerSpark> => {
 };
 
 export const getMyReferalInfo = async (): Promise<IBrokerReferal> => {
-  return from(loginUserAccount())
-    .pipe(
-      switchMap(account => {
-        return contractAccessor.getBrokerInfo(account);
-      }),
-      map(rs => {
-        const total = rs.claim
-          .map(one => Number(toEthers(one.balance, 4, one.coin)))
-          .reduce((acc, cur) => acc + cur, 0);
-        const refer = rs.refer.toNumber();
-        const rank: number = rs.rank.toNumber();
-        const level = confirmLevel(rank);
+  const res = from(loginUserAccount()).pipe(
+    switchMap(account => {
+      return contractAccessor.getBrokerInfo(account);
+    }),
+    map(rs => {
+      const total = rs.claim.map(one => Number(toEthers(one.balance, 4, one.coin))).reduce((acc, cur) => acc + cur, 0);
+      const refer = rs.refer.toNumber();
+      const rank: number = rs.rank.toNumber();
+      const level = confirmLevel(rank);
 
-        const rankStr: string = rank === 0 || rank > 100 ? '100+' : rank.toString();
+      const rankStr: string = rank === 0 || rank > 100 ? '100+' : rank.toString();
 
-        return {
-          bonus: total,
-          referals: refer,
-          level,
-          ranking: rankStr,
-        };
-      }),
-      take(1)
-    )
-    .toPromise();
+      return {
+        bonus: total,
+        referals: refer,
+        level,
+        ranking: rankStr,
+      };
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 export const claimReferalInfo = async (): Promise<boolean> => {
   return withLoading(
-    from(loginUserAccount())
-      .pipe(
+    firstValueFrom(
+      from(loginUserAccount()).pipe(
         switchMap(account => {
           return contractAccessor.doBrokerClaim();
         }),
         take(1)
       )
-      .toPromise()
+    )
   );
 };
 
 // 获取broker活动累计奖励信息 new 4.18
 export const getBrokerCampaignRewardData = async (): Promise<ICoinItem[]> => {
-  return from(loginUserAccount())
-    .pipe(
-      switchMap(account => {
-        return contractAccessor.getBrokerMonthlyAwardsInfo(account);
-      }),
-      map((balances: CoinBalance[]) => {
-        return balances.map(one => {
-          return {
-            coin: one.coin,
-            amount: Number(toEthers(one.balance, 2, one.coin)),
-          } as ICoinItem;
-        });
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = from(loginUserAccount()).pipe(
+    switchMap(account => {
+      return contractAccessor.getBrokerMonthlyAwardsInfo(account);
+    }),
+    map((balances: CoinBalance[]) => {
+      return balances.map(one => {
+        return {
+          coin: one.coin,
+          amount: Number(toEthers(one.balance, 2, one.coin)),
+        } as ICoinItem;
+      });
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 // 获取Broker活动当月奖金池信息
 export const getBrokerCampaignPool = async (): Promise<{ nextDistribution: string; data: ICoinItem[] }> => {
-  return from(loginUserAccount())
-    .pipe(
-      switchMap(account => {
-        const total$ = contractAccessor.getBrokerMonthlyRewardPool();
-        const rank$ = contractAccessor.getBrokerInfo(account).pipe(map(rs => rs.rank));
+  const res = from(loginUserAccount()).pipe(
+    switchMap(account => {
+      const total$ = contractAccessor.getBrokerMonthlyRewardPool();
+      const rank$ = contractAccessor.getBrokerInfo(account).pipe(map(rs => rs.rank));
 
-        return zip(total$, rank$);
-      }),
-      switchMap(([total, rank]) => {
-        const data = total.map(balance => {
-          const selfReward: BigNumber = confirmLevelReward(balance.balance, confirmLevel(rank.toNumber()));
+      return zip(total$, rank$);
+    }),
+    switchMap(([total, rank]) => {
+      const data = total.map(balance => {
+        const selfReward: BigNumber = confirmLevelReward(balance.balance, confirmLevel(rank.toNumber()));
+        return {
+          coin: balance.coin,
+          amount: Number(toEthers(selfReward, 2, balance.coin)),
+          total: Number(toEthers(balance.balance, 2, balance.coin)),
+        } as ICoinItem;
+      });
+
+      return contractAccessor.getBrokerMonthlyStartTime().pipe(
+        map(timestamp => {
+          const nextDate = new Date(timestamp + 30 * 24 * 3600 * 1000);
           return {
-            coin: balance.coin,
-            amount: Number(toEthers(selfReward, 2, balance.coin)),
-            total: Number(toEthers(balance.balance, 2, balance.coin)),
-          } as ICoinItem;
-        });
-
-        return contractAccessor.getBrokerMonthlyStartTime().pipe(
-          map(timestamp => {
-            const nextDate = new Date(timestamp + 30 * 24 * 3600 * 1000);
-            return {
-              data,
-              nextDistribution: nextDate.getFullYear() + '-' + (nextDate.getMonth() + 1) + '-' + nextDate.getDate(),
-            };
-          })
-        );
-      }),
-      take(1)
-    )
-    .toPromise();
+            data,
+            nextDistribution: nextDate.getFullYear() + '-' + (nextDate.getMonth() + 1) + '-' + nextDate.getDate(),
+          };
+        })
+      );
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 export const getBrokerCampaignRewardsPool = async (): Promise<IBrokerCampaignRecord[]> => {
@@ -159,21 +154,20 @@ export const getBrokerCampaignRewardsPool = async (): Promise<IBrokerCampaignRec
 
 // 获取当前活动周期的开始时间 new 4.18
 export const getBrokerCampaignCurCycleStartTime = async (): Promise<number> => {
-  return contractAccessor.getBrokerMonthlyStartTime().pipe(take(1)).toPromise();
+  return firstValueFrom(contractAccessor.getBrokerMonthlyStartTime().pipe(take(1)));
 };
 
 export const getBrokerCommissionData = async (): Promise<ICoinValue[]> => {
-  return from(loginUserAccount())
-    .pipe(
-      switchMap(account => {
-        return contractAccessor.getBrokerAllCommission(account);
-      }),
-      map((rs: CoinBalance[]) => {
-        return rs.map(one => ({ coin: one.coin, value: Number(toEthers(one.balance, 4, one.coin)) } as ICoinValue));
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = from(loginUserAccount()).pipe(
+    switchMap(account => {
+      return contractAccessor.getBrokerAllCommission(account);
+    }),
+    map((rs: CoinBalance[]) => {
+      return rs.map(one => ({ coin: one.coin, value: Number(toEthers(one.balance, 4, one.coin)) } as ICoinValue));
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 export const getBrokerCommissionRecords = async (): Promise<IBrokerCommissionRecord[]> => {

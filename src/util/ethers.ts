@@ -1,17 +1,21 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import * as _ from 'lodash';
 import { MyTokenSymbol } from '../constant';
+import { TOKEN_SYMBOL } from '../constant/tokens';
 
 export const ETH_WEI = 18;
 export const USD_WEI = 6;
 
 export function toEthers(
-  num: BigNumber,
+  num: BigNumber | null | undefined,
   decimal: number,
-  coin: number | ISLD | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'
+  coin: number | symbol | ISLD | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'
 ): string {
+  if (num === null) {
+    return '0';
+  }
+
   if (num === undefined) {
-    console.warn('number value is undefined.');
     return '0';
   }
 
@@ -32,8 +36,12 @@ export function toEthers(
   return _.trimEnd(_.trimEnd(rs, '0'), '.');
 }
 
-export function toEtherNumber(num: BigNumber, decimal: number, coin: ISLD | IUSDCoins | IReUSDCoins | IFromCoins) {
-  return Number(toEthers(num, decimal, coin));
+export function toEtherNumber(
+  num: BigNumber | null | undefined,
+  decimal: number,
+  coin: symbol | ISLD | IUSDCoins | IReUSDCoins | IFromCoins
+): string {
+  return Number(toEthers(num, decimal, coin)).toFixed(decimal);
 }
 
 export function toDisplayNum(coinNum: CoinNumber, decimal: number): number {
@@ -52,7 +60,10 @@ export function keepDecimal(num: number, decimal: number): string {
   }
 }
 
-export function tokenBigNumber(amount: number, coin: ISLD | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'): BigNumber {
+export function tokenBigNumber(
+  amount: number,
+  coin: symbol | ISLD | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'
+): BigNumber {
   const wei = getTokenWei(coin);
 
   if (amount % 1) {
@@ -93,6 +104,14 @@ export function fromExchangePair(exchange: ExchangeCoinPair): IExchangeStr {
   return (exchange.ETH + exchange.USD) as IExchangeStr;
 }
 
-export function getTokenWei(coin: ISLD | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'): number {
-  return ['ETH', MyTokenSymbol, 'BTC', 'DAI', 'reDAI'].indexOf(coin) >= 0 ? ETH_WEI : USD_WEI;
+export function getTokenWei(coin: symbol | ISLD | IUSDCoins | IReUSDCoins | IFromCoins = 'ETH'): number {
+  if (typeof coin === 'symbol') {
+    return [TOKEN_SYMBOL.ETH, TOKEN_SYMBOL.SLD, TOKEN_SYMBOL.BTC, TOKEN_SYMBOL.DAI, TOKEN_SYMBOL.reDAI].indexOf(coin) >=
+      0
+      ? ETH_WEI
+      : USD_WEI;
+  } else {
+    const coinStr: Exclude<typeof coin, symbol> = coin;
+    return ['ETH', MyTokenSymbol, 'BTC', 'DAI', 'reDAI'].indexOf(coinStr) >= 0 ? ETH_WEI : USD_WEI;
+  }
 }

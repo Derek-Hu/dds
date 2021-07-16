@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import { Button, Col, Icon, Menu, Row } from 'antd';
 import styles from './style.module.less';
 import { Link as LLink, Route } from 'react-router-dom';
@@ -7,49 +6,40 @@ import ConnectWallet from '../connect-wallet/index';
 import Logo from '~/assets/imgs/logo.png';
 import LogoMobile from '~/assets/imgs/logo-mobile.png';
 import LogoWhite from '~/assets/imgs/logo-white.png';
-import { ddsBasePath, DefaultKeNetwork, homeBasePath } from '../../constant/index';
-import { isNumberLike } from '../../util/math';
+import { ddsBasePath, DefaultKeNetwork, homeBasePath, MyTokenSymbol } from '../../constant/index';
 import { formatMessage } from 'locale/i18n';
 import { shortAddress } from '../../util/index';
 import { RouteKey } from '../../constant/routes';
 import { TokenFaucet } from './token-faucet';
 import { AirDropEntry } from '../activities/air-drop/air-drop-entry';
+import { toEthers } from '../../util/ethers';
+import { BigNumber } from 'ethers';
+import { BaseStateComponent } from '../../state-manager/base-state-component';
+import { walletState } from '../../state-manager/wallet-state';
+import { S } from '../../state-manager/contract-state-parser';
 
 const { SubMenu } = Menu;
 
-const rightMenus = {
-  Trade: '/trade',
-  Pool: '/pool',
-  SLD: {
-    Mining: '/mining',
-    Swap: '/swap-burn',
-  },
-  Broker: '/broker',
-  Analytics: '/home',
-  Support: {
-    Whitepaper: '/Whitepaper',
-    FAQ: '/faq',
-    'Developer Docs': '/docs',
-    API: '/api',
-    Github: '/github',
-    Twitter: '/Twitter',
-    Reddit: '/Reddit',
-    // 'DDerivatives DAO': '/dao',
-    Vote: '/vote',
-  },
-  Audits: '/home',
-  'Bug Bounty': '/home',
-  Liquidator: '/home',
-  Blog: '/home',
-  'Brand Assets': '/home',
-  'Terms of Service': '/terms',
+type IProps = { darkMode?: boolean };
+type IState = {
+  current: string;
+  drawerOpen: boolean;
+  selectedNetwork: INetworkKey;
+  userAddress?: string;
+  sldBalance?: BigNumber;
+  daiBalance?: BigNumber;
+  isConnected?: boolean;
 };
 
-export default class Header extends Component<{ darkMode?: boolean }, any> {
+export default class Header extends BaseStateComponent<IProps, IState> {
   state = {
     current: 'mail',
     drawerOpen: false,
     selectedNetwork: (this.context as ISiteContextProps).currentNetwork || DefaultKeNetwork,
+    sldBalance: BigNumber.from(0),
+    daiBalance: BigNumber.from(0),
+    userAddress: '0x0000000000000000000000000000000000000000',
+    isConnected: true,
   };
 
   componentWillReceiveProps(nextProps: any) {
@@ -60,6 +50,17 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
     if (key) {
       this.setState({ current: key });
     }
+  }
+
+  componentDidMount() {
+    this.registerState('sldBalance', S.User.WalletBalance.SLD);
+    this.registerState('daiBalance', S.User.WalletBalance.DAI);
+    this.watch('userAddress', walletState.USER_ADDR);
+    this.watch('isConnected', walletState.IS_CONNECTED);
+  }
+
+  componentWillUnmount() {
+    this.destroyState();
   }
 
   findMenuKey(path: string): RouteKey | null {
@@ -101,6 +102,7 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
       drawerOpen: false,
     });
   };
+
   renderRightMenus = (config: any) => {
     return Object.keys(config).map(linkName => {
       const url = config[linkName];
@@ -253,21 +255,15 @@ export default class Header extends Component<{ darkMode?: boolean }, any> {
                       <div style={{ marginRight: '20px' }}>
                         {network !== null ? <TokenFaucet network={network} /> : null}
                       </div>
+
                       <ConnectWallet>
-                        {account ? (
+                        {this.state.isConnected ? (
                           <div className={styles.accountInfo}>
-                            {account.USDBalance
-                              ? Object.keys(account.USDBalance)
-                                  .filter(coin => coin !== 'USDT' && coin !== 'USDC')
-                                  .map(coin => (
-                                    <span key={coin}>
-                                      {isNumberLike(account.USDBalance[coin]) ? account.USDBalance[coin].toFixed(1) : 0}
-                                      &nbsp;
-                                      {coin}
-                                    </span>
-                                  ))
-                              : null}
-                            <span>{shortAddress(account.address)}</span>
+                            <span key={'SLD'}>
+                              {toEthers(this.state.sldBalance, 1, MyTokenSymbol)} {MyTokenSymbol}
+                            </span>
+                            <span>{toEthers(this.state.daiBalance, 1, 'DAI')} DAI</span>
+                            <span>{shortAddress(this.state.userAddress)}</span>
                           </div>
                         ) : (
                           <Button className={styles.connectBtn}>{formatMessage({ id: 'connect-wallet' })}</Button>

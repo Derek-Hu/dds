@@ -1,95 +1,124 @@
-import { Button, Row, Col, message } from 'antd';
+import { Row, Col, message, Button } from 'antd';
 import ModalRender from '../../modal-render/index';
 import styles from './style.module.less';
 import SiteContext from '../../../layouts/SiteContext';
-import { Component } from 'react';
-import { isGreaterZero, isNumberLike } from '../../../util/math';
 import InputNumber from '../../input/index';
 import { formatMessage } from 'locale/i18n';
+import { PageTradingPair } from '../../../state-manager/page-state-types';
+import { P } from '../../../state-manager/page-state-parser';
+import { BaseStateComponent } from '../../../state-manager/base-state-component';
+import { BigNumber } from 'ethers';
+import { S } from '../../../state-manager/contract-state-parser';
+import { toEtherNumber } from '../../../util/ethers';
+import NormalButton from '../../common/buttons/normal-btn';
 
 const title = formatMessage({ id: 'funding-fee-deposit' });
 
 interface IProps {
-  visible: boolean;
-  onCancel: () => any;
-  max?: number;
-  coin: string;
-  onConfirm: (depositAmount?: number) => any;
+  onConfirm: (depositAmount: number) => any;
 }
+
 interface IState {
   depositAmount?: number;
+  visible: boolean;
+  tradePair: PageTradingPair;
+  maxDeposit: BigNumber | null;
 }
-export default class Balance extends Component<IProps, IState> {
-  state: IState = {};
 
-  onAmountChange = (depositAmount: number) => {
-    this.setState({
-      depositAmount,
-    });
+export default class Deposit extends BaseStateComponent<IProps, IState> {
+  state: IState = {
+    visible: false,
+    tradePair: P.Trade.Pair.default(),
+    maxDeposit: BigNumber.from(0),
   };
 
+  componentDidMount() {
+    this.registerState('tradePair', P.Trade.Pair);
+    this.registerState('maxDeposit', S.User.DepositWalletBalance);
+  }
+
+  componentWillUnmount() {
+    this.destroyState();
+  }
+
+  coinNum(num: BigNumber | null | undefined): string {
+    return toEtherNumber(num, 2, this.state.tradePair.quote);
+  }
+
+  onCancel() {
+    this.setState({ visible: false });
+  }
+
+  onChangeAmount(depositAmount: number) {
+    this.setState({ depositAmount });
+  }
+
+  onDeposit() {
+    if (this.state.depositAmount && this.state.depositAmount <= 0) {
+      return;
+    }
+
+    if (Number(this.coinNum(this.state.maxDeposit)) < (this.state.depositAmount as number)) {
+      message.warning(formatMessage({ id: 'more-balance-required' }));
+      return;
+    }
+
+    this.onCancel();
+    this.props.onConfirm(this.state.depositAmount as number);
+  }
+
   render() {
-    const { visible, onCancel, onConfirm, max, coin } = this.props;
-    const { depositAmount } = this.state;
     return (
       <SiteContext.Consumer>
         {({ isMobile }) => (
-          <ModalRender
-            visible={visible}
-            onCancel={onCancel}
-            footer={null}
-            height={340}
-            title={title}
-            className={styles.commonModal}
-          >
-            <div>
-              {/* <h4>{title}</h4> */}
-              <Row gutter={[16, 16]}>
-                <Col xs={24} sm={24} md={24} lg={24}>
-                  <InputNumber
-                    className={styles.orderInput}
-                    onChange={this.onAmountChange}
-                    placeholder={max ? `${formatMessage({ id: 'max' })} ${max}` : '0.00'}
-                    max={max}
-                    showTag={true}
-                    skip={true}
-                    // tagClassName={styles.utilMax}
-                    suffix={coin}
-                  />
-                </Col>
-              </Row>
-              {/* <Row gutter={[16, 16]} className={styles.utilMax} type="flex" justify="space-between">
-              <Col span={12}>
-                <Tag color="#1346FF">Max</Tag>
-              </Col>
-              <Col span={12} style={{ textAlign: 'right' }}>
-                323.34 ETH
-              </Col>
-            </Row> */}
-              <Row className={styles.actionBtns} gutter={[16, 16]}>
-                <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                  <Button onClick={onCancel}>{formatMessage({ id: 'cancel' })}</Button>
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
-                  <Button
-                    onClick={() => {
-                      if (!isGreaterZero(depositAmount)) {
-                        return;
+          <>
+            <Button type="link" onClick={() => this.setState({ visible: true })}>
+              {formatMessage({ id: 'deposit' })}
+            </Button>
+            <ModalRender
+              visible={this.state.visible}
+              onCancel={this.onCancel.bind(this)}
+              footer={null}
+              height={340}
+              title={title}
+              className={styles.commonModal}
+            >
+              <div>
+                {/* deposit number */}
+                <Row gutter={[16, 16]}>
+                  <Col xs={24} sm={24} md={24} lg={24}>
+                    <InputNumber
+                      className={styles.orderInput}
+                      onChange={this.onChangeAmount.bind(this)}
+                      placeholder={
+                        this.state.maxDeposit !== null
+                          ? `${formatMessage({ id: 'max' })} ${this.coinNum(this.state.maxDeposit)}`
+                          : '0.00'
                       }
-                      if (isNumberLike(max) && depositAmount! > max!) {
-                        message.warning(formatMessage({ id: 'more-balance-required' }));
-                        return;
-                      }
-                      onConfirm(depositAmount);
-                    }}
-                    type="primary"
-                  >
-                    {formatMessage({ id: 'deposit' })}
-                  </Button>
-                </Col>
-              </Row>
-            </div>
-          </ModalRender>
+                      max={Number(this.coinNum(this.state.maxDeposit))}
+                      showTag={true}
+                      skip={true}
+                      suffix={this.state.tradePair.quote.description}
+                    />
+                  </Col>
+                </Row>
+
+                <Row className={styles.actionBtns} gutter={[16, 16]}>
+                  <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
+                    <NormalButton type={'default'} onClick={this.onCancel.bind(this)} inModal={true}>
+                      {formatMessage({ id: 'cancel' })}
+                    </NormalButton>
+                  </Col>
+
+                  <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
+                    <NormalButton type={'primary'} onClick={this.onDeposit.bind(this)} inModal={true}>
+                      {formatMessage({ id: 'deposit' })}
+                    </NormalButton>
+                  </Col>
+                </Row>
+              </div>
+            </ModalRender>
+          </>
         )}
       </SiteContext.Consumer>
     );

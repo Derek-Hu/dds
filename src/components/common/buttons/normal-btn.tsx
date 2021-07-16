@@ -12,6 +12,7 @@ type IProps = {
   onClick?: React.MouseEventHandler;
   inModal?: boolean;
   marginTop?: string;
+  bgColor?: string;
 };
 
 export default class NormalButton extends Component<IProps, IState> {
@@ -26,7 +27,11 @@ export default class NormalButton extends Component<IProps, IState> {
         type={this.props.type}
         loading={this.props.loading}
         className={classNames.join(' ')}
-        style={{ marginTop: this.props.marginTop }}
+        style={{
+          marginTop: this.props.marginTop,
+          backgroundColor: this.props.bgColor,
+          borderColor: this.props.bgColor,
+        }}
         disabled={this.props.disabled}
         onClick={this.props.onClick}
       >

@@ -1,20 +1,18 @@
 import { walletManager } from '../wallet/wallet-manager';
 import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
-import { AsyncSubject, from, Observable, of, zip } from 'rxjs';
+import { AsyncSubject, firstValueFrom, from, Observable, of, zip } from 'rxjs';
 import { contractAccessor } from '../wallet/chain-access';
 import { ConfirmInfo, UserAccountInfo } from '../wallet/contract-interface';
 import { BigNumber } from 'ethers';
 import { ETH_WEI, toEthers, toExchangePair } from '../util/ethers';
 import * as request from 'superagent';
 import { loadingObs, withLoading } from './utils';
-import { getCurNetwork, getCurUserAccount, getNetworkAndAccount, loginUserAccount } from './account';
+import { getNetworkAndAccount, loginUserAccount } from './account';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
 import { CentralHost, CentralPath, CentralPort, CentralProto } from '../constant/address';
 import { LocalStorageKeyPrefix } from '../constant';
-import { getLocalStorageKey } from '../util/string';
 import { readTradeSetting } from './local-storage.service';
-import { EthNetwork } from '../constant/network';
 
 /**
  * Trade Page
@@ -33,41 +31,39 @@ export const getFundingBalanceInfo = async (coin: IUSDCoins): Promise<IBalanceIn
   //   balance: 10000,
   //   locked: 0,
   // })
-  return walletManager
-    .watchWalletInstance()
-    .pipe(
-      filter(wallet => wallet !== null),
-      switchMap((wallet: WalletInterface | null) => {
-        return wallet === null ? of(null) : wallet.watchAccount();
-      }),
-      filter(userAddress => userAddress !== null),
-      switchMap((userAddress: string | null) => {
-        return userAddress === null ? of(null) : contractAccessor.watchUserAccount(userAddress, coin);
-      }),
-      filter(account => account !== null),
-      map(
-        (accountInfo: UserAccountInfo | null): IBalanceInfo => {
-          if (accountInfo === null) {
-            return {
-              balance: -1,
-              locked: 0,
-            };
-          } else {
-            const deposit: BigNumber = accountInfo.deposit;
-            const availed: BigNumber = accountInfo.available;
-            const locked: BigNumber = deposit.sub(availed);
+  const res = walletManager.watchWalletInstance().pipe(
+    filter(wallet => wallet !== null),
+    switchMap((wallet: WalletInterface | null) => {
+      return wallet === null ? of(null) : wallet.watchAccount();
+    }),
+    filter(userAddress => userAddress !== null),
+    switchMap((userAddress: string | null) => {
+      return userAddress === null ? of(null) : contractAccessor.watchUserAccount(userAddress, coin);
+    }),
+    filter(account => account !== null),
+    map(
+      (accountInfo: UserAccountInfo | null): IBalanceInfo => {
+        if (accountInfo === null) {
+          return {
+            balance: -1,
+            locked: 0,
+          };
+        } else {
+          const deposit: BigNumber = accountInfo.deposit;
+          const availed: BigNumber = accountInfo.available;
+          const locked: BigNumber = deposit.sub(availed);
 
-            return {
-              balance: Number(toEthers(deposit, 4)),
-              locked: Number(toEthers(locked, 4)),
-              available: Number(toEthers(availed, 4)),
-            } as IBalanceInfo;
-          }
+          return {
+            balance: Number(toEthers(deposit, 4)),
+            locked: Number(toEthers(locked, 4)),
+            available: Number(toEthers(availed, 4)),
+          } as IBalanceInfo;
         }
-      ),
-      take(1)
-    )
-    .toPromise();
+      }
+    ),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 export const getMaxOpenAmount = async (
@@ -78,26 +74,22 @@ export const getMaxOpenAmount = async (
   const exchange: ExchangeCoinPair = toExchangePair(exchangeStr);
   const amount: number = availedAmount === undefined ? 0 : availedAmount;
 
-  return contractAccessor
-    .getMaxOpenTradeAmount(exchange, type, amount)
-    .pipe(
-      map((num: BigNumber) => Number(toEthers(num, 2))),
-      take(1)
-    )
-    .toPromise();
+  const res = contractAccessor.getMaxOpenTradeAmount(exchange, type, amount).pipe(
+    map((num: BigNumber) => Number(toEthers(num, 2))),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 // 订单确认弹框中funding lock的值
 export const getFundingLocked = async (coin: IUSDCoins, ethAmount: number): Promise<number> => {
-  return contractAccessor
-    .getFundingLockedAmount(coin, 'ETHDAI', ethAmount)
-    .pipe(
-      map((locked: BigNumber) => {
-        return Number(toEthers(locked, 4));
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = contractAccessor.getFundingLockedAmount(coin, 'ETHDAI', ethAmount).pipe(
+    map((locked: BigNumber) => {
+      return Number(toEthers(locked, 4));
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 /**
@@ -148,53 +140,52 @@ export const getTradeOrders = async (page: number, pageSize = 5, isActive = true
   //   ]);
   // }
 
-  return from(getNetworkAndAccount())
-    .pipe(
-      switchMap(({ account, network }) => {
-        const baseHost: string =
-          CentralProto === 'https:'
-            ? CentralHost + '/' + CentralPath[network]
-            : CentralHost + ':' + CentralPort[network] + '/' + CentralPath[network];
-        const url: string = baseHost + '/transactions/getTransactionsInfo';
-        const pageIndex = page - 1;
-        const state = isActive ? 1 : 2; // 1:未平仓，2：已平仓
-        return from(
-          request.post(url).send({ page: pageIndex, offset: pageSize, state, address: account, name: 'taker' })
-        ).pipe(
-          map(res => {
-            return { res, network };
+  const res = from(getNetworkAndAccount()).pipe(
+    switchMap(({ account, network }) => {
+      const baseHost: string =
+        CentralProto === 'https:'
+          ? CentralHost + '/' + CentralPath[network]
+          : CentralHost + ':' + CentralPort[network] + '/' + CentralPath[network];
+      const url: string = baseHost + '/transactions/getTransactionsInfo';
+      const pageIndex = page - 1;
+      const state = isActive ? 1 : 2; // 1:未平仓，2：已平仓
+      return from(
+        request.post(url).send({ page: pageIndex, offset: pageSize, state, address: account, name: 'taker' })
+      ).pipe(
+        map(res => {
+          return { res, network };
+        })
+      );
+    }),
+    switchMap(({ res, network }) => {
+      if (res.body.code === 200 && res.body.msg.length > 0) {
+        return contractAccessor.getPriceByETHDAI('DAI').pipe(
+          map((curPrice: BigNumber) => {
+            return {
+              value: curPrice,
+              precision: ETH_WEI,
+            } as CoinNumber;
+          }),
+          map((curPrice: CoinNumber) => {
+            const orders: IOrderInfoData[] = res.body.msg;
+            return orders.map(
+              (o: IOrderInfoData): ITradeRecord => {
+                return new OrderInfoObject(o, network).getTakerOrder(curPrice);
+              }
+            );
           })
         );
-      }),
-      switchMap(({ res, network }) => {
-        if (res.body.code === 200 && res.body.msg.length > 0) {
-          return contractAccessor.getPriceByETHDAI('DAI').pipe(
-            map((curPrice: BigNumber) => {
-              return {
-                value: curPrice,
-                precision: ETH_WEI,
-              } as CoinNumber;
-            }),
-            map((curPrice: CoinNumber) => {
-              const orders: IOrderInfoData[] = res.body.msg;
-              return orders.map(
-                (o: IOrderInfoData): ITradeRecord => {
-                  return new OrderInfoObject(o, network).getTakerOrder(curPrice);
-                }
-              );
-            })
-          );
-        } else {
-          return of([]);
-        }
-      }),
-      catchError(err => {
-        console.warn('error', err);
+      } else {
         return of([]);
-      }),
-      take(1)
-    )
-    .toPromise();
+      }
+    }),
+    catchError(err => {
+      console.warn('error', err);
+      return of([]);
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 export const getTradeLiquidityPoolInfo = async (coin: IUSDCoins): Promise<ITradePoolInfo> => {
@@ -211,73 +202,58 @@ export const getTradeLiquidityPoolInfo = async (coin: IUSDCoins): Promise<ITrade
     });
   }
   const obs = [contractAccessor.getPubPoolInfo(coin), contractAccessor.getPrivatePoolInfo(coin)];
-  return zip(...obs)
-    .pipe(
-      map((infoList: CoinAvailableInfo[]) => {
-        return {
-          public: infoList[0],
-          private: infoList[1],
-        };
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = zip(...obs).pipe(
+    map((infoList: CoinAvailableInfo[]) => {
+      return {
+        public: infoList[0],
+        private: infoList[1],
+      };
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 export const deposit = async (amount: IRecord): Promise<boolean> => {
   let userAccount: string | null = null;
 
-  return from(loginUserAccount())
-    .pipe(
-      switchMap((account: string) => {
-        userAccount = account;
-        return contractAccessor.needApproveUSDFunding(amount.amount, account, amount.coin);
-      }),
-      switchMap((needApprove: boolean) => {
-        if (needApprove) {
-          const doApprove: Observable<boolean> = contractAccessor.approveUSDFunding(amount.coin);
-          return loadingObs(doApprove, 'Approve Failed!', 'Approving...', true);
-        } else {
-          return of(true);
-        }
-      }),
-      switchMap((approved: boolean) => {
-        if (userAccount && approved) {
-          const depObs: Observable<boolean> = contractAccessor.depositToken(userAccount, amount.amount, amount.coin);
-          return loadingObs(depObs, 'Deposit Failed!', 'Depositing');
-        } else {
-          return of(false);
-        }
-      }),
-      take(1)
-    )
-    .toPromise();
-
-  // const result: Promise<boolean> = from(loginUserAccount())
-  //   .pipe(
-  //     switchMap(account => {
-  //       return contractAccessor.depositToken(account, amount.amount, amount.coin);
-  //     }),
-  //     take(1)
-  //   )
-  //   .toPromise();
-  //
-  // return withLoading(result);
+  const res = from(loginUserAccount()).pipe(
+    switchMap((account: string) => {
+      userAccount = account;
+      return contractAccessor.needApproveUSDFunding(amount.amount, account, amount.coin);
+    }),
+    switchMap((needApprove: boolean) => {
+      if (needApprove) {
+        const doApprove: Observable<boolean> = contractAccessor.approveUSDFunding(amount.coin);
+        return loadingObs(doApprove, 'Approve Failed!', 'Approving...', true);
+      } else {
+        return of(true);
+      }
+    }),
+    switchMap((approved: boolean) => {
+      if (userAccount && approved) {
+        const depObs: Observable<boolean> = contractAccessor.depositToken(userAccount, amount.amount, amount.coin);
+        return loadingObs(depObs, 'Deposit Failed!', 'Depositing');
+      } else {
+        return of(false);
+      }
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 export const withdraw = async (amount: IRecord): Promise<boolean> => {
-  return withLoading(contractAccessor.withdrawToken(amount.amount, amount.coin).pipe(take(1)).toPromise());
+  return withLoading(firstValueFrom(contractAccessor.withdrawToken(amount.amount, amount.coin).pipe(take(1))));
 };
 
 export const getCurPrice = async (coin: IUSDCoins): Promise<number> => {
   // return returnVal(100);
-  return contractAccessor
-    .getPriceByETHDAI(coin)
-    .pipe(
-      map(num => Number(toEthers(num, 4))),
-      take(1)
-    )
-    .toPromise();
+  const res = contractAccessor.getPriceByETHDAI(coin).pipe(
+    map(num => Number(toEthers(num, 4))),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 /**
@@ -295,13 +271,13 @@ export const openOrder = async (
   const res: Promise<string> = createOrder(coin, tradeType, amount, curPrice);
 
   const toBoolean = (a: Promise<string>) =>
-    from(a)
-      .pipe(
+    firstValueFrom(
+      from(a).pipe(
         map(r => {
           return r.length > 0;
         })
       )
-      .toPromise();
+    );
 
   return withLoading(toBoolean(res));
 };
@@ -331,10 +307,9 @@ export const createOrder = async (
     timeout = setting.deadline * 60;
   }
 
-  const res: Promise<string> = contractAccessor
-    .createContract(coin, tradeType, amount, curPrice, inviteAddress, slider, timeout)
-    .pipe(take(1))
-    .toPromise();
+  const res: Promise<string> = firstValueFrom(
+    contractAccessor.createContract(coin, tradeType, amount, curPrice, inviteAddress, slider, timeout).pipe(take(1))
+  );
 
   return withLoading<string>(res, '');
 };
@@ -344,7 +319,7 @@ export const createOrder = async (
  * @param order - 订单对象，从返回的order列表中选取
  */
 export const closeOrder = async (order: ITradeRecord, closePrice: number): Promise<boolean> => {
-  return withLoading(contractAccessor.closeContract(order).pipe(take(1)).toPromise());
+  return withLoading(firstValueFrom(contractAccessor.closeContract(order).pipe(take(1))));
 };
 
 const NetworkChains: Partial<Record<IFromCoins, INetworkChain>> = {
@@ -380,7 +355,7 @@ export const getPriceGraphData = (
       rs.error(err);
     }
   });
-  return rs.toPromise();
+  return firstValueFrom(rs);
 };
 
 /**
@@ -394,19 +369,17 @@ export const confirmOrder = async (amount: number, coin: IUSDCoins, type: ITrade
   //   settlementFee: 1001,
   //   fundingFeeLocked: 0.2
   // });
-  return contractAccessor
-    .confirmContract('ETHDAI', amount, type)
-    .pipe(
-      map((info: ConfirmInfo) => {
-        return {
-          curPrice: Number(toEthers(info.currentPrice, 4, coin)),
-          settlementFee: Number(toEthers(info.exchgFee, 3, coin)),
-          fundingFeeLocked: Number(toEthers(info.openFee, 3, coin)),
-        };
-      }),
-      take(1)
-    )
-    .toPromise();
+  const res = contractAccessor.confirmContract('ETHDAI', amount, type).pipe(
+    map((info: ConfirmInfo) => {
+      return {
+        curPrice: Number(toEthers(info.currentPrice, 4, coin)),
+        settlementFee: Number(toEthers(info.exchgFee, 3, coin)),
+        fundingFeeLocked: Number(toEthers(info.openFee, 3, coin)),
+      };
+    }),
+    take(1)
+  );
+  return firstValueFrom(res);
 };
 
 const getOrderStatusFun = (hash: string): Observable<IOrderPendingResult> => {
@@ -421,6 +394,9 @@ const getOrderStatusFun = (hash: string): Observable<IOrderPendingResult> => {
       return from(request.post(url).send({ txHash: hash })).pipe(
         map(res => {
           return 'pending' as IOrderPendingResult;
+        }),
+        catchError(err => {
+          return of('pending' as IOrderPendingResult);
         })
       );
     }),
@@ -432,7 +408,7 @@ const getOrderStatusFun = (hash: string): Observable<IOrderPendingResult> => {
  * 获取pending状态的变化
  */
 export const getOrderStatus = async (hash: string): Promise<IOrderPendingResult> => {
-  return getOrderStatusFun(hash).toPromise();
+  return firstValueFrom(getOrderStatusFun(hash));
 };
 
 /**

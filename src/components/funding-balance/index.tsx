@@ -1,42 +1,35 @@
-import { Row, Col, Radio, message, Icon, Button } from 'antd';
+import { Row, Col, Radio, Icon } from 'antd';
 import styles from './style.module.less';
-import DespositModal from './modals/deposit';
+import DepositModal from './modals/deposit';
 import WithdrawModal from './modals/withdraw';
 import OrderConfirm from './modals/order-confirm';
-import { Component } from 'react';
 import dayjs from 'dayjs';
 import SiteContext from '../../layouts/SiteContext';
-import {
-  getFundingBalanceInfo,
-  confirmOrder,
-  deposit,
-  withdraw,
-  getCurPrice,
-  createOrder,
-  getMaxOpenAmount,
-} from '../../services/trade.service';
-import { getMaxFromCoin } from './calculate';
-import { format, isGreaterZero, truncated, isNumberLike, divide } from '../../util/math';
+import { deposit, withdraw, createOrder } from '../../services/trade.service';
 import InputNumber from '../input/index';
 import Placeholder from '../placeholder/index';
 import { setPendingOrders } from '../../util/order-cache';
 import { formatMessage } from 'locale/i18n';
 import { Setting } from './dropdown/setting';
+import { TradeOrderFees, UserTradeAccountInfo } from '../../state-manager/contract-state-types';
+import { BaseStateComponent } from '../../state-manager/base-state-component';
+import { PageTradingPair, TradeDirection } from '../../state-manager/page-state-types';
+import { toEtherNumber } from '../../util/ethers';
+import { BigNumber } from 'ethers';
+import { P } from '../../state-manager/page-state-parser';
+import { S } from '../../state-manager/contract-state-parser';
 
 interface IState {
-  depositVisible: boolean;
-  withdrawVisible: boolean;
-  orderConfirmVisible: boolean;
-  tradeType: ITradeType;
-  balanceInfo?: IBalanceInfo;
-  openAmount: number | undefined;
-  maxNumber?: number;
-  available?: number;
-  curPrice?: number; // 从链上读取的price
-  loading: boolean;
-  feeQuery: boolean;
-  fees?: IOpenFee;
-  setFeeQuery: boolean;
+  fundingBalance: UserTradeAccountInfo | null;
+  fundingBalancePending: boolean;
+  curTradingPrice: BigNumber | null;
+  curTradingPricePending: boolean;
+  maxOpenAmount: BigNumber | null;
+  curOpenAmount: number;
+  openOrderFees: TradeOrderFees | null;
+  openOrderFeesPending: boolean;
+  tradingPair: PageTradingPair;
+  tradingDirection: TradeDirection;
 }
 
 interface IProps {
@@ -44,261 +37,186 @@ interface IProps {
   timestamp: any;
 }
 
-type TModalKeys = Pick<IState, 'withdrawVisible' | 'depositVisible' | 'orderConfirmVisible'>;
-
-export default class Balance extends Component<IProps, IState> {
-  state: IState = {
-    depositVisible: false,
-    withdrawVisible: false,
-    orderConfirmVisible: false,
-    openAmount: undefined,
-    tradeType: 'LONG',
-    available: undefined,
-    curPrice: 0,
-    setFeeQuery: false,
-    loading: false,
-    feeQuery: false,
-  };
-
+export default class Balance extends BaseStateComponent<IProps, IState> {
   static contextType = SiteContext;
 
-  componentDidMount = () => {
-    this.loadBalanceInfo();
+  state: IState = {
+    fundingBalance: null,
+    fundingBalancePending: false,
+    curTradingPrice: null,
+    curTradingPricePending: false,
+    maxOpenAmount: null,
+    curOpenAmount: P.Trade.Create.OpenAmount.get(),
+    openOrderFees: null,
+    openOrderFeesPending: false,
+    tradingPair: P.Trade.Pair.get(),
+    tradingDirection: P.Trade.Direction.get(),
   };
+
+  componentDidMount = () => {
+    this.registerState('tradingPair', P.Trade.Pair);
+    this.registerState('tradingDirection', P.Trade.Direction);
+    this.registerState('curOpenAmount', P.Trade.Create.OpenAmount);
+
+    this.registerState('fundingBalance', S.User.CurTradePairAccount);
+    this.registerStatePending('fundingBalancePending', S.User.CurTradePairAccount);
+    this.registerState('curTradingPrice', S.Trade.CurPairPrice);
+    this.registerStatePending('curTradingPricePending', S.Trade.CurPairPrice);
+    this.registerState('maxOpenAmount', S.Trade.Order.CurMaxOpenAmount);
+    this.registerState('openOrderFees', S.Trade.Order.CurOpenOrderFee);
+    this.registerStatePending('openOrderFeesPending', S.Trade.Order.CurOpenOrderFee);
+  };
+
+  componentWillUnmount() {
+    this.destroyState();
+  }
+
+  private baseCoinNum(num: BigNumber | null | undefined): string {
+    return toEtherNumber(num, 2, this.state.tradingPair.base);
+  }
+
+  private quoteCoinNum(num: BigNumber | null | undefined): string {
+    return toEtherNumber(num, 2, this.state.tradingPair.quote);
+  }
+
+  private feeNum(num: BigNumber | null | undefined): string {
+    return toEtherNumber(num, 3, this.state.tradingPair.quote);
+  }
 
   UNSAFE_componentWillReceiveProps(nextProps: IProps) {
     if (this.props.timestamp !== nextProps.timestamp) {
-      this.loadBalanceInfo();
+      this.refreshBalanceValue();
     }
   }
 
-  loadBalanceInfo = async (damon?: boolean) => {
-    const { coins } = this.props;
-    const { to } = coins;
-    try {
-      if (!damon) {
-        this.setState({ loading: true });
-      }
-      const balanceInfo = await getFundingBalanceInfo(to);
-      const curPrice = await getCurPrice(to);
-      const available = getMaxFromCoin(balanceInfo);
-      const maxNumber = await getMaxOpenAmount(
-        (coins.from + coins.to) as IExchangeStr,
-        available,
-        this.state.tradeType
-      );
-      this.setState({
-        balanceInfo,
-        available: truncated(available),
-        maxNumber,
-        curPrice,
-        loading: false,
+  refreshBalanceValue() {
+    this.tickState(
+      S.User.CurTradePairAccount,
+      S.User.WalletBalance.DAI,
+      S.User.WalletBalance.USDT,
+      S.User.WalletBalance.USDC,
+      S.User.DepositWalletBalance
+    );
+  }
+
+  doDeposit(amount: number) {
+    deposit({ amount, coin: this.state.tradingPair.quote.description as IUSDCoins })
+      .then((done: boolean) => {
+        if (done) {
+          this.refreshBalanceValue();
+        }
+      })
+      .catch(err => {
+        console.warn('deposit error', err);
       });
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  }
 
-  deposit = async (amount?: number) => {
-    if (!amount || amount <= 0) {
+  doWithdraw(amount: number) {
+    withdraw({ amount, coin: this.state.tradingPair.quote.description as IUSDCoins })
+      .then((done: boolean) => {
+        if (done) {
+          this.refreshBalanceValue();
+        }
+      })
+      .catch(err => {
+        console.warn('withdraw error', err);
+      });
+  }
+
+  switchTradeDirection(e: any) {
+    const direction: TradeDirection = e.target.value;
+    P.Trade.Direction.set(direction);
+  }
+
+  changeOpenAmount(amount: number) {
+    if (amount >= 0) {
+      P.Trade.Create.OpenAmount.set(amount);
+    }
+  }
+
+  onCreateOrder() {
+    const curPrice: number = Number(this.quoteCoinNum(this.state.openOrderFees?.curPrice));
+    if (!curPrice || curPrice === 0) {
       return;
     }
-
-    this.depositVisible.hide();
-    const { coins } = this.props;
-    const success = await deposit({ amount, coin: coins.to });
-    if (success) {
-      this.context.refreshPage && this.context.refreshPage();
-    }
-  };
-
-  withdraw = async (amount: number, coin: IUSDCoins) => {
-    if (!amount || amount <= 0) {
-      return;
-    }
-    this.withdrawVisible.hide();
-    const success = await withdraw({ amount, coin });
-    if (success) {
-      this.context.refreshPage && this.context.refreshPage();
-    }
-  };
-
-  setModalVisible = (key: keyof TModalKeys) => {
-    return {
-      show: () =>
-        // @ts-ignore
-        this.setState({
-          [key]: true,
-        }),
-      hide: () =>
-        // @ts-ignore
-        this.setState({
-          [key]: false,
-        }),
-    };
-  };
-
-  withdrawVisible = this.setModalVisible('withdrawVisible');
-  depositVisible = this.setModalVisible('depositVisible');
-  orderConfirmVisible = this.setModalVisible('orderConfirmVisible');
-
-  changeType = async (e: any) => {
-    const tradeType: ITradeType = e.target.value;
-    const { coins } = this.props;
-    // 新的APi要求获取maxOpen时传入long，short类型，这里同步获取略有卡顿，后期可优化。 --by 蒜苗 2021-04-05
-    const maxNumber = await getMaxOpenAmount((coins.from + coins.to) as IExchangeStr, this.state.available, tradeType);
-
-    this.setState({
-      tradeType: tradeType,
-      maxNumber,
-    });
-  };
-
-  onOpenAmountChange = async (openAmount: number) => {
-    const { coins } = this.props;
-    const { to } = coins;
-
-    this.setState({
-      openAmount,
-    });
-
-    this.setState({
-      setFeeQuery: true,
-    });
-    const fees = await confirmOrder(openAmount, to, this.state.tradeType);
-    this.setState({
-      fees,
-      setFeeQuery: false,
-    });
-  };
-
-  onOpen = async () => {
-    const { coins } = this.props;
-    const { to } = coins;
-    const { tradeType, openAmount, fees } = this.state;
-    const curPrice = fees?.curPrice;
-
-    if (!curPrice) {
-      return;
-    }
-
-    this.orderConfirmVisible.hide();
 
     const openTime = new Date().getTime();
-    const orderId = await createOrder(to, tradeType, openAmount!, curPrice);
 
-    if (orderId) {
-      setPendingOrders({
-        hash: orderId,
-        time: openTime,
-        type: tradeType,
-        amount: openAmount,
-        cost: fees?.fundingFeeLocked,
-        fee: fees?.settlementFee,
-        price: fees?.curPrice,
-        status: 'PENDING',
-        costCoin: coins.to,
-        $expireTime: dayjs(new Date(openTime)).add(20, 'minute').toDate().getTime(),
+    createOrder(
+      P.Trade.Pair.get().quote.description as IUSDCoins,
+      P.Trade.Direction.get(),
+      P.Trade.Create.OpenAmount.get(),
+      Number(this.quoteCoinNum(this.state.openOrderFees?.curPrice))
+    )
+      .then(newOrderId => {
+        if (newOrderId) {
+          setPendingOrders({
+            hash: newOrderId,
+            time: openTime,
+            type: P.Trade.Direction.get(),
+            amount: P.Trade.Create.OpenAmount.get(),
+            cost: this.quoteCoinNum(this.state.openOrderFees?.fundingLocked),
+            fee: this.quoteCoinNum(this.state.openOrderFees?.settlementFee),
+            price: curPrice,
+            status: 'PENDING',
+            costCoin: this.state.tradingPair.quote.description,
+            $expireTime: dayjs(new Date(openTime)).add(20, 'minute').toDate().getTime(),
+          });
+
+          S.User.CurTradePairAccount.tick();
+          this.context.refreshPage && this.context.refreshPage();
+        }
+      })
+      .catch(err => {
+        console.warn('create order error', err);
       });
-      this.context.refreshPage && this.context.refreshPage();
-    }
-  };
-
-  queryFee = async () => {
-    this.setState({
-      feeQuery: true,
-    });
-
-    try {
-      const { coins } = this.props;
-      const { to } = coins;
-      const { openAmount } = this.state;
-
-      const fees = await confirmOrder(openAmount!, to, this.state.tradeType);
-      this.orderConfirmVisible.show();
-      this.setState({
-        fees,
-      });
-    } catch {}
-    this.setState({
-      feeQuery: false,
-    });
-  };
-
-  clickOpen = () => {
-    const { openAmount, maxNumber } = this.state;
-    if (!isGreaterZero(openAmount)) {
-      return;
-    }
-
-    if (!isNumberLike(maxNumber)) {
-      return;
-    }
-
-    if (maxNumber! < openAmount!) {
-      message.warning(formatMessage({ id: 'more-balance-required-deposit-first' }));
-      return;
-    }
-
-    this.queryFee();
-  };
+  }
 
   render() {
-    const {
-      depositVisible,
-      withdrawVisible,
-      orderConfirmVisible,
-      tradeType,
-      balanceInfo,
-      loading,
-      fees,
-      openAmount,
-      maxNumber,
-      setFeeQuery,
-      feeQuery,
-      curPrice, // 必须使用从链上读取的price
-      available,
-    } = this.state;
-    const { coins } = this.props;
-    const { from, to } = coins;
-
-    const address = this.context.address;
-
-    const openData = {
-      type: tradeType,
-      amount: openAmount,
-      coins: coins,
-    };
     return (
       <SiteContext.Consumer>
-        {({ account, isBSC }) => (
+        {({ isBSC }) => (
           <div className={styles.root}>
             <h2>
-              Funding Balance<span>({to})</span>
+              Funding Balance <span>({this.state.tradingPair.quote.description})</span>
               {isBSC ? <Setting /> : null}
             </h2>
+
+            {/* funding balance */}
             <p className={styles.balanceVal}>
-              <Placeholder loading={loading}>{format(balanceInfo?.balance)}</Placeholder>
+              <Placeholder
+                height={'42px'}
+                loading={this.state.fundingBalance === null || this.state.fundingBalancePending}
+              >
+                {this.quoteCoinNum(this.state.fundingBalance?.balance)}
+              </Placeholder>
             </p>
+
+            {/* funding locked */}
             <div className={styles.dayChange}>
-              <Placeholder loading={loading}>
-                {format(balanceInfo?.locked)}&nbsp;<span>{formatMessage({ id: 'locked' })}</span>
+              <Placeholder
+                height={'16px'}
+                loading={this.state.fundingBalance === null || this.state.fundingBalancePending}
+              >
+                {this.quoteCoinNum(this.state.fundingBalance?.locked)}
+                &nbsp;
+                <span>{formatMessage({ id: 'locked' })}</span>
               </Placeholder>
             </div>
+
+            {/* deposit/withdraw options */}
             <Row className={styles.actionLink} type="flex" justify="space-between">
               <Col>
-                <Button type="link" onClick={() => address && this.depositVisible.show()}>
-                  {formatMessage({ id: 'deposit' })}
-                </Button>
+                <DepositModal onConfirm={this.doDeposit.bind(this)} />
               </Col>
               <Col>
-                <Button type="link" onClick={() => address && this.withdrawVisible.show()}>
-                  {formatMessage({ id: 'withdraw' })}
-                </Button>
+                <WithdrawModal onConfirm={this.doWithdraw.bind(this)} />
               </Col>
             </Row>
+
+            {/* LONG/SHORT switch */}
             <Row className={styles.radioBtn}>
-              <Radio.Group value={tradeType} onChange={this.changeType}>
+              <Radio.Group value={this.state.tradingDirection} onChange={this.switchTradeDirection.bind(this)}>
                 <Radio.Button value="LONG" className={styles.green}>
                   {formatMessage({ id: 'order-type-long' })}
                 </Radio.Button>
@@ -307,57 +225,52 @@ export default class Balance extends Component<IProps, IState> {
                 </Radio.Button>
               </Radio.Group>
             </Row>
+
+            {/* current base token price */}
             <p className={styles.price}>
-              <Placeholder loading={loading}>
-                Current Price: {format(curPrice)} {to}
+              <Placeholder
+                height={'14px'}
+                loading={this.state.curTradingPrice === null || this.state.curTradingPricePending}
+              >
+                Current Price: {this.quoteCoinNum(this.state.curTradingPrice)}{' '}
+                {this.state.tradingPair.quote.description}
               </Placeholder>
             </p>
+
             <p className={styles.amountTip}>{formatMessage({ id: 'amount' })}</p>
+
+            {/* base coin amount input */}
             <InputNumber
               className={styles.orderInput}
-              onChange={this.onOpenAmountChange}
-              placeholder={maxNumber ? `${formatMessage({ id: 'max' })} ${maxNumber}` : '0.00'}
-              max={maxNumber}
+              onChange={this.changeOpenAmount.bind(this)}
+              placeholder={
+                this.state.maxOpenAmount !== null
+                  ? `${formatMessage({ id: 'max' })} ${this.baseCoinNum(this.state.maxOpenAmount)}`
+                  : '0.00'
+              }
+              value={this.state.curOpenAmount}
+              max={Number(this.baseCoinNum(this.state.maxOpenAmount))}
               skip={true}
               showTag={true}
               tagClassName={styles.utilMax}
-              suffix={from}
+              suffix={this.state.tradingPair.base.description}
             />
-            <p className={styles.settlement}>
-              {formatMessage({ id: 'settlement-fee' })} :{' '}
-              {setFeeQuery ? <Icon type="loading" /> : isNumberLike(fees?.settlementFee) ? fees?.settlementFee : 0} {to}
-            </p>
-            {/* <Progress strokeColor="#1346FF" showInfo={false} percent={30} strokeWidth={20} /> */}
-            <Button
-              loading={feeQuery}
-              className={tradeType === 'SHORT' ? 'buttonRed' : 'buttonGreen'}
-              type="primary"
-              onClick={this.clickOpen}
-            >
-              {formatMessage({ id: 'order-action-open' })}
-            </Button>
 
-            <DespositModal
-              coin={to}
-              max={truncated(account && account.USDBalance ? account?.USDBalance[to] : undefined)}
-              onCancel={this.depositVisible.hide}
-              onConfirm={this.deposit}
-              visible={depositVisible}
-            />
-            <WithdrawModal
-              coin={to}
-              onCancel={this.withdrawVisible.hide}
-              onConfirm={this.withdraw}
-              max={available}
-              visible={withdrawVisible}
-            />
-            <OrderConfirm
-              data={openData}
-              fees={fees}
-              onConfirm={this.onOpen}
-              onCancel={this.orderConfirmVisible.hide}
-              visible={orderConfirmVisible}
-            />
+            {/* settlement fee */}
+            <p className={styles.settlement}>
+              {formatMessage({ id: 'settlement-fee' })}: &nbsp;
+              {this.state.openOrderFeesPending ? (
+                <Icon type="loading" />
+              ) : (
+                <span>
+                  {this.feeNum(this.state.openOrderFees?.settlementFee)} &nbsp;
+                  {this.state.tradingPair.quote.description}
+                </span>
+              )}
+            </p>
+
+            {/* confirm order */}
+            <OrderConfirm onConfirm={this.onCreateOrder.bind(this)} />
           </div>
         )}
       </SiteContext.Consumer>
