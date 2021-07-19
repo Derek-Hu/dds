@@ -6,3 +6,5 @@ declare module '*.module.less' {
 }
 
 declare module 'locale/i18n';
+
+declare module 'rc-tween-one/lib/plugin/PathPlugin';

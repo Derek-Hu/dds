@@ -5,7 +5,7 @@ import render from '../routers/render';
 
 const setRootRem = () => {
   const currentW = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-  window.document.documentElement.style.fontSize = parseInt((currentW / 1080) * 100) + 'px';
+  window.document.documentElement.style.fontSize = parseInt((Math.max(currentW, 600) / 1080) * 100) + 'px';
 };
 
 setRootRem();
