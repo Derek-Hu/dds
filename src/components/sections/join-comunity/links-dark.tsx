@@ -1,7 +1,7 @@
-import TelegramIcon from '~/assets/join-community/3.svg';
-import DiscordIcon from '~/assets/join-community/2.svg';
-import TwitterIcon from '~/assets/join-community/1.svg';
-import MediumIcon from '~/assets/join-community/4.svg';
+import TelegramIcon from '~/assets/join-community/3.png';
+import DiscordIcon from '~/assets/join-community/2.png';
+import TwitterIcon from '~/assets/join-community/1.png';
+import MediumIcon from '~/assets/join-community/4.png';
 import styles from './style.module.less';
 
 export const darkLinks = [

@@ -1,0 +1,48 @@
+.submenu-dialog {
+  max-width: 382px;
+  background: #fff;
+  font-size: 14px;
+  color: #333333;
+  line-height: 17px;
+
+  .top {
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+    border-bottom: 1px solid #f3f3f3;
+    font-family: Gilroy-Bold, Gilroy;
+
+    .content {
+      font-family: Gilroy-Medium, Gilroy;
+      font-weight: 500;
+      color: #666666;
+      margin-top: 10px;
+    }
+  }
+
+  .bottom {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .link {
+    color: #333;
+    z-index: 1;
+    width: 50%;
+    padding: 12px 0;
+    text-align: center;
+
+    &:first-child {
+      border-right: 1px solid #f3f3f3;
+    }
+    &:hover {
+      background-color: #f8f8f8;
+    }
+  }
+
+  .mobile-link {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+}

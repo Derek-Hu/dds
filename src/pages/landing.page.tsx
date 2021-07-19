@@ -6,7 +6,8 @@ import Screen from '../components/sections/screen/index';
 import ContentWidth from '../components/sections/content-width';
 import WhyWeBuild from '../components/sections/why-we-build/index';
 import WhyWeBuild2 from '../components/sections/why-build-section2/index';
-import JoinCommunity from '../components/sections/join-comunity/index';
+// import JoinCommunity from '../components/sections/join-comunity/index';
+import JoinCommunity from '../components/sections/join-comunity/index-dark';
 import Partners from '../components/sections/partners/index';
 import AsFeature from '../components/sections/as-feature/index';
 import HowWorks from '../components/sections/how-works/index';
@@ -20,54 +21,41 @@ import TweenOne from 'rc-tween-one';
 import 'rc-banner-anim/assets/index.css';
 import Header from '../components/header/index';
 import ScrollOverPack from 'rc-scroll-anim/lib/ScrollOverPack';
+import { SIDs } from '../constant/index';
 
+const limit = 200;
+function throttle(func: () => any) {
+  let inThrottle = false; // 开关
+  return function (...args: any) {
+    // @ts-ignore
+    const context = this;
+    if (!inThrottle) {
+      func.apply(context, args);
+      inThrottle = true;
+      setTimeout(() => {
+        // 定时器用来进行保证在一定时间内开关的状态
+        inThrottle = false;
+      }, limit);
+    }
+  };
+}
+
+let idx = 0;
 export default class HomePage extends Component {
+  componentDidMount() {
+    window.addEventListener('scroll', this.windowScroll);
+  }
+  windowScroll(...args: any) {
+    console.log(...args);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.windowScroll);
+  }
   render() {
-    //   return <BannerAnim prefixCls="banner-user">
-    //   <Element
-    //     prefixCls="banner-user-elem"
-    //     key="0"
-    //   >
-    //     <BgElement
-    //       key="bg"
-    //       className="bg"
-    //       style={{
-    //         background: '#364D79',
-    //       }}
-    //     />
-    //     <TweenOne className="banner-user-title" animation={{ y: 30, opacity: 0, type: 'from' }}>
-    //       Ant Motion Banner
-    //     </TweenOne>
-    //     <TweenOne className="banner-user-text"
-    //       animation={{ y: 30, opacity: 0, type: 'from', delay: 100 }}
-    //     >
-    //       The Fast Way Use Animation In React
-    //     </TweenOne>
-    //   </Element>
-    //   <Element
-    //     prefixCls="banner-user-elem"
-    //     key="1"
-    //   >
-    //     <BgElement
-    //       key="bg"
-    //       className="bg"
-    //       style={{
-    //         background: '#64CBCC',
-    //       }}
-    //     />
-    //     <TweenOne className="banner-user-title" animation={{ y: 30, opacity: 0, type: 'from' }}>
-    //       Ant Motion Banner
-    //     </TweenOne>
-    //     <TweenOne className="banner-user-text"
-    //       animation={{ y: 30, opacity: 0, type: 'from', delay: 100 }}
-    //     >
-    //       The Fast Way Use Animation In React
-    //     </TweenOne>
-    //   </Element>
-    // </BannerAnim>;
     return (
       <div style={{ background: '#fff' }}>
-        <Screen>
+        <Screen id={SIDs[idx++]}>
           <Header darkMode={true} />
           <ContentWidth>
             <Banner></Banner>
@@ -95,52 +83,52 @@ export default class HomePage extends Component {
             </TweenOne>
           </ContentWidth>
         </Screen>
-        <ScrollOverPack>
-          <Screen style={{ background: '#FAFAFA' }}>
+        {/* <ScrollOverPack> */}
+        {/* <Screen id={SIDs[idx++]} style={{ background: '#FAFAFA' }}>
             <ContentWidth>
               <WhyWeBuild></WhyWeBuild>
             </ContentWidth>
-          </Screen>
-          <Screen style={{ background: '#1346ff' }}>
-            <ContentWidth>
-              <Parallax animation={{ y: 70, type: 'from', delay: 300, opacity: 0 }}>
-                <WhyWeBuild2></WhyWeBuild2>
-              </Parallax>
-            </ContentWidth>
-          </Screen>
-          <Screen>
-            <ContentWidth>
-              <Parallax animation={{ y: 70, type: 'from', delay: 300, opacity: 0 }}>
-                <WhatIsPerpetual></WhatIsPerpetual>
-              </Parallax>
-            </ContentWidth>
-          </Screen>
-          <Screen style={{ background: '#000' }}>
-            <ContentWidth>
-              <Parallax animation={{ y: 70, type: 'from', delay: 300, opacity: 0 }}>
-                <HowWorks></HowWorks>
-              </Parallax>
-            </ContentWidth>
-          </Screen>
-          <Screen>
-            {/* <Parallax animation={{ y: 70, type: 'from', delay: 300, opacity: 0 }}> */}
-            <div>
-              <ContentWidth>
-                <ShieldDAO></ShieldDAO>
-              </ContentWidth>
-              <JoinCommunity></JoinCommunity>
-            </div>
-            {/* </Parallax> */}
-          </Screen>
-          <Screen>
-            <Parallax animation={{ y: 70, type: 'from', delay: 300, opacity: 0 }}>
-              <ContentWidth>
-                <Partners></Partners>
-                <AsFeature></AsFeature>
-              </ContentWidth>
+          </Screen> */}
+        <Screen id={SIDs[idx++]}>
+          <ContentWidth>
+            <Parallax animation={{ y: 40, type: 'from', delay: 100, opacity: 0 }}>
+              <WhyWeBuild2></WhyWeBuild2>
             </Parallax>
-          </Screen>
-        </ScrollOverPack>
+          </ContentWidth>
+        </Screen>
+        <Screen id={SIDs[idx++]}>
+          <ContentWidth>
+            <Parallax animation={{ y: 40, type: 'from', delay: 300, opacity: 0 }}>
+              <WhatIsPerpetual></WhatIsPerpetual>
+            </Parallax>
+          </ContentWidth>
+        </Screen>
+        <Screen id={SIDs[idx++]}>
+          <ContentWidth>
+            <Parallax animation={{ y: 40, type: 'from', delay: 300, opacity: 0 }}>
+              <HowWorks></HowWorks>
+            </Parallax>
+          </ContentWidth>
+        </Screen>
+        <Screen id={SIDs[idx++]}>
+          {/* <Parallax animation={{ y: 70, type: 'from', delay: 300, opacity: 0 }}> */}
+          <div>
+            <ContentWidth>
+              <ShieldDAO></ShieldDAO>
+            </ContentWidth>
+            <JoinCommunity></JoinCommunity>
+          </div>
+          {/* </Parallax> */}
+        </Screen>
+        <Screen id={SIDs[idx++]}>
+          <Parallax animation={{ y: 70, type: 'from', delay: 300, opacity: 0 }}>
+            <ContentWidth>
+              <Partners></Partners>
+              <AsFeature></AsFeature>
+            </ContentWidth>
+          </Parallax>
+        </Screen>
+        {/* </ScrollOverPack> */}
         {/* <NonRisk></NonRisk> */}
         {/* <HowTrade></HowTrade> */}
         {/* <WhyDderivatives /> */}
