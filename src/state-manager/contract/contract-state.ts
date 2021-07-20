@@ -1,4 +1,4 @@
-import { ContractState, StateGetter } from './interface';
+import { ContractState, StateGetter } from '../interface';
 import { BehaviorSubject, combineLatest, merge, Observable, of, Subscription } from 'rxjs';
 import { debounceTime, filter, finalize, map, startWith, switchMap, take, tap } from 'rxjs/operators';
 

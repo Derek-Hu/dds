@@ -19,6 +19,11 @@ export function toEthers(
     return '0';
   }
 
+  const sign: 1 | -1 = num.lt(0) ? -1 : 1;
+  if (sign < 0) {
+    num = num.mul(-1);
+  }
+
   let numStr = num.toString();
   const wei = typeof coin === 'number' ? coin : getTokenWei(coin);
 
@@ -31,9 +36,14 @@ export function toEthers(
   }
 
   const integers: string = numStr.substring(0, numStr.length - wei) || '0';
-  const rs = integers + '.' + decimals;
+  let rs = integers + '.' + decimals;
+  rs = _.trimEnd(_.trimEnd(rs, '0'), '.');
 
-  return _.trimEnd(_.trimEnd(rs, '0'), '.');
+  if (sign < 0) {
+    rs = '-' + rs;
+  }
+
+  return rs;
 }
 
 export function toEtherNumber(

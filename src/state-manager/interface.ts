@@ -10,6 +10,9 @@ export interface StateReference {
 
 export type Watchable = { watch: () => Observable<any> };
 
+// ---------------------------------------------------------------------------------------------------------------------
+// Contract State
+
 export type ContractStateDefine<T> = {
   _depend: (Observable<any> | StateReference | Watchable)[];
   _getter: StateGetter<T>;
@@ -47,6 +50,9 @@ export type ContractStateTree<D extends ContractStateDefineTree> = {
     : never;
 };
 
+// ------------------------------------------------------------------------------------------------
+// Page State
+
 export type PageStateDefine<T> = { _default: T; _serializer?: (s: T) => string };
 export type PageStateDefineTree = { [p: string]: PageStateDefine<any> | PageStateDefineTree };
 export type PageStateTree<D extends PageStateDefineTree> = {
@@ -60,9 +66,66 @@ export type PageStateTree<D extends PageStateDefineTree> = {
 export interface PageState<T> {
   set(state: T): void;
 
+  setToDefault(): void;
+
   get(): T;
 
   default(): T;
 
   watch(): Observable<T>;
 }
+
+// ----------------------------------------------------------------------------
+// Cache State
+
+export interface CacheStateDefine<T> {
+  _key: string;
+  _parser: (stateStr: string) => T | null;
+  _serializer: (state: T) => string;
+}
+
+export type CacheStateDefineTree = { [p: string]: CacheStateDefine<any> | CacheStateDefineTree };
+export type CacheStateTree<D extends CacheStateDefineTree> = {
+  [p in keyof D]: D[p] extends CacheStateDefine<infer S>
+    ? CacheState<S>
+    : D[p] extends CacheStateDefineTree
+    ? CacheStateTree<D[p]>
+    : never;
+};
+
+export interface CacheState<T> {
+  getKey(): string;
+
+  set(state: T | null): void;
+
+  get(): Observable<T | null>;
+
+  watch(): Observable<T | null>;
+}
+
+// ----------------------------------------------------------------------------
+// Database State
+
+export interface DatabaseState<T> {
+  watch(): Observable<T>;
+
+  tick(): void;
+}
+
+export interface DatabaseStateMerger<T, A extends readonly any[]> {
+  mergeWatch(...args: A): Observable<T>;
+}
+
+export interface DatabaseStateDefine<T> {
+  _depend: (Observable<any> | Watchable)[];
+  _merger: DatabaseStateMerger<T, any[]>;
+}
+
+export type DatabaseStateDefineTree = { [p: string]: DatabaseStateDefine<any> | DatabaseStateDefineTree };
+export type DatabaseStateTree<D extends DatabaseStateDefineTree> = {
+  [p in keyof D]: D[p] extends DatabaseStateDefine<infer S>
+    ? DatabaseState<S>
+    : D[p] extends DatabaseStateDefineTree
+    ? DatabaseStateTree<D[p]>
+    : never;
+};

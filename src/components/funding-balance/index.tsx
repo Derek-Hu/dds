@@ -11,13 +11,12 @@ import Placeholder from '../placeholder/index';
 import { setPendingOrders } from '../../util/order-cache';
 import { formatMessage } from 'locale/i18n';
 import { Setting } from './dropdown/setting';
-import { TradeOrderFees, UserTradeAccountInfo } from '../../state-manager/contract-state-types';
 import { BaseStateComponent } from '../../state-manager/base-state-component';
-import { PageTradingPair, TradeDirection } from '../../state-manager/page-state-types';
 import { toEtherNumber } from '../../util/ethers';
 import { BigNumber } from 'ethers';
-import { P } from '../../state-manager/page-state-parser';
-import { S } from '../../state-manager/contract-state-parser';
+import { P } from '../../state-manager/page/page-state-parser';
+import { S } from '../../state-manager/contract/contract-state-parser';
+import { PageTradingPair, TradeDirection, TradeOrderFees, UserTradeAccountInfo } from '../../state-manager/state-types';
 
 interface IState {
   fundingBalance: UserTradeAccountInfo | null;
@@ -37,6 +36,9 @@ interface IProps {
   timestamp: any;
 }
 
+/**
+ * Funding Balance
+ */
 export default class Balance extends BaseStateComponent<IProps, IState> {
   static contextType = SiteContext;
 
@@ -62,9 +64,9 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
     this.registerStatePending('fundingBalancePending', S.User.CurTradePairAccount);
     this.registerState('curTradingPrice', S.Trade.CurPairPrice);
     this.registerStatePending('curTradingPricePending', S.Trade.CurPairPrice);
-    this.registerState('maxOpenAmount', S.Trade.Order.CurMaxOpenAmount);
-    this.registerState('openOrderFees', S.Trade.Order.CurOpenOrderFee);
-    this.registerStatePending('openOrderFeesPending', S.Trade.Order.CurOpenOrderFee);
+    this.registerState('maxOpenAmount', S.Trade.Create.CurMaxOpenAmount);
+    this.registerState('openOrderFees', S.Trade.Create.CurOpenOrderFee);
+    this.registerStatePending('openOrderFeesPending', S.Trade.Create.CurOpenOrderFee);
   };
 
   componentWillUnmount() {
@@ -163,7 +165,8 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
             $expireTime: dayjs(new Date(openTime)).add(20, 'minute').toDate().getTime(),
           });
 
-          S.User.CurTradePairAccount.tick();
+          this.refreshBalanceValue();
+          P.Trade.Create.OpenAmount.setToDefault();
           this.context.refreshPage && this.context.refreshPage();
         }
       })

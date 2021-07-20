@@ -1,14 +1,14 @@
-import { BSC_ADDRESS, ContractAddress, ContractAddressByNetwork } from '../constant/address';
+import { BSC_ADDRESS, ContractAddress, ContractAddressByNetwork } from '../../constant/address';
 import { NEVER, Observable } from 'rxjs';
-import { walletState } from './wallet-state';
+import { walletState } from '../wallet/wallet-state';
 import { map, switchMap } from 'rxjs/operators';
-import { EthNetwork } from '../constant/network';
+import { EthNetwork } from '../../constant/network';
 import { Contract } from 'ethers';
-import { ContractABIByNetwork } from '../wallet/abi';
-import { contractAccessor } from '../wallet/chain-access';
-import { PageTradingPair } from './page-state-types';
-import { TOKEN_SYMBOL } from '../constant/tokens';
-import { P } from './page-state-parser';
+import { ContractABIByNetwork } from '../../wallet/abi';
+import { contractAccessor } from '../../wallet/chain-access';
+import { TOKEN_SYMBOL } from '../../constant/tokens';
+import { P } from '../page/page-state-parser';
+import { PageTradingPair } from '../state-types';
 
 type ContractObsMap = { [p in keyof ContractAddress]: Observable<Contract> };
 type ContractName = keyof ContractAddress;

@@ -9,7 +9,7 @@ import { ETH_WEI, toEthers, toExchangePair } from '../util/ethers';
 import * as request from 'superagent';
 import { loadingObs, withLoading } from './utils';
 import { getNetworkAndAccount, loginUserAccount } from './account';
-import { IOrderInfoData, OrderInfoObject } from './centralization-data';
+import { IOrderInfoData, OrderInfoObject } from '../state-manager/database/database-state-mergers/centralization-data';
 import { CentralHost, CentralPath, CentralPort, CentralProto } from '../constant/address';
 import { LocalStorageKeyPrefix } from '../constant';
 import { readTradeSetting } from './local-storage.service';

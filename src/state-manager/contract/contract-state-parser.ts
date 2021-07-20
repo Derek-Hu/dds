@@ -5,7 +5,7 @@ import {
   ContractStateTree,
   StateReference,
   Watchable,
-} from './interface';
+} from '../interface';
 import { ContractStateImp } from './contract-state';
 import _ from 'lodash';
 import { isObservable, Observable } from 'rxjs';

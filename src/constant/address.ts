@@ -114,3 +114,18 @@ export const CentralPath: Record<EthNetwork, INetworkKey> = {
   [EthNetwork.bianTest]: 'bsctest',
   [EthNetwork.bsc]: 'bscmain',
 };
+
+function genOrderDataUrl(network: EthNetwork): string {
+  const basePath =
+    CentralProto === 'https:'
+      ? CentralHost + '/' + CentralPath[network]
+      : CentralHost + ':' + CentralPort[network] + '/' + CentralPath[network];
+
+  return basePath + '/transactions/getTransactionsInfo';
+}
+
+export const DatabaseUrl: { [p in EthNetwork]: string } = {
+  [EthNetwork.bianTest]: genOrderDataUrl(EthNetwork.bianTest),
+  [EthNetwork.bsc]: genOrderDataUrl(EthNetwork.bsc),
+  [EthNetwork.kovan]: genOrderDataUrl(EthNetwork.kovan),
+};

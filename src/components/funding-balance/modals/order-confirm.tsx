@@ -4,14 +4,13 @@ import ModalRender from '../../modal-render/index';
 import SiteContext from '../../../layouts/SiteContext';
 import { formatMessage } from 'locale/i18n';
 import { BaseStateComponent } from '../../../state-manager/base-state-component';
-import { P } from '../../../state-manager/page-state-parser';
-import { TradeOrderFees } from '../../../state-manager/contract-state-types';
-import { S } from '../../../state-manager/contract-state-parser';
-import { PageTradingPair, TradeDirection } from '../../../state-manager/page-state-types';
+import { P } from '../../../state-manager/page/page-state-parser';
+import { S } from '../../../state-manager/contract/contract-state-parser';
 import { BigNumber } from 'ethers';
 import { toEtherNumber } from '../../../util/ethers';
 import NormalButton from '../../common/buttons/normal-btn';
 import { isGreaterZero } from '../../../util/math';
+import { PageTradingPair, TradeDirection, TradeOrderFees } from '../../../state-manager/state-types';
 
 const title = formatMessage({ id: 'order-confirm' });
 
@@ -41,9 +40,9 @@ export default class OrderConfirm extends BaseStateComponent<IProps, IState> {
   };
 
   componentDidMount() {
-    this.registerState('openOrderFees', S.Trade.Order.CurOpenOrderFee);
-    this.registerStatePending('openOrderFeesPending', S.Trade.Order.CurOpenOrderFee);
-    this.registerState('maxOpenAmount', S.Trade.Order.CurMaxOpenAmount);
+    this.registerState('openOrderFees', S.Trade.Create.CurOpenOrderFee);
+    this.registerStatePending('openOrderFeesPending', S.Trade.Create.CurOpenOrderFee);
+    this.registerState('maxOpenAmount', S.Trade.Create.CurMaxOpenAmount);
     this.registerState('tradingPair', P.Trade.Pair);
     this.registerState('tradingDirection', P.Trade.Direction);
     this.registerState('openAmount', P.Trade.Create.OpenAmount);
@@ -88,7 +87,7 @@ export default class OrderConfirm extends BaseStateComponent<IProps, IState> {
       return;
     }
 
-    S.Trade.Order.CurOpenOrderFee.tick();
+    S.Trade.Create.CurOpenOrderFee.tick();
     this.setState({ visible: true });
   }
 

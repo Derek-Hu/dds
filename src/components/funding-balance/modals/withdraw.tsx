@@ -7,11 +7,10 @@ import { formatMessage } from 'locale/i18n';
 import { BaseStateComponent } from '../../../state-manager/base-state-component';
 import { BigNumber } from 'ethers';
 import { toEtherNumber } from '../../../util/ethers';
-import { PageTradingPair } from '../../../state-manager/page-state-types';
-import { P } from '../../../state-manager/page-state-parser';
+import { P } from '../../../state-manager/page/page-state-parser';
 import NormalButton from '../../common/buttons/normal-btn';
-import { UserTradeAccountInfo } from '../../../state-manager/contract-state-types';
-import { S } from '../../../state-manager/contract-state-parser';
+import { S } from '../../../state-manager/contract/contract-state-parser';
+import { PageTradingPair, UserTradeAccountInfo } from '../../../state-manager/state-types';
 
 const title = formatMessage({ id: 'funding-fee-withdraw' });
 

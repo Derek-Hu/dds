@@ -1,9 +1,9 @@
 import { AsyncSubject, Observable, of } from 'rxjs';
-import { Wallet } from '../constant';
-import { walletManager } from '../wallet/wallet-manager';
+import { Wallet } from '../../constant';
+import { walletManager } from '../../wallet/wallet-manager';
 import { filter, map, startWith, switchMap, take } from 'rxjs/operators';
-import { WalletInterface } from '../wallet/wallet-interface';
-import { EthNetwork } from '../constant/network';
+import { WalletInterface } from '../../wallet/wallet-interface';
+import { EthNetwork } from '../../constant/network';
 import MetaMaskOnboarding from '@metamask/onboarding';
 
 const { isMetaMaskInstalled } = MetaMaskOnboarding;
@@ -11,10 +11,12 @@ const { isMetaMaskInstalled } = MetaMaskOnboarding;
 export class WalletState {
   public readonly USER_ADDR: Observable<string>;
   public readonly IS_CONNECTED: Observable<boolean>;
+  public readonly NETWORK: Observable<EthNetwork>;
 
   constructor() {
     this.USER_ADDR = this.watchUserAccount();
     this.IS_CONNECTED = this.watchIsConnected();
+    this.NETWORK = this.watchNetwork();
   }
 
   // the current connected wallet type
@@ -67,7 +69,7 @@ export class WalletState {
   }
 
   // install the specified type of wallet
-  installWallet(wallet: Wallet) {
+  installWallet(wallet: Wallet): void {
     switch (wallet) {
       case Wallet.Metamask: {
         window.location.href = 'https://metamask.io/';

@@ -1,10 +1,13 @@
 import { from, NEVER, Observable, of } from 'rxjs';
 import { BigNumber, Contract } from 'ethers';
 import { map, take } from 'rxjs/operators';
-import { TradeOrderFees, UserTradeAccountInfo } from './contract-state-types';
-import { getTradePairSymbol, TOKEN_SYMBOL } from '../constant/tokens';
-import { PageTradingPair, TradeDirection } from './page-state-types';
-import { tokenBigNumber } from '../util/ethers';
+import { getTradePairSymbol } from '../../constant/tokens';
+import { tokenBigNumber } from '../../util/ethers';
+import { EthNetwork } from '../../constant/network';
+import { IOrderInfoData, OrderInfoObject } from '../database/database-state-mergers/centralization-data';
+import * as request from 'superagent';
+import { DatabaseUrl } from '../../constant/address';
+import { PageTradingPair, TradeDirection, TradeOrderFees, TradeOrderTab, UserTradeAccountInfo } from '../state-types';
 
 // balance in erc20
 export function walletBalanceGetter(contract: Contract, address: string): Observable<BigNumber> {
@@ -60,13 +63,7 @@ export function maxOpenAmountGetter(
   );
 }
 
-/**
- * get open order fees
- * @param contract
- * @param openAmount
- * @param tradePair
- * @param direction
- */
+// get open order fees
 export function tradeFeeGetter(
   contract: Contract,
   openAmount: number,
@@ -91,6 +88,29 @@ export function tradeFeeGetter(
         settlementFee: fees.exchgFee,
         fundingLocked: fees.openFee,
       };
+    })
+  );
+}
+
+export function orderListGetter(
+  orderType: TradeOrderTab,
+  userAddr: string,
+  network: EthNetwork,
+  pageIndex: number,
+  pageSize: number
+): Observable<OrderInfoObject[]> {
+  const url: string = DatabaseUrl[network];
+  const state: number = orderType === 'ACTIVE' ? 1 : 2;
+  const resObs: Promise<any> = request
+    .post(url)
+    .send({ page: pageIndex, offset: pageSize, state, address: userAddr, name: 'taker' });
+
+  return from(resObs).pipe(
+    map(res => {
+      const records: IOrderInfoData[] = res.body.msg;
+      return records.map(record => {
+        return new OrderInfoObject(record, network);
+      });
     })
   );
 }

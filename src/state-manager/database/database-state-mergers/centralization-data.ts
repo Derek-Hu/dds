@@ -1,6 +1,6 @@
-import { getTokenWei, keepDecimal, toDisplayNum, toExchangePair } from '../util/ethers';
+import { getTokenWei, keepDecimal, toDisplayNum, toExchangePair } from '../../../util/ethers';
 import { BigNumber } from 'ethers';
-import { EthNetwork } from '../constant/network';
+import { EthNetwork } from '../../../constant/network';
 
 export interface IOrderInfoData {
   closePrice: string;
@@ -43,7 +43,7 @@ export class OrderInfoObject {
   public readonly marginAmount: CoinNumber;
   public readonly marginFee: CoinNumber;
 
-  constructor(orderInfoData: IOrderInfoData, private network: EthNetwork) {
+  constructor(public readonly orderInfoData: IOrderInfoData, public readonly network: EthNetwork) {
     this.createHash = orderInfoData.createHash;
     this.takerAddress = orderInfoData.takerAddress;
     this.makerAddress = orderInfoData.makerAddress;

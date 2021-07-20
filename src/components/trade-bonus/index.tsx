@@ -15,6 +15,9 @@ import DTable from '../table/index';
 import { Visible, Hidden } from '../builtin/hidden';
 import { getPendingOrders } from '../../util/order-cache';
 import { formatMessage } from 'locale/i18n';
+import { BaseStateComponent } from '../../state-manager/base-state-component';
+import { P } from '../../state-manager/page/page-state-parser';
+import { TradeOrderTab } from '../../state-manager/state-types';
 
 const { TabPane } = Tabs;
 
@@ -34,7 +37,9 @@ interface IState {
   selectedItem?: ITradeRecord;
   loading: boolean;
   orderCategory: keyof typeof OrderCategory;
+  orderTab: TradeOrderTab;
 }
+type IProps = { curPrice?: number; coin: IUSDCoins };
 
 type TModalKeys = Pick<IState, 'orderCloseVisible'>;
 
@@ -68,16 +73,26 @@ const getPL = (value?: { val: number; percentage: number }) => {
     </span>
   );
 };
-export default class Balance extends Component<{ curPrice?: number; coin: IUSDCoins }, IState> {
+export default class TradeOrderList extends BaseStateComponent<IProps, IState> {
   state: IState = {
     orderCloseVisible: false,
     orders: [],
     page: 1,
     loading: false,
     orderCategory: 'active',
+
+    orderTab: P.Trade.Orders.ListTab.get(),
   };
 
   static contextType = SiteContext;
+
+  componentDidMount() {
+    this.registerState('orderTab', P.Trade.Orders.ListTab);
+  }
+
+  componentWillUnmount() {
+    this.destroyState();
+  }
 
   UNSAFE_componentWillReceiveProps() {
     // console.log('trade orders refresh...');
@@ -256,6 +271,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
         {({ isMobile, timestamp }) => (
           <div className={styles.root}>
             <h2>{formatMessage({ id: 'orders' })}</h2>
+
             <div className={styles.tableWpr}>
               <Tabs
                 className={styles.orderTab}
@@ -299,6 +315,7 @@ export default class Balance extends Component<{ curPrice?: number; coin: IUSDCo
                 scroll={{ x: 1000 }}
               /> */}
             </div>
+            {/*<ActiveOrderTable />*/}
             <ModalRender
               visible={orderCloseVisible}
               onCancel={this.orderModalVisible.hide}
