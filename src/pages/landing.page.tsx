@@ -59,7 +59,7 @@ export default class HomePage extends Component {
           <Header darkMode={true} />
           <ContentWidth>
             <Banner></Banner>
-            <TweenOne animation={{ y: 70, opacity: 0, delay: 400, type: 'from' }}>
+            {/* <TweenOne animation={{ y: 70, opacity: 0, delay: 400, type: 'from' }}>
               <div className={styles.bannerDatas}>
                 <Row>
                   <Col span={6}>
@@ -80,7 +80,7 @@ export default class HomePage extends Component {
                   </Col>
                 </Row>
               </div>
-            </TweenOne>
+            </TweenOne> */}
           </ContentWidth>
         </Screen>
         {/* <ScrollOverPack> */}

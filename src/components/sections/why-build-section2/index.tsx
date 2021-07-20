@@ -10,11 +10,11 @@ import threeImg from '../../../assets/why-build/three@2x.png';
 import fourImg from '../../../assets/why-build/four@2x.png';
 import TweenOne from 'rc-tween-one';
 
-import adsoneImg from '../../../assets/why-build/11@2x.png';
-import adstwoImg from '../../../assets/why-build/22@2x.png';
-import adsthreeImg from '../../../assets/why-build/33@2x.png';
-import adsfourImg from '../../../assets/why-build/44@2x.png';
-import adsfiveImg from '../../../assets/why-build/55@2x.png';
+import adsoneImg from '../../../assets/why-build/1.svg';
+import adstwoImg from '../../../assets/why-build/2.svg';
+import adsthreeImg from '../../../assets/why-build/3.svg';
+import adsfourImg from '../../../assets/why-build/4.svg';
+import adsfiveImg from '../../../assets/why-build/5.svg';
 
 const Image = ({ src }: { src: string }) => {
   return (

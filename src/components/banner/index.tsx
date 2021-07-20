@@ -32,7 +32,7 @@ export default () => {
           <img className={styles.bannerBg} src={bg} />
           <div className={styles.contentWpr}>
             <div className={styles.content}>
-              <TweenOne
+              {/* <TweenOne
                 animation={animation}
                 style={{ margin: 0, background: '#000', width: 20, height: 20, transform: 'translate(-10px, -10px)' }}
                 className="code-box-shape"
@@ -40,7 +40,7 @@ export default () => {
               />
               <svg width="200" height="200">
                 <path d={path} fill="none" stroke="rgba(1, 155, 240, 0.2)" />
-              </svg>
+              </svg> */}
               <TweenOne className={styles.bannerTitle} animation={{ y: 70, opacity: 0, delay: 200, type: 'from' }}>
                 <h2>{formatMessage({ id: 'shield-slogan' }, true)}</h2>
                 <p>{formatMessage({ id: 'shield-slogan-desc' })}</p>
