@@ -21,6 +21,7 @@ function isWatchable(depend: any) {
 
 export function parseContractStateDefine<D extends ContractStateDefineTree>(
   defineTree: D,
+  parent: string = 'S',
   root?: ContractStateTree<D>
 ): ContractStateTree<D> {
   const res: any = {};
@@ -31,12 +32,15 @@ export function parseContractStateDefine<D extends ContractStateDefineTree>(
   const keys = Object.keys(defineTree) as (keyof D)[];
   keys.forEach(k => {
     const def: ContractStateDefine<any> | ContractStateDefineTree = defineTree[k];
+    const selfPath = parent + '.' + k;
 
     if (isStateDefine(def)) {
       const define = def as ContractStateDefine<any>;
-      res[k] = convertContractState(define, root as ContractStateTree<D>) as ContractStateOfDefine<typeof define>;
+      res[k] = convertContractState(define, selfPath, root as ContractStateTree<D>) as ContractStateOfDefine<
+        typeof define
+      >;
     } else {
-      res[k] = parseContractStateDefine(def as ContractStateDefineTree, root);
+      res[k] = parseContractStateDefine(def as ContractStateDefineTree, selfPath, root);
     }
   });
 
@@ -45,6 +49,7 @@ export function parseContractStateDefine<D extends ContractStateDefineTree>(
 
 export function convertContractState<T extends ContractStateDefine<any>>(
   define: T,
+  selfPath: string,
   root: ContractStateTree<any>
 ): ContractStateOfDefine<T> {
   const dependArgs: Observable<any>[] = define._depend.map(one => {
@@ -57,7 +62,7 @@ export function convertContractState<T extends ContractStateDefine<any>>(
     }
   });
 
-  return new ContractStateImp(dependArgs, define._getter);
+  return new ContractStateImp(dependArgs, define._getter, selfPath);
 }
 
 export const S = parseContractStateDefine(CONTRACT_STATE);

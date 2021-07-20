@@ -1,5 +1,5 @@
 import { DatabaseState, DatabaseStateMerger } from '../interface';
-import { BehaviorSubject, combineLatest, merge, Observable, of, Subject, Subscription, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, merge, NEVER, Observable, of, Subject, Subscription, switchMap } from 'rxjs';
 import { debounceTime, filter, finalize, map, tap } from 'rxjs/operators';
 
 export class DatabaseStateImp<T> implements DatabaseState<T> {

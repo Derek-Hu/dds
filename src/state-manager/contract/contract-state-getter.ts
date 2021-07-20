@@ -71,6 +71,7 @@ export function tradeFeeGetter(
   direction: TradeDirection
 ): Observable<TradeOrderFees> {
   const pairSymbol: symbol | null = getTradePairSymbol(tradePair.base, tradePair.quote);
+
   const pairStr: string | undefined = pairSymbol ? pairSymbol.description : undefined;
   const directSign: BigNumber = direction === 'LONG' ? BigNumber.from(1) : BigNumber.from(2);
   const amount: BigNumber = tokenBigNumber(openAmount, tradePair.base); // base coin amount
@@ -80,6 +81,7 @@ export function tradeFeeGetter(
     openFee: BigNumber;
     total: BigNumber;
   };
+
   return from(contract.fees(pairStr, amount, directSign) as Promise<Rs>).pipe(
     map((fees: Rs) => {
       return {

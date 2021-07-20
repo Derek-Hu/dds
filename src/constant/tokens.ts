@@ -33,7 +33,7 @@ export const TRADE_PAIR_SYMBOL_MAP = (Object.keys(TRADE_PAIR_SYMBOL) as TradePai
 }, new Map());
 
 export function getTradePairSymbol(base: symbol, quote: symbol): symbol | null {
-  const pairDesc: string = base.description || '' + quote.description || '';
+  const pairDesc: string = (base.description || '') + (quote.description || '');
   const pairSymbol: symbol | undefined = TRADE_PAIR_SYMBOL_MAP.get(pairDesc);
 
   return pairSymbol || null;
