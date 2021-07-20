@@ -5,6 +5,7 @@ export default {
   sld: 'SLD',
   d: 'D',
 
+  'order-id-canceled': 'Order ${tx} canceled.',
   'how-works-ad1': `Broker: A broker who brings a steady stream of traders to the Shield network through education and referrals, incentivized by the "Broker Campaign" commission system.`,
   'how-works-ad2': `Trader: Buyer of Shield to meet their trading needs, and to pay for trading fees and position charges, etc.`,
   'how-works-ad3': `Liquidator: Trigger liquidation trades for arbitrage rewards by monitoring Taker and Maker positions and discovering insufficient position fees or liquidity margin.`,
