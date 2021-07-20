@@ -8,6 +8,8 @@ export enum Wallet {
   WalletConnect = 'Wallet Connect',
 }
 
+export const SIDs = ['screen-1', 'screen-2', 'screen-3', 'screen-4', 'screen-5', 'screen-6'];
+
 export const CSS_H_SCALE = 'scale-h-enable';
 
 export const DefaultKeNetwork: INetworkKey = 'bsctest';

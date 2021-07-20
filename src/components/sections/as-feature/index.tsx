@@ -80,9 +80,8 @@ export default () => {
         <QueueAnim>
           <div className={styles.featureContent}>
             <div>
-              <h2>
-                As featurred in <Image src={datas[index].icon} />
-              </h2>
+              <h2>As featurred in</h2>
+              <Image src={datas[index].icon} />
             </div>
             <p className={styles.desc}>
               {/* <Texty type="right" mode="sync"> */}« {datas[index].label} »{/* </Texty> */}

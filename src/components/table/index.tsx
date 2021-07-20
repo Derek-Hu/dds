@@ -43,7 +43,7 @@ export default class Balance extends PureComponent<IProps, IState> {
         loading: hideLoading ? false : true,
       });
       const pageData = await loadPage(page, PageSize);
-      console.log('init page, pageSize', page, PageSize);
+      // console.log('init page, pageSize', page, PageSize);
       let all = (data || []).concat(pageData);
       if (cacheService) {
         const pendingOrders = cacheService(all);
@@ -81,7 +81,6 @@ export default class Balance extends PureComponent<IProps, IState> {
   }
 
   async componentDidMount() {
-    console.log('dtable componentDidMount...');
     this.loadData(false);
   }
 
@@ -94,7 +93,6 @@ export default class Balance extends PureComponent<IProps, IState> {
   }
   UNSAFE_componentWillReceiveProps(nextProps: IProps) {
     if (this.props.timestamp !== nextProps.timestamp) {
-      console.log('dtable refresh...');
       this.loadData(false);
     }
   }

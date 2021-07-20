@@ -3,12 +3,6 @@ import CardInfo from '../card-info/index';
 import { formatMessage } from 'locale/i18n';
 import SiteContext from '../../layouts/SiteContext';
 
-// interface IState {
-//   info?: any;
-//   loading: boolean;
-// }
-// @ts-ignore
-
 export default class TradeInfo extends Component<{ from: string; coin: IUSDCoins }, any> {
   state = {
     loading: false,

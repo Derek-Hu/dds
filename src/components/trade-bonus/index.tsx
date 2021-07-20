@@ -186,7 +186,7 @@ export default class TradeOrderList extends BaseStateComponent<IProps, IState> {
       type: formatMessage({ id: 'type' }),
       price: formatMessage({ id: 'open-price' }),
       amount: formatMessage({ id: 'amount' }),
-      closePrice: 'Close Price',
+      closePrice: formatMessage({ id: 'close-price' }),
       cost: formatMessage({ id: 'funding-fee-cost' }),
       fee: formatMessage({ id: 'settlement-fee' }),
       pl: formatMessage({ id: 'P&L' }),

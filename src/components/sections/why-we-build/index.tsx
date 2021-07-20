@@ -2,7 +2,7 @@ import styles from './style.module.less';
 import SectionTitle from '../section-title/index';
 import { formatMessage } from 'locale/i18n';
 import { Row, Col, Icon } from 'antd';
-import { CSS_H_SCALE } from '../../../constant/index';
+import { CSS_H_SCALE, SIDs } from '../../../constant/index';
 
 import threeImg from '../../../assets/why-build/one@2x.png';
 import fourImg from '../../../assets/why-build/two@2x.png';
@@ -24,6 +24,10 @@ const colSize = 6;
 const adColSize = 8;
 
 export default () => {
+  const nextPage = () => {
+    const element = document.getElementById(SIDs[2]);
+    element && element.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
+  };
   return (
     <div className={styles.whatWeBuild}>
       <div className={[styles.content, CSS_H_SCALE].join(' ')}>
@@ -63,7 +67,7 @@ export default () => {
           </div>
         </TweenOne>
         <div className={styles.arrowDown}>
-          <Icon type="down-circle" />
+          <Icon onClick={nextPage} type="down-circle" />
         </div>
       </div>
     </div>

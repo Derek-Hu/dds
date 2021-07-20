@@ -3,7 +3,7 @@ import SectionTitle from '../section-title/index';
 import { formatMessage } from 'locale/i18n';
 import { Row, Col } from 'antd';
 
-import howWorksImg from '../../../assets/how-shield-works.svg';
+import howWorksImg from '../../../assets/how-works.jpg';
 
 const Image = ({ src }: { src: string }) => {
   return (

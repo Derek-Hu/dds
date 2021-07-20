@@ -1,6 +1,8 @@
+import { formatMessage } from 'locale/i18n';
+
 export const orderTips = (txs: string[]) =>
   txs.map(tx => (
     <span>
-      Order {tx} canceled. <br />
+      {formatMessage({ id: 'order-id-canceled', tx })} <br />
     </span>
   ));
