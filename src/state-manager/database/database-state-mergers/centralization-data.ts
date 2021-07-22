@@ -1,6 +1,8 @@
-import { getTokenWei, keepDecimal, toDisplayNum, toExchangePair } from '../util/ethers';
+import { getTokenWei, keepDecimal, toDisplayNum, toExchangePair } from '../../../util/ethers';
 import { BigNumber } from 'ethers';
-import { EthNetwork } from '../constant/network';
+import { EthNetwork } from '../../../constant/network';
+import { getPairTokenSymbols, TRADE_PAIR_SYMBOL_MAP } from '../../../constant/tokens';
+import { OrderItemData } from '../../state-types';
 
 export interface IOrderInfoData {
   closePrice: string;
@@ -31,6 +33,9 @@ export class OrderInfoObject {
   public readonly makerAddress: string;
   public readonly orderId: BigNumber;
   public readonly exchangePair: ExchangeCoinPair;
+  public readonly tradePairSymbol: symbol;
+  public readonly quoteSymbol: symbol | null = null;
+  public readonly baseSymbol: symbol | null = null;
   public readonly openTime: number;
   public readonly orderType: ITradeType;
   public readonly openAmount: CoinNumber;
@@ -43,12 +48,20 @@ export class OrderInfoObject {
   public readonly marginAmount: CoinNumber;
   public readonly marginFee: CoinNumber;
 
-  constructor(orderInfoData: IOrderInfoData, private network: EthNetwork) {
+  constructor(public readonly orderInfoData: IOrderInfoData, public readonly network: EthNetwork) {
     this.createHash = orderInfoData.createHash;
     this.takerAddress = orderInfoData.takerAddress;
     this.makerAddress = orderInfoData.makerAddress;
     this.orderId = BigNumber.from(orderInfoData.orderId);
     this.exchangePair = toExchangePair(orderInfoData.symbol);
+    this.tradePairSymbol = TRADE_PAIR_SYMBOL_MAP.get(orderInfoData.symbol);
+    const tokens: { quote: symbol; base: symbol } | null = getPairTokenSymbols(this.tradePairSymbol);
+
+    if (tokens) {
+      this.quoteSymbol = tokens.quote;
+      this.baseSymbol = tokens.base;
+    }
+
     this.openTime = BigNumber.from(orderInfoData.openContractTime).toNumber();
     this.orderType = orderInfoData.orderType === 'LONG' ? 'LONG' : 'SHORT';
     this.openAmount = {
@@ -105,6 +118,29 @@ export class OrderInfoObject {
     };
   }
 
+  public toOrderItemData(): OrderItemData {
+    return {
+      id: this.orderId.toString(),
+      hash: this.createHash,
+      network: this.network,
+      takerAddress: this.takerAddress,
+      tradeDirection: this.orderType,
+      openTime: this.openTime,
+      openAmount: this.openAmount.value,
+      openPrice: this.openPrice.value,
+      closePrice: this.closePrice.value,
+      pairSymbol: TRADE_PAIR_SYMBOL_MAP.get(this.orderInfoData.symbol),
+      quoteSymbol: this.quoteSymbol,
+      baseSymbol: this.baseSymbol,
+      fundingFee: this.lockFee.value,
+      settlementFee: this.exFee.value,
+      orderStatus: this.status,
+      positionPNLVal: null,
+      positionPNLPercent: null,
+      realizedProfit: null,
+    } as OrderItemData;
+  }
+
   public getMakerOrder(): PrivatePoolOrder {
     return {
       network: this.network as string,
@@ -136,21 +172,21 @@ export class OrderInfoObject {
   // -----------------------------------------------------------------------
 
   private getTakerPLPercent(curPrice: CoinNumber): number {
-    let rs: number = (100 * toDisplayNum(this.getPriceDiff(curPrice), 4)) / toDisplayNum(this.openPrice, 4);
-    if (rs < 0) {
-      rs = 0;
-    }
-    return rs;
+    return (100 * toDisplayNum(this.getPriceDiff(curPrice), 4)) / toDisplayNum(this.openPrice, 4);
+    // if (rs < 0) {
+    //   rs = 0;
+    // }
+    // return rs;
   }
 
   private getTakerPL(curPrice: CoinNumber): number {
     const diff: number = toDisplayNum(this.getPriceDiff(curPrice), 4);
     const count: number = toDisplayNum(this.openAmount, 4);
-    let rs = diff * count;
-    if (rs < 0) {
-      rs = 0;
-    }
-    return rs;
+    return diff * count;
+    // if (rs < 0) {
+    //   rs = 0;
+    // }
+    //return rs;
   }
 
   private getEndPrice(curPrice: CoinNumber): CoinNumber {

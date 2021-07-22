@@ -4,6 +4,7 @@ import {
   ConfirmInfo,
   ContractProxy,
   LiquditorRewardsResult,
+  OrderRealtimeInfo,
   PrivateLockLiquidity,
   PrivatePoolAccountInfo,
   PubPoolLockInfo,
@@ -37,7 +38,7 @@ import { getPageListRange } from '../util/page';
 import { ContractAddress, ContractAddressByNetwork } from '../constant/address';
 import { getContractAddress, getContractInfo } from './contract-info';
 import { bigNumMultiple } from '../util/math';
-import { ReTokenMapping } from '../constant/tokens';
+import { ReTokenMapping, TOKEN_SYMBOL } from '../constant/tokens';
 import { EthNetwork, SupportedNetwork } from '../constant/network';
 import { Contract } from 'ethers';
 
@@ -535,10 +536,10 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
-  public closeContract(order: ITradeRecord): Observable<boolean> {
-    return this.getContract(order.costCoin).pipe(
+  public closeContract(orderId: string, quote: symbol): Observable<boolean> {
+    return this.getContract(quote.description as IUSDCoins).pipe(
       switchMap((contract: ethers.Contract) => {
-        const id = BigNumber.from(order.id);
+        const id = BigNumber.from(orderId);
         return contract.functions.closecontract(id);
       }),
       switchMap(rs => {
@@ -548,6 +549,32 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       catchError(err => {
         console.warn('error', err);
         return of(false);
+      })
+    );
+  }
+
+  public getOrderInfo(orderId: string, quote: symbol): Observable<OrderRealtimeInfo> {
+    return this.getContract(quote.description as IUSDCoins).pipe(
+      switchMap((contract: ethers.Contract) => {
+        const id = BigNumber.from(orderId);
+        return contract.getOrderInfo(id);
+      }),
+      map((res: any) => {
+        return {
+          orderId: orderId,
+          tradePair: res.exType,
+          tradeDirection: res.contractType === 1 ? 'LONG' : 'SHORT',
+          takerAddress: res.holder,
+          settlementFee: res.exFee,
+          lockedFee: res.lockFee,
+          newLockedFee: res.newLockFee,
+          openPrice: res.openPrice,
+          closePrice: res.closePrice,
+          openTime: res.startTime,
+          status: res.state === 1 ? 'ACTIVE' : 'CLOSED',
+          marginAmount: res.marginAmount,
+          marginFee: res.marginFee,
+        } as OrderRealtimeInfo;
       })
     );
   }
@@ -2348,8 +2375,16 @@ export class ContractAccessor implements ContractProxy {
     );
   }
 
-  public closeContract(orderId: ITradeRecord): Observable<boolean> {
-    return this.accessor.pipe(switchMap(accessor => accessor.closeContract(orderId)));
+  public closeContract(orderId: string, quote: symbol): Observable<boolean> {
+    return this.accessor.pipe(switchMap(accessor => accessor.closeContract(orderId, quote)));
+  }
+
+  public getOrderInfo(orderId: string, quote: symbol): Observable<OrderRealtimeInfo> {
+    return this.accessor.pipe(
+      switchMap(accessor => {
+        return accessor.getOrderInfo(orderId, quote);
+      })
+    );
   }
 
   public getUserOrders(address: string, curPrice: BigNumber, page: number, pageSize: number): Observable<any> {

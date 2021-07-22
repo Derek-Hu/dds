@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
 import { BigNumber, Contract } from 'ethers';
+import { TradeDirection } from '../state-manager/state-types';
 
 export interface ContractRead {
   getUserSelfWalletBalance(address: string): Observable<CoinBalance[]>;
@@ -107,7 +108,9 @@ export interface ContractProxy extends ContractRead, ApprovalAction, ActivityIte
     timeout: number
   ): Observable<string>;
 
-  closeContract(orderId: ITradeRecord): Observable<boolean>;
+  closeContract(orderId: string, quote: symbol): Observable<boolean>;
+
+  getOrderInfo(orderId: string, quote: symbol): Observable<OrderRealtimeInfo>;
 
   getFundingLockedAmount(coin: IUSDCoins, exchange: IExchangeStr, ethAmount: number): Observable<BigNumber>;
 
@@ -225,12 +228,6 @@ export interface UserAccountInfo {
   available: BigNumber;
 }
 
-export interface ContractParam {
-  exchangeType: 'ETHDAI';
-  number: BigNumber;
-  contractType: 1 | 2;
-}
-
 export interface CoinShare {
   coin: IUSDCoins;
   value: BigNumber;
@@ -303,3 +300,19 @@ export interface PubPoolLockInfo {
   lpToken: LpTokenAmountNum;
   totalLpToken: LpTokenAmountNum;
 }
+
+export type OrderRealtimeInfo = {
+  orderId: string;
+  tradePair: string;
+  tradeDirection: TradeDirection;
+  takerAddress: string;
+  settlementFee: BigNumber;
+  lockedFee: BigNumber;
+  newLockedFee: BigNumber;
+  openPrice: BigNumber;
+  closePrice: BigNumber;
+  openTime: BigNumber;
+  status: string;
+  marginAmount: BigNumber;
+  marginFee: BigNumber;
+};

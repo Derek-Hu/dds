@@ -1,4 +1,4 @@
-import { PageState, PageStateDefine, PageStateDefineTree, PageStateTree } from './interface';
+import { PageState, PageStateDefine, PageStateDefineTree, PageStateTree } from '../interface';
 import { PageStateImp } from './page-state';
 import _ from 'lodash';
 import { PAGE_STATE } from './page-state-def';

@@ -1,6 +1,6 @@
-import { ContractState, StateGetter } from './interface';
-import { BehaviorSubject, combineLatest, merge, Observable, of, Subscription } from 'rxjs';
-import { debounceTime, filter, finalize, map, startWith, switchMap, take, tap } from 'rxjs/operators';
+import { ContractState, StateGetter } from '../interface';
+import { BehaviorSubject, combineLatest, EMPTY, merge, Observable, Subscription } from 'rxjs';
+import { catchError, debounceTime, filter, finalize, map, startWith, switchMap, take, tap } from 'rxjs/operators';
 
 export class ContractStateImp<T> implements ContractState<T> {
   private state: BehaviorSubject<T | null> = new BehaviorSubject<T | null>(null);
@@ -11,7 +11,7 @@ export class ContractStateImp<T> implements ContractState<T> {
   private debugLabel: string | null = null;
   private debugSub: Subscription | null = null;
 
-  constructor(private depends: Observable<any>[], private getter: StateGetter<T>) {}
+  constructor(private depends: Observable<any>[], private getter: StateGetter<T>, private path: string) {}
 
   public get(): Observable<T> {
     if (this.isWatching()) {
@@ -94,7 +94,14 @@ export class ContractStateImp<T> implements ContractState<T> {
 
   private callGetter(args: any[]): Observable<T> {
     this.isPending.next(true);
-    return this.getter(...args).pipe(tap(() => this.isPending.next(false)));
+    return this.getter(...args).pipe(
+      take(1),
+      finalize(() => this.isPending.next(false)),
+      catchError(err => {
+        console.log('contract state getter error', this.path, args, err);
+        return EMPTY;
+      })
+    );
   }
 
   private unwatch() {

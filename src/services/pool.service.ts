@@ -8,7 +8,7 @@ import { first, firstValueFrom, from, Observable, of, zip } from 'rxjs';
 import { loadingObs, withLoading } from './utils';
 import { defaultCoinDatas, defaultPoolData } from './mock/unlogin-default';
 import * as request from 'superagent';
-import { IOrderInfoData, OrderInfoObject } from './centralization-data';
+import { IOrderInfoData, OrderInfoObject } from '../state-manager/database/database-state-mergers/centralization-data';
 import { CoinBalance, CoinShare, PrivatePoolAccountInfo } from '../wallet/contract-interface';
 import { CentralHost, CentralPath, CentralPort, CentralProto } from '../constant/address';
 import { queryMan } from '../wallet/state-manager';

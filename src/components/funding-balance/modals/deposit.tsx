@@ -4,13 +4,13 @@ import styles from './style.module.less';
 import SiteContext from '../../../layouts/SiteContext';
 import InputNumber from '../../input/index';
 import { formatMessage } from 'locale/i18n';
-import { PageTradingPair } from '../../../state-manager/page-state-types';
-import { P } from '../../../state-manager/page-state-parser';
+import { P } from '../../../state-manager/page/page-state-parser';
 import { BaseStateComponent } from '../../../state-manager/base-state-component';
 import { BigNumber } from 'ethers';
-import { S } from '../../../state-manager/contract-state-parser';
+import { S } from '../../../state-manager/contract/contract-state-parser';
 import { toEtherNumber } from '../../../util/ethers';
 import NormalButton from '../../common/buttons/normal-btn';
+import { PageTradingPair } from '../../../state-manager/state-types';
 
 const title = formatMessage({ id: 'funding-fee-deposit' });
 

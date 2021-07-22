@@ -3,7 +3,7 @@ import styles from './air-drop-page.module.less';
 import { Col, Row } from 'antd';
 import { format } from '../../../util/math';
 import NormalButton from '../../common/buttons/normal-btn';
-import { walletState } from '../../../state-manager/wallet-state';
+import { walletState } from '../../../state-manager/wallet/wallet-state';
 import { MyTokenSymbol, Wallet } from '../../../constant';
 import { AsyncSubject, combineLatest, merge, Observable, Subscription } from 'rxjs';
 import { EthNetwork } from '../../../constant/network';

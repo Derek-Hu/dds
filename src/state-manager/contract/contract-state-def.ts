@@ -1,22 +1,23 @@
 /**
  * 状态会根据PageState，WalletState的改变进行更新。
  */
-import { constState } from './const-state';
-import { walletState } from './wallet-state';
+import { constState } from '../const/const-state';
+import { walletState } from '../wallet/wallet-state';
 import {
   maxOpenAmountGetter,
+  orderListGetter,
   tradeFeeGetter,
   tradePairPriceGetter,
   tradePriceGetter,
   userTradeAccountGetter,
   walletBalanceGetter,
 } from './contract-state-getter';
-import { TOKEN_SYMBOL } from '../constant/tokens';
+import { TOKEN_SYMBOL } from '../../constant/tokens';
 import { NEVER, Observable, of } from 'rxjs';
-import { ContractState, ContractStateTree, StateReference } from './interface';
+import { ContractState, ContractStateTree, StateReference } from '../interface';
 import _ from 'lodash';
 import { switchMap } from 'rxjs/operators';
-import { P } from './page-state-parser';
+import { P } from '../page/page-state-parser';
 
 class StateHolder implements StateReference {
   private treeRoot: ContractStateTree<any> | null = null;
@@ -103,40 +104,36 @@ export const CONTRACT_STATE = {
   },
   Trade: {
     Price: {
-      ETH: {
-        DAI: {
-          _depend: [constState.CONTRACTS.TradeDAIContract, of(TOKEN_SYMBOL.ETH)],
-          _getter: tradePriceGetter,
-        },
-        USDT: {
-          _depend: [constState.CONTRACTS.TradeUSDTContract, of(TOKEN_SYMBOL.ETH)],
-          _getter: tradePriceGetter,
-        },
-        USDC: {
-          _depend: [constState.CONTRACTS.TradeUSDCContract, of(TOKEN_SYMBOL.ETH)],
-          _getter: tradePriceGetter,
-        },
+      ETHDAI: {
+        _depend: [constState.CONTRACTS.TradeDAIContract, of(TOKEN_SYMBOL.ETH), of(TOKEN_SYMBOL.DAI)],
+        _getter: tradePriceGetter,
       },
-      BTC: {
-        DAI: {
-          _depend: [constState.CONTRACTS.TradeDAIContract, of(TOKEN_SYMBOL.BTC)],
-          _getter: tradePriceGetter,
-        },
-        USDT: {
-          _depend: [constState.CONTRACTS.TradeUSDTContract, of(TOKEN_SYMBOL.BTC)],
-          _getter: tradePriceGetter,
-        },
-        USDC: {
-          _depend: [constState.CONTRACTS.TradeUSDCContract, of(TOKEN_SYMBOL.BTC)],
-          _getter: tradePriceGetter,
-        },
+      ETHUSDT: {
+        _depend: [constState.CONTRACTS.TradeUSDTContract, of(TOKEN_SYMBOL.ETH), of(TOKEN_SYMBOL.USDT)],
+        _getter: tradePriceGetter,
+      },
+      ETHUSDC: {
+        _depend: [constState.CONTRACTS.TradeUSDCContract, of(TOKEN_SYMBOL.ETH), of(TOKEN_SYMBOL.USDC)],
+        _getter: tradePriceGetter,
+      },
+      BTCDAI: {
+        _depend: [constState.CONTRACTS.TradeDAIContract, of(TOKEN_SYMBOL.BTC), of(TOKEN_SYMBOL.DAI)],
+        _getter: tradePriceGetter,
+      },
+      BTCUSDT: {
+        _depend: [constState.CONTRACTS.TradeUSDTContract, of(TOKEN_SYMBOL.BTC), of(TOKEN_SYMBOL.USDT)],
+        _getter: tradePriceGetter,
+      },
+      BTCUSDC: {
+        _depend: [constState.CONTRACTS.TradeUSDCContract, of(TOKEN_SYMBOL.BTC), of(TOKEN_SYMBOL.USDC)],
+        _getter: tradePriceGetter,
       },
     },
     CurPairPrice: {
       _depend: [constState.TradeOptionContract, P.Trade.Pair],
       _getter: tradePairPriceGetter,
     },
-    Order: {
+    Create: {
       CurMaxOpenAmount: {
         _depend: [constState.TradeOptionContract, P.Trade.Direction, P.Trade.Pair, Ref('User.CurTradePairAccount')],
         _getter: maxOpenAmountGetter,
@@ -144,6 +141,16 @@ export const CONTRACT_STATE = {
       CurOpenOrderFee: {
         _depend: [constState.TradeOptionContract, P.Trade.Create.OpenAmount, P.Trade.Pair, P.Trade.Direction],
         _getter: tradeFeeGetter,
+      },
+    },
+    OrderList: {
+      Active: {
+        _depend: [walletState.USER_ADDR, walletState.NETWORK, P.Trade.Orders.Active.PageIndex],
+        _getter: orderListGetter.bind(null, 'ACTIVE'),
+      },
+      HISTORY: {
+        _depend: [walletState.USER_ADDR, walletState.NETWORK],
+        _getter: orderListGetter.bind(null, 'HISTORY'),
       },
     },
   },

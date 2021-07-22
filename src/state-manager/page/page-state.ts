@@ -1,6 +1,5 @@
-import { PageState } from './interface';
+import { PageState } from '../interface';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 export class PageStateImp<T> implements PageState<T> {
   private readonly state: BehaviorSubject<T>;
@@ -15,6 +14,10 @@ export class PageStateImp<T> implements PageState<T> {
 
   set(state: T): void {
     this.state.next(state);
+  }
+
+  setToDefault() {
+    this.state.next(this.defaultVal);
   }
 
   get(): T {

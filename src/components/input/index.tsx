@@ -83,6 +83,7 @@ export default class InputNumberComp extends Component<
     // income value
     const newVal: number | null = nextProps.value === null ? null : Number(nextProps.value);
     // income value was not changed, return;
+
     if (newVal === prevState.cacheInputAmount) {
       return null;
     }
@@ -90,10 +91,10 @@ export default class InputNumberComp extends Component<
     // update income value cache
     const rs = { cacheInputAmount: newVal };
     // update real amount if needed.
-    if (newVal && !isNaN(newVal) && prevState.amount !== newVal.toString()) {
-      Object.assign(rs, { amount: newVal.toString() });
-    } else if (newVal === null) {
+    if (newVal === null || newVal === undefined || newVal === 0 || isNaN(newVal)) {
       Object.assign(rs, { amount: '' });
+    } else if (prevState.amount !== newVal.toString()) {
+      Object.assign(rs, { amount: newVal.toString() });
     }
 
     return rs;

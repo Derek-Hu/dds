@@ -72,13 +72,15 @@ export default class TradePage extends Component {
                   <KLine updatePrice={this.updatePrice} curPrice={curPrice} from={fromCoin} to={coin} />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={8}>
-                  <FundingBalance timestamp={timestamp} coins={{ from: fromCoin, to: coin }} />
+                  <FundingBalance />
                 </Col>
               </Row>
+
               <div>
                 <Auth>
                   <TradeBonus coin={coin} curPrice={curPrice} />
                 </Auth>
+
                 <div>
                   <Row gutter={isMobile ? 0 : 20}>
                     <Col xs={24} sm={24} md={12} lg={12}>
