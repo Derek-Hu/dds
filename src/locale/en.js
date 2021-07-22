@@ -117,6 +117,7 @@ export default {
   'funding-fee-cost': 'Funding Fee Cost',
   'funding-fee-locked': 'Funding Fee Locked',
   'P&L': 'P&L',
+  'realized-profit': 'Realized Profit',
   status: 'Status',
   withdraw: 'WITHDRAW',
   'withdraw-until-deadline': 'Withdraw until ${deadline}',

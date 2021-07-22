@@ -1,37 +1,21 @@
 import { DatabaseStateMerger } from '../../interface';
-import { asyncScheduler, from, merge, NEVER, Observable, of } from 'rxjs';
+import { asyncScheduler, AsyncSubject, from, merge, Observable, of } from 'rxjs';
 import { OrderItemData } from '../../state-types';
-import { EthNetwork } from '../../../constant/network';
 import { DatabaseUrl } from '../../../constant/address';
 import * as request from 'superagent';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { finalize, map, mapTo, startWith, switchMap, tap } from 'rxjs/operators';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
-import { TRADE_PAIR_SYMBOL_MAP, TRADE_PAIR_SYMBOL, getPairTokenSymbols } from '../../../constant/tokens';
+import { TRADE_PAIR_SYMBOL } from '../../../constant/tokens';
 import _ from 'lodash';
 import { BigNumber } from 'ethers';
 import { S } from '../../contract/contract-state-parser';
-import { toEtherNumber } from '../../../util/ethers';
 import { C } from 'state-manager/cache/cache-state-parser';
+import { computePositionPNL } from '../../../util/pnl';
+import { contractAccessor } from '../../../wallet/chain-access';
+import { OrderRealtimeInfo } from '../../../wallet/contract-interface';
+import { argConverter, ListArgObject, ListArgs } from './list-types';
 
-// address, network, pageIndex, pageSize, PendingOrders
-type Args = [string, EthNetwork, number, number];
-type ArgObject = {
-  address: string;
-  network: EthNetwork;
-  pageIndex: number;
-  pageSize: number;
-};
-
-function argConverter(args: Args): ArgObject {
-  return {
-    address: args[0],
-    network: args[1],
-    pageIndex: args[2],
-    pageSize: args[3],
-  } as ArgObject;
-}
-
-export class ActiveOrdersMerger implements DatabaseStateMerger<OrderItemData[], Args> {
+export class ActiveOrdersMerger implements DatabaseStateMerger<OrderItemData[], ListArgs> {
   private cachedFundingFee = new Map<string, BigNumber>();
 
   /**
@@ -39,8 +23,8 @@ export class ActiveOrdersMerger implements DatabaseStateMerger<OrderItemData[], 
    * maybe send results multi-times.
    * @param args
    */
-  public mergeWatch(...args: Args): Observable<OrderItemData[]> {
-    const argObj: ArgObject = argConverter(args);
+  public mergeWatch(...args: ListArgs): Observable<OrderItemData[]> {
+    const argObj: ListArgObject = argConverter(args);
 
     return this.doGet(argObj).pipe(
       switchMap((confirmed: OrderItemData[]) => {
@@ -113,7 +97,7 @@ export class ActiveOrdersMerger implements DatabaseStateMerger<OrderItemData[], 
    * get confirmed and active orders
    * @param argObj
    */
-  private doGet(argObj: ArgObject): Observable<OrderItemData[]> {
+  private doGet(argObj: ListArgObject): Observable<OrderItemData[]> {
     const url: string = DatabaseUrl[argObj.network];
     const allSize: number = (argObj.pageIndex + 1) * argObj.pageSize;
     const resObs: Promise<any> = request
@@ -128,7 +112,7 @@ export class ActiveOrdersMerger implements DatabaseStateMerger<OrderItemData[], 
         });
       }),
       map((orderInfos: OrderInfoObject[]) => {
-        return orderInfos.map(one => this.convertToRowItem(one));
+        return orderInfos.map(one => one.toOrderItemData());
       })
     );
   }
@@ -140,7 +124,7 @@ export class ActiveOrdersMerger implements DatabaseStateMerger<OrderItemData[], 
           .filter(one => one.orderStatus !== 'PENDING')
           .filter(one => one.pairSymbol === pair)
           .forEach(one => {
-            const { pnl, percent } = this.computePNL(price, one.openPrice, one.pairSymbol);
+            const { pnl, percent } = computePositionPNL(one.openPrice, price, one.openAmount, one.pairSymbol);
             one.positionPNLVal = pnl;
             one.positionPNLPercent = percent;
           });
@@ -171,40 +155,29 @@ export class ActiveOrdersMerger implements DatabaseStateMerger<OrderItemData[], 
 
     const newIds: string[] = _.difference(ids, existFees);
     if (newIds.length > 0) {
-      // TODO get the funding fee by order id from blockchain
-      return NEVER;
+      const needFetchOrders: OrderItemData[] = orders.filter(one => newIds.indexOf(one.id) >= 0);
+      const obs: Observable<OrderRealtimeInfo>[] = needFetchOrders.map(one => {
+        return contractAccessor.getOrderInfo(one.id, one.quoteSymbol);
+      });
+
+      const rs = new AsyncSubject();
+      merge(...obs)
+        .pipe(
+          tap((info: OrderRealtimeInfo) => {
+            const fundingFee: BigNumber = info.lockedFee.add(info.newLockedFee);
+            this.cachedFundingFee.set(info.orderId, fundingFee);
+          }),
+          finalize(() => {
+            rs.next(true);
+            rs.complete();
+          })
+        )
+        .subscribe();
+
+      return rs.pipe(mapTo(this.cachedFundingFee));
     } else {
       return of(this.cachedFundingFee);
     }
-  }
-
-  private convertToRowItem(orderInfoData: OrderInfoObject): OrderItemData {
-    return {
-      id: orderInfoData.orderId.toString(),
-      hash: orderInfoData.createHash,
-      network: orderInfoData.network,
-      takerAddress: orderInfoData.takerAddress,
-      openTime: orderInfoData.openTime,
-      openAmount: orderInfoData.openAmount.value,
-      openPrice: orderInfoData.openPrice.value,
-      closePrice: orderInfoData.closePrice.value,
-      pairSymbol: TRADE_PAIR_SYMBOL_MAP.get(orderInfoData.orderInfoData.symbol),
-      fundingFee: orderInfoData.lockFee.value,
-      settlementFee: orderInfoData.exFee.value,
-      orderStatus: orderInfoData.status,
-      positionPNLVal: null,
-      positionPNLPercent: null,
-    } as OrderItemData;
-  }
-
-  private computePNL(curPrice: BigNumber, openPrice: BigNumber, pair: symbol): { pnl: number; percent: number } {
-    const quote: symbol = getPairTokenSymbols(pair)?.quote as symbol;
-    const delta: BigNumber = curPrice.sub(openPrice);
-    const open: number = Number(toEtherNumber(openPrice, 2, quote));
-    const pnl = Number(toEtherNumber(delta, 2, quote));
-    const pnlPercent = Number(((pnl * 100) / open).toFixed(2));
-
-    return { pnl, percent: pnlPercent };
   }
 
   private watchCurPrices(items: OrderItemData[]): Observable<[symbol, BigNumber]> {

@@ -86,7 +86,11 @@ export const dividedPecent = (fenzi: any, fenmu: any) => {
 };
 
 export const isNumberLike = (value: any) => {
-  return String(Number(value)) === String(value);
+  return (
+    (typeof value === 'string' && !!value.match(/^-?[0-9]+\.?[0-9]*$/)) ||
+    (typeof value === 'number' && !isNaN(value)) ||
+    String(Number(value)) === String(value)
+  );
 };
 
 export const isNotZeroLike = (value: any) => {

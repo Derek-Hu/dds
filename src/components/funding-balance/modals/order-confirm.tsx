@@ -137,13 +137,13 @@ export default class OrderConfirm extends BaseStateComponent<IProps, IState> {
 
               <Row gutter={[isMobile ? 0 : 16, 16]} className={styles.actionBtns} type="flex">
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 2 : 1}>
-                  <NormalButton type={'default'} onClick={this.onCancel.bind(this)}>
+                  <NormalButton type={'default'} onClick={this.onCancel.bind(this)} inModal={true}>
                     {formatMessage({ id: 'cancel' })}
                   </NormalButton>
                 </Col>
 
                 <Col xs={24} sm={24} md={12} lg={12} order={isMobile ? 1 : 2}>
-                  <NormalButton type={'primary'} onClick={this.onConfirmCreateOrder.bind(this)}>
+                  <NormalButton type={'primary'} onClick={this.onConfirmCreateOrder.bind(this)} inModal={true}>
                     {formatMessage({ id: 'confirm' })}
                   </NormalButton>
                 </Col>

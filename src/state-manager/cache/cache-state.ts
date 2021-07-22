@@ -1,4 +1,4 @@
-import { CacheState } from '../interface';
+import { CacheParser, CachePatcher, CacheSerializer, CacheState } from '../interface';
 import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
 import { walletState } from '../wallet/wallet-state';
 import { finalize, map, switchMap, take } from 'rxjs/operators';
@@ -9,8 +9,9 @@ export class CacheStateImp<T> implements CacheState<T> {
   private sub: Subscription | null = null;
   constructor(
     private key: string,
-    private serializer: (state: T) => string,
-    private parser: (str: string) => T | null
+    private serializer: CacheSerializer<T>,
+    private parser: CacheParser<T>,
+    private patcher?: CachePatcher<T>
   ) {}
 
   getKey(): string {
@@ -31,11 +32,27 @@ export class CacheStateImp<T> implements CacheState<T> {
       if (state === null) {
         localStorage.removeItem(key);
       } else {
-        localStorage.setItem(key, this.serializer(state));
+        const lastStr: string | null = this.serializer(state);
+        if (lastStr === null) {
+          localStorage.removeItem(key);
+        } else {
+          localStorage.setItem(key, lastStr);
+        }
       }
 
       this.state.next(state);
     });
+  }
+
+  patch(state: T | null) {
+    if (this.patcher) {
+      this.get().subscribe((old: T | null) => {
+        const newState: T | null = (this.patcher as CachePatcher<T>)(old, state);
+        this.set(newState);
+      });
+    } else {
+      this.set(state);
+    }
   }
 
   watch(): Observable<T | null> {

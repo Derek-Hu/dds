@@ -83,7 +83,7 @@ export default class InputNumberComp extends Component<
     // income value
     const newVal: number | null = nextProps.value === null ? null : Number(nextProps.value);
     // income value was not changed, return;
-    console.log('new val', newVal, prevState.cacheInputAmount);
+
     if (newVal === prevState.cacheInputAmount) {
       return null;
     }

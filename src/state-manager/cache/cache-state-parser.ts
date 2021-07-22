@@ -24,7 +24,7 @@ export function parseCacheStateDefineTree<D extends CacheStateDefineTree>(define
 }
 
 export function convertCacheState<T>(stateDefine: CacheStateDefine<T>): CacheState<T> {
-  return new CacheStateImp(stateDefine._key, stateDefine._serializer, stateDefine._parser);
+  return new CacheStateImp(stateDefine._key, stateDefine._serializer, stateDefine._parser, stateDefine._patcher);
 }
 
 export const C = parseCacheStateDefineTree(CACHE_STATE);

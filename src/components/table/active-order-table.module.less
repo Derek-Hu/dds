@@ -1,7 +1,18 @@
-.tradeLong {
-  color: #02b464;
-}
+@normal-text-color: #333333;
 
-.tradeShort {
-  color: #fa4d56;
+.modalItem {
+  :global {
+    .ant-descriptions-row {
+      .ant-descriptions-item {
+        .ant-descriptions-item-label {
+          color: @normal-text-color;
+          font-family: Gilroy-Bold, sans-serif;
+        }
+
+        .ant-descriptions-item-content {
+          color: @normal-text-color;
+        }
+      }
+    }
+  }
 }

@@ -54,6 +54,10 @@ export function toEtherNumber(
   return Number(toEthers(num, decimal, coin)).toFixed(decimal);
 }
 
+export function toRoundNumber(num: BigNumber | null | undefined, decimal: number, coin: symbol): string {
+  return Number(toEthers(num, decimal + 1, coin)).toFixed(decimal);
+}
+
 export function toDisplayNum(coinNum: CoinNumber, decimal: number): number {
   return Number(toEthers(coinNum.value, decimal, coinNum.precision));
 }

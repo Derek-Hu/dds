@@ -77,11 +77,15 @@ export interface PageState<T> {
 
 // ----------------------------------------------------------------------------
 // Cache State
+export type CacheSerializer<T> = (state: T | null) => string | null;
+export type CacheParser<T> = (stateStr: string | null) => T | null;
+export type CachePatcher<T> = (oldState: T | null, newState: T | null) => T | null;
 
 export interface CacheStateDefine<T> {
   _key: string;
-  _parser: (stateStr: string) => T | null;
-  _serializer: (state: T) => string;
+  _parser: CacheParser<T>;
+  _serializer: CacheSerializer<T>;
+  _patcher?: CachePatcher<T>;
 }
 
 export type CacheStateDefineTree = { [p: string]: CacheStateDefine<any> | CacheStateDefineTree };
@@ -97,6 +101,8 @@ export interface CacheState<T> {
   getKey(): string;
 
   set(state: T | null): void;
+
+  patch(state: T | null): void;
 
   get(): Observable<T | null>;
 

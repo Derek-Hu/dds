@@ -1,17 +1,12 @@
-import { OrderItemData } from '../state-types';
+import { orderParser, orderPatcher, orderSerializer } from './cache-state-serializer';
 
 export const CACHE_STATE = {
   Order: {
     NewCreate: {
       _key: '_pending_orders',
-      _serializer: (state: OrderItemData[]) => JSON.stringify(state),
-      _parser: (stateStr: string): OrderItemData[] | null => {
-        try {
-          return JSON.parse(stateStr);
-        } catch (e) {
-          return null;
-        }
-      },
+      _serializer: orderSerializer,
+      _parser: orderParser,
+      _patcher: orderPatcher,
     },
   },
 };

@@ -12,11 +12,14 @@ export type OrderItemData = {
   openPrice: BigNumber;
   closePrice: BigNumber;
   pairSymbol: symbol;
+  quoteSymbol: symbol;
+  baseSymbol: symbol;
   fundingFee: BigNumber;
   settlementFee: BigNumber;
   orderStatus: OrderStatus;
   positionPNLVal: number | null;
   positionPNLPercent: number | null;
+  realizedProfit: number | null;
 };
 export type PageTradingPair = { quote: symbol; base: symbol };
 export type TradeDirection = 'LONG' | 'SHORT';

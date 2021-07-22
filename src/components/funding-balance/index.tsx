@@ -3,12 +3,10 @@ import styles from './style.module.less';
 import DepositModal from './modals/deposit';
 import WithdrawModal from './modals/withdraw';
 import OrderConfirm from './modals/order-confirm';
-import dayjs from 'dayjs';
 import SiteContext from '../../layouts/SiteContext';
 import { deposit, withdraw, createOrder } from '../../services/trade.service';
 import InputNumber from '../input/index';
 import Placeholder from '../placeholder/index';
-import { setPendingOrders } from '../../util/order-cache';
 import { formatMessage } from 'locale/i18n';
 import { Setting } from './dropdown/setting';
 import { BaseStateComponent } from '../../state-manager/base-state-component';
@@ -16,7 +14,18 @@ import { toEtherNumber } from '../../util/ethers';
 import { BigNumber } from 'ethers';
 import { P } from '../../state-manager/page/page-state-parser';
 import { S } from '../../state-manager/contract/contract-state-parser';
-import { PageTradingPair, TradeDirection, TradeOrderFees, UserTradeAccountInfo } from '../../state-manager/state-types';
+import {
+  OrderItemData,
+  PageTradingPair,
+  TradeDirection,
+  TradeOrderFees,
+  UserTradeAccountInfo,
+} from '../../state-manager/state-types';
+import { D } from '../../state-manager/database/database-state-parser';
+import { walletState } from '../../state-manager/wallet/wallet-state';
+import { zip } from 'rxjs';
+import { getTradePairSymbol } from '../../constant/tokens';
+import { C } from '../../state-manager/cache/cache-state-parser';
 
 interface IState {
   fundingBalance: UserTradeAccountInfo | null;
@@ -31,10 +40,7 @@ interface IState {
   tradingDirection: TradeDirection;
 }
 
-interface IProps {
-  coins: { from: IFromCoins; to: IUSDCoins };
-  timestamp: any;
-}
+interface IProps {}
 
 /**
  * Funding Balance
@@ -83,12 +89,6 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
 
   private feeNum(num: BigNumber | null | undefined): string {
     return toEtherNumber(num, 3, this.state.tradingPair.quote);
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps: IProps) {
-    if (this.props.timestamp !== nextProps.timestamp) {
-      this.refreshBalanceValue();
-    }
   }
 
   refreshBalanceValue() {
@@ -150,23 +150,38 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
       P.Trade.Create.OpenAmount.get(),
       Number(this.quoteCoinNum(this.state.openOrderFees?.curPrice))
     )
-      .then(newOrderId => {
-        if (newOrderId) {
-          setPendingOrders({
-            hash: newOrderId,
-            time: openTime,
-            type: P.Trade.Direction.get(),
-            amount: P.Trade.Create.OpenAmount.get(),
-            cost: this.quoteCoinNum(this.state.openOrderFees?.fundingLocked),
-            fee: this.quoteCoinNum(this.state.openOrderFees?.settlementFee),
-            price: curPrice,
-            status: 'PENDING',
-            costCoin: this.state.tradingPair.quote.description,
-            $expireTime: dayjs(new Date(openTime)).add(20, 'minute').toDate().getTime(),
+      .then(newOrderHash => {
+        if (newOrderHash) {
+          zip([walletState.watchNetwork(), walletState.watchUserAccount()]).subscribe(([network, address]) => {
+            const pageTradePair = P.Trade.Pair.get();
+            const pendingOrder: OrderItemData = {
+              id: '',
+              hash: newOrderHash,
+              network,
+              takerAddress: address,
+              openTime: openTime,
+              tradeDirection: P.Trade.Direction.get(),
+              openAmount: BigNumber.from(P.Trade.Create.OpenAmount.get()),
+              openPrice: this.state.openOrderFees?.curPrice as BigNumber,
+              closePrice: BigNumber.from(0),
+              pairSymbol: getTradePairSymbol(pageTradePair.base, pageTradePair.quote) as symbol,
+              quoteSymbol: pageTradePair.quote,
+              baseSymbol: pageTradePair.base,
+              fundingFee: this.state.openOrderFees?.fundingLocked as BigNumber,
+              settlementFee: this.state.openOrderFees?.settlementFee as BigNumber,
+              orderStatus: 'PENDING',
+              positionPNLVal: 0,
+              positionPNLPercent: 0,
+              realizedProfit: 0,
+            };
+
+            C.Order.NewCreate.patch([pendingOrder]);
           });
 
+          // after order created
           this.refreshBalanceValue();
           P.Trade.Create.OpenAmount.setToDefault();
+          this.tickState(D.ActiveOrders);
           this.context.refreshPage && this.context.refreshPage();
         }
       })

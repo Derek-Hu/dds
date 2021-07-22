@@ -20,7 +20,7 @@ export const PAGE_STATE = {
       },
       Active: {
         PageSize: {
-          _default: 10,
+          _default: 999,
         },
         PageIndex: {
           _default: 0,

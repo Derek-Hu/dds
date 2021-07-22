@@ -1,6 +1,6 @@
 import { Component } from 'react';
-import { ContractState, PageState } from './interface';
-import { isObservable, Observable, of, Subscription } from 'rxjs';
+import { CacheState, ContractState, DatabaseState, PageState } from './interface';
+import { interval, isObservable, Observable, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 type StateName<S> = keyof S & string;
@@ -11,11 +11,16 @@ export class BaseStateComponent<P, S> extends Component<P, S> {
 
   public registerState<N extends keyof S, T extends Pick<S, N>>(
     name: N,
-    state: ContractState<S[N]> | PageState<S[N]> | Observable<ContractState<S[N]> | PageState<S[N]>>,
+    state:
+      | ContractState<S[N]>
+      | PageState<S[N]>
+      | DatabaseState<S[N]>
+      | CacheState<S[N] | null>
+      | Observable<ContractState<S[N]> | PageState<S[N]> | DatabaseState<S[N]> | CacheState<S[N] | null>>,
     callback?: () => void
   ): void {
     const stateObs = isObservable(state) ? state : of(state);
-    const sub: Subscription = stateObs.pipe(switchMap(state => state.watch())).subscribe((s: S[N]) => {
+    const sub: Subscription = stateObs.pipe(switchMap(state => state.watch())).subscribe((s: S[N] | null) => {
       const newState = { [name]: s } as T;
       this.setState(newState, () => {
         if (callback) {
@@ -48,8 +53,15 @@ export class BaseStateComponent<P, S> extends Component<P, S> {
     this.subs.push(sub);
   }
 
-  public tickState(...states: ContractState<any>[]) {
+  public tickState(...states: (ContractState<any> | DatabaseState<any>)[]) {
     states.forEach(one => one.tick());
+  }
+
+  public tickInterval(time: number, ...states: (ContractState<any> | DatabaseState<any>)[]): void {
+    const sub = interval(time).subscribe(() => {
+      this.tickState(...states);
+    });
+    this.subs.push(sub);
   }
 
   public destroyState() {

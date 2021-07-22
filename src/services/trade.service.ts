@@ -13,6 +13,7 @@ import { IOrderInfoData, OrderInfoObject } from '../state-manager/database/datab
 import { CentralHost, CentralPath, CentralPort, CentralProto } from '../constant/address';
 import { LocalStorageKeyPrefix } from '../constant';
 import { readTradeSetting } from './local-storage.service';
+import { OrderItemData } from '../state-manager/state-types';
 
 /**
  * Trade Page
@@ -318,8 +319,8 @@ export const createOrder = async (
  * 关仓操作
  * @param order - 订单对象，从返回的order列表中选取
  */
-export const closeOrder = async (order: ITradeRecord, closePrice: number): Promise<boolean> => {
-  return withLoading(firstValueFrom(contractAccessor.closeContract(order).pipe(take(1))));
+export const closeOrder = async (order: OrderItemData): Promise<boolean> => {
+  return withLoading(firstValueFrom(contractAccessor.closeContract(order.id, order.quoteSymbol).pipe(take(1))));
 };
 
 const NetworkChains: Partial<Record<IFromCoins, INetworkChain>> = {

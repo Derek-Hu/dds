@@ -3,14 +3,9 @@ import { DatabaseStateImp } from './database-state';
 import { isObservable, NEVER, Observable } from 'rxjs';
 import _ from 'lodash';
 import { DATABASE_STATE } from './database-state-def';
+import { isDatabaseStateDefine, isWatchable } from '../interface-util';
 
-function isDatabaseStateDefine(def: any): boolean {
-  return _.has(def, '_merger') && _.has(def, '_depend');
-}
-
-export function parseDatabaseStateDefine<D extends DatabaseStateDefineTree>(
-  defines: D
-): Observable<DatabaseStateTree<D>> {
+export function parseDatabaseStateDefine<D extends DatabaseStateDefineTree>(defines: D): DatabaseStateTree<D> {
   const res = {} as any;
 
   const keys = Object.keys(defines) as (keyof D)[];
@@ -23,16 +18,17 @@ export function parseDatabaseStateDefine<D extends DatabaseStateDefineTree>(
     }
   });
 
-  return res as Observable<DatabaseStateTree<D>>;
+  return res as DatabaseStateTree<D>;
 }
 
 export function convertDatabaseState<T>(define: DatabaseStateDefine<T>): DatabaseState<T> {
   const obs: Observable<any>[] = define._depend.map(one => {
     if (isObservable(one)) {
       return one;
-    } else if (_.has(one, 'watch')) {
+    } else if (isWatchable(one)) {
       return one.watch();
     } else {
+      console.warn('never observable exist in db state args', one);
       return NEVER;
     }
   });

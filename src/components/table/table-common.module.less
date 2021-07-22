@@ -1,0 +1,104 @@
+@table-padding-top: 1rem;
+@table-padding-side: 1rem;
+@table-bg: #ffffff;
+@table-hover: #f6f7f9;
+@table-border-color: #f9f9f9;
+@table-border-radius: 8px; // 0.5rem
+@th-font-color: #808080;
+@td-font-color: #383838;
+@td-font-size: 14px; //0.875rem;
+@th-line-height: 20px; //1.25rem;
+@td-line-height: 22px; //1.375rem;
+@td-padding: 22px 16px; // 1.375rem 1rem;
+
+@positive-color: #02b464;
+@negative-color: #fa4d56;
+
+.tradeLong,
+.positive {
+  color: @positive-color;
+}
+
+.tradeShort,
+.negative {
+  color: @negative-color;
+}
+
+.more {
+  display: block;
+  text-align: center;
+  padding-bottom: 0.5rem;
+}
+
+.sldTable {
+  border: none;
+  display: block;
+  background-color: @table-bg;
+
+  :global {
+    .ant-table-content {
+      padding-top: @table-padding-top;
+      padding-left: @table-padding-side;
+      padding-right: @table-padding-side;
+      padding-bottom: @table-padding-side;
+      background-color: @table-bg;
+      border-radius: @table-border-radius;
+
+      .ant-table-fixed-right {
+        top: @table-padding-top;
+        right: @table-padding-side;
+      }
+
+      .ant-table-scroll {
+        .ant-table-body {
+          &::-webkit-scrollbar {
+            background-color: transparent;
+            height: 9px;
+          }
+          &::-webkit-scrollbar-thumb {
+            background-color: #c1c1c1;
+            border-radius: 5px;
+          }
+          &::-webkit-scrollbar-thumb:hover {
+            background-color: #888888;
+          }
+          &::-webkit-scrollbar-track {
+            background-color: transparent;
+            box-shadow: none;
+          }
+        }
+      }
+
+      table > thead > tr > th {
+        background-color: @table-bg;
+      }
+
+      .ant-table-thead {
+        tr {
+          th {
+            border-color: @table-border-color;
+            color: @th-font-color;
+            font-size: @td-font-size;
+            line-height: @th-line-height;
+          }
+        }
+      }
+      .ant-table-tbody {
+        tr:hover:not(.ant-table-row-selected):not(.ant-table-expanded-row) > td,
+        .ant-table-row-hover:not(.ant-table-row-selected):not(.ant-table-expanded-row) > td {
+          background-color: @table-hover !important;
+        }
+
+        tr {
+          td {
+            border-color: @table-border-color;
+            color: @td-font-color;
+            font-size: @td-font-size;
+            line-height: @td-line-height;
+            padding: @td-padding;
+          }
+        }
+      }
+    }
+  }
+}
