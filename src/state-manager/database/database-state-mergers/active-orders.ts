@@ -31,7 +31,10 @@ export class ActiveOrdersMerger implements DatabaseStateMerger<OrderItemData[], 
         return this.doMergePending(confirmed);
       }),
       switchMap((pendingMerged: OrderItemData[]) => {
-        return this.doMergePnl(pendingMerged);
+        return this.doMergeClosing(pendingMerged);
+      }),
+      switchMap((closingMerged: OrderItemData[]) => {
+        return this.doMergePnl(closingMerged);
       }),
       switchMap((pnlMerged: OrderItemData[]) => {
         return this.doMergeFundingFee(pnlMerged);
@@ -57,7 +60,7 @@ export class ActiveOrdersMerger implements DatabaseStateMerger<OrderItemData[], 
     return !_.isEqual(pendingHash, newPendingHash);
   }
 
-  private doMergePending(confirmed: OrderItemData[]) {
+  private doMergePending(confirmed: OrderItemData[]): Observable<OrderItemData[]> {
     return of(confirmed).pipe(
       switchMap((orders: OrderItemData[]) => {
         return C.Order.NewCreate.watch().pipe(
@@ -93,6 +96,30 @@ export class ActiveOrdersMerger implements DatabaseStateMerger<OrderItemData[], 
     return { newPending, mergeOrders: mergedOrders };
   }
 
+  private doMergeClosing(orders: OrderItemData[]): Observable<OrderItemData[]> {
+    return C.Order.NewClose.watch().pipe(
+      map((closing: OrderItemData[] | null) => {
+        const closingHash: string[] = closing === null ? [] : closing.map(one => one.hash);
+        const orderHash: string[] = orders.map(one => one.hash);
+
+        orders.forEach(one => {
+          one.isClosing = closingHash.indexOf(one.hash) >= 0;
+        });
+
+        if (closing) {
+          asyncScheduler.schedule(() => {
+            const newClosing = closing.filter(one => orderHash.indexOf(one.hash) >= 0);
+            if (newClosing.length !== closing.length) {
+              C.Order.NewClose.set(newClosing.length > 0 ? newClosing : null);
+            }
+          });
+        }
+
+        return orders;
+      })
+    );
+  }
+
   /**
    * get confirmed and active orders
    * @param argObj
@@ -118,6 +145,10 @@ export class ActiveOrdersMerger implements DatabaseStateMerger<OrderItemData[], 
   }
 
   private doMergePnl(orders: OrderItemData[]): Observable<OrderItemData[]> {
+    if (orders.length === 0) {
+      return of([]);
+    }
+
     return this.watchCurPrices(orders).pipe(
       map(([pair, price]) => {
         orders

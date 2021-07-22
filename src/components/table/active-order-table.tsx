@@ -19,8 +19,8 @@ import { map } from 'rxjs/operators';
 import { computePositionPNL } from '../../util/pnl';
 import NormalButton from '../common/buttons/normal-btn';
 import { closeOrder } from '../../services/trade.service';
-import Placeholder from '../placeholder';
 import { TableLoading } from './table-loading';
+import { C } from '../../state-manager/cache/cache-state-parser';
 
 type IProps = {};
 type IState = {
@@ -110,14 +110,14 @@ export class ActiveOrderTable extends BaseStateComponent<IProps, IState> {
       title: formatMessage({ id: 'status' }),
       dataIndex: 'orderStatus',
       key: 'orderStatus',
-      render: (text: string) => text,
+      render: (text: string, row: OrderItemData) => (row.isClosing ? 'CLOSING' : text),
     },
     {
       title: formatMessage({ id: 'action' }),
       dataIndex: '',
       key: '',
       render: (text: string, row: OrderItemData) =>
-        row.orderStatus === 'ACTIVE' ? (
+        row.orderStatus === 'ACTIVE' && !row.isClosing ? (
           <Button type="link" onClick={() => this.onClosePosition(row)}>
             {formatMessage({ id: 'close' })}
           </Button>
@@ -146,8 +146,12 @@ export class ActiveOrderTable extends BaseStateComponent<IProps, IState> {
   onCloseOrder() {
     if (this.state.closeOrder) {
       this.hideCloseModal();
-      closeOrder(this.state.closeOrder).then(() => {
-        this.tickState(D.ActiveOrders);
+      closeOrder(this.state.closeOrder).then((done: boolean) => {
+        if (done) {
+          const close: OrderItemData[] | null = this.state.closeOrder ? [this.state.closeOrder] : null;
+          C.Order.NewClose.patch(close);
+        }
+        //this.tickState(D.ActiveOrders);
       });
     }
   }

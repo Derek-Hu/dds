@@ -17,6 +17,7 @@ export type OrderItemData = {
   fundingFee: BigNumber;
   settlementFee: BigNumber;
   orderStatus: OrderStatus;
+  isClosing?: boolean;
   positionPNLVal: number | null;
   positionPNLPercent: number | null;
   realizedProfit: number | null;
