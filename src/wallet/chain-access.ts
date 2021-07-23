@@ -540,7 +540,13 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     return this.getContract(quote.description as IUSDCoins).pipe(
       switchMap((contract: ethers.Contract) => {
         const id = BigNumber.from(orderId);
-        return contract.functions.closecontract(id);
+        // TODO 临时，abi修改后可以去掉价格参数
+        return from(contract.getPriceByETHDAI()).pipe(
+          switchMap(price => {
+            console.log('price big num ', price);
+            return contract.functions.closecontract(id); //, price);
+          })
+        );
       }),
       switchMap(rs => {
         return from(rs.wait());

@@ -4,7 +4,7 @@ import { from, Observable, of } from 'rxjs';
 import { argConverter, ListArgObject, ListArgs } from './list-types';
 import { DatabaseUrl } from '../../../constant/address';
 import * as request from 'superagent';
-import { map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
 import { computePositionPNL } from '../../../util/pnl';
 import { toEtherNumber } from '../../../util/ethers';
@@ -36,6 +36,10 @@ export class HistoryOrdersMerger implements DatabaseStateMerger<OrderItemData[],
       }),
       map((orderInfos: OrderInfoObject[]) => {
         return orderInfos.map(one => one.toOrderItemData());
+      }),
+      catchError(err => {
+        console.warn('Get history orders ERROR:', err);
+        return of([]);
       })
     );
   }

@@ -1,6 +1,6 @@
 import { from, NEVER, Observable, of } from 'rxjs';
 import { BigNumber, Contract } from 'ethers';
-import { map, take } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
 import { getTradePairSymbol } from '../../constant/tokens';
 import { tokenBigNumber } from '../../util/ethers';
 import { EthNetwork } from '../../constant/network';
@@ -54,13 +54,14 @@ export function maxOpenAmountGetter(
   }
 
   const tradeDirSign = tradeDir === 'LONG' ? 1 : 2;
+
   return from(
     contract.getMaxOpenAmount(
       tradePairSymbol.description,
       accountInfo.available,
       BigNumber.from(tradeDirSign)
     ) as Promise<BigNumber>
-  );
+  ).pipe(tap(rs => console.log('rs ==', rs)));
 }
 
 // get open order fees

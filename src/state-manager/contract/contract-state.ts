@@ -98,7 +98,7 @@ export class ContractStateImp<T> implements ContractState<T> {
       take(1),
       finalize(() => this.isPending.next(false)),
       catchError(err => {
-        console.log('contract state getter error', this.path, args, err);
+        console.warn('contract state getter error', this.path, args, err);
         return EMPTY;
       })
     );
