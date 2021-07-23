@@ -70,7 +70,7 @@ export const BIAN_TEST_ADDRESS: ContractAddress = {
   ERC20USDC: '0x9E404218898Fb63Cac611D02BAF508A61215B2FE',
 
   ReceiveTestTokenContract: '0x69FA54869e95f67A9b36f4aFF808B45De6347DE7',
-  AirDropContract: '0x0730d4Be6A3d232E40046Dd0156213F0dcd209BD',
+  AirDropContract: '0x97bd81DAE378f98a9332F28D1358F991Cb90A1c5',
 };
 export const BIAN_TEST_ADDRESS_NEW: ContractAddress = {
   TradeDAIContract: '0x97ccFFFFB15a7Ca99fFC8C1aA0b5F39ABf3cC6A6', //
@@ -93,7 +93,7 @@ export const BIAN_TEST_ADDRESS_NEW: ContractAddress = {
   ERC20USDC: '0x9E404218898Fb63Cac611D02BAF508A61215B2FE',
 
   ReceiveTestTokenContract: '0x69FA54869e95f67A9b36f4aFF808B45De6347DE7',
-  AirDropContract: '0x0730d4Be6A3d232E40046Dd0156213F0dcd209BD',
+  AirDropContract: '0x97bd81DAE378f98a9332F28D1358F991Cb90A1c5',
 };
 export const BSC_ADDRESS: ContractAddress = {
   TradeDAIContract: ' ', //
