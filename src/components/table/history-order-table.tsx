@@ -5,12 +5,13 @@ import { formatTime } from '../../util/time';
 import { BigNumber } from 'ethers';
 import { format } from '../../util/math';
 import { toRoundNumber } from '../../util/ethers';
-import { Table } from 'antd';
+import { ConfigProvider, Table } from 'antd';
 import tables from './table-common.module.less';
 import { D } from '../../state-manager/database/database-state-parser';
 import { TableLoading } from './table-loading';
 import { TableMore } from './table-more';
 import { P } from '../../state-manager/page/page-state-parser';
+import { TableNodata } from './table-nodata';
 
 type IProps = {};
 type IState = {
@@ -126,12 +127,14 @@ export class HistoryOrderTable extends BaseStateComponent<IProps, IState> {
         {this.state.datasource === undefined ? (
           <TableLoading />
         ) : (
-          <Table
-            dataSource={this.state.datasource}
-            columns={this.columns}
-            pagination={false}
-            scroll={{ x: 'max-content' }}
-          />
+          <ConfigProvider renderEmpty={() => <TableNodata />}>
+            <Table
+              dataSource={this.state.datasource}
+              columns={this.columns}
+              pagination={false}
+              scroll={{ x: 'max-content' }}
+            />
+          </ConfigProvider>
         )}
         <TableMore show={this.state.hasMore} loading={this.state.loadingMore} onClick={this.onDisplayMore.bind(this)} />
       </div>

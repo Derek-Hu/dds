@@ -12,8 +12,8 @@ import { getNetworkAndAccount, loginUserAccount } from './account';
 import { IOrderInfoData, OrderInfoObject } from '../state-manager/database/database-state-mergers/centralization-data';
 import { CentralHost, CentralPath, CentralPort, CentralProto } from '../constant/address';
 import { LocalStorageKeyPrefix } from '../constant';
-import { readTradeSetting } from './local-storage.service';
 import { OrderItemData } from '../state-manager/state-types';
+import { C } from '../state-manager/cache/cache-state-parser';
 
 /**
  * Trade Page
@@ -298,19 +298,24 @@ export const createOrder = async (
   curPrice: number
 ): Promise<string> => {
   const inviteAddress: string | null = localStorage.getItem(LocalStorageKeyPrefix.ReferalCode);
-  const setting: TradeSetting | null = readTradeSetting();
 
-  let slider = 1;
-  let timeout = 20 * 60;
+  const obs: Observable<string> = C.Order.TradeSetting.get().pipe(
+    switchMap(setting => {
+      let slider = 1;
+      let timeout = 20 * 60;
 
-  if (setting) {
-    slider = setting.tolerance;
-    timeout = setting.deadline * 60;
-  }
+      if (setting) {
+        slider = setting.slippage;
+        timeout = setting.deadline * 60;
+      }
 
-  const res: Promise<string> = firstValueFrom(
-    contractAccessor.createContract(coin, tradeType, amount, curPrice, inviteAddress, slider, timeout).pipe(take(1))
+      return contractAccessor
+        .createContract(coin, tradeType, amount, curPrice, inviteAddress, slider, timeout)
+        .pipe(take(1));
+    })
   );
+
+  const res: Promise<string> = firstValueFrom(obs);
 
   return withLoading<string>(res, '');
 };

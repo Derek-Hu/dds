@@ -37,3 +37,7 @@ export type TradeOrderFees = {
   settlementFee: BigNumber;
   fundingLocked: BigNumber;
 };
+export type TradeSetting = {
+  slippage: number;
+  deadline: number;
+};

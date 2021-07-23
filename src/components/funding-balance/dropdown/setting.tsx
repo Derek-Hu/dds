@@ -1,55 +1,60 @@
-import { Component } from 'react';
-import { Dropdown } from 'antd';
+import { Dropdown, Icon } from 'antd';
 import styles from './setting.style.module.less';
 import InputNumber from '../../input/index';
 import SiteContext from '../../../layouts/SiteContext';
-import { readTradeSetting, writeTradeSetting } from '../../../services/local-storage.service';
 import { IconClose } from '../../svg/close.icon';
 import { IconSetting } from '../../svg/setting.icon';
+import { BaseStateComponent } from '../../../state-manager/base-state-component';
+import { TradeSetting } from '../../../state-manager/state-types';
+import { C } from '../../../state-manager/cache/cache-state-parser';
+import { formatMessage } from '../../../locale/i18n';
 
 type IState = {
   visible: boolean;
-  tolerance: number;
-  customTolerance: number | null;
-  deadline: number;
-  deadlineValid: boolean; // TODO 当不合法时，收起后，要恢复原来的数值显示
+  setting: TradeSetting | null;
+  isChooseSlippage: boolean;
+
+  isSlippageWarn: boolean;
+  isDeadlineWarn: boolean;
 };
 
 type IProperty = {};
 
-export class Setting extends Component<IProperty, IState> {
+export class Setting extends BaseStateComponent<IProperty, IState> {
   static contextType = SiteContext;
-  public readonly defaultTolerance = 1; // 默认1%
-  public readonly defaultDeadline = 20; // default to 20 minutes
   public readonly clickTolerances = [0.5, 1, 3];
+  public readonly defaultSetting: TradeSetting = {
+    slippage: 1,
+    deadline: 20,
+  };
 
   state: IState = {
     visible: false,
-    tolerance: this.defaultTolerance,
-    customTolerance: null,
-    deadline: this.defaultDeadline,
-    deadlineValid: true,
+    setting: null,
+    isChooseSlippage: true,
+    isSlippageWarn: false,
+    isDeadlineWarn: false,
   };
 
-  componentWillUpdate() {
-    this.readSetting();
+  componentDidMount() {
+    this.registerState('setting', C.Order.TradeSetting, () => {
+      // this.setState({
+      // isSlippageWarn: this.setting.slippage > 50,
+      // isDeadlineWarn: this.setting.deadline > 180,
+      // });
+    });
   }
 
-  private isInClickTolerance(num: number): boolean {
-    return this.clickTolerances.indexOf(num) >= 0;
+  componentWillUnmount() {
+    this.destroyState();
   }
 
-  // get trade setting from local storage
-  private readSetting() {
-    const setting: TradeSetting | null = readTradeSetting();
+  get setting(): TradeSetting {
+    return this.state.setting ? this.state.setting : this.defaultSetting;
+  }
 
-    if (setting) {
-      const eq: boolean = this.state.deadline === setting.deadline && this.state.tolerance === setting.tolerance;
-      if (!eq) {
-        // update state if need
-        this.updateSetting(setting);
-      }
-    }
+  private isChoice(): boolean {
+    return this.state.isChooseSlippage && this.clickTolerances.indexOf(this.setting.slippage) >= 0;
   }
 
   // show or hide modal
@@ -66,57 +71,45 @@ export class Setting extends Component<IProperty, IState> {
   // choose tolerance value
   private clickTolerance(num: number) {
     if (!num) {
-      num = this.defaultTolerance;
+      num = this.defaultSetting.slippage;
     }
 
-    if (this.state.tolerance === num) {
+    if (this.setting.slippage === num) {
       return;
     }
 
-    this.setState({ customTolerance: null });
-    this.saveTolerance(num);
+    this.setState({ isChooseSlippage: true }, () => {
+      this.setSlippage(num);
+    });
   }
 
   // input custom tolerance
   private inputTolerance(num: number) {
     if (!num) {
-      if (!this.isInClickTolerance(this.state.tolerance)) {
-        this.saveTolerance(this.defaultTolerance);
-      }
       return;
     }
 
-    this.setState({ customTolerance: num });
-
-    this.saveTolerance(num);
+    this.setState({ isChooseSlippage: false }, () => {
+      this.setSlippage(num);
+    });
   }
 
   // input deadline
   private changeDeadline(minute: number) {
     if (!minute || isNaN(minute)) {
-      this.setState({ deadlineValid: false });
       return;
     }
 
     minute = Math.round(minute);
-    this.saveSetting({ deadline: minute, tolerance: this.state.tolerance });
+    this.setDeadline(minute);
   }
 
-  private saveTolerance(tolerance: number) {
-    this.saveSetting({ tolerance: tolerance, deadline: this.state.deadline });
+  private setDeadline(deadline: number) {
+    C.Order.TradeSetting.set(Object.assign({}, this.setting, { deadline }));
   }
 
-  // save to local storage
-  private saveSetting(setting: TradeSetting) {
-    // @1 must save to storage first
-    writeTradeSetting(setting);
-    // @2
-    this.updateSetting(setting);
-  }
-
-  // update setting state
-  private updateSetting(setting: { deadline: number; tolerance: number }) {
-    this.setState(setting);
+  private setSlippage(slippage: number) {
+    C.Order.TradeSetting.set(Object.assign({}, this.setting, { slippage }));
   }
 
   render() {
@@ -128,62 +121,72 @@ export class Setting extends Component<IProperty, IState> {
 
         <div className={[styles.box2, styles['flex-col']].join(' ')}>
           <div className={styles.title}>
-            <span>Trade Settings</span>
+            <span>{formatMessage({ id: 'trade-setting' })}</span>
           </div>
 
           <div className={styles.title2}>
-            <span>Slippage Tolerance</span>
+            <span> {formatMessage({ id: 'slippage' })}</span>
           </div>
 
           <div className={styles.tolerance}>
             <div
-              className={`${styles.item} ${this.state.tolerance === this.clickTolerances[0] ? styles.active : ''}`}
+              className={`${styles.item} ${this.setting.slippage === this.clickTolerances[0] ? styles.active : ''}`}
               onClick={() => this.clickTolerance(this.clickTolerances[0])}
             >
               <span>{this.clickTolerances[0]}%</span>
             </div>
             <div
-              className={`${styles.item} ${this.state.tolerance === this.clickTolerances[1] ? styles.active : ''}`}
+              className={`${styles.item} ${this.setting.slippage === this.clickTolerances[1] ? styles.active : ''}`}
               onClick={() => this.clickTolerance(this.clickTolerances[1])}
             >
               <span>{this.clickTolerances[1]}%</span>
             </div>
             <div
-              className={`${styles.item} ${this.state.tolerance === this.clickTolerances[2] ? styles.active : ''}`}
+              className={`${styles.item} ${this.setting.slippage === this.clickTolerances[2] ? styles.active : ''}`}
               onClick={() => this.clickTolerance(this.clickTolerances[2])}
             >
               <span>{this.clickTolerances[2]}%</span>
             </div>
 
             <InputNumber
-              className={`${styles.toleranceItem} ${
-                this.isInClickTolerance(this.state.tolerance) ? '' : styles.active
-              } `}
-              value={this.state.customTolerance}
+              className={`${styles.toleranceItem} ${this.isChoice() ? '' : styles.active} `}
+              value={this.isChoice() ? null : this.setting.slippage}
               onChange={(val: number) => this.inputTolerance(val)}
             />
             <span className={styles.text}>%</span>
           </div>
 
+          {this.state.isSlippageWarn ? (
+            <div className={styles.warn}>
+              <Icon type="warning" /> {formatMessage({ id: 'warning' })}:
+            </div>
+          ) : null}
+
           <div className={styles.title2}>
-            <span>Transaction Deadline</span>
+            <span> {formatMessage({ id: 'deadline' })}</span>
           </div>
 
           <div className={styles.deadline}>
             <InputNumber
               className={styles.input}
               mustInt={true}
-              value={this.state.deadline}
+              value={this.setting.deadline}
               onChange={(val: number) => this.changeDeadline(val)}
             />
-            <span className={styles.unit}>min</span>
+            <span className={styles.unit}>{formatMessage({ id: 'minute' })}</span>
           </div>
+
+          {this.state.isDeadlineWarn ? (
+            <div className={styles.warn}>
+              <Icon type="warning" /> {formatMessage({ id: 'warning' })}:
+            </div>
+          ) : null}
         </div>
       </div>
     );
 
     const rs = (
-      <Dropdown overlay={settingOverlay} placement="bottomLeft" visible={this.state.visible} trigger={[]}>
+      <Dropdown overlay={settingOverlay} placement="bottomRight" visible={this.state.visible} trigger={[]}>
         <div className={styles.settingIcon} onClick={() => this.clickIcon()}>
           <IconSetting />
         </div>
