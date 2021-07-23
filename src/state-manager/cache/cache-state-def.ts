@@ -1,4 +1,10 @@
-import { orderParser, orderPatcher, orderSerializer } from './cache-state-serializer';
+import {
+  orderParser,
+  orderPatcher,
+  orderSerializer,
+  tradeSettingParser,
+  tradeSettingSerializer,
+} from './cache-state-serializer';
 
 export const CACHE_STATE = {
   Order: {
@@ -13,6 +19,11 @@ export const CACHE_STATE = {
       _serializer: orderSerializer,
       _parser: orderParser,
       _patcher: orderPatcher,
+    },
+    TradeSetting: {
+      _key: '_trade_setting',
+      _serializer: tradeSettingSerializer,
+      _parser: tradeSettingParser,
     },
   },
 };

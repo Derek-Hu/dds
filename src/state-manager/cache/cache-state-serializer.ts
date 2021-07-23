@@ -1,4 +1,4 @@
-import { OrderItemData } from '../state-types';
+import { OrderItemData, TradeSetting } from '../state-types';
 import { BigNumber } from 'ethers';
 import { TOKEN_SYMBOL_MAP, TRADE_PAIR_SYMBOL_MAP } from '../../constant/tokens';
 
@@ -83,4 +83,24 @@ export function orderPatcher(
   }
 
   return [...newOrders, ...oldOrders];
+}
+
+export function tradeSettingSerializer(setting: TradeSetting | null): string | null {
+  if (setting === null) {
+    return null;
+  }
+
+  return JSON.stringify(setting);
+}
+
+export function tradeSettingParser(cache: string | null): TradeSetting | null {
+  if (cache === null) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(cache);
+  } catch (err) {
+    return null;
+  }
 }

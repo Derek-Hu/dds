@@ -34,11 +34,6 @@ export default class InputNumberComp extends Component<
     const val: string = e.target.value;
     const { max, min, skip, mustInt } = this.props;
 
-    // const isCompatible = (val: string) => val === '' || /^\d+\.\d*$/.test(val);
-    // delete or exceed
-    // if ((!isNumberLike(val) && !isCompatible(val)) || (isNumberLike(max) && Number(val) > Number(max!))) {
-    //   return;
-    // }
     const isInt = /^[1-9]\d{0,8}$/.test(val) || val === '0';
     const isFloat = /^[1-9]\d{0,8}\.\d{0,2}?$/.test(val) || /^0\.\d{0,2}?$/.test(val);
     const isEmpty = val === '';
@@ -82,8 +77,8 @@ export default class InputNumberComp extends Component<
   static getDerivedStateFromProps(nextProps: any, prevState: IState) {
     // income value
     const newVal: number | null = nextProps.value === null ? null : Number(nextProps.value);
-    // income value was not changed, return;
 
+    // income value was not changed, return;
     if (newVal === prevState.cacheInputAmount) {
       return null;
     }

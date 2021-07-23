@@ -4,7 +4,7 @@ import { formatTime } from '../../util/time';
 import { OrderItemData, TradeDirection } from '../../state-manager/state-types';
 import styles from './active-order-table.module.less';
 import tables from './table-common.module.less';
-import { Button, Col, Descriptions, Row, Table } from 'antd';
+import { Button, Col, ConfigProvider, Descriptions, Row, Table } from 'antd';
 import { D } from '../../state-manager/database/database-state-parser';
 import { toRoundNumber } from '../../util/ethers';
 import { BigNumber } from 'ethers';
@@ -21,6 +21,7 @@ import NormalButton from '../common/buttons/normal-btn';
 import { closeOrder } from '../../services/trade.service';
 import { TableLoading } from './table-loading';
 import { C } from '../../state-manager/cache/cache-state-parser';
+import { TableNodata } from './table-nodata';
 
 type IProps = {};
 type IState = {
@@ -151,7 +152,6 @@ export class ActiveOrderTable extends BaseStateComponent<IProps, IState> {
           const close: OrderItemData[] | null = this.state.closeOrder ? [this.state.closeOrder] : null;
           C.Order.NewClose.patch(close);
         }
-        //this.tickState(D.ActiveOrders);
       });
     }
   }
@@ -187,12 +187,14 @@ export class ActiveOrderTable extends BaseStateComponent<IProps, IState> {
           {this.state.datasource === undefined ? (
             <TableLoading />
           ) : (
-            <Table
-              columns={this.columns}
-              dataSource={this.state.datasource}
-              pagination={false}
-              scroll={{ x: 'max-content' }}
-            />
+            <ConfigProvider renderEmpty={() => <TableNodata />}>
+              <Table
+                columns={this.columns}
+                dataSource={this.state.datasource}
+                pagination={false}
+                scroll={{ x: 'max-content' }}
+              />
+            </ConfigProvider>
           )}
         </div>
 
