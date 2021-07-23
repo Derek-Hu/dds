@@ -7,7 +7,14 @@ import { EthNetwork } from '../../constant/network';
 import { IOrderInfoData, OrderInfoObject } from '../database/database-state-mergers/centralization-data';
 import * as request from 'superagent';
 import { DatabaseUrl } from '../../constant/address';
-import { PageTradingPair, TradeDirection, TradeOrderFees, TradeOrderTab, UserTradeAccountInfo } from '../state-types';
+import {
+  PageTradingPair,
+  PoolInfo,
+  TradeDirection,
+  TradeOrderFees,
+  TradeOrderTab,
+  UserTradeAccountInfo,
+} from '../state-types';
 
 // balance in erc20
 export function walletBalanceGetter(contract: Contract, address: string): Observable<BigNumber> {
@@ -114,6 +121,18 @@ export function orderListGetter(
       return records.map(record => {
         return new OrderInfoObject(record, network);
       });
+    })
+  );
+}
+
+export function poolInfoGetter(contract: Contract): Observable<PoolInfo> {
+  type RS = { deposit: BigNumber; availabe: BigNumber };
+  return from(contract.getLPAmountInfo() as Promise<RS>).pipe(
+    map((res: RS) => {
+      return {
+        total: res.deposit,
+        available: res.availabe,
+      } as PoolInfo;
     })
   );
 }

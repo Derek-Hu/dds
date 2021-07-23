@@ -151,6 +151,8 @@ export class Setting extends BaseStateComponent<IProperty, IState> {
             <InputNumber
               className={`${styles.toleranceItem} ${this.isChoice() ? '' : styles.active} `}
               value={this.isChoice() ? null : this.setting.slippage}
+              min={0}
+              max={100}
               onChange={(val: number) => this.inputTolerance(val)}
             />
             <span className={styles.text}>%</span>

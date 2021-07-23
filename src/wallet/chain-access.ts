@@ -534,7 +534,7 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         console.warn('error', err);
         const info: string | null = this.parseErrInfo(err);
         if (info === null) {
-          return of('');
+          throw new Error('');
         } else {
           throw new Error(info);
         }

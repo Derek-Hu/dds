@@ -6,6 +6,7 @@ import { walletState } from '../wallet/wallet-state';
 import {
   maxOpenAmountGetter,
   orderListGetter,
+  poolInfoGetter,
   tradeFeeGetter,
   tradePairPriceGetter,
   tradePriceGetter,
@@ -151,6 +152,18 @@ export const CONTRACT_STATE = {
       HISTORY: {
         _depend: [walletState.USER_ADDR, walletState.NETWORK],
         _getter: orderListGetter.bind(null, 'HISTORY'),
+      },
+    },
+  },
+  Pool: {
+    Info: {
+      CurPub: {
+        _depend: [constState.TradePubPoolContract],
+        _getter: poolInfoGetter,
+      },
+      CurPri: {
+        _depend: [constState.TradePriPoolContract],
+        _getter: poolInfoGetter,
       },
     },
   },

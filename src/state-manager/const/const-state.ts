@@ -17,6 +17,8 @@ export class ConstState {
   public readonly CONTRACTS: ContractObsMap;
   public readonly TradeOptionContract: Observable<Contract>;
   public readonly DepositERC20Contract: Observable<Contract>;
+  public readonly TradePubPoolContract: Observable<Contract>;
+  public readonly TradePriPoolContract: Observable<Contract>;
 
   constructor() {
     this.CONTRACTS = Array.from(Object.keys(BSC_ADDRESS) as ContractName[]).reduce(
@@ -57,6 +59,44 @@ export class ConstState {
           }
           case TOKEN_SYMBOL.USDC: {
             return this.CONTRACTS.TradeUSDCContract;
+          }
+          default: {
+            return NEVER;
+          }
+        }
+      })
+    );
+
+    this.TradePriPoolContract = P.Trade.Pair.watch().pipe(
+      switchMap((pair: PageTradingPair) => {
+        switch (pair.quote) {
+          case TOKEN_SYMBOL.DAI: {
+            return this.CONTRACTS.Lp2DAIContract;
+          }
+          case TOKEN_SYMBOL.USDT: {
+            return this.CONTRACTS.Lp2USDTContract;
+          }
+          case TOKEN_SYMBOL.USDC: {
+            return this.CONTRACTS.Lp2USDCContract;
+          }
+          default: {
+            return NEVER;
+          }
+        }
+      })
+    );
+
+    this.TradePubPoolContract = P.Trade.Pair.watch().pipe(
+      switchMap((pair: PageTradingPair) => {
+        switch (pair.quote) {
+          case TOKEN_SYMBOL.DAI: {
+            return this.CONTRACTS.Lp1DAIContract;
+          }
+          case TOKEN_SYMBOL.USDT: {
+            return this.CONTRACTS.Lp1USDTContract;
+          }
+          case TOKEN_SYMBOL.USDC: {
+            return this.CONTRACTS.Lp1USDCContract;
           }
           default: {
             return NEVER;

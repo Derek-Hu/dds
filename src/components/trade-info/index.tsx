@@ -1,19 +1,32 @@
-import { Component } from 'react';
 import CardInfo from '../card-info/index';
 import { formatMessage } from 'locale/i18n';
 import SiteContext from '../../layouts/SiteContext';
+import { PageTradingPair } from '../../state-manager/state-types';
+import { P } from '../../state-manager/page/page-state-parser';
+import { BaseStateComponent } from '../../state-manager/base-state-component';
 
-export default class TradeInfo extends Component<{ from: string; coin: IUSDCoins }, any> {
-  state = {
-    loading: false,
+type IState = {
+  tradingPair: PageTradingPair;
+};
+
+export default class TradeInfo extends BaseStateComponent<{}, IState> {
+  state: IState = {
+    tradingPair: P.Trade.Pair.get(),
   };
 
+  componentDidMount() {
+    this.registerState('tradingPair', P.Trade.Pair);
+  }
+
+  componentWillUnmount() {
+    this.destroyState();
+  }
+
   render() {
-    const { from, coin } = this.props;
     const info = {
       ticketRoot: {
         label: formatMessage({ id: 'ticker-root' }),
-        value: `${from}/${coin}`,
+        value: `${this.state.tradingPair.base.description}/${this.state.tradingPair.quote.description}`,
       },
       expireData: {
         label: formatMessage({ id: 'expiry-date' }),

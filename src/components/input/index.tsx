@@ -7,7 +7,7 @@ import { formatMessage } from 'locale/i18n';
 
 interface IState {
   amount: string;
-  cacheInputAmount: number | undefined;
+  cacheInputAmount: number | null | undefined;
 }
 
 export default class InputNumberComp extends Component<
@@ -52,9 +52,8 @@ export default class InputNumberComp extends Component<
         return;
       }
     }
-    console.log('val is', val);
+
     this.setState({ amount: val }, () => {
-      console.log('state set', this.state.amount);
       this.onPropChange && this.onPropChange(Number(val));
     });
   };
@@ -64,6 +63,13 @@ export default class InputNumberComp extends Component<
       ? this.props.onChange
       : debounce(this.props.onChange)
     : null;
+
+  onBlur() {
+    if (this.state.cacheInputAmount !== undefined) {
+      const lastVal = this.state.cacheInputAmount === null ? '' : this.state.cacheInputAmount.toString();
+      this.setState({ amount: lastVal });
+    }
+  }
 
   onMaxOpenClick = () => {
     const { max } = this.props;
@@ -112,6 +118,7 @@ export default class InputNumberComp extends Component<
           disabled={disabled}
           suffix={suffix}
           value={amount}
+          onBlur={this.onBlur.bind(this)}
           onChange={this.amountChange}
           placeholder={placeholder}
         />

@@ -343,14 +343,13 @@ export const createNewOrder = (
           .pipe(take(1));
       }),
       catchError((err: Error) => {
-        Mask.showFail(formatMessage({ id: err.message }));
+        const failMsg = err.message ? formatMessage({ id: err.message }) : null;
+        Mask.showFail(failMsg);
         return of('');
       }),
       tap((rs: string) => {
-        if (rs && rs.length > 0) {
+        if (rs.length > 0) {
           Mask.showSuccess();
-        } else {
-          Mask.showFail();
         }
       })
     )
