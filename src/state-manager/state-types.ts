@@ -41,3 +41,7 @@ export type TradeSetting = {
   slippage: number;
   deadline: number;
 };
+export type PoolInfo = {
+  total: BigNumber;
+  available: BigNumber;
+};

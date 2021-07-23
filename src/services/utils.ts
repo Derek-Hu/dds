@@ -14,7 +14,7 @@ export const withLoading = <T = boolean>(promiseInstance: Promise<T>, fallback?:
       return rs;
     })
     .catch(err => {
-      console.log(err);
+      console.warn(err);
       Mask.showFail();
       return (fallback === undefined ? false : fallback) as T;
     });

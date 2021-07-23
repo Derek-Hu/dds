@@ -1,5 +1,5 @@
 import { walletManager } from '../wallet/wallet-manager';
-import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { WalletInterface } from '../wallet/wallet-interface';
 import { AsyncSubject, firstValueFrom, from, Observable, of, zip } from 'rxjs';
 import { contractAccessor } from '../wallet/chain-access';
@@ -12,8 +12,10 @@ import { getNetworkAndAccount, loginUserAccount } from './account';
 import { IOrderInfoData, OrderInfoObject } from '../state-manager/database/database-state-mergers/centralization-data';
 import { CentralHost, CentralPath, CentralPort, CentralProto } from '../constant/address';
 import { LocalStorageKeyPrefix } from '../constant';
-import { OrderItemData } from '../state-manager/state-types';
+import { OrderItemData, TradeDirection } from '../state-manager/state-types';
 import { C } from '../state-manager/cache/cache-state-parser';
+import Mask from '../components/mask/index';
+import { formatMessage } from '../locale/i18n';
 
 /**
  * Trade Page
@@ -190,18 +192,6 @@ export const getTradeOrders = async (page: number, pageSize = 5, isActive = true
 };
 
 export const getTradeLiquidityPoolInfo = async (coin: IUSDCoins): Promise<ITradePoolInfo> => {
-  if (process.env.NODE_ENV === 'development') {
-    return returnVal({
-      public: {
-        value: 100000000.12,
-        total: 1234567890.1235,
-      },
-      private: {
-        value: 10232003222,
-        total: 30232003222,
-      },
-    });
-  }
   const obs = [contractAccessor.getPubPoolInfo(coin), contractAccessor.getPrivatePoolInfo(coin)];
   const res = zip(...obs).pipe(
     map((infoList: CoinAvailableInfo[]) => {
@@ -318,6 +308,54 @@ export const createOrder = async (
   const res: Promise<string> = firstValueFrom(obs);
 
   return withLoading<string>(res, '');
+};
+
+export const createNewOrder = (
+  quote: symbol,
+  tradeDirection: TradeDirection,
+  amount: number,
+  curPrice: number
+): Observable<string> => {
+  const rs = new AsyncSubject<string>();
+
+  Mask.showLoading();
+  C.Order.TradeSetting.get()
+    .pipe(
+      switchMap(setting => {
+        let slider = 1;
+        let timeout = 20 * 60;
+        const inviteAddress: string | null = localStorage.getItem(LocalStorageKeyPrefix.ReferalCode);
+        if (setting) {
+          slider = setting.slippage;
+          timeout = setting.deadline * 60;
+        }
+
+        return contractAccessor
+          .createContract(
+            quote.description as IUSDCoins,
+            tradeDirection,
+            amount,
+            curPrice,
+            inviteAddress,
+            slider,
+            timeout
+          )
+          .pipe(take(1));
+      }),
+      catchError((err: Error) => {
+        const failMsg = err.message ? formatMessage({ id: err.message }) : null;
+        Mask.showFail(failMsg);
+        return of('');
+      }),
+      tap((rs: string) => {
+        if (rs.length > 0) {
+          Mask.showSuccess();
+        }
+      })
+    )
+    .subscribe(rs);
+
+  return rs;
 };
 
 /**

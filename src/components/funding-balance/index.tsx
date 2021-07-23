@@ -4,13 +4,13 @@ import DepositModal from './modals/deposit';
 import WithdrawModal from './modals/withdraw';
 import OrderConfirm from './modals/order-confirm';
 import SiteContext from '../../layouts/SiteContext';
-import { deposit, withdraw, createOrder } from '../../services/trade.service';
+import { deposit, withdraw, createOrder, createNewOrder } from '../../services/trade.service';
 import InputNumber from '../input/index';
 import Placeholder from '../placeholder/index';
 import { formatMessage } from 'locale/i18n';
 import { Setting } from './dropdown/setting';
 import { BaseStateComponent } from '../../state-manager/base-state-component';
-import { toEtherNumber } from '../../util/ethers';
+import { toEtherNumber, tokenBigNumber } from '../../util/ethers';
 import { BigNumber } from 'ethers';
 import { P } from '../../state-manager/page/page-state-parser';
 import { S } from '../../state-manager/contract/contract-state-parser';
@@ -23,9 +23,10 @@ import {
 } from '../../state-manager/state-types';
 import { D } from '../../state-manager/database/database-state-parser';
 import { walletState } from '../../state-manager/wallet/wallet-state';
-import { zip } from 'rxjs';
+import { Observable, zip } from 'rxjs';
 import { getTradePairSymbol } from '../../constant/tokens';
 import { C } from '../../state-manager/cache/cache-state-parser';
+import { take } from 'rxjs/operators';
 
 interface IState {
   fundingBalance: UserTradeAccountInfo | null;
@@ -144,50 +145,51 @@ export default class Balance extends BaseStateComponent<IProps, IState> {
 
     const openTime = new Date().getTime();
 
-    createOrder(
-      P.Trade.Pair.get().quote.description as IUSDCoins,
+    const createObs: Observable<string> = createNewOrder(
+      P.Trade.Pair.get().quote,
       P.Trade.Direction.get(),
       P.Trade.Create.OpenAmount.get(),
       Number(this.quoteCoinNum(this.state.openOrderFees?.curPrice))
-    )
-      .then(newOrderHash => {
-        if (newOrderHash) {
-          zip([walletState.watchNetwork(), walletState.watchUserAccount()]).subscribe(([network, address]) => {
-            const pageTradePair = P.Trade.Pair.get();
-            const pendingOrder: OrderItemData = {
-              id: '',
-              hash: newOrderHash,
-              network,
-              takerAddress: address,
-              openTime: openTime,
-              tradeDirection: P.Trade.Direction.get(),
-              openAmount: BigNumber.from(P.Trade.Create.OpenAmount.get()),
-              openPrice: this.state.openOrderFees?.curPrice as BigNumber,
-              closePrice: BigNumber.from(0),
-              pairSymbol: getTradePairSymbol(pageTradePair.base, pageTradePair.quote) as symbol,
-              quoteSymbol: pageTradePair.quote,
-              baseSymbol: pageTradePair.base,
-              fundingFee: this.state.openOrderFees?.fundingLocked as BigNumber,
-              settlementFee: this.state.openOrderFees?.settlementFee as BigNumber,
-              orderStatus: 'PENDING',
-              positionPNLVal: 0,
-              positionPNLPercent: 0,
-              realizedProfit: 0,
-            };
+    );
 
-            C.Order.NewCreate.patch([pendingOrder]);
-          });
+    this.subOnce(createObs, (hash: string) => {
+      if (hash.length === 0) {
+        return;
+      }
 
-          // after order created
-          this.refreshBalanceValue();
-          P.Trade.Create.OpenAmount.setToDefault();
-          this.tickState(D.ActiveOrders);
-          this.context.refreshPage && this.context.refreshPage();
-        }
-      })
-      .catch(err => {
-        console.warn('create order error', err);
-      });
+      zip([walletState.watchNetwork(), walletState.watchUserAccount()])
+        .pipe(take(1))
+        .subscribe(([network, address]) => {
+          const pageTradePair = P.Trade.Pair.get();
+          const pendingOrder: OrderItemData = {
+            id: '',
+            hash: hash,
+            network,
+            takerAddress: address,
+            openTime: openTime,
+            tradeDirection: P.Trade.Direction.get(),
+            openAmount: tokenBigNumber(P.Trade.Create.OpenAmount.get(), pageTradePair.base),
+            openPrice: this.state.openOrderFees?.curPrice as BigNumber,
+            closePrice: BigNumber.from(0),
+            pairSymbol: getTradePairSymbol(pageTradePair.base, pageTradePair.quote) as symbol,
+            quoteSymbol: pageTradePair.quote,
+            baseSymbol: pageTradePair.base,
+            fundingFee: this.state.openOrderFees?.fundingLocked as BigNumber,
+            settlementFee: this.state.openOrderFees?.settlementFee as BigNumber,
+            orderStatus: 'PENDING',
+            positionPNLVal: 0,
+            positionPNLPercent: 0,
+            realizedProfit: 0,
+          };
+
+          C.Order.NewCreate.patch([pendingOrder]);
+        });
+
+      // after order created
+      this.refreshBalanceValue();
+      P.Trade.Create.OpenAmount.setToDefault();
+      this.tickState(D.ActiveOrders);
+    });
   }
 
   render() {

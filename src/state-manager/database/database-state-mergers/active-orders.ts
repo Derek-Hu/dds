@@ -3,7 +3,7 @@ import { asyncScheduler, AsyncSubject, from, merge, Observable, of } from 'rxjs'
 import { OrderItemData } from '../../state-types';
 import { DatabaseUrl } from '../../../constant/address';
 import * as request from 'superagent';
-import { finalize, map, mapTo, startWith, switchMap, tap } from 'rxjs/operators';
+import { catchError, finalize, map, mapTo, startWith, switchMap, tap } from 'rxjs/operators';
 import { IOrderInfoData, OrderInfoObject } from './centralization-data';
 import { TRADE_PAIR_SYMBOL } from '../../../constant/tokens';
 import _ from 'lodash';
@@ -140,6 +140,10 @@ export class ActiveOrdersMerger implements DatabaseStateMerger<OrderItemData[], 
       }),
       map((orderInfos: OrderInfoObject[]) => {
         return orderInfos.map(one => one.toOrderItemData());
+      }),
+      catchError(err => {
+        console.warn('Get active orders ERROR:', err);
+        return of([]);
       })
     );
   }

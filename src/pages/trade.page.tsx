@@ -84,10 +84,10 @@ export default class TradePage extends Component {
                 <div>
                   <Row gutter={isMobile ? 0 : 20}>
                     <Col xs={24} sm={24} md={12} lg={12}>
-                      <TradePool coin={coin} />
+                      <TradePool />
                     </Col>
                     <Col xs={24} sm={24} md={12} lg={12}>
-                      <TradeInfo from={fromCoin} coin={coin} />
+                      <TradeInfo />
                     </Col>
                   </Row>
                 </div>

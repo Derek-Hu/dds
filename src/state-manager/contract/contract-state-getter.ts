@@ -1,13 +1,20 @@
 import { from, NEVER, Observable, of } from 'rxjs';
 import { BigNumber, Contract } from 'ethers';
-import { map, take } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
 import { getTradePairSymbol } from '../../constant/tokens';
 import { tokenBigNumber } from '../../util/ethers';
 import { EthNetwork } from '../../constant/network';
 import { IOrderInfoData, OrderInfoObject } from '../database/database-state-mergers/centralization-data';
 import * as request from 'superagent';
 import { DatabaseUrl } from '../../constant/address';
-import { PageTradingPair, TradeDirection, TradeOrderFees, TradeOrderTab, UserTradeAccountInfo } from '../state-types';
+import {
+  PageTradingPair,
+  PoolInfo,
+  TradeDirection,
+  TradeOrderFees,
+  TradeOrderTab,
+  UserTradeAccountInfo,
+} from '../state-types';
 
 // balance in erc20
 export function walletBalanceGetter(contract: Contract, address: string): Observable<BigNumber> {
@@ -54,13 +61,14 @@ export function maxOpenAmountGetter(
   }
 
   const tradeDirSign = tradeDir === 'LONG' ? 1 : 2;
+
   return from(
     contract.getMaxOpenAmount(
       tradePairSymbol.description,
       accountInfo.available,
       BigNumber.from(tradeDirSign)
     ) as Promise<BigNumber>
-  );
+  ).pipe(tap(rs => console.log('rs ==', rs)));
 }
 
 // get open order fees
@@ -113,6 +121,18 @@ export function orderListGetter(
       return records.map(record => {
         return new OrderInfoObject(record, network);
       });
+    })
+  );
+}
+
+export function poolInfoGetter(contract: Contract): Observable<PoolInfo> {
+  type RS = { deposit: BigNumber; availabe: BigNumber };
+  return from(contract.getLPAmountInfo() as Promise<RS>).pipe(
+    map((res: RS) => {
+      return {
+        total: res.deposit,
+        available: res.availabe,
+      } as PoolInfo;
     })
   );
 }
