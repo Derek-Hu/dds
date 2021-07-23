@@ -34,7 +34,6 @@ export function orderParser(cache: string | null): OrderItemData[] | null {
   try {
     const normalArr: any = JSON.parse(cache);
     if (normalArr instanceof Array) {
-      console.log('cache array', normalArr);
       const orders: OrderItemData[] = normalArr.map(normal => {
         return {
           id: normal.id,

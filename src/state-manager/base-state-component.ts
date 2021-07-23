@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { CacheState, ContractState, DatabaseState, PageState } from './interface';
 import { interval, isObservable, Observable, of, Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 
 type StateName<S> = keyof S & string;
 type PendingName<S> = `${keyof S & string}Pending` & keyof S;
@@ -50,6 +50,15 @@ export class BaseStateComponent<P, S> extends Component<P, S> {
       this.setState({ [name]: s } as T);
     });
 
+    this.subs.push(sub);
+  }
+
+  public subOnce<T>(
+    obs: Observable<T>,
+    callback: (val: T) => void,
+    errCallback = (err: any) => console.warn('Subscribe Error:', err)
+  ) {
+    const sub = obs.pipe(take(1)).subscribe({ next: callback, error: errCallback, complete: () => ({}) });
     this.subs.push(sub);
   }
 

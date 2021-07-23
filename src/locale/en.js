@@ -255,4 +255,5 @@ export default {
   'current-reward-factor': 'Current reward factor',
   'rewards-balance-history': 'Rewards Balance History',
   'active-liquidity-reward-today': 'Active Liquidity Reward Today',
+  'lp1 amount is not enought': 'Liquidity pool is not enough',
 };

@@ -38,9 +38,10 @@ import { getPageListRange } from '../util/page';
 import { ContractAddress, ContractAddressByNetwork } from '../constant/address';
 import { getContractAddress, getContractInfo } from './contract-info';
 import { bigNumMultiple } from '../util/math';
-import { ReTokenMapping, TOKEN_SYMBOL } from '../constant/tokens';
+import { ReTokenMapping } from '../constant/tokens';
 import { EthNetwork, SupportedNetwork } from '../constant/network';
 import { Contract } from 'ethers';
+import _ from 'lodash';
 
 declare const window: Window & { ethereum: any };
 
@@ -531,7 +532,12 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       }),
       catchError(err => {
         console.warn('error', err);
-        return of('');
+        const info: string | null = this.parseErrInfo(err);
+        if (info === null) {
+          return of('');
+        } else {
+          throw new Error(info);
+        }
       })
     );
   }
@@ -543,7 +549,6 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
         // TODO 临时，abi修改后可以去掉价格参数
         return from(contract.getPriceByETHDAI()).pipe(
           switchMap(price => {
-            console.log('price big num ', price);
             return contract.functions.closecontract(id); //, price);
           })
         );
@@ -1157,30 +1162,6 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
       })
     );
   }
-
-  // public priPoolBalanceWhole(): Observable<Map<IUSDCoins, BigNumber>> {
-  //   const daiBalance: Observable<BigNumber> = this.getPriPoolContract('DAI').pipe(
-  //     switchMap((contract: ethers.Contract) => {
-  //       return contract.functions.getLPAmountInfo();
-  //     }),
-  //     map((rs: any) => {
-  //       return rs.deposit as BigNumber;
-  //     })
-  //   );
-  //
-  //   const usdtBalance = of(BigNumber.from(0));
-  //   const usdcBalance = of(BigNumber.from(0));
-  //
-  //   return zip(daiBalance, usdtBalance, usdcBalance).pipe(
-  //     map((balances: BigNumber[]) => {
-  //       const rs = new Map();
-  //       rs.set('DAI', balances[0]);
-  //       rs.set('USDT', balances[1]);
-  //       rs.set('USDC', balances[2]);
-  //       return rs;
-  //     })
-  //   );
-  // }
 
   public setPriPoolRejectOrder(isReject: boolean): Observable<boolean> {
     return this.getPriPoolContract('DAI').pipe(
@@ -1920,6 +1901,16 @@ abstract class BaseTradeContractAccessor implements ContractProxy {
     );
   }
 
+  protected parseErrInfo(err: { data: { code: number; data: string; message: string } }): string | null {
+    const errMsg: string = _.get(err, 'data.message', '');
+    if (errMsg.startsWith('execution reverted:')) {
+      const msg = errMsg.substring('execution reverted:'.length).trim();
+      return msg.length > 0 ? msg : null;
+    }
+
+    return null;
+  }
+
   protected abstract getERC20DDSContract(): Observable<ethers.Contract>;
 
   protected abstract getErc20USDContract(coin: IUSDCoins): Observable<ethers.Contract>;
@@ -2545,14 +2536,6 @@ export class ContractAccessor implements ContractProxy {
       })
     );
   }
-
-  // public priPoolBalanceWhole(): Observable<Map<IUSDCoins, BigNumber>> {
-  //   return this.accessor.pipe(
-  //     switchMap(accessor => {
-  //       return accessor.priPoolBalanceWhole();
-  //     })
-  //   );
-  // }
 
   public priPoolUserBalance(address: string): Observable<PrivatePoolAccountInfo> {
     return this.accessor.pipe(
